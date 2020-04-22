@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>AGS paper I simulation results</title>
+  <meta name="description" content="AGS paper I simulation results" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="AGS paper I simulation results" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://username.github.io/reponame/" />
+  
+  <meta property="og:description" content="AGS paper I simulation results" />
+  <meta name="github-repo" content="username/reponame" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AGS paper I simulation results" />
+  
+  <meta name="twitter:description" content="AGS paper I simulation results" />
+  
+
+<meta name="author" content="John Zobolas" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DrugLogics Paper I: An AGS story</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path=""><a href="#intro"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#input"><i class="fa fa-check"></i>Input</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#cascade-1.0-analysis"><i class="fa fa-check"></i>Cascade 1.0 Analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#calibrated-vs-random-hsa"><i class="fa fa-check"></i>Calibrated vs Random (HSA)</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#roc-auc-sensitivity"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#calibrated-vs-random-bliss"><i class="fa fa-check"></i>Calibrated vs Random (Bliss)</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#roc-auc-sensitivity-1"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#correlation-ensemblewise-vs-modelwise"><i class="fa fa-check"></i>Correlation (ensemblewise vs modelwise)</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#cascade-2.0-analysis"><i class="fa fa-check"></i>Cascade 2.0 Analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#fitness-vs-performance"><i class="fa fa-check"></i>Fitness vs performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#reproduce-simulation-results"><i class="fa fa-check"></i>Reproduce simulation results</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#random-model-results"><i class="fa fa-check"></i>Random model results</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#references"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AGS paper I simulation results</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">AGS paper I simulation results</h1>
+<p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
+<p class="date"><em>Last updated: 22 April, 2020</em></p>
+</div>
+<div id="intro" class="section level1 unnumbered" number="">
+<h1>Intro</h1>
+<p>This report has the AGS-Paper I data analysis and resulting figures.</p>
+</div>
+<div id="input" class="section level1 unnumbered" number="">
+<h1>Input</h1>
+<p>Loading libraries:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(DT)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(ggpubr)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(RColorBrewer)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(plotly)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(xfun)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">library</span>(tibble)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">library</span>(emba)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">library</span>(usefun)</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">library</span>(readr)</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="kw">library</span>(latex2exp)</span></code></pre></div>
+</div>
+<div id="cascade-1.0-analysis" class="section level1 unnumbered" number="">
+<h1>Cascade 1.0 Analysis</h1>
+<div class="blue-box">
+<p>Performance of automatically parameterized models against published data in <span class="citation">(Flobak et al. <a href="#ref-Flobak2015" role="doc-biblioref">2015</a>)</span></p>
+</div>
+<div id="calibrated-vs-random-hsa" class="section level2 unnumbered" number="">
+<h2>Calibrated vs Random (HSA)</h2>
+<div id="info-note-1" class="note">
+<ul>
+<li><em>HSA</em> refers to the synergy method used in <code>Drabme</code> to assess the synergies from <code>Gitsbe</code></li>
+<li>We test performance using ROC AUC for both the <em>ensemble-wise</em> and <em>model-wise</em> synergies from <code>Drabme</code></li>
+<li><strong>Calibrated</strong> models: fitted to steady state</li>
+<li><strong>Random</strong> models: produced via <code>abmlog</code> (see <a href="#random-model-results">here</a> and used in <code>Drabme</code> with <code>synergy_method: hsa</code></li>
+</ul>
+</div>
+<p>Load results:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># &#39;ss&#39; =&gt; calibrated models, &#39;random&#39; =&gt; random models</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">## HSA results</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>ss_hsa_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a>ss_hsa_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>random_hsa_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_random_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a>random_hsa_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_random_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>ss_hsa_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_hsa_ensemblewise_file)</span>
+<span id="cb2-10"><a href="#cb2-10"></a>ss_hsa_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_hsa_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>random_hsa_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_hsa_ensemblewise_file)</span>
+<span id="cb2-12"><a href="#cb2-12"></a>random_hsa_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_hsa_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co"># calculate probability of synergy in the modelwise results</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>ss_hsa_modelwise_synergies =<span class="st"> </span>ss_hsa_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_ss =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
+<span id="cb2-17"><a href="#cb2-17"></a>random_hsa_modelwise_synergies =<span class="st"> </span>random_hsa_modelwise_synergies <span class="op">%&gt;%</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_random =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a>observed_synergies_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/observed_synergies_cascade_1.0&quot;</span>)</span>
+<span id="cb2-21"><a href="#cb2-21"></a>observed_synergies =<span class="st"> </span><span class="kw">get_observed_synergies</span>(observed_synergies_file)</span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co"># 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>observed =<span class="st"> </span><span class="kw">sapply</span>(random_hsa_modelwise_synergies<span class="op">$</span>perturbation <span class="op">%in%</span><span class="st"> </span>observed_synergies, as.integer)</span></code></pre></div>
+<div id="roc-curves" class="section level3 unnumbered" number="">
+<h3>ROC curves</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># &#39;ew&#39; =&gt; ensemble-wise, &#39;mw&#39; =&gt; model-wise</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>pred_ew_hsa =<span class="st"> </span><span class="kw">bind_cols</span>(ss_hsa_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_score =</span> score), </span>
+<span id="cb3-3"><a href="#cb3-3"></a>  random_hsa_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">random_score =</span> score), </span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a>pred_mw_hsa =<span class="st"> </span><span class="kw">bind_cols</span>(</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  ss_hsa_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(perturbation, synergy_prob_ss),</span>
+<span id="cb3-8"><a href="#cb3-8"></a>  random_hsa_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_random),</span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb3-10"><a href="#cb3-10"></a></span>
+<span id="cb3-11"><a href="#cb3-11"></a>res_ss_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;ss_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb3-12"><a href="#cb3-12"></a>res_random_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;random_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb3-13"><a href="#cb3-13"></a></span>
+<span id="cb3-14"><a href="#cb3-14"></a>res_ss_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_ss&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb3-15"><a href="#cb3-15"></a>res_random_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_random&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb3-16"><a href="#cb3-16"></a></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co"># Plot ROCs</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>my_palette =<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">9</span>, <span class="dt">name =</span> <span class="st">&quot;Set1&quot;</span>)</span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb3-21"><a href="#cb3-21"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Ensemble-wise synergies (HSA)&#39;</span>,</span>
+<span id="cb3-22"><a href="#cb3-22"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb3-24"><a href="#cb3-24"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb3-26"><a href="#cb3-26"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb3-27"><a href="#cb3-27"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;#FF726F&#39;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb3-30"><a href="#cb3-30"></a></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb3-32"><a href="#cb3-32"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Model-wise synergies (HSA)&#39;</span>,</span>
+<span id="cb3-33"><a href="#cb3-33"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb3-35"><a href="#cb3-35"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb3-37"><a href="#cb3-37"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb3-38"><a href="#cb3-38"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb3-40"><a href="#cb3-40"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;#FF726F&#39;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/ROC%20HSA%20Cascade%201.0-1.png" width="50%" /><img src="index_files/figure-html/ROC%20HSA%20Cascade%201.0-2.png" width="50%" /></p>
+</div>
+<div id="roc-auc-sensitivity" class="section level3 unnumbered" number="">
+<h3>ROC AUC sensitivity</h3>
+<div id="roc-combine-1" class="blue-box">
+<ul>
+<li>Investigate <strong>combining the synergy results of calibrated and random models</strong>
+<ul>
+<li>How information from the ‘random’ models is augmenting calibrated (to steady state) results?</li>
+</ul></li>
+<li><strong>Ensemble-wise</strong> scenario: <span class="math inline">\(score = calibrated + \beta \times random\)</span>
+<ul>
+<li><span class="math inline">\(\beta \rightarrow +\infty\)</span>: mostly <strong>random model predictions</strong></li>
+<li><span class="math inline">\(\beta \rightarrow -\infty\)</span>: mostly <strong>reverse random model predictions</strong></li>
+</ul></li>
+<li><strong>Model-wise</strong> scenario: <span class="math inline">\((1-w) \times prob_{ss} + w \times prob_{rand}, w \in[0,1]\)</span>
+<ul>
+<li><span class="math inline">\(w=0\)</span>: only calibrated model predictions</li>
+<li><span class="math inline">\(w=1\)</span>: only random model predictions</li>
+</ul></li>
+</ul>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Ensemble-wise</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>betas =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>auc_values_ew =<span class="st"> </span><span class="kw">sapply</span>(betas, <span class="cf">function</span>(beta) {</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  pred_ew_hsa =<span class="st"> </span>pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;combined_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb4-8"><a href="#cb4-8"></a>})</span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a>df_ew =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(betas, auc_values_ew))</span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_ew, <span class="dt">x =</span> <span class="st">&quot;betas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_ew&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb4-13"><a href="#cb4-13"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">beta$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb4-14"><a href="#cb4-14"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to $</span><span class="ch">\\</span><span class="st">beta$ parameter: $calibrated + </span><span class="ch">\\</span><span class="st">beta </span><span class="ch">\\</span><span class="st">times random$&quot;</span>),</span>
+<span id="cb4-15"><a href="#cb4-15"></a>  <span class="dt">color =</span> my_palette[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(HSA,%20cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Model-wise</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>weights =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a>auc_values_mw =<span class="st"> </span><span class="kw">sapply</span>(weights, <span class="cf">function</span>(w) {</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  pred_mw_hsa =<span class="st"> </span>pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">weighted_prob =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>w) <span class="op">*</span><span class="st"> </span>pred_mw_hsa<span class="op">$</span>synergy_prob_ss <span class="op">+</span><span class="st"> </span>w <span class="op">*</span><span class="st"> </span>pred_mw_hsa<span class="op">$</span>synergy_prob_random)</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;weighted_prob&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb5-9"><a href="#cb5-9"></a>})</span>
+<span id="cb5-10"><a href="#cb5-10"></a></span>
+<span id="cb5-11"><a href="#cb5-11"></a>df_mw =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(weights, auc_values_mw))</span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_mw, <span class="dt">x =</span> <span class="st">&quot;weights&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_mw&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb5-14"><a href="#cb5-14"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;weight $w$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb5-15"><a href="#cb5-15"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to weighted average score: $(1-w) </span><span class="ch">\\</span><span class="st">times prob_{ss} + w </span><span class="ch">\\</span><span class="st">times prob_{rand}$&quot;</span>),</span>
+<span id="cb5-16"><a href="#cb5-16"></a>  <span class="dt">color =</span> my_palette[<span class="dv">3</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(HSA,%20cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="green-box">
+<ul>
+<li>Symmetricity (Ensemble-wise): <span class="math inline">\(AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1\)</span></li>
+<li>Random models perform worse than calibrated ones</li>
+<li>There is are <span class="math inline">\(\beta\)</span> values that can boost the predictive performance of the combined synergy classifier but no <span class="math inline">\(w\)</span> weight in the model-wise case</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="calibrated-vs-random-bliss" class="section level2 unnumbered" number="">
+<h2>Calibrated vs Random (Bliss)</h2>
+<div id="info-note-2" class="note">
+<ul>
+<li><em>Bliss</em> refers to the synergy method used in <code>Drabme</code> to assess the synergies from <code>Gitsbe</code></li>
+<li>We test performance using ROC AUC for both the <em>ensemble-wise</em> and <em>model-wise</em> synergies from <code>Drabme</code></li>
+<li><strong>Calibrated</strong> models: fitted to steady state</li>
+<li><strong>Random</strong> models: produced via <code>abmlog</code> (see <a href="#random-model-results">here</a> and used in <code>Drabme</code> with <code>synergy_method: bliss</code></li>
+</ul>
+</div>
+<p>Load results:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># &#39;ss&#39; =&gt; calibrated models, &#39;random&#39; =&gt; random models</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## Bliss results</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>ss_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>ss_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>random_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_random_bliss_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a>random_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_random_bliss_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a>ss_bliss_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_bliss_ensemblewise_file)</span>
+<span id="cb6-10"><a href="#cb6-10"></a>ss_bliss_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_bliss_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb6-11"><a href="#cb6-11"></a>random_bliss_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_bliss_ensemblewise_file)</span>
+<span id="cb6-12"><a href="#cb6-12"></a>random_bliss_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_bliss_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb6-13"><a href="#cb6-13"></a></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co"># calculate probability of synergy in the modelwise results</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>ss_bliss_modelwise_synergies =<span class="st"> </span>ss_bliss_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_ss =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
+<span id="cb6-17"><a href="#cb6-17"></a>random_bliss_modelwise_synergies =<span class="st"> </span>random_bliss_modelwise_synergies <span class="op">%&gt;%</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_random =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span></code></pre></div>
+<div id="roc-curves-1" class="section level3 unnumbered" number="">
+<h3>ROC curves</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># &#39;ew&#39; =&gt; ensemble-wise, &#39;mw&#39; =&gt; model-wise</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>pred_ew_bliss =<span class="st"> </span><span class="kw">bind_cols</span>(ss_bliss_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_score =</span> score), </span>
+<span id="cb7-3"><a href="#cb7-3"></a>  random_bliss_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">random_score =</span> score), </span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a>pred_mw_bliss =<span class="st"> </span><span class="kw">bind_cols</span>(</span>
+<span id="cb7-7"><a href="#cb7-7"></a>  ss_bliss_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(perturbation, synergy_prob_ss),</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  random_bliss_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_random),</span>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb7-10"><a href="#cb7-10"></a></span>
+<span id="cb7-11"><a href="#cb7-11"></a>res_ss_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;ss_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb7-12"><a href="#cb7-12"></a>res_random_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;random_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb7-13"><a href="#cb7-13"></a></span>
+<span id="cb7-14"><a href="#cb7-14"></a>res_ss_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_ss&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb7-15"><a href="#cb7-15"></a>res_random_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_random&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb7-16"><a href="#cb7-16"></a></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co"># Plot ROCs</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb7-19"><a href="#cb7-19"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Ensemble-wise synergies (Bliss)&#39;</span>,</span>
+<span id="cb7-20"><a href="#cb7-20"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb7-22"><a href="#cb7-22"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb7-24"><a href="#cb7-24"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb7-25"><a href="#cb7-25"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;#FF726F&#39;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb7-28"><a href="#cb7-28"></a></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb7-30"><a href="#cb7-30"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Model-wise synergies (Bliss)&#39;</span>,</span>
+<span id="cb7-31"><a href="#cb7-31"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb7-33"><a href="#cb7-33"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb7-34"><a href="#cb7-34"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb7-35"><a href="#cb7-35"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb7-36"><a href="#cb7-36"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;#FF726F&#39;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/ROC%20Bliss%20Cascade%201.0-1.png" width="50%" /><img src="index_files/figure-html/ROC%20Bliss%20Cascade%201.0-2.png" width="50%" /></p>
+</div>
+<div id="roc-auc-sensitivity-1" class="section level3 unnumbered" number="">
+<h3>ROC AUC sensitivity</h3>
+<p>Investigate same thing as described in <a href="#roc-combine-1">here</a>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Ensemble-wise</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>betas =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a>auc_values_ew =<span class="st"> </span><span class="kw">sapply</span>(betas, <span class="cf">function</span>(beta) {</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  pred_ew_bliss =<span class="st"> </span>pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;combined_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb8-8"><a href="#cb8-8"></a>})</span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a>df_ew =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(betas, auc_values_ew))</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_ew, <span class="dt">x =</span> <span class="st">&quot;betas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_ew&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb8-13"><a href="#cb8-13"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">beta$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb8-14"><a href="#cb8-14"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to $</span><span class="ch">\\</span><span class="st">beta$ parameter: $calibrated + </span><span class="ch">\\</span><span class="st">beta </span><span class="ch">\\</span><span class="st">times random$&quot;</span>),</span>
+<span id="cb8-15"><a href="#cb8-15"></a>  <span class="dt">color =</span> my_palette[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(Bliss,%20cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Model-wise</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>weights =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a>auc_values_mw =<span class="st"> </span><span class="kw">sapply</span>(weights, <span class="cf">function</span>(w) {</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  pred_mw_bliss =<span class="st"> </span>pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">weighted_prob =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>w) <span class="op">*</span><span class="st"> </span>pred_mw_bliss<span class="op">$</span>synergy_prob_ss <span class="op">+</span><span class="st"> </span>w <span class="op">*</span><span class="st"> </span>pred_mw_bliss<span class="op">$</span>synergy_prob_random)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;weighted_prob&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb9-8"><a href="#cb9-8"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb9-9"><a href="#cb9-9"></a>})</span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a>df_mw =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(weights, auc_values_mw))</span>
+<span id="cb9-12"><a href="#cb9-12"></a></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_mw, <span class="dt">x =</span> <span class="st">&quot;weights&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_mw&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb9-14"><a href="#cb9-14"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;weight $w$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb9-15"><a href="#cb9-15"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to weighted average score: $(1-w) </span><span class="ch">\\</span><span class="st">times prob_{ss} + w </span><span class="ch">\\</span><span class="st">times prob_{rand}$&quot;</span>),</span>
+<span id="cb9-16"><a href="#cb9-16"></a>  <span class="dt">color =</span> my_palette[<span class="dv">3</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(Bliss,%20cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="green-box">
+<ul>
+<li>Symmetricity (Ensemble-wise): <span class="math inline">\(AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1\)</span></li>
+<li>Random models perform worse than calibrated ones</li>
+<li>There is are <span class="math inline">\(\beta\)</span> values that can boost the predictive performance of the combined synergy classifier but no <span class="math inline">\(w\)</span> weight in the model-wise case</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="correlation-ensemblewise-vs-modelwise" class="section level2 unnumbered" number="">
+<h2>Correlation (ensemblewise vs modelwise)</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>data_hsa =<span class="st"> </span><span class="kw">bind_cols</span>(<span class="kw">as_tibble</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">normalize_to_range</span>(pred_ew_hsa<span class="op">$</span>ss_score)), pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_ss))</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">colnames</span>(data_hsa) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ensemblewise&quot;</span>, <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="kw">ggscatter</span>(<span class="dt">data =</span> data_hsa, <span class="dt">x =</span> <span class="st">&quot;ensemblewise&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;modelwise&quot;</span>, <span class="dt">add =</span> <span class="st">&quot;reg.line&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>  <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;lightgray&quot;</span>),</span>
+<span id="cb10-6"><a href="#cb10-6"></a>  <span class="dt">title =</span> <span class="st">&quot;Correlation (Ensemble-wise vs Model-wise results, HSA)&quot;</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>  <span class="dt">conf.int =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coef =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coeff.args =</span> <span class="kw">list</span>(<span class="dt">method =</span> <span class="st">&quot;pearson&quot;</span>))</span></code></pre></div>
+<p><img src="index_files/figure-html/Correlation%20between%20ensemble-wise%20and%20model-wise%20calibrated%20results%20(Cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>data_bliss =<span class="st"> </span><span class="kw">bind_cols</span>(<span class="kw">as_tibble</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">normalize_to_range</span>(pred_ew_bliss<span class="op">$</span>ss_score)), pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_ss))</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">colnames</span>(data_bliss) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ensemblewise&quot;</span>, <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="kw">ggscatter</span>(<span class="dt">data =</span> data_bliss, <span class="dt">x =</span> <span class="st">&quot;ensemblewise&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;modelwise&quot;</span>, <span class="dt">add =</span> <span class="st">&quot;reg.line&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;lightgray&quot;</span>),</span>
+<span id="cb11-6"><a href="#cb11-6"></a>  <span class="dt">title =</span> <span class="st">&quot;Correlation (Ensemble-wise vs Model-wise results, Bliss)&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>  <span class="dt">conf.int =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coef =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coeff.args =</span> <span class="kw">list</span>(<span class="dt">method =</span> <span class="st">&quot;pearson&quot;</span>))</span></code></pre></div>
+<p><img src="index_files/figure-html/Correlation%20between%20ensemble-wise%20and%20model-wise%20calibrated%20results%20(Cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="green-box">
+<ul>
+<li>No strong correlation</li>
+<li>Lots of <span class="math inline">\(0\)</span>’s modelwise + small number of tested perturbations affect the correlation</li>
+</ul>
+</div>
+</div>
+<div id="fitness-evolution" class="section level2 unnumbered" number="">
+<h2>Fitness Evolution</h2>
+<p>TODO</p>
+</div>
+</div>
+<div id="cascade-2.0-analysis" class="section level1 unnumbered" number="">
+<h1>Cascade 2.0 Analysis</h1>
+<div class="blue-box">
+<p>Performance of automatically parameterized models against a new dataset (SINTEF, AGS only)</p>
+</div>
+<p>TODO</p>
+<p>Loading results:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># original_file = paste0(res_dir, &quot;cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;)</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># random_file = paste0(res_dir, &quot;cascade_2.0_rand_50sim_fixpoints_ensemblewise_synergies.tab&quot;)</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># observed_synergies_file = paste0(res_dir, &quot;observed_synergies_cascade_2.0&quot;)</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="co"># </span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="co"># observed_synergies = emba::get_observed_synergies(observed_synergies_file)</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="co"># orig_res = emba::get_synergy_scores(original_file)</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co"># rand_res = emba::get_synergy_scores(random_file)</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="co"># 1 or 0 for all tested drug combinations: is it observed (TP) or not (TN)?</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="co"># observed = sapply(orig_res$perturbation %in% observed_synergies, as.integer)</span></span></code></pre></div>
+<div id="fitness-vs-performance" class="section level2 unnumbered" number="">
+<h2>Fitness vs performance</h2>
+<p>The idea here is to generate many training data files from the steady state as used in the simulations above for the AGS, where some of the nodes will have their states <em>flipped</em> to the opposite state (<span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span> and vice versa).
+That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete <em>reversed</em> version of the one used in the simulations above.</p>
+<p>Using the <code>gen_training_data.R</code> script, we first choose a few number of flips (<span class="math inline">\(11\)</span> flips) ranging from <span class="math inline">\(1\)</span> to <span class="math inline">\(24\)</span> (all nodes) in the steady state.
+Then, for each such <em>flipping-nodes</em> value, we generated <span class="math inline">\(20\)</span> new steady states with a randomly chosen set of nodes whose value is going to flip.
+Thus, in total, <span class="math inline">\(205\)</span> training data files were produced (<span class="math inline">\(205 = 9 \times 20 + 24 + 1\)</span>, where from the <span class="math inline">\(11\)</span> number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).</p>
+<p>Running the script <code>run_druglogics_synergy_training.sh</code> from the <code>druglogics-synergy</code> repository root, we get the simulation results for each of these training data files.
+The only difference in the cascade 2.0 configuration file was the number of simulations (<span class="math inline">\(15\)</span>) for each training data file and the attractor tool used (<code>biolqm_stable_states</code>).</p>
+<p>We now load the data from these simulations:</p>
+</div>
+</div>
+<div id="reproduce-simulation-results" class="section level1 unnumbered" number="">
+<h1>Reproduce simulation results</h1>
+<div id="roc-curves-2" class="section level2 unnumbered" number="">
+<h2>ROC curves</h2>
+<ul>
+<li>Install <code>druglogics-synergy</code></li>
+<li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo using the configuration settings:
+<ul>
+<li><code>simulations: 50</code></li>
+<li><code>attractor_tool: biolqm_stable_states</code></li>
+<li><code>synergy_method: hsa</code> (also rerun the script chaning the synergy method <code>bliss</code>)</li>
+</ul></li>
+</ul>
+<p>Thus you will get a directory per simulation and inside will be several result files.
+To generate the ROC curves, we use the ensemble-wise and model-wise synergies found in each respective simulation.</p>
+</div>
+<div id="random-model-results" class="section level2 unnumbered" number="">
+<h2>Random model results</h2>
+<p>The CASCADE 1.0 and 2.0 <code>.sif</code> network files can be found at the directories <code>ags_cascade_1.0</code> and <code>ags_cascade_2.0</code> on the
+<code>druglogics-synergy</code> repository.</p>
+<p>Run the <code>abmlog</code> for the CASCADE 2.0 topology:</p>
+<pre><code>java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000</code></pre>
+<p>Next, prune the resulting models to only the ones that have 1 stable state (<span class="math inline">\(1292\)</span>) using a simple bash script, while renaming the modelnames inside the files so that they have the string <code>_run_</code> (mimicking thus the files generated by gitsbe - otherwise drabme fails!) - use the script <code>process_models.sh</code> inside the generated <code>models</code> directory from <code>abmlog</code>.</p>
+<pre><code>cd pathTo/druglogics-synergy/ags_cascade_2.0</code></pre>
+<ul>
+<li>Move the <code>models</code> dir inside the <code>ags_cascade_2.0</code> dir</li>
+<li>Use attractor_tool: <code>biolqm_stable_states</code> in the config file</li>
+<li>Use either <code>synergy_method: hsa</code> or <code>synergy_method: bliss</code></li>
+<li>Run drabme via <code>druglogics-synergy</code>:</li>
+</ul>
+<pre><code>java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
+java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_bliss --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs</code></pre>
+<p>The above procedure is the same for CASCADE 1.0. Changes:
+- Network file is now the <code>cascade_1_0.sif</code>
+- The <code>process_models.sh</code> needs a small name change (documented inside the script)
+- The <code>models</code> directory should be put inside the <code>ags_cascade_1.0</code> of <code>druglogics-synergy</code>
+- The drabme command should be run with <code>--project=cascade_1.0_random_hsa</code> and <code>--project=cascade_1.0_random_bliss</code> respectively</p>
+</div>
+</div>
+<div id="r-session-info" class="section level1 unnumbered" number="">
+<h1>R session info</h1>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<pre><code>R version 3.6.3 (2020-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.4 LTS
+
+Locale:
+  LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+  LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+  LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+  LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+  LC_ADDRESS=C               LC_TELEPHONE=C            
+  LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+Package version:
+  askpass_1.1         assertthat_0.2.1    backports_1.1.6    
+  base64enc_0.1.3     BH_1.72.0.3         bibtex_0.4.2.2     
+  bookdown_0.18       callr_3.4.3         Ckmeans.1d.dp_4.3.2
+  cli_2.0.2           clipr_0.7.0         colorspace_1.4-1   
+  compiler_3.6.3      cowplot_1.0.0       crayon_1.3.4       
+  crosstalk_1.1.0.1   curl_4.3            data.table_1.12.8  
+  desc_1.2.0          digest_0.6.25       dplyr_0.8.5        
+  DT_0.13             ellipsis_0.3.0      emba_0.1.4         
+  evaluate_0.14       fansi_0.4.1         farver_2.0.3       
+  gbRd_0.4-11         ggplot2_3.3.0       ggpubr_0.2.5       
+  ggrepel_0.8.2       ggsci_2.9           ggsignif_0.6.0     
+  glue_1.4.0          graphics_3.6.3      grDevices_3.6.3    
+  grid_3.6.3          gridExtra_2.3       gtable_0.3.0       
+  hexbin_1.28.1       highr_0.8           hms_0.5.3          
+  htmltools_0.4.0     htmlwidgets_1.5.1   httr_1.4.1         
+  igraph_1.2.5        isoband_0.2.1       jsonlite_1.6.1     
+  knitr_1.28          labeling_0.3        later_1.0.0        
+  latex2exp_0.4.0     lattice_0.20.41     lazyeval_0.2.2     
+  lifecycle_0.2.0     magrittr_1.5        markdown_1.1       
+  MASS_7.3.51.5       Matrix_1.2.18       methods_3.6.3      
+  mgcv_1.8.31         mime_0.9            munsell_0.5.0      
+  nlme_3.1.145        openssl_1.4.1       pillar_1.4.3       
+  pkgbuild_1.0.6      pkgconfig_2.0.3     pkgload_1.0.2      
+  plogr_0.2.0         plotly_4.9.2.1      polynom_1.4.0      
+  praise_1.0.0        prettyunits_1.1.1   processx_3.4.2     
+  promises_1.1.0      ps_1.3.2            purrr_0.3.3        
+  R6_2.4.1            RColorBrewer_1.1-2  Rcpp_1.0.4.6       
+  Rdpack_0.11-1       readr_1.3.1         rje_1.10.15        
+  rlang_0.4.5         rmarkdown_2.1       rprojroot_1.3.2    
+  rstudioapi_0.11     scales_1.1.0        splines_3.6.3      
+  stats_3.6.3         stringi_1.4.6       stringr_1.4.0      
+  sys_3.3             testthat_2.3.2      tibble_3.0.0       
+  tidyr_1.0.2         tidyselect_1.0.0    tinytex_0.21       
+  tools_3.6.3         usefun_0.4.5        utf8_1.1.4         
+  utils_3.6.3         vctrs_0.2.4         viridisLite_0.3.0  
+  visNetwork_2.0.9    withr_2.1.2         xfun_0.12          
+  yaml_2.2.1         </code></pre>
+</div>
+<div id="references" class="section level1 unnumbered" number="">
+<h1>References</h1>
+
+<div id="refs" class="references hanging-indent">
+<div id="ref-Flobak2015">
+<p>Flobak, Åsmund, Anaïs Baudot, Elisabeth Remy, Liv Thommesen, Denis Thieffry, Martin Kuiper, and Astrid Lægreid. 2015. “Discovery of Drug Synergies in Gastric Cancer Cells Predicted by Logical Modeling.” Edited by Ioannis Xenarios. <em>PLOS Computational Biology</em> 11 (8): e1004426. <a href="https://doi.org/10.1371/journal.pcbi.1004426">https://doi.org/10.1371/journal.pcbi.1004426</a>.</p>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
