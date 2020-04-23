@@ -169,7 +169,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
 - Random models perform worse than calibrated ones
-- There is are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
+- There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
 :::
 
 ## Calibrated vs Random (Bliss) {-}
@@ -248,7 +248,7 @@ abline(a = 0, b = 1, col = '#FF726F', lty = 2)
 
 ### ROC AUC sensitivity {-}
 
-Investigate same thing as described in [here](#roc-combine-1):
+Investigate same thing as described in [here](#roc-combine-1).
 
 ```{r AUC sensitivity (Bliss, cascade 1.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
 # Ensemble-wise
@@ -288,7 +288,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
 - Random models perform worse than calibrated ones
-- There is are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
+- There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
 :::
 
 ## Correlation (ensemblewise vs modelwise) {-}
@@ -379,21 +379,403 @@ grid(lwd = 0.5)
 Performance of automatically parameterized models against a new dataset (SINTEF, AGS only)
 :::
 
-TODO
+## Calibrated vs Random (HSA) {-}
 
-Loading results:
-```{r cascade 2.0 results}
-# original_file = paste0(res_dir, "cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
-# random_file = paste0(res_dir, "cascade_2.0_rand_50sim_fixpoints_ensemblewise_synergies.tab")
-# observed_synergies_file = paste0(res_dir, "observed_synergies_cascade_2.0")
-# 
-# observed_synergies = emba::get_observed_synergies(observed_synergies_file)
-# orig_res = emba::get_synergy_scores(original_file)
-# rand_res = emba::get_synergy_scores(random_file)
+:::{#info-note-1 .note}
+- *HSA* refers to the synergy method used in `Drabme` to assess the synergies from `Gitsbe`
+- We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
+- **Calibrated** models: fitted to steady state
+- **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: hsa`
+:::
 
-# 1 or 0 for all tested drug combinations: is it observed (TP) or not (TN)?
-# observed = sapply(orig_res$perturbation %in% observed_synergies, as.integer)
+Load results:
+
+```{r load Cascade 2.0 HSA results}
+# 'ss' => calibrated models, 'random' => random models
+
+## HSA results
+ss_hsa_ensemblewise_5sim_file = paste0("results/hsa/cascade_2.0_ss_5sim_fixpoints_ensemblewise_synergies.tab")
+ss_hsa_modelwise_5sim_file = paste0("results/hsa/cascade_2.0_ss_5sim_fixpoints_modelwise_synergies.tab")
+ss_hsa_ensemblewise_50sim_file = paste0("results/hsa/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
+ss_hsa_modelwise_50sim_file = paste0("results/hsa/cascade_2.0_ss_50sim_fixpoints_modelwise_synergies.tab")
+random_hsa_ensemblewise_file = paste0("results/hsa/cascade_2.0_random_ensemblewise_synergies.tab")
+random_hsa_modelwise_file = paste0("results/hsa/cascade_2.0_random_modelwise_synergies.tab")
+
+ss_hsa_ensemblewise_synergies_5sim = emba::get_synergy_scores(ss_hsa_ensemblewise_5sim_file)
+ss_hsa_modelwise_synergies_5sim = emba::get_synergy_scores(ss_hsa_modelwise_5sim_file, file_type = "modelwise")
+ss_hsa_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_hsa_ensemblewise_50sim_file)
+ss_hsa_modelwise_synergies_50sim = emba::get_synergy_scores(ss_hsa_modelwise_50sim_file, file_type = "modelwise")
+random_hsa_ensemblewise_synergies = emba::get_synergy_scores(random_hsa_ensemblewise_file)
+random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_modelwise_file, file_type = "modelwise")
+
+# calculate probability of synergy in the modelwise results
+ss_hsa_modelwise_synergies_5sim = ss_hsa_modelwise_synergies_5sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_hsa_modelwise_synergies_50sim = ss_hsa_modelwise_synergies_50sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+random_hsa_modelwise_synergies = random_hsa_modelwise_synergies %>%
+  mutate(synergy_prob_random = synergies/(synergies + `non-synergies`))
+
+observed_synergies_file = paste0("results/observed_synergies_cascade_2.0")
+observed_synergies = get_observed_synergies(observed_synergies_file)
+# 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
+observed = sapply(random_hsa_modelwise_synergies$perturbation %in% observed_synergies, as.integer)
 ```
+
+### ROC curves {-}
+
+```{r ROC HSA Cascade 2.0, fig.width=5, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%'}
+# 'ew' => ensemble-wise, 'mw' => model-wise
+pred_ew_hsa = bind_cols(ss_hsa_ensemblewise_synergies_5sim %>% rename(ss_score_5sim = score), 
+  ss_hsa_ensemblewise_synergies_50sim %>% select(score) %>% rename(ss_score_50sim = score),
+  random_hsa_ensemblewise_synergies %>% select(score) %>% rename(random_score = score), 
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_mw_hsa = bind_cols(
+  ss_hsa_modelwise_synergies_5sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_5sim = synergy_prob_ss),
+  ss_hsa_modelwise_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  random_hsa_modelwise_synergies %>% select(synergy_prob_random),
+  as_tibble_col(observed, column_name = "observed"))
+
+res_ss_ew_5sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_5sim", label_col = "observed")
+res_ss_ew_50sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
+res_random_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "random_score", label_col = "observed")
+
+res_ss_mw_5sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_5sim", label_col = "observed", direction = ">")
+res_ss_mw_50sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random", label_col = "observed", direction = ">")
+
+# Plot ROCs
+my_palette = RColorBrewer::brewer.pal(n = 9, name = "Set1")
+
+plot(x = res_ss_ew_5sim$roc_stats$FPR, y = res_ss_ew_5sim$roc_stats$TPR,
+  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR, 
+  lwd = 2, col = my_palette[2])
+lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
+  lwd = 2, col = my_palette[3])
+legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
+  legend = c(paste(round(res_ss_ew_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
+    paste(round(res_ss_ew_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
+    paste(round(res_random_ew$AUC, digits = 3), "Random")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+
+plot(x = res_ss_mw_5sim$roc_stats$FPR, y = res_ss_mw_5sim$roc_stats$TPR,
+  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR, 
+  lwd = 2, col = my_palette[2])
+lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
+  lwd = 2, col = my_palette[3])
+legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
+  legend = c(paste(round(res_ss_mw_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
+    paste(round(res_ss_mw_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
+    paste(round(res_random_mw$AUC, digits = 3), "Random")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+```
+
+### ROC AUC sensitivity {-}
+
+Investigate same thing as described in [here](#roc-combine-1).
+We will combine the synergy scores from the random simulations with the results from the $50$ Gitsbe simulations.
+
+```{r AUC sensitivity (HSA, cascade 2.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_50sim + beta * random_score)
+  res = get_roc_stats(df = pred_ew_hsa, pred_col = "combined_score", label_col = "observed")
+  auc_value = res$AUC
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_mw_hsa = pred_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_50sim + w * pred_mw_hsa$synergy_prob_random)
+  res = get_roc_stats(df = pred_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
+  auc_value = res$AUC
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids() #+ ylim(0.4, 0.9)
+```
+
+:::{.green-box}
+- Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
+- Random models perform worse than calibrated ones (though difference is very small)
+- There are $\beta$ values that can boost the predictive performance of the combined synergy classifier and a $w$ weight in the model-wise case (though the significance in performance gain is negligible).
+:::
+
+## Calibrated vs Random (Bliss) {-}
+
+:::{#info-note-2 .note}
+- *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from `Gitsbe`
+- We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
+- **Calibrated** models: fitted to steady state
+- **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: bliss`
+:::
+
+Load results:
+```{r Load Cascade 2.0 Bliss results}
+# 'ss' => calibrated models, 'random' => random models
+
+## Bliss results
+ss_bliss_ensemblewise_10sim_file = paste0("results/bliss/cascade_2.0_ss_10sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_10sim_file = paste0("results/bliss/cascade_2.0_ss_10sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_30sim_file = paste0("results/bliss/cascade_2.0_ss_30sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_30sim_file = paste0("results/bliss/cascade_2.0_ss_30sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_50sim_file = paste0("results/bliss/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_50sim_file = paste0("results/bliss/cascade_2.0_ss_50sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_70sim_file = paste0("results/bliss/cascade_2.0_ss_70sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_70sim_file = paste0("results/bliss/cascade_2.0_ss_70sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_100sim_file = paste0("results/bliss/cascade_2.0_ss_100sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_100sim_file = paste0("results/bliss/cascade_2.0_ss_100sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_150sim_file = paste0("results/bliss/cascade_2.0_ss_150sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_150sim_file = paste0("results/bliss/cascade_2.0_ss_150sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_200sim_file = paste0("results/bliss/cascade_2.0_ss_200sim_fixpoints_ensemblewise_synergies.tab")
+ss_bliss_modelwise_200sim_file = paste0("results/bliss/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
+
+random_bliss_ensemblewise_file = paste0("results/bliss/cascade_2.0_random_bliss_ensemblewise_synergies.tab")
+random_bliss_modelwise_file = paste0("results/bliss/cascade_2.0_random_bliss_modelwise_synergies.tab")
+
+ss_bliss_ensemblewise_synergies_10sim = emba::get_synergy_scores(ss_bliss_ensemblewise_10sim_file)
+ss_bliss_modelwise_synergies_10sim = emba::get_synergy_scores(ss_bliss_modelwise_10sim_file, file_type = "modelwise")
+ss_bliss_ensemblewise_synergies_30sim = emba::get_synergy_scores(ss_bliss_ensemblewise_30sim_file)
+ss_bliss_modelwise_synergies_30sim = emba::get_synergy_scores(ss_bliss_modelwise_30sim_file, file_type = "modelwise")
+ss_bliss_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_bliss_ensemblewise_50sim_file)
+ss_bliss_modelwise_synergies_50sim = emba::get_synergy_scores(ss_bliss_modelwise_50sim_file, file_type = "modelwise")
+ss_bliss_ensemblewise_synergies_70sim = emba::get_synergy_scores(ss_bliss_ensemblewise_70sim_file)
+ss_bliss_modelwise_synergies_70sim = emba::get_synergy_scores(ss_bliss_modelwise_70sim_file, file_type = "modelwise")
+ss_bliss_ensemblewise_synergies_100sim = emba::get_synergy_scores(ss_bliss_ensemblewise_100sim_file)
+ss_bliss_modelwise_synergies_100sim = emba::get_synergy_scores(ss_bliss_modelwise_100sim_file, file_type = "modelwise")
+ss_bliss_ensemblewise_synergies_150sim = emba::get_synergy_scores(ss_bliss_ensemblewise_150sim_file)
+ss_bliss_modelwise_synergies_150sim = emba::get_synergy_scores(ss_bliss_modelwise_150sim_file, file_type = "modelwise")
+ss_bliss_ensemblewise_synergies_200sim = emba::get_synergy_scores(ss_bliss_ensemblewise_200sim_file)
+ss_bliss_modelwise_synergies_200sim = emba::get_synergy_scores(ss_bliss_modelwise_200sim_file, file_type = "modelwise")
+
+random_bliss_ensemblewise_synergies = emba::get_synergy_scores(random_bliss_ensemblewise_file)
+random_bliss_modelwise_synergies = emba::get_synergy_scores(random_bliss_modelwise_file, file_type = "modelwise")
+
+# calculate probability of synergy in the modelwise results
+ss_bliss_modelwise_synergies_10sim = ss_bliss_modelwise_synergies_10sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_bliss_modelwise_synergies_30sim = ss_bliss_modelwise_synergies_30sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_bliss_modelwise_synergies_50sim = ss_bliss_modelwise_synergies_50sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_bliss_modelwise_synergies_70sim = ss_bliss_modelwise_synergies_70sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_bliss_modelwise_synergies_100sim = ss_bliss_modelwise_synergies_100sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_bliss_modelwise_synergies_150sim = ss_bliss_modelwise_synergies_150sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_bliss_modelwise_synergies_200sim = ss_bliss_modelwise_synergies_200sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+random_bliss_modelwise_synergies = random_bliss_modelwise_synergies %>%
+  mutate(synergy_prob_random = synergies/(synergies + `non-synergies`))
+```
+
+### ROC curves {-}
+
+```{r ROC Bliss Cascade 2.0, fig.width=6, fig.height=6, dpi=300, cache=TRUE, fig.show='hold', out.width='50%'}
+# 'ew' => ensemble-wise, 'mw' => model-wise
+pred_ew_bliss = bind_cols(ss_bliss_ensemblewise_synergies_10sim %>% rename(ss_score_10sim = score), 
+  ss_bliss_ensemblewise_synergies_30sim %>% select(score) %>% rename(ss_score_30sim = score),
+  ss_bliss_ensemblewise_synergies_50sim %>% select(score) %>% rename(ss_score_50sim = score),
+  ss_bliss_ensemblewise_synergies_70sim %>% select(score) %>% rename(ss_score_70sim = score),
+  ss_bliss_ensemblewise_synergies_100sim %>% select(score) %>% rename(ss_score_100sim = score),
+  ss_bliss_ensemblewise_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
+  ss_bliss_ensemblewise_synergies_200sim %>% select(score) %>% rename(ss_score_200sim = score),
+  random_bliss_ensemblewise_synergies %>% select(score) %>% rename(random_score = score), 
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_mw_bliss = bind_cols(
+  ss_bliss_modelwise_synergies_10sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_10sim = synergy_prob_ss),
+  ss_bliss_modelwise_synergies_30sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_30sim = synergy_prob_ss),
+  ss_bliss_modelwise_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  ss_bliss_modelwise_synergies_70sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_70sim = synergy_prob_ss),
+  ss_bliss_modelwise_synergies_100sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_100sim = synergy_prob_ss),
+  ss_bliss_modelwise_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
+  ss_bliss_modelwise_synergies_200sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_200sim = synergy_prob_ss),
+  random_bliss_modelwise_synergies %>% select(synergy_prob_random),
+  as_tibble_col(observed, column_name = "observed"))
+
+res_ss_ew_10sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_10sim", label_col = "observed")
+res_ss_ew_30sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_30sim", label_col = "observed")
+res_ss_ew_50sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_50sim", label_col = "observed")
+res_ss_ew_70sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_70sim", label_col = "observed")
+res_ss_ew_100sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_100sim", label_col = "observed")
+res_ss_ew_150sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_150sim", label_col = "observed")
+res_ss_ew_200sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_200sim", label_col = "observed")
+res_random_ew = get_roc_stats(df = pred_ew_bliss, pred_col = "random_score", label_col = "observed")
+
+res_ss_mw_10sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_10sim", label_col = "observed", direction = ">")
+res_ss_mw_30sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_30sim", label_col = "observed", direction = ">")
+res_ss_mw_50sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+res_ss_mw_70sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_70sim", label_col = "observed", direction = ">")
+res_ss_mw_100sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_100sim", label_col = "observed", direction = ">")
+res_ss_mw_150sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
+res_ss_mw_200sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_200sim", label_col = "observed", direction = ">")
+res_random_mw = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_random", label_col = "observed", direction = ">")
+
+# Plot ROCs
+plot(x = res_ss_ew_10sim$roc_stats$FPR, y = res_ss_ew_10sim$roc_stats$TPR,
+  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_ss_ew_30sim$roc_stats$FPR, y = res_ss_ew_30sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[2])
+lines(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[3])
+lines(x = res_ss_ew_70sim$roc_stats$FPR, y = res_ss_ew_70sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[4])
+lines(x = res_ss_ew_100sim$roc_stats$FPR, y = res_ss_ew_100sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[5])
+lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[6])
+lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[7])
+lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
+  lwd = 2, col = my_palette[8])
+legend('bottomright', title = 'AUC', col = my_palette[1:8], pch = 19,
+  legend = c(paste(round(res_ss_ew_10sim$AUC, digits = 2), "Calibrated (10 sim)"),
+    paste(round(res_ss_ew_30sim$AUC, digits = 2), "Calibrated (30 sim)"),
+    paste(round(res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(res_ss_ew_70sim$AUC, digits = 2), "Calibrated (70 sim)"),
+    paste(round(res_ss_ew_100sim$AUC, digits = 2), "Calibrated (100 sim)"),
+    paste(round(res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(res_ss_ew_200sim$AUC, digits = 2), "Calibrated (200 sim)"),
+    paste(round(res_random_ew$AUC, digits = 2), "Random")), cex = 0.7)
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+
+plot(x = res_ss_mw_10sim$roc_stats$FPR, y = res_ss_mw_10sim$roc_stats$TPR,
+  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_ss_mw_30sim$roc_stats$FPR, y = res_ss_mw_30sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[2])
+lines(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[3])
+lines(x = res_ss_mw_70sim$roc_stats$FPR, y = res_ss_mw_70sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[4])
+lines(x = res_ss_mw_100sim$roc_stats$FPR, y = res_ss_mw_100sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[5])
+lines(x = res_ss_mw_150sim$roc_stats$FPR, y = res_ss_mw_150sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[6])
+lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[7])
+lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
+  lwd = 2, col = my_palette[8])
+legend('bottomright', title = 'AUC', col = my_palette[1:8], pch = 19,
+  legend = c(paste(round(res_ss_mw_10sim$AUC, digits = 2), "Calibrated (10 sim)"),
+    paste(round(res_ss_mw_30sim$AUC, digits = 2), "Calibrated (30 sim)"),
+    paste(round(res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(res_ss_mw_70sim$AUC, digits = 2), "Calibrated (70 sim)"),
+    paste(round(res_ss_mw_100sim$AUC, digits = 2), "Calibrated (100 sim)"),
+    paste(round(res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(res_ss_mw_200sim$AUC, digits = 2), "Calibrated (200 sim)"),
+    paste(round(res_random_mw$AUC, digits = 2), "Random")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+```
+
+### ROC AUC sensitivity {-}
+
+Investigate same thing as described in [here](#roc-combine-1).
+We will combine the synergy scores from the random simulations with the results from the $50$ Gitsbe simulations.
+
+```{r AUC sensitivity (Bliss, Cascade 2.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
+# Ensemble-wise
+betas = seq(from = -20, to = 20, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score_50sim + beta * random_score)
+  res = get_roc_stats(df = pred_ew_bliss, pred_col = "combined_score", label_col = "observed")
+  auc_value = res$AUC
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_mw_bliss = pred_mw_bliss %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_bliss$synergy_prob_ss_50sim + w * pred_mw_bliss$synergy_prob_random)
+  res = get_roc_stats(df = pred_mw_bliss, pred_col = "weighted_prob", label_col = "observed", direction = ">")
+  auc_value = res$AUC
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+:::{.green-box}
+- Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
+- Random models perform better than calibrated ones
+- Combining the synergy results using the weighted probability score does not bring any significant difference in performance
+- Using the $\beta$ parameter to boost the ensemble synergy results works only for the HSA results (not the Bliss-based ones)
+:::
+
+```{r test, include=FALSE, echo=FALSE}
+file_ew = '/home/john/repos/druglogics/druglogics-synergy/ags_cascade_1.0/cascade_1.0_ss_5sim_traps_bliss_20200424_005641/cascade_1.0_ss_5sim_traps_ensemblewise_synergies.tab'
+file_mw = '/home/john/repos/druglogics/druglogics-synergy/ags_cascade_1.0/cascade_1.0_ss_5sim_traps_bliss_20200424_005641/cascade_1.0_ss_5sim_traps_modelwise_synergies.tab'
+
+res_ew = emba::get_synergy_scores(file_name = file_ew)
+res_mw = emba::get_synergy_scores(file_name = file_mw, file_type = "modelwise")
+
+observed_synergies_file = paste0("results/observed_synergies_cascade_1.0")
+observed_synergies = get_observed_synergies(observed_synergies_file)
+# 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
+observed = sapply(res_ew$perturbation %in% observed_synergies, as.integer)
+
+res_mw = res_mw %>% mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+
+pred_ew = bind_cols(res_ew, as_tibble_col(observed, column_name = "observed"))
+pred_mw = bind_cols(res_mw, as_tibble_col(observed, column_name = "observed"))
+
+res_1 = get_roc_stats(df = pred_ew, pred_col = "score", label_col = "observed")
+res_2 = get_roc_stats(df = pred_mw, pred_col = "synergy_prob_ss", label_col = "observed", direction = ">")
+
+data_trap = bind_cols(as_tibble(1 - normalize_to_range(pred_ew$score)), pred_mw %>% select(synergy_prob_ss))
+colnames(data_trap) = c("ensemblewise", "modelwise")
+
+ggscatter(data = data_trap, x = "ensemblewise", y = "modelwise", add = "reg.line",
+  add.params = list(color = "blue", fill = "lightgray"),
+  title = "Correlation (Ensemble-wise vs Model-wise results, HSA)",
+  conf.int = TRUE, cor.coef = TRUE, cor.coeff.args = list(method = "pearson"))
+```
+
+
+
+
+
+
 
 
 
