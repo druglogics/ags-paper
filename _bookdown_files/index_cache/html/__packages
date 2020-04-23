@@ -3,13 +3,12 @@ DT
 ggplot2
 magrittr
 ggpubr
-plotly
+RColorBrewer
 xfun
 dplyr
 tibble
 emba
 usefun
 readr
-pROC
-RColorBrewer
+stringr
 latex2exp
