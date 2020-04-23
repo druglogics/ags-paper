@@ -21,13 +21,13 @@ Loading libraries:
 library(DT)
 library(ggpubr)
 library(RColorBrewer)
-library(plotly)
 library(xfun)
 library(dplyr)
 library(tibble)
 library(emba)
 library(usefun)
 library(readr)
+library(stringr)
 library(latex2exp)
 ```
 
@@ -318,7 +318,60 @@ ggscatter(data = data_bliss, x = "ensemblewise", y = "modelwise", add = "reg.lin
 
 ## Fitness Evolution {-}
 
-TODO
+Results are from the simulation result with $50$ Gitsbe simulations, fitting to steady state (**calibrated models**) and *HSA* Drabme synergy assessment.
+We show only $10$ simulations - the first ones that spanned the maximum defined generations in the configuration ($20$), meaning that they did not surpass the target fitness threhold specified ($0.99$).
+Each data point is the average fitness in that generation out of $20$ models.
+
+```{r fitness evolution, dpi=300, fig.align='center', cache=TRUE}
+fitness_summary_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_summary.txt")
+
+read_summary_file = function(file_name) {
+  lines = readr::read_lines(file = fitness_summary_file, skip = 5, skip_empty_rows = TRUE)
+  
+  data_list = list()
+  index = 1
+  
+  gen_fit_list = list()
+  gen_index = 1
+  for (line_index in 1:length(lines)) {
+    line = lines[line_index]
+    if (stringr::str_detect(string = line, pattern = "Simulation")) {
+      data_list[[index]] = bind_cols(gen_fit_list)
+      index = index + 1
+      
+      gen_fit_list = list()
+      gen_index = 1
+    } else { # read fitness values
+      gen_fit_list[[gen_index]] = as_tibble_col(as.numeric(unlist(strsplit(line, split = '\t'))))
+      gen_index = gen_index + 1
+    }
+  }
+  
+  # add the last simulation's values
+  data_list[[index]] = bind_cols(gen_fit_list)
+  
+  return(data_list)
+}
+
+fit_res = read_summary_file(file_name = fitness_summary_file)
+
+first_sim_data = colMeans(fit_res[[1]])
+plot(1:length(first_sim_data), y = first_sim_data, ylim = c(0,1), 
+  xlim = c(0,20), type = 'l', lwd = 1.5, 
+  main = 'Fitness vs Generation (10 Simulations)', xlab = 'Generations', 
+  ylab = 'Average Fitness', col = usefun:::colors.100[1])
+index = 2
+for (fit_data in fit_res) {
+  if (index > 10) break
+  if (ncol(fit_data) != 20) next
+  mean_fit_per_gen = colMeans(fit_data)
+  lines(x = 1:length(mean_fit_per_gen), y = mean_fit_per_gen, lwd = 1.5,
+    col = usefun:::colors.100[index])
+  index = index + 1
+}
+grid(lwd = 0.5)
+```
+
 
 # Cascade 2.0 Analysis {-}
 
@@ -400,6 +453,7 @@ java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.
 ```
 
 The above procedure is the same for CASCADE 1.0. Changes:
+
 - Network file is now the `cascade_1_0.sif`
 - The `process_models.sh` needs a small name change (documented inside the script)
 - The `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
