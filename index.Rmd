@@ -29,6 +29,7 @@ library(usefun)
 library(readr)
 library(stringr)
 library(latex2exp)
+library(corrplot)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -291,29 +292,32 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
 :::
 
-## Correlation (ensemblewise vs modelwise) {-}
+## Correlation {-}
 
-```{r Correlation between ensemble-wise and model-wise calibrated results (Cascade 1.0), message=FALSE, cache=TRUE, dpi=300, out.width='80%', fig.align='center'}
-data_hsa = bind_cols(as_tibble(1 - normalize_to_range(pred_ew_hsa$ss_score)), pred_mw_hsa %>% select(synergy_prob_ss))
-colnames(data_hsa) = c("ensemblewise", "modelwise")
+We test for correlation between all the results shown in the ROC curves.
+This means *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
+*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*)
 
-ggscatter(data = data_hsa, x = "ensemblewise", y = "modelwise", add = "reg.line",
-  add.params = list(color = "blue", fill = "lightgray"),
-  title = "Correlation (Ensemble-wise vs Model-wise results, HSA)",
-  conf.int = TRUE, cor.coef = TRUE, cor.coeff.args = list(method = "pearson"))
+```{r Correlation of ROC results (Cascade 1.0), dpi=300, cache=TRUE}
+synergy_scores = bind_cols(
+  pred_ew_hsa %>% select(ss_score, random_score) %>% rename(ss_ensemble_hsa = ss_score, random_ensemble_hsa = random_score),
+  pred_ew_bliss %>% select(ss_score, random_score) %>% rename(ss_ensemble_bliss = ss_score, random_ensemble_bliss = random_score),
+  pred_mw_hsa %>% select(synergy_prob_ss, synergy_prob_random) %>% 
+    rename(ss_modelwise_hsa = synergy_prob_ss, random_modelwise_hsa = synergy_prob_random),
+  pred_mw_bliss %>% select(synergy_prob_ss, synergy_prob_random) %>% 
+    rename(ss_modelwise_bliss = synergy_prob_ss, random_modelwise_bliss = synergy_prob_random)
+  )
 
-data_bliss = bind_cols(as_tibble(1 - normalize_to_range(pred_ew_bliss$ss_score)), pred_mw_bliss %>% select(synergy_prob_ss))
-colnames(data_bliss) = c("ensemblewise", "modelwise")
-
-ggscatter(data = data_bliss, x = "ensemblewise", y = "modelwise", add = "reg.line",
-  add.params = list(color = "blue", fill = "lightgray"),
-  title = "Correlation (Ensemble-wise vs Model-wise results, Bliss)",
-  conf.int = TRUE, cor.coef = TRUE, cor.coeff.args = list(method = "pearson"))
+M = cor(synergy_scores)
+res = cor.mtest(synergy_scores)
+corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05), 
+  pch.cex = 1.5, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
 ```
 
 :::{.green-box}
-- No strong correlation
-- Lots of $0$'s modelwise + small number of tested perturbations affect the correlation
+- **HSA and Bliss results correlate** for both the model-wise and the ensemble-wise results
+- **Model-wise results are in general different than the ensemble-wise ones**. 
+Only strong correlation is seen between the random models and not the calibrated ones.
 :::
 
 ## Fitness Evolution {-}
