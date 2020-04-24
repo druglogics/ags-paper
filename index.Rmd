@@ -296,9 +296,9 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 
 We test for correlation between all the results shown in the ROC curves.
 This means *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
-*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*)
+*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*) and the correlation coefficient is calculated using Kendall's *tau* statistic.
 
-```{r Correlation of ROC results (Cascade 1.0), dpi=300, cache=TRUE}
+```{r Correlation of ROC results (Cascade 1.0), dpi=300, warning=FALSE, cache=TRUE}
 synergy_scores = bind_cols(
   pred_ew_hsa %>% select(ss_score, random_score) %>% rename(ss_ensemble_hsa = ss_score, random_ensemble_hsa = random_score),
   pred_ew_bliss %>% select(ss_score, random_score) %>% rename(ss_ensemble_bliss = ss_score, random_ensemble_bliss = random_score),
@@ -308,16 +308,15 @@ synergy_scores = bind_cols(
     rename(ss_modelwise_bliss = synergy_prob_ss, random_modelwise_bliss = synergy_prob_random)
   )
 
-M = cor(synergy_scores)
-res = cor.mtest(synergy_scores)
+M = cor(synergy_scores, method = "kendall")
+res = cor.mtest(synergy_scores, method = "kendall")
 corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05), 
-  pch.cex = 1.5, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
+  pch.cex = 1, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
 ```
 
 :::{.green-box}
-- **HSA and Bliss results correlate** for both the model-wise and the ensemble-wise results
-- **Model-wise results are in general different than the ensemble-wise ones**. 
-Only strong correlation is seen between the random models and not the calibrated ones.
+- **HSA and Bliss results correlate**, higher for the model-wise than the ensemble-wise results.
+- **Model-wise don't correlate with ensemble-wise results**.
 :::
 
 ## Fitness Evolution {-}
@@ -803,35 +802,32 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - Using the $\beta$ parameter to boost the ensemble synergy results works only for the HSA results (not the Bliss-based ones)
 :::
 
-```{r test, include=FALSE, eval=FALSE}
-file_ew = '/home/john/repos/druglogics/druglogics-synergy/ags_cascade_1.0/cascade_1.0_ss_5sim_traps_bliss_20200424_005641/cascade_1.0_ss_5sim_traps_ensemblewise_synergies.tab'
-file_mw = '/home/john/repos/druglogics/druglogics-synergy/ags_cascade_1.0/cascade_1.0_ss_5sim_traps_bliss_20200424_005641/cascade_1.0_ss_5sim_traps_modelwise_synergies.tab'
+## Correlation {-}
 
-res_ew = emba::get_synergy_scores(file_name = file_ew)
-res_mw = emba::get_synergy_scores(file_name = file_mw, file_type = "modelwise")
+We test for correlation between some of the results shown in the ROC curves (the calibrated models are from the $150$ simulation results).
+This means *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
+*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*) and the correlation coefficient is calculated using Kendall's *tau* statistic.
 
-observed_synergies_file = paste0("results/observed_synergies_cascade_1.0")
-observed_synergies = get_observed_synergies(observed_synergies_file)
-# 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
-observed = sapply(res_ew$perturbation %in% observed_synergies, as.integer)
+```{r Correlation of ROC results (Cascade 2.0), dpi=300, cache=TRUE}
+synergy_scores = bind_cols(
+  pred_ew_hsa %>% select(ss_score_100sim, random_score) %>% rename(ss_ensemble_hsa = ss_score_100sim, random_ensemble_hsa = random_score),
+  pred_ew_bliss %>% select(ss_score_100sim, random_score) %>% rename(ss_ensemble_bliss = ss_score_100sim, random_ensemble_bliss = random_score),
+  pred_mw_hsa %>% select(synergy_prob_ss_100sim, synergy_prob_random) %>% 
+    rename(ss_modelwise_hsa = synergy_prob_ss_100sim, random_modelwise_hsa = synergy_prob_random),
+  pred_mw_bliss %>% select(synergy_prob_ss_100sim, synergy_prob_random) %>% 
+    rename(ss_modelwise_bliss = synergy_prob_ss_100sim, random_modelwise_bliss = synergy_prob_random)
+  )
 
-res_mw = res_mw %>% mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-
-pred_ew = bind_cols(res_ew, as_tibble_col(observed, column_name = "observed"))
-pred_mw = bind_cols(res_mw, as_tibble_col(observed, column_name = "observed"))
-
-res_1 = get_roc_stats(df = pred_ew, pred_col = "score", label_col = "observed")
-res_2 = get_roc_stats(df = pred_mw, pred_col = "synergy_prob_ss", label_col = "observed", direction = ">")
-
-data_trap = bind_cols(as_tibble(1 - normalize_to_range(pred_ew$score)), as_tibble(pred_mw$synergy_prob_ss))
-colnames(data_trap) = c("ensemblewise", "modelwise")
-
-ggscatter(data = data_trap, x = "ensemblewise", y = "modelwise", add = "reg.line",
-  add.params = list(color = "blue", fill = "lightgray"),
-  title = "Correlation (Ensemble-wise vs Model-wise results, HSA)",
-  conf.int = TRUE, cor.coef = TRUE, cor.coeff.args = list(method = "pearson"))
+M = cor(synergy_scores, method = "kendall")
+res = cor.mtest(mat = synergy_scores, method = "kendall")
+corrplot(corr = M, type ="upper", p.mat = res$p, sig.level = c(.001, .01, .05), 
+  pch.cex = 1, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
 ```
 
+:::{.green-box}
+- **HSA and Bliss results correlate**, especially for the model-wise results (ensemble-wise correlation is not as strong).
+- **Model-wise don't correlate with ensemble-wise results**.
+:::
 
 
 
