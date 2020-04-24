@@ -30,6 +30,7 @@ library(usefun)
 library(readr)
 library(stringr)
 library(latex2exp)
+library(corrplot)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -314,36 +315,35 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
 :::
 
-## Correlation (ensemblewise vs modelwise) {-}
+## Correlation {-}
+
+We test for correlation between all the results shown in the ROC curves.
+This means *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
+*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*)
 
 
 ```r
-data_hsa = bind_cols(as_tibble(1 - normalize_to_range(pred_ew_hsa$ss_score)), pred_mw_hsa %>% select(synergy_prob_ss))
-colnames(data_hsa) = c("ensemblewise", "modelwise")
+synergy_scores = bind_cols(
+  pred_ew_hsa %>% select(ss_score, random_score) %>% rename(ss_ensemble_hsa = ss_score, random_ensemble_hsa = random_score),
+  pred_ew_bliss %>% select(ss_score, random_score) %>% rename(ss_ensemble_bliss = ss_score, random_ensemble_bliss = random_score),
+  pred_mw_hsa %>% select(synergy_prob_ss, synergy_prob_random) %>% 
+    rename(ss_modelwise_hsa = synergy_prob_ss, random_modelwise_hsa = synergy_prob_random),
+  pred_mw_bliss %>% select(synergy_prob_ss, synergy_prob_random) %>% 
+    rename(ss_modelwise_bliss = synergy_prob_ss, random_modelwise_bliss = synergy_prob_random)
+  )
 
-ggscatter(data = data_hsa, x = "ensemblewise", y = "modelwise", add = "reg.line",
-  add.params = list(color = "blue", fill = "lightgray"),
-  title = "Correlation (Ensemble-wise vs Model-wise results, HSA)",
-  conf.int = TRUE, cor.coef = TRUE, cor.coeff.args = list(method = "pearson"))
+M = cor(synergy_scores)
+res = cor.mtest(synergy_scores)
+corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05), 
+  pch.cex = 1.5, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
 ```
 
-<img src="index_files/figure-html/Correlation between ensemble-wise and model-wise calibrated results (Cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
-
-```r
-data_bliss = bind_cols(as_tibble(1 - normalize_to_range(pred_ew_bliss$ss_score)), pred_mw_bliss %>% select(synergy_prob_ss))
-colnames(data_bliss) = c("ensemblewise", "modelwise")
-
-ggscatter(data = data_bliss, x = "ensemblewise", y = "modelwise", add = "reg.line",
-  add.params = list(color = "blue", fill = "lightgray"),
-  title = "Correlation (Ensemble-wise vs Model-wise results, Bliss)",
-  conf.int = TRUE, cor.coef = TRUE, cor.coeff.args = list(method = "pearson"))
-```
-
-<img src="index_files/figure-html/Correlation between ensemble-wise and model-wise calibrated results (Cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/Correlation of ROC results (Cascade 1.0)-1.png" width="2100" />
 
 :::{.green-box}
-- No strong correlation
-- Lots of $0$'s modelwise + small number of tested perturbations affect the correlation
+- **HSA and Bliss results correlate** for both the model-wise and the ensemble-wise results
+- **Model-wise results are in general different than the ensemble-wise ones**. 
+Only strong correlation is seen between the random models and not the calibrated ones.
 :::
 
 ## Fitness Evolution {-}
@@ -432,6 +432,12 @@ ss_hsa_ensemblewise_5sim_file = paste0("results/hsa/cascade_2.0_ss_5sim_fixpoint
 ss_hsa_modelwise_5sim_file = paste0("results/hsa/cascade_2.0_ss_5sim_fixpoints_modelwise_synergies.tab")
 ss_hsa_ensemblewise_50sim_file = paste0("results/hsa/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
 ss_hsa_modelwise_50sim_file = paste0("results/hsa/cascade_2.0_ss_50sim_fixpoints_modelwise_synergies.tab")
+ss_hsa_ensemblewise_100sim_file = paste0("results/hsa/cascade_2.0_ss_100sim_fixpoints_ensemblewise_synergies.tab")
+ss_hsa_modelwise_100sim_file = paste0("results/hsa/cascade_2.0_ss_100sim_fixpoints_modelwise_synergies.tab")
+ss_hsa_ensemblewise_150sim_file = paste0("results/hsa/cascade_2.0_ss_150sim_fixpoints_ensemblewise_synergies.tab")
+ss_hsa_modelwise_150sim_file = paste0("results/hsa/cascade_2.0_ss_150sim_fixpoints_modelwise_synergies.tab")
+ss_hsa_ensemblewise_200sim_file = paste0("results/hsa/cascade_2.0_ss_200sim_fixpoints_ensemblewise_synergies.tab")
+ss_hsa_modelwise_200sim_file = paste0("results/hsa/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
 random_hsa_ensemblewise_file = paste0("results/hsa/cascade_2.0_random_ensemblewise_synergies.tab")
 random_hsa_modelwise_file = paste0("results/hsa/cascade_2.0_random_modelwise_synergies.tab")
 
@@ -439,6 +445,12 @@ ss_hsa_ensemblewise_synergies_5sim = emba::get_synergy_scores(ss_hsa_ensemblewis
 ss_hsa_modelwise_synergies_5sim = emba::get_synergy_scores(ss_hsa_modelwise_5sim_file, file_type = "modelwise")
 ss_hsa_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_hsa_ensemblewise_50sim_file)
 ss_hsa_modelwise_synergies_50sim = emba::get_synergy_scores(ss_hsa_modelwise_50sim_file, file_type = "modelwise")
+ss_hsa_ensemblewise_synergies_100sim = emba::get_synergy_scores(ss_hsa_ensemblewise_100sim_file)
+ss_hsa_modelwise_synergies_100sim = emba::get_synergy_scores(ss_hsa_modelwise_100sim_file, file_type = "modelwise")
+ss_hsa_ensemblewise_synergies_150sim = emba::get_synergy_scores(ss_hsa_ensemblewise_150sim_file)
+ss_hsa_modelwise_synergies_150sim = emba::get_synergy_scores(ss_hsa_modelwise_150sim_file, file_type = "modelwise")
+ss_hsa_ensemblewise_synergies_200sim = emba::get_synergy_scores(ss_hsa_ensemblewise_200sim_file)
+ss_hsa_modelwise_synergies_200sim = emba::get_synergy_scores(ss_hsa_modelwise_200sim_file, file_type = "modelwise")
 random_hsa_ensemblewise_synergies = emba::get_synergy_scores(random_hsa_ensemblewise_file)
 random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_modelwise_file, file_type = "modelwise")
 
@@ -446,6 +458,12 @@ random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_modelwise_f
 ss_hsa_modelwise_synergies_5sim = ss_hsa_modelwise_synergies_5sim %>% 
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 ss_hsa_modelwise_synergies_50sim = ss_hsa_modelwise_synergies_50sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_hsa_modelwise_synergies_100sim = ss_hsa_modelwise_synergies_100sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_hsa_modelwise_synergies_150sim = ss_hsa_modelwise_synergies_150sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+ss_hsa_modelwise_synergies_200sim = ss_hsa_modelwise_synergies_200sim %>% 
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 random_hsa_modelwise_synergies = random_hsa_modelwise_synergies %>%
   mutate(synergy_prob_random = synergies/(synergies + `non-synergies`))
@@ -463,21 +481,33 @@ observed = sapply(random_hsa_modelwise_synergies$perturbation %in% observed_syne
 # 'ew' => ensemble-wise, 'mw' => model-wise
 pred_ew_hsa = bind_cols(ss_hsa_ensemblewise_synergies_5sim %>% rename(ss_score_5sim = score), 
   ss_hsa_ensemblewise_synergies_50sim %>% select(score) %>% rename(ss_score_50sim = score),
+  ss_hsa_ensemblewise_synergies_100sim %>% select(score) %>% rename(ss_score_100sim = score),
+  ss_hsa_ensemblewise_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
+  ss_hsa_ensemblewise_synergies_200sim %>% select(score) %>% rename(ss_score_200sim = score),
   random_hsa_ensemblewise_synergies %>% select(score) %>% rename(random_score = score), 
   as_tibble_col(observed, column_name = "observed"))
 
 pred_mw_hsa = bind_cols(
   ss_hsa_modelwise_synergies_5sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_5sim = synergy_prob_ss),
   ss_hsa_modelwise_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  ss_hsa_modelwise_synergies_100sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_100sim = synergy_prob_ss),
+  ss_hsa_modelwise_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
+  ss_hsa_modelwise_synergies_200sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_200sim = synergy_prob_ss),
   random_hsa_modelwise_synergies %>% select(synergy_prob_random),
   as_tibble_col(observed, column_name = "observed"))
 
 res_ss_ew_5sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_5sim", label_col = "observed")
 res_ss_ew_50sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
+res_ss_ew_100sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_100sim", label_col = "observed")
+res_ss_ew_150sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
+res_ss_ew_200sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_200sim", label_col = "observed")
 res_random_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "random_score", label_col = "observed")
 
 res_ss_mw_5sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_5sim", label_col = "observed", direction = ">")
 res_ss_mw_50sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+res_ss_mw_100sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_100sim", label_col = "observed", direction = ">")
+res_ss_mw_150sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
+res_ss_mw_200sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_200sim", label_col = "observed", direction = ">")
 res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random", label_col = "observed", direction = ">")
 
 # Plot ROCs
@@ -488,12 +518,21 @@ plot(x = res_ss_ew_5sim$roc_stats$FPR, y = res_ss_ew_5sim$roc_stats$TPR,
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR, 
   lwd = 2, col = my_palette[2])
-lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
+lines(x = res_ss_ew_100sim$roc_stats$FPR, y = res_ss_ew_100sim$roc_stats$TPR, 
   lwd = 2, col = my_palette[3])
-legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
+lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR, 
+  lwd = 2, col = my_palette[4])
+lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR, 
+  lwd = 2, col = my_palette[5])
+lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
+  lwd = 2, col = my_palette[6])
+legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
   legend = c(paste(round(res_ss_ew_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
     paste(round(res_ss_ew_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
-    paste(round(res_random_ew$AUC, digits = 3), "Random")))
+    paste(round(res_ss_ew_100sim$AUC, digits = 3), "Calibrated (100 sim)"),
+    paste(round(res_ss_ew_150sim$AUC, digits = 3), "Calibrated (150 sim)"),
+    paste(round(res_ss_ew_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
+    paste(round(res_random_ew$AUC, digits = 3), "Random")), cex = 0.9)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = '#FF726F', lty = 2)
 
@@ -502,17 +541,30 @@ plot(x = res_ss_mw_5sim$roc_stats$FPR, y = res_ss_mw_5sim$roc_stats$TPR,
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR, 
   lwd = 2, col = my_palette[2])
-lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
+lines(x = res_ss_mw_100sim$roc_stats$FPR, y = res_ss_mw_100sim$roc_stats$TPR, 
   lwd = 2, col = my_palette[3])
-legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
+lines(x = res_ss_mw_150sim$roc_stats$FPR, y = res_ss_mw_150sim$roc_stats$TPR, 
+  lwd = 2, col = my_palette[4])
+lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR, 
+  lwd = 2, col = my_palette[5])
+lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
+  lwd = 2, col = my_palette[6])
+legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
   legend = c(paste(round(res_ss_mw_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
     paste(round(res_ss_mw_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
-    paste(round(res_random_mw$AUC, digits = 3), "Random")))
+    paste(round(res_ss_mw_100sim$AUC, digits = 3), "Calibrated (100 sim)"),
+    paste(round(res_ss_mw_150sim$AUC, digits = 3), "Calibrated (150 sim)"),
+    paste(round(res_ss_mw_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
+    paste(round(res_random_mw$AUC, digits = 3), "Random")), cex = 0.9)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = '#FF726F', lty = 2)
 ```
 
 <img src="index_files/figure-html/ROC HSA Cascade 2.0-1.png" width="50%" /><img src="index_files/figure-html/ROC HSA Cascade 2.0-2.png" width="50%" />
+
+:::{.green-box}
+- Model-wise results *scale* with respect to the number of `Gitsbe` simulations (more **calibrated** models, better performance).
+:::
 
 ### ROC AUC sensitivity {-}
 
@@ -743,6 +795,11 @@ abline(a = 0, b = 1, col = '#FF726F', lty = 2)
 
 <img src="index_files/figure-html/ROC Bliss Cascade 2.0-1.png" width="50%" /><img src="index_files/figure-html/ROC Bliss Cascade 2.0-2.png" width="50%" />
 
+:::{.green-box}
+- Model-wise results *scale* with respect to the number of `Gitsbe` simulations (more **calibrated** models, better performance).
+- Ensemble-wise performance is disproportionate compared to the model-wise performance 
+:::
+
 ### ROC AUC sensitivity {-}
 
 Investigate same thing as described in [here](#roc-combine-1).
@@ -893,37 +950,38 @@ Package version:
   assertthat_0.2.1    backports_1.1.6     base64enc_0.1.3    
   BH_1.72.0.3         bibtex_0.4.2.2      bookdown_0.18      
   callr_3.4.3         Ckmeans.1d.dp_4.3.2 cli_2.0.2          
-  clipr_0.7.0         colorspace_1.4-1    compiler_3.6.3     
-  cowplot_1.0.0       crayon_1.3.4        crosstalk_1.1.0.1  
-  desc_1.2.0          digest_0.6.25       dplyr_0.8.5        
-  DT_0.13             ellipsis_0.3.0      emba_0.1.4         
-  evaluate_0.14       fansi_0.4.1         farver_2.0.3       
-  gbRd_0.4-11         ggplot2_3.3.0       ggpubr_0.2.5       
-  ggrepel_0.8.2       ggsci_2.9           ggsignif_0.6.0     
-  glue_1.4.0          graphics_3.6.3      grDevices_3.6.3    
-  grid_3.6.3          gridExtra_2.3       gtable_0.3.0       
-  highr_0.8           hms_0.5.3           htmltools_0.4.0    
-  htmlwidgets_1.5.1   igraph_1.2.5        isoband_0.2.1      
-  jsonlite_1.6.1      knitr_1.28          labeling_0.3       
-  later_1.0.0         latex2exp_0.4.0     lattice_0.20-41    
-  lazyeval_0.2.2      lifecycle_0.2.0     magrittr_1.5       
-  markdown_1.1        MASS_7.3.51.5       Matrix_1.2-18      
-  methods_3.6.3       mgcv_1.8-31         mime_0.9           
-  munsell_0.5.0       nlme_3.1-145        pillar_1.4.3       
-  pkgbuild_1.0.6      pkgconfig_2.0.3     pkgload_1.0.2      
-  plogr_0.2.0         polynom_1.4.0       praise_1.0.0       
-  prettyunits_1.1.1   processx_3.4.2      promises_1.1.0     
-  ps_1.3.2            purrr_0.3.3         R6_2.4.1           
-  RColorBrewer_1.1-2  Rcpp_1.0.4.6        Rdpack_0.11-1      
-  readr_1.3.1         rje_1.10.15         rlang_0.4.5        
-  rmarkdown_2.1       rprojroot_1.3.2     rstudioapi_0.11    
-  scales_1.1.0        splines_3.6.3       stats_3.6.3        
-  stringi_1.4.6       stringr_1.4.0       testthat_2.3.2     
-  tibble_3.0.0        tidyr_1.0.2         tidyselect_1.0.0   
-  tinytex_0.21        tools_3.6.3         usefun_0.4.5       
-  utf8_1.1.4          utils_3.6.3         vctrs_0.2.4        
-  viridisLite_0.3.0   visNetwork_2.0.9    withr_2.1.2        
-  xfun_0.12           yaml_2.2.1         
+  clipr_0.7.0         codetools_0.2-16    colorspace_1.4-1   
+  compiler_3.6.3      corrplot_0.84       cowplot_1.0.0      
+  crayon_1.3.4        crosstalk_1.1.0.1   desc_1.2.0         
+  digest_0.6.25       dplyr_0.8.5         DT_0.13            
+  ellipsis_0.3.0      emba_0.1.4          evaluate_0.14      
+  fansi_0.4.1         farver_2.0.3        gbRd_0.4-11        
+  ggplot2_3.3.0       ggpubr_0.2.5        ggrepel_0.8.2      
+  ggsci_2.9           ggsignif_0.6.0      glue_1.4.0         
+  graphics_3.6.3      grDevices_3.6.3     grid_3.6.3         
+  gridExtra_2.3       gtable_0.3.0        highr_0.8          
+  hms_0.5.3           htmltools_0.4.0     htmlwidgets_1.5.1  
+  igraph_1.2.5        isoband_0.2.1       jsonlite_1.6.1     
+  knitr_1.28          labeling_0.3        later_1.0.0        
+  latex2exp_0.4.0     lattice_0.20.41     lazyeval_0.2.2     
+  lifecycle_0.2.0     magrittr_1.5        markdown_1.1       
+  MASS_7.3.51.5       Matrix_1.2.18       methods_3.6.3      
+  mgcv_1.8.31         mime_0.9            munsell_0.5.0      
+  nlme_3.1.145        pillar_1.4.3        pkgbuild_1.0.6     
+  pkgconfig_2.0.3     pkgload_1.0.2       plogr_0.2.0        
+  polynom_1.4.0       praise_1.0.0        prettyunits_1.1.1  
+  processx_3.4.2      promises_1.1.0      ps_1.3.2           
+  purrr_0.3.3         R6_2.4.1            RColorBrewer_1.1-2 
+  Rcpp_1.0.4.6        Rdpack_0.11-1       readr_1.3.1        
+  rje_1.10.15         rlang_0.4.5         rmarkdown_2.1      
+  rprojroot_1.3.2     rstudioapi_0.11     scales_1.1.0       
+  splines_3.6.3       stats_3.6.3         stringi_1.4.6      
+  stringr_1.4.0       testthat_2.3.2      tibble_3.0.0       
+  tidyr_1.0.2         tidyselect_1.0.0    tinytex_0.21       
+  tools_3.6.3         usefun_0.4.5        utf8_1.1.4         
+  utils_3.6.3         vctrs_0.2.4         viridisLite_0.3.0  
+  visNetwork_2.0.9    withr_2.1.2         xfun_0.12          
+  yaml_2.2.1         
 ```
 
 # References {-}
