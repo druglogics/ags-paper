@@ -319,7 +319,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 
 We test for correlation between all the results shown in the ROC curves.
 This means *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
-*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*)
+*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*) and the correlation coefficient is calculated using Kendall's *tau* statistic.
 
 
 ```r
@@ -332,18 +332,17 @@ synergy_scores = bind_cols(
     rename(ss_modelwise_bliss = synergy_prob_ss, random_modelwise_bliss = synergy_prob_random)
   )
 
-M = cor(synergy_scores)
-res = cor.mtest(synergy_scores)
+M = cor(synergy_scores, method = "kendall")
+res = cor.mtest(synergy_scores, method = "kendall")
 corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05), 
-  pch.cex = 1.5, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
+  pch.cex = 1, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
 ```
 
 <img src="index_files/figure-html/Correlation of ROC results (Cascade 1.0)-1.png" width="2100" />
 
 :::{.green-box}
-- **HSA and Bliss results correlate** for both the model-wise and the ensemble-wise results
-- **Model-wise results are in general different than the ensemble-wise ones**. 
-Only strong correlation is seen between the random models and not the calibrated ones.
+- **HSA and Bliss results correlate**, higher for the model-wise than the ensemble-wise results.
+- **Model-wise don't correlate with ensemble-wise results**.
 :::
 
 ## Fitness Evolution {-}
@@ -854,8 +853,35 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - Using the $\beta$ parameter to boost the ensemble synergy results works only for the HSA results (not the Bliss-based ones)
 :::
 
+## Correlation {-}
+
+We test for correlation between some of the results shown in the ROC curves (the calibrated models are from the $150$ simulation results).
+This means *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
+*P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*) and the correlation coefficient is calculated using Kendall's *tau* statistic.
 
 
+```r
+synergy_scores = bind_cols(
+  pred_ew_hsa %>% select(ss_score_100sim, random_score) %>% rename(ss_ensemble_hsa = ss_score_100sim, random_ensemble_hsa = random_score),
+  pred_ew_bliss %>% select(ss_score_100sim, random_score) %>% rename(ss_ensemble_bliss = ss_score_100sim, random_ensemble_bliss = random_score),
+  pred_mw_hsa %>% select(synergy_prob_ss_100sim, synergy_prob_random) %>% 
+    rename(ss_modelwise_hsa = synergy_prob_ss_100sim, random_modelwise_hsa = synergy_prob_random),
+  pred_mw_bliss %>% select(synergy_prob_ss_100sim, synergy_prob_random) %>% 
+    rename(ss_modelwise_bliss = synergy_prob_ss_100sim, random_modelwise_bliss = synergy_prob_random)
+  )
+
+M = cor(synergy_scores, method = "kendall")
+res = cor.mtest(mat = synergy_scores, method = "kendall")
+corrplot(corr = M, type ="upper", p.mat = res$p, sig.level = c(.001, .01, .05), 
+  pch.cex = 1, pch.col = "white", insig = "label_sig", tl.col = "black", tl.srt = 45)
+```
+
+<img src="index_files/figure-html/Correlation of ROC results (Cascade 2.0)-1.png" width="2100" />
+
+:::{.green-box}
+- **HSA and Bliss results correlate**, especially for the model-wise results (ensemble-wise correlation is not as strong).
+- **Model-wise don't correlate with ensemble-wise results**.
+:::
 
 
 
@@ -950,38 +976,37 @@ Package version:
   assertthat_0.2.1    backports_1.1.6     base64enc_0.1.3    
   BH_1.72.0.3         bibtex_0.4.2.2      bookdown_0.18      
   callr_3.4.3         Ckmeans.1d.dp_4.3.2 cli_2.0.2          
-  clipr_0.7.0         codetools_0.2-16    colorspace_1.4-1   
-  compiler_3.6.3      corrplot_0.84       cowplot_1.0.0      
-  crayon_1.3.4        crosstalk_1.1.0.1   desc_1.2.0         
-  digest_0.6.25       dplyr_0.8.5         DT_0.13            
-  ellipsis_0.3.0      emba_0.1.4          evaluate_0.14      
-  fansi_0.4.1         farver_2.0.3        gbRd_0.4-11        
-  ggplot2_3.3.0       ggpubr_0.2.5        ggrepel_0.8.2      
-  ggsci_2.9           ggsignif_0.6.0      glue_1.4.0         
-  graphics_3.6.3      grDevices_3.6.3     grid_3.6.3         
-  gridExtra_2.3       gtable_0.3.0        highr_0.8          
-  hms_0.5.3           htmltools_0.4.0     htmlwidgets_1.5.1  
-  igraph_1.2.5        isoband_0.2.1       jsonlite_1.6.1     
-  knitr_1.28          labeling_0.3        later_1.0.0        
-  latex2exp_0.4.0     lattice_0.20.41     lazyeval_0.2.2     
-  lifecycle_0.2.0     magrittr_1.5        markdown_1.1       
-  MASS_7.3.51.5       Matrix_1.2.18       methods_3.6.3      
-  mgcv_1.8.31         mime_0.9            munsell_0.5.0      
-  nlme_3.1.145        pillar_1.4.3        pkgbuild_1.0.6     
-  pkgconfig_2.0.3     pkgload_1.0.2       plogr_0.2.0        
-  polynom_1.4.0       praise_1.0.0        prettyunits_1.1.1  
-  processx_3.4.2      promises_1.1.0      ps_1.3.2           
-  purrr_0.3.3         R6_2.4.1            RColorBrewer_1.1-2 
-  Rcpp_1.0.4.6        Rdpack_0.11-1       readr_1.3.1        
-  rje_1.10.15         rlang_0.4.5         rmarkdown_2.1      
-  rprojroot_1.3.2     rstudioapi_0.11     scales_1.1.0       
-  splines_3.6.3       stats_3.6.3         stringi_1.4.6      
-  stringr_1.4.0       testthat_2.3.2      tibble_3.0.0       
-  tidyr_1.0.2         tidyselect_1.0.0    tinytex_0.21       
-  tools_3.6.3         usefun_0.4.5        utf8_1.1.4         
-  utils_3.6.3         vctrs_0.2.4         viridisLite_0.3.0  
-  visNetwork_2.0.9    withr_2.1.2         xfun_0.12          
-  yaml_2.2.1         
+  clipr_0.7.0         colorspace_1.4-1    compiler_3.6.3     
+  corrplot_0.84       cowplot_1.0.0       crayon_1.3.4       
+  crosstalk_1.1.0.1   desc_1.2.0          digest_0.6.25      
+  dplyr_0.8.5         DT_0.13             ellipsis_0.3.0     
+  emba_0.1.4          evaluate_0.14       fansi_0.4.1        
+  farver_2.0.3        gbRd_0.4-11         ggplot2_3.3.0      
+  ggpubr_0.2.5        ggrepel_0.8.2       ggsci_2.9          
+  ggsignif_0.6.0      glue_1.4.0          graphics_3.6.3     
+  grDevices_3.6.3     grid_3.6.3          gridExtra_2.3      
+  gtable_0.3.0        highr_0.8           hms_0.5.3          
+  htmltools_0.4.0     htmlwidgets_1.5.1   igraph_1.2.5       
+  isoband_0.2.1       jsonlite_1.6.1      knitr_1.28         
+  labeling_0.3        later_1.0.0         latex2exp_0.4.0    
+  lattice_0.20.41     lazyeval_0.2.2      lifecycle_0.2.0    
+  magrittr_1.5        markdown_1.1        MASS_7.3.51.5      
+  Matrix_1.2.18       methods_3.6.3       mgcv_1.8.31        
+  mime_0.9            munsell_0.5.0       nlme_3.1.145       
+  pillar_1.4.3        pkgbuild_1.0.6      pkgconfig_2.0.3    
+  pkgload_1.0.2       plogr_0.2.0         polynom_1.4.0      
+  praise_1.0.0        prettyunits_1.1.1   processx_3.4.2     
+  promises_1.1.0      ps_1.3.2            purrr_0.3.3        
+  R6_2.4.1            RColorBrewer_1.1-2  Rcpp_1.0.4.6       
+  Rdpack_0.11-1       readr_1.3.1         rje_1.10.15        
+  rlang_0.4.5         rmarkdown_2.1       rprojroot_1.3.2    
+  rstudioapi_0.11     scales_1.1.0        splines_3.6.3      
+  stats_3.6.3         stringi_1.4.6       stringr_1.4.0      
+  testthat_2.3.2      tibble_3.0.0        tidyr_1.0.2        
+  tidyselect_1.0.0    tinytex_0.21        tools_3.6.3        
+  usefun_0.4.5        utf8_1.1.4          utils_3.6.3        
+  vctrs_0.2.4         viridisLite_0.3.0   visNetwork_2.0.9   
+  withr_2.1.2         xfun_0.12           yaml_2.2.1         
 ```
 
 # References {-}
