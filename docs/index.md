@@ -1,18 +1,22 @@
 ---
 title: "AGS paper I simulation results"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 24 April, 2020"
+date: "Last updated: 27 April, 2020"
 description: "AGS paper I simulation results"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
-bibliography: references.bib
+bibliography: ["references.bib", "packages.bib"]
 link-citations: true
 site: bookdown::bookdown_site
 ---
 
+
+
 # Intro {-}
 
 This report has the AGS-Paper I data analysis and resulting figures.
+
+For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (based on [@Grau2015]).
 
 # Input {-}
 
@@ -31,6 +35,7 @@ library(readr)
 library(stringr)
 library(latex2exp)
 library(corrplot)
+library(PRROC)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -41,8 +46,8 @@ Performance of automatically parameterized models against published data in [@Fl
 
 ## Calibrated vs Random (HSA) {-}
 
-:::{#info-note-1 .note}
-- *HSA* refers to the synergy method used in `Drabme` to assess the synergies from `Gitsbe`
+:::{.note}
+- *HSA* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
 - We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state
 - **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: hsa`
@@ -100,29 +105,67 @@ res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random"
 my_palette = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 
 plot(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
   legend = c(paste(round(res_ss_ew$AUC, digits = 3), "Calibrated"), 
     paste(round(res_random_ew$AUC, digits = 3), "Random")))
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 plot(x = res_ss_mw$roc_stats$FPR, y = res_ss_mw$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
   legend = c(paste(round(res_ss_mw$AUC, digits = 3), "Calibrated"), 
     paste(round(res_random_mw$AUC, digits = 3), "Random")))
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
 <img src="index_files/figure-html/ROC HSA Cascade 1.0-1.png" width="50%" /><img src="index_files/figure-html/ROC HSA Cascade 1.0-2.png" width="50%" />
+
+### PR curves {-}
+
+
+```r
+pr_ss_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_random_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(random_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+pr_ss_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_random_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_random), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+plot(pr_ss_ew_hsa, main = 'PR curve, Ensemble-wise synergies (HSA)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_random_ew_hsa, add = TRUE, color = my_palette[2])
+legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19,
+  legend = c(paste(round(pr_ss_ew_hsa$auc.davis.goadrich, digits = 3), "Calibrated"), 
+    paste(round(pr_random_ew_hsa$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+
+plot(pr_ss_mw_hsa, main = 'PR curve, Model-wise synergies (HSA)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_random_mw_hsa, add = TRUE, color = my_palette[2])
+legend('left', title = 'AUC', col = my_palette[1:2], pch = 19,
+  legend = c(paste(round(pr_ss_mw_hsa$auc.davis.goadrich, digits = 3), "Calibrated"), 
+    paste(round(pr_random_mw_hsa$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/PR HSA Cascade 1.0-1.png" width="50%" /><img src="index_files/figure-html/PR HSA Cascade 1.0-2.png" width="50%" />
+
+:::{.green-box}
+- PR curves show better the performance advantage of calibrated models over random ones
+- PR AUCs suggest that the **model-wise approach is better than the ensemble-wise** in our imbalanced dataset
+:::
 
 ### ROC AUC sensitivity {-}
 
@@ -185,10 +228,57 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
 :::
 
+### PR AUC sensitivity {-}
+
+
+```r
+# Ensemble-wise
+betas = seq(from = -20, to = 20, by = 0.1)
+
+pr_auc_values_ew = sapply(betas, function(beta) {
+  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score + beta * random_score)
+  res = pr.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_ew = as_tibble(cbind(betas, pr_auc_values_ew))
+
+ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/PR AUC sensitivity (HSA, cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+pr_auc_values_mw = sapply(weights, function(w) {
+  pred_mw_hsa = pred_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss + w * pred_mw_hsa$synergy_prob_random)
+  res = pr.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob), 
+    weights.class0 = pred_mw_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_mw = as_tibble(cbind(weights, pr_auc_values_mw))
+
+ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+<img src="index_files/figure-html/PR AUC sensitivity (HSA, cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+
+
 ## Calibrated vs Random (Bliss) {-}
 
-:::{#info-note-2 .note}
-- *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from `Gitsbe`
+:::{.note}
+- *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
 - We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state
 - **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: bliss`
@@ -239,26 +329,26 @@ res_random_mw = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_rando
 
 # Plot ROCs
 plot(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
   legend = c(paste(round(res_ss_ew$AUC, digits = 3), "Calibrated"), 
     paste(round(res_random_ew$AUC, digits = 3), "Random")))
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 plot(x = res_ss_mw$roc_stats$FPR, y = res_ss_mw$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
   legend = c(paste(round(res_ss_mw$AUC, digits = 3), "Calibrated"), 
     paste(round(res_random_mw$AUC, digits = 3), "Random")))
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
 <img src="index_files/figure-html/ROC Bliss Cascade 1.0-1.png" width="50%" /><img src="index_files/figure-html/ROC Bliss Cascade 1.0-2.png" width="50%" />
@@ -413,8 +503,8 @@ Performance of automatically parameterized models against a new dataset (SINTEF,
 
 ## Calibrated vs Random (HSA) {-}
 
-:::{#info-note-1 .note}
-- *HSA* refers to the synergy method used in `Drabme` to assess the synergies from `Gitsbe`
+:::{.note}
+- *HSA* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
 - We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state
 - **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: hsa`
@@ -513,18 +603,18 @@ res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random"
 my_palette = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 
 plot(x = res_ss_ew_5sim$roc_stats$FPR, y = res_ss_ew_5sim$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 lines(x = res_ss_ew_100sim$roc_stats$FPR, y = res_ss_ew_100sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[3])
+  lwd = 3, col = my_palette[3])
 lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[4])
+  lwd = 3, col = my_palette[4])
 lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[5])
+  lwd = 3, col = my_palette[5])
 lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 2, col = my_palette[6])
+  lwd = 3, col = my_palette[6])
 legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
   legend = c(paste(round(res_ss_ew_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
     paste(round(res_ss_ew_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
@@ -533,21 +623,21 @@ legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
     paste(round(res_ss_ew_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
     paste(round(res_random_ew$AUC, digits = 3), "Random")), cex = 0.9)
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 plot(x = res_ss_mw_5sim$roc_stats$FPR, y = res_ss_mw_5sim$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 lines(x = res_ss_mw_100sim$roc_stats$FPR, y = res_ss_mw_100sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[3])
+  lwd = 3, col = my_palette[3])
 lines(x = res_ss_mw_150sim$roc_stats$FPR, y = res_ss_mw_150sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[4])
+  lwd = 3, col = my_palette[4])
 lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR, 
-  lwd = 2, col = my_palette[5])
+  lwd = 3, col = my_palette[5])
 lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 2, col = my_palette[6])
+  lwd = 3, col = my_palette[6])
 legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
   legend = c(paste(round(res_ss_mw_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
     paste(round(res_ss_mw_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
@@ -556,7 +646,7 @@ legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
     paste(round(res_ss_mw_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
     paste(round(res_random_mw$AUC, digits = 3), "Random")), cex = 0.9)
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
 <img src="index_files/figure-html/ROC HSA Cascade 2.0-1.png" width="50%" /><img src="index_files/figure-html/ROC HSA Cascade 2.0-2.png" width="50%" />
@@ -620,8 +710,8 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 
 ## Calibrated vs Random (Bliss) {-}
 
-:::{#info-note-2 .note}
-- *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from `Gitsbe`
+:::{.note}
+- *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
 - We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state
 - **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: bliss`
@@ -734,22 +824,22 @@ res_random_mw = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_rando
 
 # Plot ROCs
 plot(x = res_ss_ew_10sim$roc_stats$FPR, y = res_ss_ew_10sim$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_ss_ew_30sim$roc_stats$FPR, y = res_ss_ew_30sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 lines(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[3])
+  lwd = 3, col = my_palette[3])
 lines(x = res_ss_ew_70sim$roc_stats$FPR, y = res_ss_ew_70sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[4])
+  lwd = 3, col = my_palette[4])
 lines(x = res_ss_ew_100sim$roc_stats$FPR, y = res_ss_ew_100sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[5])
+  lwd = 3, col = my_palette[5])
 lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[6])
+  lwd = 3, col = my_palette[6])
 lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[7])
+  lwd = 3, col = my_palette[7])
 lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 2, col = my_palette[8])
+  lwd = 3, col = my_palette[8])
 legend('bottomright', title = 'AUC', col = my_palette[1:8], pch = 19,
   legend = c(paste(round(res_ss_ew_10sim$AUC, digits = 2), "Calibrated (10 sim)"),
     paste(round(res_ss_ew_30sim$AUC, digits = 2), "Calibrated (30 sim)"),
@@ -760,25 +850,25 @@ legend('bottomright', title = 'AUC', col = my_palette[1:8], pch = 19,
     paste(round(res_ss_ew_200sim$AUC, digits = 2), "Calibrated (200 sim)"),
     paste(round(res_random_ew$AUC, digits = 2), "Random")), cex = 0.7)
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 plot(x = res_ss_mw_10sim$roc_stats$FPR, y = res_ss_mw_10sim$roc_stats$TPR,
-  type = 'l', lwd = 2, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = res_ss_mw_30sim$roc_stats$FPR, y = res_ss_mw_30sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[2])
+  lwd = 3, col = my_palette[2])
 lines(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[3])
+  lwd = 3, col = my_palette[3])
 lines(x = res_ss_mw_70sim$roc_stats$FPR, y = res_ss_mw_70sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[4])
+  lwd = 3, col = my_palette[4])
 lines(x = res_ss_mw_100sim$roc_stats$FPR, y = res_ss_mw_100sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[5])
+  lwd = 3, col = my_palette[5])
 lines(x = res_ss_mw_150sim$roc_stats$FPR, y = res_ss_mw_150sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[6])
+  lwd = 3, col = my_palette[6])
 lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[7])
+  lwd = 3, col = my_palette[7])
 lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 2, col = my_palette[8])
+  lwd = 3, col = my_palette[8])
 legend('bottomright', title = 'AUC', col = my_palette[1:8], pch = 19,
   legend = c(paste(round(res_ss_mw_10sim$AUC, digits = 2), "Calibrated (10 sim)"),
     paste(round(res_ss_mw_30sim$AUC, digits = 2), "Calibrated (30 sim)"),
@@ -789,7 +879,7 @@ legend('bottomright', title = 'AUC', col = my_palette[1:8], pch = 19,
     paste(round(res_ss_mw_200sim$AUC, digits = 2), "Calibrated (200 sim)"),
     paste(round(res_random_mw$AUC, digits = 2), "Random")))
 grid(lwd = 0.5)
-abline(a = 0, b = 1, col = '#FF726F', lty = 2)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
 <img src="index_files/figure-html/ROC Bliss Cascade 2.0-1.png" width="50%" /><img src="index_files/figure-html/ROC Bliss Cascade 2.0-2.png" width="50%" />
@@ -929,7 +1019,7 @@ Run the `abmlog` for the CASCADE 2.0 topology:
 java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000
 ```
 
-Next, prune the resulting models to only the ones that have 1 stable state ($1292$) using a simple bash script, while renaming the modelnames inside the files so that they have the string `_run_` (mimicking thus the files generated by gitsbe - otherwise drabme fails!) - use the script `process_models.sh` inside the generated `models` directory from `abmlog`.
+Next, prune the resulting models to only the ones that have 1 stable state ($1292$) using the simple bash script `process_models.sh` inside the generated `models` directory from `abmlog`.
 
 ```
 cd pathTo/druglogics-synergy/ags_cascade_2.0
@@ -937,7 +1027,7 @@ cd pathTo/druglogics-synergy/ags_cascade_2.0
 
 - Move the `models` dir inside the `ags_cascade_2.0` dir
 - Use attractor_tool: `biolqm_stable_states` in the config file
-- Use either `synergy_method: hsa` or `synergy_method: bliss`
+- Use `synergy_method: hsa` or `synergy_method: bliss` (or run twice)
 - Run drabme via `druglogics-synergy`:
 
 ```
@@ -948,7 +1038,6 @@ java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.
 The above procedure is the same for CASCADE 1.0. Changes:
 
 - Network file is now the `cascade_1_0.sif`
-- The `process_models.sh` needs a small name change (documented inside the script)
 - The `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
 - The drabme command should be run with `--project=cascade_1.0_random_hsa` and `--project=cascade_1.0_random_bliss` respectively
 
@@ -976,37 +1065,38 @@ Package version:
   assertthat_0.2.1    backports_1.1.6     base64enc_0.1.3    
   BH_1.72.0.3         bibtex_0.4.2.2      bookdown_0.18      
   callr_3.4.3         Ckmeans.1d.dp_4.3.2 cli_2.0.2          
-  clipr_0.7.0         colorspace_1.4-1    compiler_3.6.3     
-  corrplot_0.84       cowplot_1.0.0       crayon_1.3.4       
-  crosstalk_1.1.0.1   desc_1.2.0          digest_0.6.25      
-  dplyr_0.8.5         DT_0.13             ellipsis_0.3.0     
-  emba_0.1.4          evaluate_0.14       fansi_0.4.1        
-  farver_2.0.3        gbRd_0.4-11         ggplot2_3.3.0      
-  ggpubr_0.2.5        ggrepel_0.8.2       ggsci_2.9          
-  ggsignif_0.6.0      glue_1.4.0          graphics_3.6.3     
-  grDevices_3.6.3     grid_3.6.3          gridExtra_2.3      
-  gtable_0.3.0        highr_0.8           hms_0.5.3          
-  htmltools_0.4.0     htmlwidgets_1.5.1   igraph_1.2.5       
-  isoband_0.2.1       jsonlite_1.6.1      knitr_1.28         
-  labeling_0.3        later_1.0.0         latex2exp_0.4.0    
-  lattice_0.20.41     lazyeval_0.2.2      lifecycle_0.2.0    
-  magrittr_1.5        markdown_1.1        MASS_7.3.51.5      
-  Matrix_1.2.18       methods_3.6.3       mgcv_1.8.31        
-  mime_0.9            munsell_0.5.0       nlme_3.1.145       
-  pillar_1.4.3        pkgbuild_1.0.6      pkgconfig_2.0.3    
-  pkgload_1.0.2       plogr_0.2.0         polynom_1.4.0      
-  praise_1.0.0        prettyunits_1.1.1   processx_3.4.2     
-  promises_1.1.0      ps_1.3.2            purrr_0.3.3        
-  R6_2.4.1            RColorBrewer_1.1-2  Rcpp_1.0.4.6       
-  Rdpack_0.11-1       readr_1.3.1         rje_1.10.15        
-  rlang_0.4.5         rmarkdown_2.1       rprojroot_1.3.2    
-  rstudioapi_0.11     scales_1.1.0        splines_3.6.3      
-  stats_3.6.3         stringi_1.4.6       stringr_1.4.0      
-  testthat_2.3.2      tibble_3.0.0        tidyr_1.0.2        
-  tidyselect_1.0.0    tinytex_0.21        tools_3.6.3        
-  usefun_0.4.5        utf8_1.1.4          utils_3.6.3        
-  vctrs_0.2.4         viridisLite_0.3.0   visNetwork_2.0.9   
-  withr_2.1.2         xfun_0.12           yaml_2.2.1         
+  clipr_0.7.0         codetools_0.2-16    colorspace_1.4-1   
+  compiler_3.6.3      corrplot_0.84       cowplot_1.0.0      
+  crayon_1.3.4        crosstalk_1.1.0.1   desc_1.2.0         
+  digest_0.6.25       dplyr_0.8.5         DT_0.13            
+  ellipsis_0.3.0      emba_0.1.4          evaluate_0.14      
+  fansi_0.4.1         farver_2.0.3        gbRd_0.4-11        
+  ggplot2_3.3.0       ggpubr_0.2.5        ggrepel_0.8.2      
+  ggsci_2.9           ggsignif_0.6.0      glue_1.4.0         
+  graphics_3.6.3      grDevices_3.6.3     grid_3.6.3         
+  gridExtra_2.3       gtable_0.3.0        highr_0.8          
+  hms_0.5.3           htmltools_0.4.0     htmlwidgets_1.5.1  
+  igraph_1.2.5        isoband_0.2.1       jsonlite_1.6.1     
+  knitr_1.28          labeling_0.3        later_1.0.0        
+  latex2exp_0.4.0     lattice_0.20.41     lazyeval_0.2.2     
+  lifecycle_0.2.0     magrittr_1.5        markdown_1.1       
+  MASS_7.3.51.5       Matrix_1.2.18       methods_3.6.3      
+  mgcv_1.8.31         mime_0.9            munsell_0.5.0      
+  nlme_3.1.145        pillar_1.4.3        pkgbuild_1.0.6     
+  pkgconfig_2.0.3     pkgload_1.0.2       plogr_0.2.0        
+  polynom_1.4.0       praise_1.0.0        prettyunits_1.1.1  
+  processx_3.4.2      promises_1.1.0      PRROC_1.3.1        
+  ps_1.3.2            purrr_0.3.3         R6_2.4.1           
+  RColorBrewer_1.1-2  Rcpp_1.0.4.6        Rdpack_0.11-1      
+  readr_1.3.1         rje_1.10.15         rlang_0.4.5        
+  rmarkdown_2.1       rprojroot_1.3.2     rstudioapi_0.11    
+  scales_1.1.0        splines_3.6.3       stats_3.6.3        
+  stringi_1.4.6       stringr_1.4.0       testthat_2.3.2     
+  tibble_3.0.0        tidyr_1.0.2         tidyselect_1.0.0   
+  tinytex_0.21        tools_3.6.3         usefun_0.4.5       
+  utf8_1.1.4          utils_3.6.3         vctrs_0.2.4        
+  viridisLite_0.3.0   visNetwork_2.0.9    withr_2.1.2        
+  xfun_0.12           yaml_2.2.1         
 ```
 
 # References {-}
