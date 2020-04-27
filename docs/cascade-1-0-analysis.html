@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Cascade 1.0 Analysis | AGS paper I simulation results</title>
+  <meta name="description" content="Cascade 1.0 Analysis | AGS paper I simulation results" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Cascade 1.0 Analysis | AGS paper I simulation results" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://username.github.io/reponame/" />
+  
+  <meta property="og:description" content="Cascade 1.0 Analysis | AGS paper I simulation results" />
+  <meta name="github-repo" content="username/reponame" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Cascade 1.0 Analysis | AGS paper I simulation results" />
+  
+  <meta name="twitter:description" content="Cascade 1.0 Analysis | AGS paper I simulation results" />
+  
+
+<meta name="author" content="John Zobolas" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="input.html"/>
+<link rel="next" href="cascade-2-0-analysis.html"/>
+<script src="libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
+    }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
+      }
+    }
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+      }
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
+      this.$element
+        .trigger('shown.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
+      this.$element
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
+    }
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "hide");
+});
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DrugLogics Paper I: An AGS story</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="input.html"><a href="input.html"><i class="fa fa-check"></i>Input</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>Cascade 1.0 Analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#calibrated-vs-random-hsa"><i class="fa fa-check"></i>Calibrated vs Random (HSA)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-auc-sensitivity"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-auc-sensitivity"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#calibrated-vs-random-bliss"><i class="fa fa-check"></i>Calibrated vs Random (Bliss)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-auc-sensitivity-1"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-auc-sensitivity-1"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html"><i class="fa fa-check"></i>Cascade 2.0 Analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#calibrated-vs-random-hsa-1"><i class="fa fa-check"></i>Calibrated vs Random (HSA)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-2"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-2"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#calibrated-vs-random-bliss-1"><i class="fa fa-check"></i>Calibrated vs Random (Bliss)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-3"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-3"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#fitness-vs-performance"><i class="fa fa-check"></i>Fitness vs performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
+<ul>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#random-model-results"><i class="fa fa-check"></i>Random model results</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AGS paper I simulation results</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cascade-1.0-analysis" class="section level1 unnumbered" number="">
+<h1>Cascade 1.0 Analysis</h1>
+<div class="blue-box">
+<p>Performance of automatically parameterized models against published data in <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2015" role="doc-biblioref">2015</a>)</span></p>
+</div>
+<div id="calibrated-vs-random-hsa" class="section level2 unnumbered" number="">
+<h2>Calibrated vs Random (HSA)</h2>
+<div class="note">
+<ul>
+<li><em>HSA</em> refers to the synergy method used in <code>Drabme</code> to assess the synergies from the <code>gitsbe</code> models</li>
+<li>We test performance using ROC AUC for both the <em>ensemble-wise</em> and <em>model-wise</em> synergies from <code>Drabme</code></li>
+<li><strong>Calibrated</strong> models: fitted to steady state</li>
+<li><strong>Random</strong> models: produced via <code>abmlog</code> (see <a href="reproduce-simulation-results.html#random-model-results">here</a> and used in <code>Drabme</code> with <code>synergy_method: hsa</code></li>
+</ul>
+</div>
+<p>Load results:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="cascade-1-0-analysis.html#cb2-1"></a><span class="co"># &#39;ss&#39; =&gt; calibrated models, &#39;random&#39; =&gt; random models</span></span>
+<span id="cb2-2"><a href="cascade-1-0-analysis.html#cb2-2"></a></span>
+<span id="cb2-3"><a href="cascade-1-0-analysis.html#cb2-3"></a><span class="co">## HSA results</span></span>
+<span id="cb2-4"><a href="cascade-1-0-analysis.html#cb2-4"></a>ss_hsa_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb2-5"><a href="cascade-1-0-analysis.html#cb2-5"></a>ss_hsa_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb2-6"><a href="cascade-1-0-analysis.html#cb2-6"></a>random_hsa_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_random_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb2-7"><a href="cascade-1-0-analysis.html#cb2-7"></a>random_hsa_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_random_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb2-8"><a href="cascade-1-0-analysis.html#cb2-8"></a></span>
+<span id="cb2-9"><a href="cascade-1-0-analysis.html#cb2-9"></a>ss_hsa_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_hsa_ensemblewise_file)</span>
+<span id="cb2-10"><a href="cascade-1-0-analysis.html#cb2-10"></a>ss_hsa_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_hsa_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb2-11"><a href="cascade-1-0-analysis.html#cb2-11"></a>random_hsa_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_hsa_ensemblewise_file)</span>
+<span id="cb2-12"><a href="cascade-1-0-analysis.html#cb2-12"></a>random_hsa_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_hsa_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb2-13"><a href="cascade-1-0-analysis.html#cb2-13"></a></span>
+<span id="cb2-14"><a href="cascade-1-0-analysis.html#cb2-14"></a><span class="co"># calculate probability of synergy in the modelwise results</span></span>
+<span id="cb2-15"><a href="cascade-1-0-analysis.html#cb2-15"></a>ss_hsa_modelwise_synergies =<span class="st"> </span>ss_hsa_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-16"><a href="cascade-1-0-analysis.html#cb2-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_ss =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
+<span id="cb2-17"><a href="cascade-1-0-analysis.html#cb2-17"></a>random_hsa_modelwise_synergies =<span class="st"> </span>random_hsa_modelwise_synergies <span class="op">%&gt;%</span></span>
+<span id="cb2-18"><a href="cascade-1-0-analysis.html#cb2-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_random =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
+<span id="cb2-19"><a href="cascade-1-0-analysis.html#cb2-19"></a></span>
+<span id="cb2-20"><a href="cascade-1-0-analysis.html#cb2-20"></a>observed_synergies_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/observed_synergies_cascade_1.0&quot;</span>)</span>
+<span id="cb2-21"><a href="cascade-1-0-analysis.html#cb2-21"></a>observed_synergies =<span class="st"> </span><span class="kw">get_observed_synergies</span>(observed_synergies_file)</span>
+<span id="cb2-22"><a href="cascade-1-0-analysis.html#cb2-22"></a><span class="co"># 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations</span></span>
+<span id="cb2-23"><a href="cascade-1-0-analysis.html#cb2-23"></a>observed =<span class="st"> </span><span class="kw">sapply</span>(random_hsa_modelwise_synergies<span class="op">$</span>perturbation <span class="op">%in%</span><span class="st"> </span>observed_synergies, as.integer)</span></code></pre></div>
+<div id="roc-curves" class="section level3 unnumbered" number="">
+<h3>ROC curves</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="cascade-1-0-analysis.html#cb3-1"></a><span class="co"># &#39;ew&#39; =&gt; ensemble-wise, &#39;mw&#39; =&gt; model-wise</span></span>
+<span id="cb3-2"><a href="cascade-1-0-analysis.html#cb3-2"></a>pred_ew_hsa =<span class="st"> </span><span class="kw">bind_cols</span>(ss_hsa_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_score =</span> score), </span>
+<span id="cb3-3"><a href="cascade-1-0-analysis.html#cb3-3"></a>  random_hsa_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">random_score =</span> score), </span>
+<span id="cb3-4"><a href="cascade-1-0-analysis.html#cb3-4"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb3-5"><a href="cascade-1-0-analysis.html#cb3-5"></a></span>
+<span id="cb3-6"><a href="cascade-1-0-analysis.html#cb3-6"></a>pred_mw_hsa =<span class="st"> </span><span class="kw">bind_cols</span>(</span>
+<span id="cb3-7"><a href="cascade-1-0-analysis.html#cb3-7"></a>  ss_hsa_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(perturbation, synergy_prob_ss),</span>
+<span id="cb3-8"><a href="cascade-1-0-analysis.html#cb3-8"></a>  random_hsa_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_random),</span>
+<span id="cb3-9"><a href="cascade-1-0-analysis.html#cb3-9"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb3-10"><a href="cascade-1-0-analysis.html#cb3-10"></a></span>
+<span id="cb3-11"><a href="cascade-1-0-analysis.html#cb3-11"></a>res_ss_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;ss_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb3-12"><a href="cascade-1-0-analysis.html#cb3-12"></a>res_random_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;random_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb3-13"><a href="cascade-1-0-analysis.html#cb3-13"></a></span>
+<span id="cb3-14"><a href="cascade-1-0-analysis.html#cb3-14"></a>res_ss_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_ss&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb3-15"><a href="cascade-1-0-analysis.html#cb3-15"></a>res_random_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_random&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb3-16"><a href="cascade-1-0-analysis.html#cb3-16"></a></span>
+<span id="cb3-17"><a href="cascade-1-0-analysis.html#cb3-17"></a><span class="co"># Plot ROCs</span></span>
+<span id="cb3-18"><a href="cascade-1-0-analysis.html#cb3-18"></a>my_palette =<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">9</span>, <span class="dt">name =</span> <span class="st">&quot;Set1&quot;</span>)</span>
+<span id="cb3-19"><a href="cascade-1-0-analysis.html#cb3-19"></a></span>
+<span id="cb3-20"><a href="cascade-1-0-analysis.html#cb3-20"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb3-21"><a href="cascade-1-0-analysis.html#cb3-21"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Ensemble-wise synergies (HSA)&#39;</span>,</span>
+<span id="cb3-22"><a href="cascade-1-0-analysis.html#cb3-22"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb3-23"><a href="cascade-1-0-analysis.html#cb3-23"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb3-24"><a href="cascade-1-0-analysis.html#cb3-24"></a>  <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb3-25"><a href="cascade-1-0-analysis.html#cb3-25"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb3-26"><a href="cascade-1-0-analysis.html#cb3-26"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb3-27"><a href="cascade-1-0-analysis.html#cb3-27"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb3-28"><a href="cascade-1-0-analysis.html#cb3-28"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb3-29"><a href="cascade-1-0-analysis.html#cb3-29"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;lightgrey&#39;</span>, <span class="dt">lty =</span> <span class="st">&#39;dotdash&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.2</span>)</span>
+<span id="cb3-30"><a href="cascade-1-0-analysis.html#cb3-30"></a></span>
+<span id="cb3-31"><a href="cascade-1-0-analysis.html#cb3-31"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb3-32"><a href="cascade-1-0-analysis.html#cb3-32"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Model-wise synergies (HSA)&#39;</span>,</span>
+<span id="cb3-33"><a href="cascade-1-0-analysis.html#cb3-33"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb3-34"><a href="cascade-1-0-analysis.html#cb3-34"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb3-35"><a href="cascade-1-0-analysis.html#cb3-35"></a>  <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb3-36"><a href="cascade-1-0-analysis.html#cb3-36"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb3-37"><a href="cascade-1-0-analysis.html#cb3-37"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb3-38"><a href="cascade-1-0-analysis.html#cb3-38"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb3-39"><a href="cascade-1-0-analysis.html#cb3-39"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb3-40"><a href="cascade-1-0-analysis.html#cb3-40"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;lightgrey&#39;</span>, <span class="dt">lty =</span> <span class="st">&#39;dotdash&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/ROC%20HSA%20Cascade%201.0-1.png" width="50%" /><img src="index_files/figure-html/ROC%20HSA%20Cascade%201.0-2.png" width="50%" /></p>
+</div>
+<div id="pr-curves" class="section level3 unnumbered" number="">
+<h3>PR curves</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="cascade-1-0-analysis.html#cb4-1"></a>pr_ss_ew_hsa =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(ss_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb4-2"><a href="cascade-1-0-analysis.html#cb4-2"></a>  <span class="dt">weights.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>, <span class="dt">rand.compute =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-3"><a href="cascade-1-0-analysis.html#cb4-3"></a>pr_random_ew_hsa =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(random_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb4-4"><a href="cascade-1-0-analysis.html#cb4-4"></a>  <span class="dt">weights.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-5"><a href="cascade-1-0-analysis.html#cb4-5"></a></span>
+<span id="cb4-6"><a href="cascade-1-0-analysis.html#cb4-6"></a>pr_ss_mw_hsa =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(synergy_prob_ss), </span>
+<span id="cb4-7"><a href="cascade-1-0-analysis.html#cb4-7"></a>  <span class="dt">weights.class0 =</span> pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>, <span class="dt">rand.compute =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-8"><a href="cascade-1-0-analysis.html#cb4-8"></a>pr_random_mw_hsa =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(synergy_prob_random), </span>
+<span id="cb4-9"><a href="cascade-1-0-analysis.html#cb4-9"></a>  <span class="dt">weights.class0 =</span> pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-10"><a href="cascade-1-0-analysis.html#cb4-10"></a></span>
+<span id="cb4-11"><a href="cascade-1-0-analysis.html#cb4-11"></a><span class="kw">plot</span>(pr_ss_ew_hsa, <span class="dt">main =</span> <span class="st">&#39;PR curve, Ensemble-wise synergies (HSA)&#39;</span>, </span>
+<span id="cb4-12"><a href="cascade-1-0-analysis.html#cb4-12"></a>  <span class="dt">auc.main =</span> <span class="ot">FALSE</span>, <span class="dt">color =</span> my_palette[<span class="dv">1</span>], <span class="dt">rand.plot =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-13"><a href="cascade-1-0-analysis.html#cb4-13"></a><span class="kw">plot</span>(pr_random_ew_hsa, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb4-14"><a href="cascade-1-0-analysis.html#cb4-14"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb4-15"><a href="cascade-1-0-analysis.html#cb4-15"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(pr_ss_ew_hsa<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb4-16"><a href="cascade-1-0-analysis.html#cb4-16"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(pr_random_ew_hsa<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb4-17"><a href="cascade-1-0-analysis.html#cb4-17"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-18"><a href="cascade-1-0-analysis.html#cb4-18"></a></span>
+<span id="cb4-19"><a href="cascade-1-0-analysis.html#cb4-19"></a><span class="kw">plot</span>(pr_ss_mw_hsa, <span class="dt">main =</span> <span class="st">&#39;PR curve, Model-wise synergies (HSA)&#39;</span>, </span>
+<span id="cb4-20"><a href="cascade-1-0-analysis.html#cb4-20"></a>  <span class="dt">auc.main =</span> <span class="ot">FALSE</span>, <span class="dt">color =</span> my_palette[<span class="dv">1</span>], <span class="dt">rand.plot =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-21"><a href="cascade-1-0-analysis.html#cb4-21"></a><span class="kw">plot</span>(pr_random_mw_hsa, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb4-22"><a href="cascade-1-0-analysis.html#cb4-22"></a><span class="kw">legend</span>(<span class="st">&#39;left&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb4-23"><a href="cascade-1-0-analysis.html#cb4-23"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(pr_ss_mw_hsa<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb4-24"><a href="cascade-1-0-analysis.html#cb4-24"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(pr_random_mw_hsa<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb4-25"><a href="cascade-1-0-analysis.html#cb4-25"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/PR%20HSA%20Cascade%201.0-1.png" width="50%" /><img src="index_files/figure-html/PR%20HSA%20Cascade%201.0-2.png" width="50%" /></p>
+<div class="green-box">
+<ul>
+<li>PR curves show better the performance advantage of calibrated models over random ones</li>
+<li>PR AUCs suggest that the <strong>model-wise approach is better than the ensemble-wise</strong> in our imbalanced dataset</li>
+</ul>
+</div>
+</div>
+<div id="roc-auc-sensitivity" class="section level3 unnumbered" number="">
+<h3>ROC AUC sensitivity</h3>
+<div id="roc-combine-1" class="blue-box">
+<ul>
+<li>Investigate <strong>combining the synergy results of calibrated and random models</strong>
+<ul>
+<li>How information from the ‘random’ models is augmenting calibrated (to steady state) results?</li>
+</ul></li>
+<li><strong>Ensemble-wise</strong> scenario: <span class="math inline">\(score = calibrated + \beta \times random\)</span>
+<ul>
+<li><span class="math inline">\(\beta \rightarrow +\infty\)</span>: mostly <strong>random model predictions</strong></li>
+<li><span class="math inline">\(\beta \rightarrow -\infty\)</span>: mostly <strong>reverse random model predictions</strong></li>
+</ul></li>
+<li><strong>Model-wise</strong> scenario: <span class="math inline">\((1-w) \times prob_{ss} + w \times prob_{rand}, w \in[0,1]\)</span>
+<ul>
+<li><span class="math inline">\(w=0\)</span>: only calibrated model predictions</li>
+<li><span class="math inline">\(w=1\)</span>: only random model predictions</li>
+</ul></li>
+</ul>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="cascade-1-0-analysis.html#cb5-1"></a><span class="co"># Ensemble-wise</span></span>
+<span id="cb5-2"><a href="cascade-1-0-analysis.html#cb5-2"></a>betas =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb5-3"><a href="cascade-1-0-analysis.html#cb5-3"></a></span>
+<span id="cb5-4"><a href="cascade-1-0-analysis.html#cb5-4"></a>auc_values_ew =<span class="st"> </span><span class="kw">sapply</span>(betas, <span class="cf">function</span>(beta) {</span>
+<span id="cb5-5"><a href="cascade-1-0-analysis.html#cb5-5"></a>  pred_ew_hsa =<span class="st"> </span>pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb5-6"><a href="cascade-1-0-analysis.html#cb5-6"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;combined_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb5-7"><a href="cascade-1-0-analysis.html#cb5-7"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb5-8"><a href="cascade-1-0-analysis.html#cb5-8"></a>})</span>
+<span id="cb5-9"><a href="cascade-1-0-analysis.html#cb5-9"></a></span>
+<span id="cb5-10"><a href="cascade-1-0-analysis.html#cb5-10"></a>df_ew =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(betas, auc_values_ew))</span>
+<span id="cb5-11"><a href="cascade-1-0-analysis.html#cb5-11"></a></span>
+<span id="cb5-12"><a href="cascade-1-0-analysis.html#cb5-12"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_ew, <span class="dt">x =</span> <span class="st">&quot;betas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_ew&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb5-13"><a href="cascade-1-0-analysis.html#cb5-13"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">beta$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb5-14"><a href="cascade-1-0-analysis.html#cb5-14"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to $</span><span class="ch">\\</span><span class="st">beta$ parameter: $calibrated + </span><span class="ch">\\</span><span class="st">beta </span><span class="ch">\\</span><span class="st">times random$&quot;</span>),</span>
+<span id="cb5-15"><a href="cascade-1-0-analysis.html#cb5-15"></a>  <span class="dt">color =</span> my_palette[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(HSA,%20cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="cascade-1-0-analysis.html#cb6-1"></a><span class="co"># Model-wise</span></span>
+<span id="cb6-2"><a href="cascade-1-0-analysis.html#cb6-2"></a>weights =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb6-3"><a href="cascade-1-0-analysis.html#cb6-3"></a></span>
+<span id="cb6-4"><a href="cascade-1-0-analysis.html#cb6-4"></a>auc_values_mw =<span class="st"> </span><span class="kw">sapply</span>(weights, <span class="cf">function</span>(w) {</span>
+<span id="cb6-5"><a href="cascade-1-0-analysis.html#cb6-5"></a>  pred_mw_hsa =<span class="st"> </span>pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-6"><a href="cascade-1-0-analysis.html#cb6-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">weighted_prob =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>w) <span class="op">*</span><span class="st"> </span>pred_mw_hsa<span class="op">$</span>synergy_prob_ss <span class="op">+</span><span class="st"> </span>w <span class="op">*</span><span class="st"> </span>pred_mw_hsa<span class="op">$</span>synergy_prob_random)</span>
+<span id="cb6-7"><a href="cascade-1-0-analysis.html#cb6-7"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;weighted_prob&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb6-8"><a href="cascade-1-0-analysis.html#cb6-8"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb6-9"><a href="cascade-1-0-analysis.html#cb6-9"></a>})</span>
+<span id="cb6-10"><a href="cascade-1-0-analysis.html#cb6-10"></a></span>
+<span id="cb6-11"><a href="cascade-1-0-analysis.html#cb6-11"></a>df_mw =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(weights, auc_values_mw))</span>
+<span id="cb6-12"><a href="cascade-1-0-analysis.html#cb6-12"></a></span>
+<span id="cb6-13"><a href="cascade-1-0-analysis.html#cb6-13"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_mw, <span class="dt">x =</span> <span class="st">&quot;weights&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_mw&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb6-14"><a href="cascade-1-0-analysis.html#cb6-14"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;weight $w$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb6-15"><a href="cascade-1-0-analysis.html#cb6-15"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to weighted average score: $(1-w) </span><span class="ch">\\</span><span class="st">times prob_{ss} + w </span><span class="ch">\\</span><span class="st">times prob_{rand}$&quot;</span>),</span>
+<span id="cb6-16"><a href="cascade-1-0-analysis.html#cb6-16"></a>  <span class="dt">color =</span> my_palette[<span class="dv">3</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(HSA,%20cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="green-box">
+<ul>
+<li>Symmetricity (Ensemble-wise): <span class="math inline">\(AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1\)</span></li>
+<li>Random models perform worse than calibrated ones</li>
+<li>There are <span class="math inline">\(\beta\)</span> values that can boost the predictive performance of the combined synergy classifier but no <span class="math inline">\(w\)</span> weight in the model-wise case</li>
+</ul>
+</div>
+</div>
+<div id="pr-auc-sensitivity" class="section level3 unnumbered" number="">
+<h3>PR AUC sensitivity</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="cascade-1-0-analysis.html#cb7-1"></a><span class="co"># Ensemble-wise</span></span>
+<span id="cb7-2"><a href="cascade-1-0-analysis.html#cb7-2"></a>betas =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb7-3"><a href="cascade-1-0-analysis.html#cb7-3"></a></span>
+<span id="cb7-4"><a href="cascade-1-0-analysis.html#cb7-4"></a>pr_auc_values_ew =<span class="st"> </span><span class="kw">sapply</span>(betas, <span class="cf">function</span>(beta) {</span>
+<span id="cb7-5"><a href="cascade-1-0-analysis.html#cb7-5"></a>  pred_ew_hsa =<span class="st"> </span>pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb7-6"><a href="cascade-1-0-analysis.html#cb7-6"></a>  res =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(combined_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb7-7"><a href="cascade-1-0-analysis.html#cb7-7"></a>    <span class="dt">weights.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
+<span id="cb7-8"><a href="cascade-1-0-analysis.html#cb7-8"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>auc.davis.goadrich</span>
+<span id="cb7-9"><a href="cascade-1-0-analysis.html#cb7-9"></a>})</span>
+<span id="cb7-10"><a href="cascade-1-0-analysis.html#cb7-10"></a></span>
+<span id="cb7-11"><a href="cascade-1-0-analysis.html#cb7-11"></a>df_pr_ew =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(betas, pr_auc_values_ew))</span>
+<span id="cb7-12"><a href="cascade-1-0-analysis.html#cb7-12"></a></span>
+<span id="cb7-13"><a href="cascade-1-0-analysis.html#cb7-13"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_pr_ew, <span class="dt">x =</span> <span class="st">&quot;betas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc_values_ew&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb7-14"><a href="cascade-1-0-analysis.html#cb7-14"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">beta$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;PR-AUC (Area Under PR Curve)&quot;</span>,</span>
+<span id="cb7-15"><a href="cascade-1-0-analysis.html#cb7-15"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;PR-AUC sensitivity to $</span><span class="ch">\\</span><span class="st">beta$ parameter: $calibrated + </span><span class="ch">\\</span><span class="st">beta </span><span class="ch">\\</span><span class="st">times random$&quot;</span>),</span>
+<span id="cb7-16"><a href="cascade-1-0-analysis.html#cb7-16"></a>  <span class="dt">color =</span> my_palette[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/PR%20AUC%20sensitivity%20(HSA,%20cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="cascade-1-0-analysis.html#cb8-1"></a><span class="co"># Model-wise</span></span>
+<span id="cb8-2"><a href="cascade-1-0-analysis.html#cb8-2"></a>weights =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb8-3"><a href="cascade-1-0-analysis.html#cb8-3"></a></span>
+<span id="cb8-4"><a href="cascade-1-0-analysis.html#cb8-4"></a>pr_auc_values_mw =<span class="st"> </span><span class="kw">sapply</span>(weights, <span class="cf">function</span>(w) {</span>
+<span id="cb8-5"><a href="cascade-1-0-analysis.html#cb8-5"></a>  pred_mw_hsa =<span class="st"> </span>pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-6"><a href="cascade-1-0-analysis.html#cb8-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">weighted_prob =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>w) <span class="op">*</span><span class="st"> </span>pred_mw_hsa<span class="op">$</span>synergy_prob_ss <span class="op">+</span><span class="st"> </span>w <span class="op">*</span><span class="st"> </span>pred_mw_hsa<span class="op">$</span>synergy_prob_random)</span>
+<span id="cb8-7"><a href="cascade-1-0-analysis.html#cb8-7"></a>  res =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(weighted_prob), </span>
+<span id="cb8-8"><a href="cascade-1-0-analysis.html#cb8-8"></a>    <span class="dt">weights.class0 =</span> pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
+<span id="cb8-9"><a href="cascade-1-0-analysis.html#cb8-9"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>auc.davis.goadrich</span>
+<span id="cb8-10"><a href="cascade-1-0-analysis.html#cb8-10"></a>})</span>
+<span id="cb8-11"><a href="cascade-1-0-analysis.html#cb8-11"></a></span>
+<span id="cb8-12"><a href="cascade-1-0-analysis.html#cb8-12"></a>df_pr_mw =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(weights, pr_auc_values_mw))</span>
+<span id="cb8-13"><a href="cascade-1-0-analysis.html#cb8-13"></a></span>
+<span id="cb8-14"><a href="cascade-1-0-analysis.html#cb8-14"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_pr_mw, <span class="dt">x =</span> <span class="st">&quot;weights&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc_values_mw&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb8-15"><a href="cascade-1-0-analysis.html#cb8-15"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;weight $w$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;PR-AUC (Area Under PR Curve)&quot;</span>,</span>
+<span id="cb8-16"><a href="cascade-1-0-analysis.html#cb8-16"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;PR-AUC sensitivity to weighted average score: $(1-w) </span><span class="ch">\\</span><span class="st">times prob_{ss} + w </span><span class="ch">\\</span><span class="st">times prob_{rand}$&quot;</span>),</span>
+<span id="cb8-17"><a href="cascade-1-0-analysis.html#cb8-17"></a>  <span class="dt">color =</span> my_palette[<span class="dv">3</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/PR%20AUC%20sensitivity%20(HSA,%20cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="calibrated-vs-random-bliss" class="section level2 unnumbered" number="">
+<h2>Calibrated vs Random (Bliss)</h2>
+<div class="note">
+<ul>
+<li><em>Bliss</em> refers to the synergy method used in <code>Drabme</code> to assess the synergies from the <code>gitsbe</code> models</li>
+<li>We test performance using ROC AUC for both the <em>ensemble-wise</em> and <em>model-wise</em> synergies from <code>Drabme</code></li>
+<li><strong>Calibrated</strong> models: fitted to steady state</li>
+<li><strong>Random</strong> models: produced via <code>abmlog</code> (see <a href="reproduce-simulation-results.html#random-model-results">here</a> and used in <code>Drabme</code> with <code>synergy_method: bliss</code></li>
+</ul>
+</div>
+<p>Load results:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="cascade-1-0-analysis.html#cb9-1"></a><span class="co"># &#39;ss&#39; =&gt; calibrated models, &#39;random&#39; =&gt; random models</span></span>
+<span id="cb9-2"><a href="cascade-1-0-analysis.html#cb9-2"></a></span>
+<span id="cb9-3"><a href="cascade-1-0-analysis.html#cb9-3"></a><span class="co">## Bliss results</span></span>
+<span id="cb9-4"><a href="cascade-1-0-analysis.html#cb9-4"></a>ss_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb9-5"><a href="cascade-1-0-analysis.html#cb9-5"></a>ss_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb9-6"><a href="cascade-1-0-analysis.html#cb9-6"></a>random_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_random_bliss_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb9-7"><a href="cascade-1-0-analysis.html#cb9-7"></a>random_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/bliss/cascade_1.0_random_bliss_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb9-8"><a href="cascade-1-0-analysis.html#cb9-8"></a></span>
+<span id="cb9-9"><a href="cascade-1-0-analysis.html#cb9-9"></a>ss_bliss_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_bliss_ensemblewise_file)</span>
+<span id="cb9-10"><a href="cascade-1-0-analysis.html#cb9-10"></a>ss_bliss_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_bliss_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb9-11"><a href="cascade-1-0-analysis.html#cb9-11"></a>random_bliss_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_bliss_ensemblewise_file)</span>
+<span id="cb9-12"><a href="cascade-1-0-analysis.html#cb9-12"></a>random_bliss_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(random_bliss_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
+<span id="cb9-13"><a href="cascade-1-0-analysis.html#cb9-13"></a></span>
+<span id="cb9-14"><a href="cascade-1-0-analysis.html#cb9-14"></a><span class="co"># calculate probability of synergy in the modelwise results</span></span>
+<span id="cb9-15"><a href="cascade-1-0-analysis.html#cb9-15"></a>ss_bliss_modelwise_synergies =<span class="st"> </span>ss_bliss_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-16"><a href="cascade-1-0-analysis.html#cb9-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_ss =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
+<span id="cb9-17"><a href="cascade-1-0-analysis.html#cb9-17"></a>random_bliss_modelwise_synergies =<span class="st"> </span>random_bliss_modelwise_synergies <span class="op">%&gt;%</span></span>
+<span id="cb9-18"><a href="cascade-1-0-analysis.html#cb9-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_random =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span></code></pre></div>
+<div id="roc-curves-1" class="section level3 unnumbered" number="">
+<h3>ROC curves</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="cascade-1-0-analysis.html#cb10-1"></a><span class="co"># &#39;ew&#39; =&gt; ensemble-wise, &#39;mw&#39; =&gt; model-wise</span></span>
+<span id="cb10-2"><a href="cascade-1-0-analysis.html#cb10-2"></a>pred_ew_bliss =<span class="st"> </span><span class="kw">bind_cols</span>(ss_bliss_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_score =</span> score), </span>
+<span id="cb10-3"><a href="cascade-1-0-analysis.html#cb10-3"></a>  random_bliss_ensemblewise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">random_score =</span> score), </span>
+<span id="cb10-4"><a href="cascade-1-0-analysis.html#cb10-4"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb10-5"><a href="cascade-1-0-analysis.html#cb10-5"></a></span>
+<span id="cb10-6"><a href="cascade-1-0-analysis.html#cb10-6"></a>pred_mw_bliss =<span class="st"> </span><span class="kw">bind_cols</span>(</span>
+<span id="cb10-7"><a href="cascade-1-0-analysis.html#cb10-7"></a>  ss_bliss_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(perturbation, synergy_prob_ss),</span>
+<span id="cb10-8"><a href="cascade-1-0-analysis.html#cb10-8"></a>  random_bliss_modelwise_synergies <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_random),</span>
+<span id="cb10-9"><a href="cascade-1-0-analysis.html#cb10-9"></a>  <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb10-10"><a href="cascade-1-0-analysis.html#cb10-10"></a></span>
+<span id="cb10-11"><a href="cascade-1-0-analysis.html#cb10-11"></a>res_ss_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;ss_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb10-12"><a href="cascade-1-0-analysis.html#cb10-12"></a>res_random_ew =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;random_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb10-13"><a href="cascade-1-0-analysis.html#cb10-13"></a></span>
+<span id="cb10-14"><a href="cascade-1-0-analysis.html#cb10-14"></a>res_ss_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_ss&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb10-15"><a href="cascade-1-0-analysis.html#cb10-15"></a>res_random_mw =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;synergy_prob_random&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb10-16"><a href="cascade-1-0-analysis.html#cb10-16"></a></span>
+<span id="cb10-17"><a href="cascade-1-0-analysis.html#cb10-17"></a><span class="co"># Plot ROCs</span></span>
+<span id="cb10-18"><a href="cascade-1-0-analysis.html#cb10-18"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb10-19"><a href="cascade-1-0-analysis.html#cb10-19"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Ensemble-wise synergies (Bliss)&#39;</span>,</span>
+<span id="cb10-20"><a href="cascade-1-0-analysis.html#cb10-20"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb10-21"><a href="cascade-1-0-analysis.html#cb10-21"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_ew<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb10-22"><a href="cascade-1-0-analysis.html#cb10-22"></a>  <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb10-23"><a href="cascade-1-0-analysis.html#cb10-23"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb10-24"><a href="cascade-1-0-analysis.html#cb10-24"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb10-25"><a href="cascade-1-0-analysis.html#cb10-25"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_ew<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb10-26"><a href="cascade-1-0-analysis.html#cb10-26"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb10-27"><a href="cascade-1-0-analysis.html#cb10-27"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;lightgrey&#39;</span>, <span class="dt">lty =</span> <span class="st">&#39;dotdash&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.2</span>)</span>
+<span id="cb10-28"><a href="cascade-1-0-analysis.html#cb10-28"></a></span>
+<span id="cb10-29"><a href="cascade-1-0-analysis.html#cb10-29"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_ss_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
+<span id="cb10-30"><a href="cascade-1-0-analysis.html#cb10-30"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Model-wise synergies (Bliss)&#39;</span>,</span>
+<span id="cb10-31"><a href="cascade-1-0-analysis.html#cb10-31"></a>  <span class="dt">xlab =</span> <span class="st">&#39;False Positive Rate (FPR)&#39;</span>, <span class="dt">ylab =</span> <span class="st">&#39;True Positive Rate (TPR)&#39;</span>)</span>
+<span id="cb10-32"><a href="cascade-1-0-analysis.html#cb10-32"></a><span class="kw">lines</span>(<span class="dt">x =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_random_mw<span class="op">$</span>roc_stats<span class="op">$</span>TPR, </span>
+<span id="cb10-33"><a href="cascade-1-0-analysis.html#cb10-33"></a>  <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb10-34"><a href="cascade-1-0-analysis.html#cb10-34"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb10-35"><a href="cascade-1-0-analysis.html#cb10-35"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(res_ss_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb10-36"><a href="cascade-1-0-analysis.html#cb10-36"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(res_random_mw<span class="op">$</span>AUC, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb10-37"><a href="cascade-1-0-analysis.html#cb10-37"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb10-38"><a href="cascade-1-0-analysis.html#cb10-38"></a><span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&#39;lightgrey&#39;</span>, <span class="dt">lty =</span> <span class="st">&#39;dotdash&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/ROC%20Bliss%20Cascade%201.0-1.png" width="50%" /><img src="index_files/figure-html/ROC%20Bliss%20Cascade%201.0-2.png" width="50%" /></p>
+</div>
+<div id="pr-curves-1" class="section level3 unnumbered" number="">
+<h3>PR curves</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="cascade-1-0-analysis.html#cb11-1"></a>pr_ss_ew_bliss =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(ss_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb11-2"><a href="cascade-1-0-analysis.html#cb11-2"></a>  <span class="dt">weights.class0 =</span> pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>, <span class="dt">rand.compute =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-3"><a href="cascade-1-0-analysis.html#cb11-3"></a>pr_random_ew_bliss =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(random_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb11-4"><a href="cascade-1-0-analysis.html#cb11-4"></a>  <span class="dt">weights.class0 =</span> pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-5"><a href="cascade-1-0-analysis.html#cb11-5"></a></span>
+<span id="cb11-6"><a href="cascade-1-0-analysis.html#cb11-6"></a>pr_ss_mw_bliss =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(synergy_prob_ss), </span>
+<span id="cb11-7"><a href="cascade-1-0-analysis.html#cb11-7"></a>  <span class="dt">weights.class0 =</span> pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>, <span class="dt">rand.compute =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-8"><a href="cascade-1-0-analysis.html#cb11-8"></a>pr_random_mw_bliss =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(synergy_prob_random), </span>
+<span id="cb11-9"><a href="cascade-1-0-analysis.html#cb11-9"></a>  <span class="dt">weights.class0 =</span> pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed), <span class="dt">curve =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-10"><a href="cascade-1-0-analysis.html#cb11-10"></a></span>
+<span id="cb11-11"><a href="cascade-1-0-analysis.html#cb11-11"></a><span class="kw">plot</span>(pr_ss_ew_bliss, <span class="dt">main =</span> <span class="st">&#39;PR curve, Ensemble-wise synergies (Bliss)&#39;</span>, </span>
+<span id="cb11-12"><a href="cascade-1-0-analysis.html#cb11-12"></a>  <span class="dt">auc.main =</span> <span class="ot">FALSE</span>, <span class="dt">color =</span> my_palette[<span class="dv">1</span>], <span class="dt">rand.plot =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-13"><a href="cascade-1-0-analysis.html#cb11-13"></a><span class="kw">plot</span>(pr_random_ew_bliss, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb11-14"><a href="cascade-1-0-analysis.html#cb11-14"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb11-15"><a href="cascade-1-0-analysis.html#cb11-15"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(pr_ss_ew_bliss<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb11-16"><a href="cascade-1-0-analysis.html#cb11-16"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(pr_random_ew_bliss<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb11-17"><a href="cascade-1-0-analysis.html#cb11-17"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb11-18"><a href="cascade-1-0-analysis.html#cb11-18"></a></span>
+<span id="cb11-19"><a href="cascade-1-0-analysis.html#cb11-19"></a><span class="kw">plot</span>(pr_ss_mw_bliss, <span class="dt">main =</span> <span class="st">&#39;PR curve, Model-wise synergies (Bliss)&#39;</span>, </span>
+<span id="cb11-20"><a href="cascade-1-0-analysis.html#cb11-20"></a>  <span class="dt">auc.main =</span> <span class="ot">FALSE</span>, <span class="dt">color =</span> my_palette[<span class="dv">1</span>], <span class="dt">rand.plot =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-21"><a href="cascade-1-0-analysis.html#cb11-21"></a><span class="kw">plot</span>(pr_random_mw_bliss, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>])</span>
+<span id="cb11-22"><a href="cascade-1-0-analysis.html#cb11-22"></a><span class="kw">legend</span>(<span class="st">&#39;left&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;AUC&#39;</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb11-23"><a href="cascade-1-0-analysis.html#cb11-23"></a>  <span class="dt">legend =</span> <span class="kw">c</span>(<span class="kw">paste</span>(<span class="kw">round</span>(pr_ss_mw_bliss<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Calibrated&quot;</span>), </span>
+<span id="cb11-24"><a href="cascade-1-0-analysis.html#cb11-24"></a>    <span class="kw">paste</span>(<span class="kw">round</span>(pr_random_mw_bliss<span class="op">$</span>auc.davis.goadrich, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="st">&quot;Random&quot;</span>)))</span>
+<span id="cb11-25"><a href="cascade-1-0-analysis.html#cb11-25"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/PR%20Bliss%20Cascade%201.0-1.png" width="50%" /><img src="index_files/figure-html/PR%20Bliss%20Cascade%201.0-2.png" width="50%" /></p>
+</div>
+<div id="roc-auc-sensitivity-1" class="section level3 unnumbered" number="">
+<h3>ROC AUC sensitivity</h3>
+<p>Investigate same thing as described in <a href="cascade-1-0-analysis.html#roc-combine-1">here</a>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="cascade-1-0-analysis.html#cb12-1"></a><span class="co"># Ensemble-wise</span></span>
+<span id="cb12-2"><a href="cascade-1-0-analysis.html#cb12-2"></a>betas =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb12-3"><a href="cascade-1-0-analysis.html#cb12-3"></a></span>
+<span id="cb12-4"><a href="cascade-1-0-analysis.html#cb12-4"></a>auc_values_ew =<span class="st"> </span><span class="kw">sapply</span>(betas, <span class="cf">function</span>(beta) {</span>
+<span id="cb12-5"><a href="cascade-1-0-analysis.html#cb12-5"></a>  pred_ew_bliss =<span class="st"> </span>pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb12-6"><a href="cascade-1-0-analysis.html#cb12-6"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;combined_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb12-7"><a href="cascade-1-0-analysis.html#cb12-7"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb12-8"><a href="cascade-1-0-analysis.html#cb12-8"></a>})</span>
+<span id="cb12-9"><a href="cascade-1-0-analysis.html#cb12-9"></a></span>
+<span id="cb12-10"><a href="cascade-1-0-analysis.html#cb12-10"></a>df_ew =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(betas, auc_values_ew))</span>
+<span id="cb12-11"><a href="cascade-1-0-analysis.html#cb12-11"></a></span>
+<span id="cb12-12"><a href="cascade-1-0-analysis.html#cb12-12"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_ew, <span class="dt">x =</span> <span class="st">&quot;betas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_ew&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb12-13"><a href="cascade-1-0-analysis.html#cb12-13"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">beta$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb12-14"><a href="cascade-1-0-analysis.html#cb12-14"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to $</span><span class="ch">\\</span><span class="st">beta$ parameter: $calibrated + </span><span class="ch">\\</span><span class="st">beta </span><span class="ch">\\</span><span class="st">times random$&quot;</span>),</span>
+<span id="cb12-15"><a href="cascade-1-0-analysis.html#cb12-15"></a>  <span class="dt">color =</span> my_palette[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(Bliss,%20cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="cascade-1-0-analysis.html#cb13-1"></a><span class="co"># Model-wise</span></span>
+<span id="cb13-2"><a href="cascade-1-0-analysis.html#cb13-2"></a>weights =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb13-3"><a href="cascade-1-0-analysis.html#cb13-3"></a></span>
+<span id="cb13-4"><a href="cascade-1-0-analysis.html#cb13-4"></a>auc_values_mw =<span class="st"> </span><span class="kw">sapply</span>(weights, <span class="cf">function</span>(w) {</span>
+<span id="cb13-5"><a href="cascade-1-0-analysis.html#cb13-5"></a>  pred_mw_bliss =<span class="st"> </span>pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-6"><a href="cascade-1-0-analysis.html#cb13-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">weighted_prob =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>w) <span class="op">*</span><span class="st"> </span>pred_mw_bliss<span class="op">$</span>synergy_prob_ss <span class="op">+</span><span class="st"> </span>w <span class="op">*</span><span class="st"> </span>pred_mw_bliss<span class="op">$</span>synergy_prob_random)</span>
+<span id="cb13-7"><a href="cascade-1-0-analysis.html#cb13-7"></a>  res =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_mw_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;weighted_prob&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>, <span class="dt">direction =</span> <span class="st">&quot;&gt;&quot;</span>)</span>
+<span id="cb13-8"><a href="cascade-1-0-analysis.html#cb13-8"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>AUC</span>
+<span id="cb13-9"><a href="cascade-1-0-analysis.html#cb13-9"></a>})</span>
+<span id="cb13-10"><a href="cascade-1-0-analysis.html#cb13-10"></a></span>
+<span id="cb13-11"><a href="cascade-1-0-analysis.html#cb13-11"></a>df_mw =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(weights, auc_values_mw))</span>
+<span id="cb13-12"><a href="cascade-1-0-analysis.html#cb13-12"></a></span>
+<span id="cb13-13"><a href="cascade-1-0-analysis.html#cb13-13"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_mw, <span class="dt">x =</span> <span class="st">&quot;weights&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;auc_values_mw&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb13-14"><a href="cascade-1-0-analysis.html#cb13-14"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;weight $w$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;AUC (Area Under ROC Curve)&quot;</span>,</span>
+<span id="cb13-15"><a href="cascade-1-0-analysis.html#cb13-15"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;AUC sensitivity to weighted average score: $(1-w) </span><span class="ch">\\</span><span class="st">times prob_{ss} + w </span><span class="ch">\\</span><span class="st">times prob_{rand}$&quot;</span>),</span>
+<span id="cb13-16"><a href="cascade-1-0-analysis.html#cb13-16"></a>  <span class="dt">color =</span> my_palette[<span class="dv">3</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/AUC%20sensitivity%20(Bliss,%20cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="green-box">
+<ul>
+<li>Symmetricity (Ensemble-wise): <span class="math inline">\(AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1\)</span></li>
+<li>Random models perform worse than calibrated ones</li>
+<li>There are <span class="math inline">\(\beta\)</span> values that can boost the predictive performance of the combined synergy classifier but no <span class="math inline">\(w\)</span> weight in the model-wise case</li>
+</ul>
+</div>
+</div>
+<div id="pr-auc-sensitivity-1" class="section level3 unnumbered" number="">
+<h3>PR AUC sensitivity</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="cascade-1-0-analysis.html#cb14-1"></a><span class="co"># Ensemble-wise</span></span>
+<span id="cb14-2"><a href="cascade-1-0-analysis.html#cb14-2"></a>betas =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb14-3"><a href="cascade-1-0-analysis.html#cb14-3"></a></span>
+<span id="cb14-4"><a href="cascade-1-0-analysis.html#cb14-4"></a>pr_auc_values_ew =<span class="st"> </span><span class="kw">sapply</span>(betas, <span class="cf">function</span>(beta) {</span>
+<span id="cb14-5"><a href="cascade-1-0-analysis.html#cb14-5"></a>  pred_ew_bliss =<span class="st"> </span>pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb14-6"><a href="cascade-1-0-analysis.html#cb14-6"></a>  res =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(combined_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb14-7"><a href="cascade-1-0-analysis.html#cb14-7"></a>    <span class="dt">weights.class0 =</span> pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
+<span id="cb14-8"><a href="cascade-1-0-analysis.html#cb14-8"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>auc.davis.goadrich</span>
+<span id="cb14-9"><a href="cascade-1-0-analysis.html#cb14-9"></a>})</span>
+<span id="cb14-10"><a href="cascade-1-0-analysis.html#cb14-10"></a></span>
+<span id="cb14-11"><a href="cascade-1-0-analysis.html#cb14-11"></a>df_pr_ew =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(betas, pr_auc_values_ew))</span>
+<span id="cb14-12"><a href="cascade-1-0-analysis.html#cb14-12"></a></span>
+<span id="cb14-13"><a href="cascade-1-0-analysis.html#cb14-13"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_pr_ew, <span class="dt">x =</span> <span class="st">&quot;betas&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc_values_ew&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb14-14"><a href="cascade-1-0-analysis.html#cb14-14"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">beta$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;PR-AUC (Area Under PR Curve)&quot;</span>,</span>
+<span id="cb14-15"><a href="cascade-1-0-analysis.html#cb14-15"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;PR-AUC sensitivity to $</span><span class="ch">\\</span><span class="st">beta$ parameter: $calibrated + </span><span class="ch">\\</span><span class="st">beta </span><span class="ch">\\</span><span class="st">times random$&quot;</span>),</span>
+<span id="cb14-16"><a href="cascade-1-0-analysis.html#cb14-16"></a>  <span class="dt">color =</span> my_palette[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/PR%20AUC%20sensitivity%20(Bliss,%20Cascade%201.0)-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="cascade-1-0-analysis.html#cb15-1"></a><span class="co"># Model-wise</span></span>
+<span id="cb15-2"><a href="cascade-1-0-analysis.html#cb15-2"></a>weights =<span class="st"> </span><span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb15-3"><a href="cascade-1-0-analysis.html#cb15-3"></a></span>
+<span id="cb15-4"><a href="cascade-1-0-analysis.html#cb15-4"></a>pr_auc_values_mw =<span class="st"> </span><span class="kw">sapply</span>(weights, <span class="cf">function</span>(w) {</span>
+<span id="cb15-5"><a href="cascade-1-0-analysis.html#cb15-5"></a>  pred_mw_bliss =<span class="st"> </span>pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-6"><a href="cascade-1-0-analysis.html#cb15-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">weighted_prob =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>w) <span class="op">*</span><span class="st"> </span>pred_mw_bliss<span class="op">$</span>synergy_prob_ss <span class="op">+</span><span class="st"> </span>w <span class="op">*</span><span class="st"> </span>pred_mw_bliss<span class="op">$</span>synergy_prob_random)</span>
+<span id="cb15-7"><a href="cascade-1-0-analysis.html#cb15-7"></a>  res =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(weighted_prob), </span>
+<span id="cb15-8"><a href="cascade-1-0-analysis.html#cb15-8"></a>    <span class="dt">weights.class0 =</span> pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
+<span id="cb15-9"><a href="cascade-1-0-analysis.html#cb15-9"></a>  auc_value =<span class="st"> </span>res<span class="op">$</span>auc.davis.goadrich</span>
+<span id="cb15-10"><a href="cascade-1-0-analysis.html#cb15-10"></a>})</span>
+<span id="cb15-11"><a href="cascade-1-0-analysis.html#cb15-11"></a></span>
+<span id="cb15-12"><a href="cascade-1-0-analysis.html#cb15-12"></a>df_pr_mw =<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">cbind</span>(weights, pr_auc_values_mw))</span>
+<span id="cb15-13"><a href="cascade-1-0-analysis.html#cb15-13"></a></span>
+<span id="cb15-14"><a href="cascade-1-0-analysis.html#cb15-14"></a><span class="kw">ggline</span>(<span class="dt">data =</span> df_pr_mw, <span class="dt">x =</span> <span class="st">&quot;weights&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc_values_mw&quot;</span>, <span class="dt">numeric.x.axis =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb15-15"><a href="cascade-1-0-analysis.html#cb15-15"></a>  <span class="dt">plot_type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlab =</span> <span class="kw">TeX</span>(<span class="st">&quot;weight $w$&quot;</span>), <span class="dt">ylab =</span> <span class="st">&quot;PR-AUC (Area Under PR Curve)&quot;</span>,</span>
+<span id="cb15-16"><a href="cascade-1-0-analysis.html#cb15-16"></a>  <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;PR-AUC sensitivity to weighted average score: $(1-w) </span><span class="ch">\\</span><span class="st">times prob_{ss} + w </span><span class="ch">\\</span><span class="st">times prob_{rand}$&quot;</span>),</span>
+<span id="cb15-17"><a href="cascade-1-0-analysis.html#cb15-17"></a>  <span class="dt">color =</span> my_palette[<span class="dv">3</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<p><img src="index_files/figure-html/PR%20AUC%20sensitivity%20(Bliss,%20Cascade%201.0)-2.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="correlation" class="section level2 unnumbered" number="">
+<h2>Correlation</h2>
+<p>We test for correlation between all the results shown in the ROC curves.
+This means <em>ensemble-wise</em> vs <em>model-wise</em>, <em>random</em> models vs <em>calibrated (ss)</em> models and <em>HSA</em> vs <em>Bliss</em> synergy assessment.
+<em>P-values</em> are represented at 3 significant levels: <span class="math inline">\(0.05, 0.01, 0.001\)</span> (*, **, ***) and the correlation coefficient is calculated using Kendall’s <em>tau</em> statistic.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="cascade-1-0-analysis.html#cb16-1"></a>synergy_scores =<span class="st"> </span><span class="kw">bind_cols</span>(</span>
+<span id="cb16-2"><a href="cascade-1-0-analysis.html#cb16-2"></a>  pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(ss_score, random_score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_ensemble_hsa =</span> ss_score, <span class="dt">random_ensemble_hsa =</span> random_score),</span>
+<span id="cb16-3"><a href="cascade-1-0-analysis.html#cb16-3"></a>  pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(ss_score, random_score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_ensemble_bliss =</span> ss_score, <span class="dt">random_ensemble_bliss =</span> random_score),</span>
+<span id="cb16-4"><a href="cascade-1-0-analysis.html#cb16-4"></a>  pred_mw_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_ss, synergy_prob_random) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-5"><a href="cascade-1-0-analysis.html#cb16-5"></a><span class="st">    </span><span class="kw">rename</span>(<span class="dt">ss_modelwise_hsa =</span> synergy_prob_ss, <span class="dt">random_modelwise_hsa =</span> synergy_prob_random),</span>
+<span id="cb16-6"><a href="cascade-1-0-analysis.html#cb16-6"></a>  pred_mw_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(synergy_prob_ss, synergy_prob_random) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-7"><a href="cascade-1-0-analysis.html#cb16-7"></a><span class="st">    </span><span class="kw">rename</span>(<span class="dt">ss_modelwise_bliss =</span> synergy_prob_ss, <span class="dt">random_modelwise_bliss =</span> synergy_prob_random)</span>
+<span id="cb16-8"><a href="cascade-1-0-analysis.html#cb16-8"></a>  )</span>
+<span id="cb16-9"><a href="cascade-1-0-analysis.html#cb16-9"></a></span>
+<span id="cb16-10"><a href="cascade-1-0-analysis.html#cb16-10"></a>M =<span class="st"> </span><span class="kw">cor</span>(synergy_scores, <span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>)</span>
+<span id="cb16-11"><a href="cascade-1-0-analysis.html#cb16-11"></a>res =<span class="st"> </span><span class="kw">cor.mtest</span>(synergy_scores, <span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>)</span>
+<span id="cb16-12"><a href="cascade-1-0-analysis.html#cb16-12"></a><span class="kw">corrplot</span>(<span class="dt">corr =</span> M, <span class="dt">type =</span> <span class="st">&quot;upper&quot;</span>, <span class="dt">p.mat =</span> res<span class="op">$</span>p, <span class="dt">sig.level =</span> <span class="kw">c</span>(.<span class="dv">001</span>, <span class="fl">.01</span>, <span class="fl">.05</span>), </span>
+<span id="cb16-13"><a href="cascade-1-0-analysis.html#cb16-13"></a>  <span class="dt">pch.cex =</span> <span class="dv">1</span>, <span class="dt">pch.col =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">insig =</span> <span class="st">&quot;label_sig&quot;</span>, <span class="dt">tl.col =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">tl.srt =</span> <span class="dv">45</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/Correlation%20of%20ROC%20results%20(Cascade%201.0)-1.png" width="2100" /></p>
+<div class="green-box">
+<ul>
+<li><strong>HSA and Bliss results correlate</strong>, higher for the model-wise than the ensemble-wise results.</li>
+<li><strong>Model-wise don’t correlate with ensemble-wise results</strong>.</li>
+</ul>
+</div>
+</div>
+<div id="fitness-evolution" class="section level2 unnumbered" number="">
+<h2>Fitness Evolution</h2>
+<p>Results are from the simulation result with <span class="math inline">\(50\)</span> Gitsbe simulations, fitting to steady state (<strong>calibrated models</strong>) and <em>HSA</em> Drabme synergy assessment.
+We show only <span class="math inline">\(10\)</span> simulations - the first ones that spanned the maximum defined generations in the configuration (<span class="math inline">\(20\)</span>), meaning that they did not surpass the target fitness threhold specified (<span class="math inline">\(0.99\)</span>).
+Each data point is the average fitness in that generation out of <span class="math inline">\(20\)</span> models.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="cascade-1-0-analysis.html#cb17-1"></a>fitness_summary_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/hsa/cascade_1.0_ss_50sim_fixpoints_summary.txt&quot;</span>)</span>
+<span id="cb17-2"><a href="cascade-1-0-analysis.html#cb17-2"></a></span>
+<span id="cb17-3"><a href="cascade-1-0-analysis.html#cb17-3"></a>read_summary_file =<span class="st"> </span><span class="cf">function</span>(file_name) {</span>
+<span id="cb17-4"><a href="cascade-1-0-analysis.html#cb17-4"></a>  lines =<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_lines</span>(<span class="dt">file =</span> fitness_summary_file, <span class="dt">skip =</span> <span class="dv">5</span>, <span class="dt">skip_empty_rows =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb17-5"><a href="cascade-1-0-analysis.html#cb17-5"></a>  </span>
+<span id="cb17-6"><a href="cascade-1-0-analysis.html#cb17-6"></a>  data_list =<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb17-7"><a href="cascade-1-0-analysis.html#cb17-7"></a>  index =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb17-8"><a href="cascade-1-0-analysis.html#cb17-8"></a>  </span>
+<span id="cb17-9"><a href="cascade-1-0-analysis.html#cb17-9"></a>  gen_fit_list =<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb17-10"><a href="cascade-1-0-analysis.html#cb17-10"></a>  gen_index =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb17-11"><a href="cascade-1-0-analysis.html#cb17-11"></a>  <span class="cf">for</span> (line_index <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(lines)) {</span>
+<span id="cb17-12"><a href="cascade-1-0-analysis.html#cb17-12"></a>    line =<span class="st"> </span>lines[line_index]</span>
+<span id="cb17-13"><a href="cascade-1-0-analysis.html#cb17-13"></a>    <span class="cf">if</span> (stringr<span class="op">::</span><span class="kw">str_detect</span>(<span class="dt">string =</span> line, <span class="dt">pattern =</span> <span class="st">&quot;Simulation&quot;</span>)) {</span>
+<span id="cb17-14"><a href="cascade-1-0-analysis.html#cb17-14"></a>      data_list[[index]] =<span class="st"> </span><span class="kw">bind_cols</span>(gen_fit_list)</span>
+<span id="cb17-15"><a href="cascade-1-0-analysis.html#cb17-15"></a>      index =<span class="st"> </span>index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb17-16"><a href="cascade-1-0-analysis.html#cb17-16"></a>      </span>
+<span id="cb17-17"><a href="cascade-1-0-analysis.html#cb17-17"></a>      gen_fit_list =<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb17-18"><a href="cascade-1-0-analysis.html#cb17-18"></a>      gen_index =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb17-19"><a href="cascade-1-0-analysis.html#cb17-19"></a>    } <span class="cf">else</span> { <span class="co"># read fitness values</span></span>
+<span id="cb17-20"><a href="cascade-1-0-analysis.html#cb17-20"></a>      gen_fit_list[[gen_index]] =<span class="st"> </span><span class="kw">as_tibble_col</span>(<span class="kw">as.numeric</span>(<span class="kw">unlist</span>(<span class="kw">strsplit</span>(line, <span class="dt">split =</span> <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>))))</span>
+<span id="cb17-21"><a href="cascade-1-0-analysis.html#cb17-21"></a>      gen_index =<span class="st"> </span>gen_index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb17-22"><a href="cascade-1-0-analysis.html#cb17-22"></a>    }</span>
+<span id="cb17-23"><a href="cascade-1-0-analysis.html#cb17-23"></a>  }</span>
+<span id="cb17-24"><a href="cascade-1-0-analysis.html#cb17-24"></a>  </span>
+<span id="cb17-25"><a href="cascade-1-0-analysis.html#cb17-25"></a>  <span class="co"># add the last simulation&#39;s values</span></span>
+<span id="cb17-26"><a href="cascade-1-0-analysis.html#cb17-26"></a>  data_list[[index]] =<span class="st"> </span><span class="kw">bind_cols</span>(gen_fit_list)</span>
+<span id="cb17-27"><a href="cascade-1-0-analysis.html#cb17-27"></a>  </span>
+<span id="cb17-28"><a href="cascade-1-0-analysis.html#cb17-28"></a>  <span class="kw">return</span>(data_list)</span>
+<span id="cb17-29"><a href="cascade-1-0-analysis.html#cb17-29"></a>}</span>
+<span id="cb17-30"><a href="cascade-1-0-analysis.html#cb17-30"></a></span>
+<span id="cb17-31"><a href="cascade-1-0-analysis.html#cb17-31"></a>fit_res =<span class="st"> </span><span class="kw">read_summary_file</span>(<span class="dt">file_name =</span> fitness_summary_file)</span>
+<span id="cb17-32"><a href="cascade-1-0-analysis.html#cb17-32"></a></span>
+<span id="cb17-33"><a href="cascade-1-0-analysis.html#cb17-33"></a>first_sim_data =<span class="st"> </span><span class="kw">colMeans</span>(fit_res[[<span class="dv">1</span>]])</span>
+<span id="cb17-34"><a href="cascade-1-0-analysis.html#cb17-34"></a><span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(first_sim_data), <span class="dt">y =</span> first_sim_data, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
+<span id="cb17-35"><a href="cascade-1-0-analysis.html#cb17-35"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.5</span>, </span>
+<span id="cb17-36"><a href="cascade-1-0-analysis.html#cb17-36"></a>  <span class="dt">main =</span> <span class="st">&#39;Fitness vs Generation (10 Simulations)&#39;</span>, <span class="dt">xlab =</span> <span class="st">&#39;Generations&#39;</span>, </span>
+<span id="cb17-37"><a href="cascade-1-0-analysis.html#cb17-37"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Average Fitness&#39;</span>, <span class="dt">col =</span> usefun<span class="op">:::</span>colors<span class="fl">.100</span>[<span class="dv">1</span>])</span>
+<span id="cb17-38"><a href="cascade-1-0-analysis.html#cb17-38"></a>index =<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb17-39"><a href="cascade-1-0-analysis.html#cb17-39"></a><span class="cf">for</span> (fit_data <span class="cf">in</span> fit_res) {</span>
+<span id="cb17-40"><a href="cascade-1-0-analysis.html#cb17-40"></a>  <span class="cf">if</span> (index <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>) <span class="cf">break</span></span>
+<span id="cb17-41"><a href="cascade-1-0-analysis.html#cb17-41"></a>  <span class="cf">if</span> (<span class="kw">ncol</span>(fit_data) <span class="op">!=</span><span class="st"> </span><span class="dv">20</span>) <span class="cf">next</span></span>
+<span id="cb17-42"><a href="cascade-1-0-analysis.html#cb17-42"></a>  mean_fit_per_gen =<span class="st"> </span><span class="kw">colMeans</span>(fit_data)</span>
+<span id="cb17-43"><a href="cascade-1-0-analysis.html#cb17-43"></a>  <span class="kw">lines</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(mean_fit_per_gen), <span class="dt">y =</span> mean_fit_per_gen, <span class="dt">lwd =</span> <span class="fl">1.5</span>,</span>
+<span id="cb17-44"><a href="cascade-1-0-analysis.html#cb17-44"></a>    <span class="dt">col =</span> usefun<span class="op">:::</span>colors<span class="fl">.100</span>[index])</span>
+<span id="cb17-45"><a href="cascade-1-0-analysis.html#cb17-45"></a>  index =<span class="st"> </span>index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb17-46"><a href="cascade-1-0-analysis.html#cb17-46"></a>}</span>
+<span id="cb17-47"><a href="cascade-1-0-analysis.html#cb17-47"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="index_files/figure-html/fitness%20evolution-1.png" width="2100" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="input.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cascade-2-0-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
