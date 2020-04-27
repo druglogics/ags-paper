@@ -17,3 +17,28 @@ volume = {11},
 year = {2015}
 }
 
+@article{Grau2015,
+abstract = {Summary: Precision-recall (PR) and receiver operating characteristic (ROC) curves are valuable measures of classifier performance. Here, we present the R-package PRROC, which allows for computing and visualizing both PR and ROC curves. In contrast to available R-packages, PRROC allows for computing PR and ROC curves and areas under these curves for soft-labeled data using a continuous interpolation between the points of PR curves. In addition, PRROC provides a generic plot function for generating publication-quality graphics of PR and ROC curves.Availability and implementation: PRROC is available from CRAN and is licensed under GPL 3.Contact: grau@informatik.uni-halle.de},
+annote = {R package for drawing ROC and PR curves. Feels bad to use (arg names, etc) but works ok!
+
+- SOS: Need to have positive class values higher than negative class values (use -x instead of x)
+- Supports soft-labeling (weighted) data: the observed classes can be probabilities not just binary 1 and 0!!!
+- The only R package to support PR curves!
+- Can add more than 1 ROC curves
+- Adds color bar with thresholds
+
+For ROC and PR it solves/computes:
+1. Standard, hard-labeled classification problems
+2. Weighted, hard-labeled classification problems (weights for class 1 and 0 don't necessarily add to 1 - they are extra evidence for that class!)
+3. Soft-labeled classification problem (weights/probabilities for class 1 and 0 add to 1)},
+author = {Grau, Jan and Grosse, Ivo and Keilwagen, Jens},
+doi = {10.1093/bioinformatics/btv153},
+issn = {1367-4803},
+journal = {Bioinformatics},
+number = {15},
+pages = {2595--2597},
+title = {{PRROC: computing and visualizing precision-recall and receiver operating characteristic curves in R}},
+url = {https://doi.org/10.1093/bioinformatics/btv153},
+volume = {31},
+year = {2015}
+}
