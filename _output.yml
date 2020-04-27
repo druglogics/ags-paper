@@ -1,13 +1,13 @@
 bookdown::gitbook:
   includes:
     in_header: hide_code.html # inspired by: https://stackoverflow.com/questions/45360998/code-folding-in-bookdown
-  split_by: none
+  split_by: chapter
   split_bib: false
   toc_depth: 3
   css: style.css
   config:
     toc:
-      collapse: none
+      collapse: subsection
       before: |
         <li><a href="./">DrugLogics Paper I: An AGS story</a></li>
       after: |
