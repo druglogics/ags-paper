@@ -255,7 +255,6 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
   color = my_palette[3]) + grids()
 ```
 
-
 ## Calibrated vs Random (Bliss) {-}
 
 :::{.note}
@@ -330,6 +329,36 @@ grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
+### PR curves {-}
+
+```{r PR Bliss Cascade 1.0, fig.width=5, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%'}
+pr_ss_ew_bliss = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_random_ew_bliss = pr.curve(scores.class0 = pred_ew_bliss %>% pull(random_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+pr_ss_mw_bliss = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_random_mw_bliss = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_random), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+plot(pr_ss_ew_bliss, main = 'PR curve, Ensemble-wise synergies (Bliss)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_random_ew_bliss, add = TRUE, color = my_palette[2])
+legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19, cex = 0.9,
+  legend = c(paste(round(pr_ss_ew_bliss$auc.davis.goadrich, digits = 3), "Calibrated"), 
+    paste(round(pr_random_ew_bliss$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+
+plot(pr_ss_mw_bliss, main = 'PR curve, Model-wise synergies (Bliss)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_random_mw_bliss, add = TRUE, color = my_palette[2])
+legend('left', title = 'AUC', col = my_palette[1:2], pch = 19,
+  legend = c(paste(round(pr_ss_mw_bliss$auc.davis.goadrich, digits = 3), "Calibrated"), 
+    paste(round(pr_random_mw_bliss$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+```
+
 ### ROC AUC sensitivity {-}
 
 Investigate same thing as described in [here](#roc-combine-1).
@@ -374,6 +403,45 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - Random models perform worse than calibrated ones
 - There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
 :::
+
+### PR AUC sensitivity {-}
+
+```{r PR AUC sensitivity (Bliss, Cascade 1.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
+# Ensemble-wise
+betas = seq(from = -20, to = 20, by = 0.1)
+
+pr_auc_values_ew = sapply(betas, function(beta) {
+  pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score + beta * random_score)
+  res = pr.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_ew = as_tibble(cbind(betas, pr_auc_values_ew))
+
+ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+pr_auc_values_mw = sapply(weights, function(w) {
+  pred_mw_bliss = pred_mw_bliss %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_bliss$synergy_prob_ss + w * pred_mw_bliss$synergy_prob_random)
+  res = pr.curve(scores.class0 = pred_mw_bliss %>% pull(weighted_prob), 
+    weights.class0 = pred_mw_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_mw = as_tibble(cbind(weights, pr_auc_values_mw))
+
+ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
 
 ## Correlation {-}
 
