@@ -133,12 +133,12 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 pr_ss_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_random_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(random_score) %>% (function(x) {-x}), 
-  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 
 pr_ss_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_random_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_random), 
-  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 
 plot(pr_ss_ew_hsa, main = 'PR curve, Ensemble-wise synergies (HSA)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
@@ -335,17 +335,17 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 pr_ss_ew_bliss = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_random_ew_bliss = pr.curve(scores.class0 = pred_ew_bliss %>% pull(random_score) %>% (function(x) {-x}), 
-  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
 
 pr_ss_mw_bliss = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss), 
   weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_random_mw_bliss = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_random), 
-  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
 
 plot(pr_ss_ew_bliss, main = 'PR curve, Ensemble-wise synergies (Bliss)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_random_ew_bliss, add = TRUE, color = my_palette[2])
-legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19, cex = 0.9,
+legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19, cex = 0.8,
   legend = c(paste(round(pr_ss_ew_bliss$auc.davis.goadrich, digits = 3), "Calibrated"), 
     paste(round(pr_random_ew_bliss$auc.davis.goadrich, digits = 3), "Random")))
 grid(lwd = 0.5)
@@ -683,17 +683,89 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 - Model-wise results *scale* with respect to the number of `Gitsbe` simulations (more **calibrated** models, better performance).
 :::
 
+### PR curves {-}
+
+```{r PR HSA Cascade 2.0, fig.width=5, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%'}
+pr_ss_ew_hsa_5sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_5sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_ss_ew_hsa_50sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
+pr_ss_ew_hsa_100sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_100sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
+pr_ss_ew_hsa_150sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
+pr_ss_ew_hsa_200sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_200sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
+pr_random_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(random_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
+
+pr_ss_mw_hsa_5sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_5sim), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_ss_mw_hsa_50sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_50sim), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
+pr_ss_mw_hsa_100sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_100sim), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
+pr_ss_mw_hsa_150sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_150sim), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
+pr_ss_mw_hsa_200sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_200sim), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
+pr_random_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_random), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
+
+plot(pr_ss_ew_hsa_5sim, main = 'PR curve, Ensemble-wise synergies (HSA)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_ss_ew_hsa_50sim, add = TRUE, color = my_palette[2])
+plot(pr_ss_ew_hsa_100sim, add = TRUE, color = my_palette[3])
+plot(pr_ss_ew_hsa_150sim, add = TRUE, color = my_palette[4])
+plot(pr_ss_ew_hsa_200sim, add = TRUE, color = my_palette[5])
+plot(pr_random_ew_hsa, add = TRUE, color = my_palette[6])
+legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
+  legend = c(paste(round(pr_ss_ew_hsa_5sim$auc.davis.goadrich, digits = 3), "Calibrated (5 sim)"),
+    paste(round(pr_ss_ew_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_ss_ew_hsa_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
+    paste(round(pr_ss_ew_hsa_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_ss_ew_hsa_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
+    paste(round(pr_random_ew_hsa$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+
+plot(pr_ss_mw_hsa_5sim, main = 'PR curve, Model-wise synergies (HSA)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_ss_mw_hsa_50sim, add = TRUE, color = my_palette[2])
+plot(pr_ss_mw_hsa_100sim, add = TRUE, color = my_palette[3])
+plot(pr_ss_mw_hsa_150sim, add = TRUE, color = my_palette[4])
+plot(pr_ss_mw_hsa_200sim, add = TRUE, color = my_palette[5])
+plot(pr_random_mw_hsa, add = TRUE, color = my_palette[6])
+legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
+  legend = c(paste(round(pr_ss_mw_hsa_5sim$auc.davis.goadrich, digits = 3), "Calibrated (5 sim)"),
+    paste(round(pr_ss_mw_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_ss_mw_hsa_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
+    paste(round(pr_ss_mw_hsa_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_ss_mw_hsa_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
+    paste(round(pr_random_mw_hsa$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+```
+
+When I saw the above I was like:  
+<iframe src="https://giphy.com/embed/l3q2K5jinAlChoCLS" width="250" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+
+:::{.green-box}
+- PR curves show the **true colors** of our models' prediction performance for our imbalanced dataset!
+- Both ROC & PR curves show that **random models have pretty much equal performance to calibrated models**
+- The performance *scaling* is still consistent with the PR AUCs but on a much smaller scale! 
+- The **model-wise approach is slightly better than the ensemble-wise**
+:::
+
 ### ROC AUC sensitivity {-}
 
 Investigate same thing as described in [here](#roc-combine-1).
-We will combine the synergy scores from the random simulations with the results from the $50$ Gitsbe simulations.
+We will combine the synergy scores from the random simulations with the results from the $150$ Gitsbe simulations.
 
 ```{r AUC sensitivity (HSA, cascade 2.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
 # Ensemble-wise
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_50sim + beta * random_score)
+  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * random_score)
   res = get_roc_stats(df = pred_ew_hsa, pred_col = "combined_score", label_col = "observed")
   auc_value = res$AUC
 })
@@ -710,7 +782,7 @@ weights = seq(from = 0, to = 1, by = 0.05)
 
 auc_values_mw = sapply(weights, function(w) {
   pred_mw_hsa = pred_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_50sim + w * pred_mw_hsa$synergy_prob_random)
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_150sim + w * pred_mw_hsa$synergy_prob_random)
   res = get_roc_stats(df = pred_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
   auc_value = res$AUC
 })
@@ -728,6 +800,47 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 - Random models perform worse than calibrated ones (though difference is very small)
 - There are $\beta$ values that can boost the predictive performance of the combined synergy classifier and a $w$ weight in the model-wise case (though the significance in performance gain is negligible).
 :::
+
+### PR AUC sensitivity {-}
+
+Again we try a linear combination of the predicted scores from the random simulations with the results from the $150$ Gitsbe simulations.
+
+```{r PR AUC sensitivity (HSA, Cascade 2.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
+# Ensemble-wise
+betas = seq(from = -20, to = 20, by = 0.1)
+
+pr_auc_values_ew = sapply(betas, function(beta) {
+  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * random_score)
+  res = pr.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_ew = as_tibble(cbind(betas, pr_auc_values_ew))
+
+ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+pr_auc_values_mw = sapply(weights, function(w) {
+  pred_mw_hsa = pred_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_150sim + w * pred_mw_hsa$synergy_prob_random)
+  res = pr.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob), 
+    weights.class0 = pred_mw_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_mw = as_tibble(cbind(weights, pr_auc_values_mw))
+
+ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
 
 ## Calibrated vs Random (Bliss) {-}
 
@@ -906,6 +1019,84 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 - Ensemble-wise performance is disproportionate compared to the model-wise performance 
 :::
 
+### PR curves {-}
+
+```{r PR Bliss Cascade 2.0, fig.width=5, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%'}
+pr_ss_ew_bliss_10sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_10sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_ss_ew_bliss_30sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_30sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+pr_ss_ew_bliss_50sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+pr_ss_ew_bliss_70sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_70sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+pr_ss_ew_bliss_100sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_100sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+pr_ss_ew_bliss_150sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+pr_ss_ew_bliss_200sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score_200sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+pr_random_ew_bliss = pr.curve(scores.class0 = pred_ew_bliss %>% pull(random_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+
+pr_ss_mw_bliss_10sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_10sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_ss_mw_bliss_30sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_30sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+pr_ss_mw_bliss_50sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_50sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+pr_ss_mw_bliss_70sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_70sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+pr_ss_mw_bliss_100sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_100sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+pr_ss_mw_bliss_150sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_150sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+pr_ss_mw_bliss_200sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_200sim), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+pr_random_mw_bliss = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_random), 
+  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
+
+plot(pr_ss_ew_bliss_10sim, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_ss_ew_bliss_30sim, add = TRUE, color = my_palette[2])
+plot(pr_ss_ew_bliss_50sim, add = TRUE, color = my_palette[3])
+plot(pr_ss_ew_bliss_70sim, add = TRUE, color = my_palette[4])
+plot(pr_ss_ew_bliss_100sim, add = TRUE, color = my_palette[5])
+plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[6])
+plot(pr_ss_ew_bliss_200sim, add = TRUE, color = my_palette[7])
+plot(pr_random_ew_bliss, add = TRUE, color = my_palette[8])
+legend('topright', title = 'AUC', col = my_palette[1:8], pch = 19,
+  legend = c(paste(round(pr_ss_ew_bliss_10sim$auc.davis.goadrich, digits = 3), "Calibrated (10 sim)"),
+    paste(round(pr_ss_ew_bliss_30sim$auc.davis.goadrich, digits = 3), "Calibrated (30 sim)"),
+    paste(round(pr_ss_ew_bliss_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_ss_ew_bliss_70sim$auc.davis.goadrich, digits = 3), "Calibrated (70 sim)"),
+    paste(round(pr_ss_ew_bliss_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
+    paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_ss_ew_bliss_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
+    paste(round(pr_random_ew_bliss$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+
+plot(pr_ss_mw_bliss_10sim, main = 'PR curve, Model-wise synergies (Bliss)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_ss_mw_bliss_30sim, add = TRUE, color = my_palette[2])
+plot(pr_ss_mw_bliss_50sim, add = TRUE, color = my_palette[3])
+plot(pr_ss_mw_bliss_70sim, add = TRUE, color = my_palette[4])
+plot(pr_ss_mw_bliss_100sim, add = TRUE, color = my_palette[5])
+plot(pr_ss_mw_bliss_150sim, add = TRUE, color = my_palette[6])
+plot(pr_ss_mw_bliss_200sim, add = TRUE, color = my_palette[7])
+plot(pr_random_mw_bliss, add = TRUE, color = my_palette[8])
+legend('topright', title = 'AUC', col = my_palette[1:8], pch = 19,
+  legend = c(paste(round(pr_ss_mw_bliss_10sim$auc.davis.goadrich, digits = 3), "Calibrated (10 sim)"),
+    paste(round(pr_ss_mw_bliss_30sim$auc.davis.goadrich, digits = 3), "Calibrated (30 sim)"),
+    paste(round(pr_ss_mw_bliss_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_ss_mw_bliss_70sim$auc.davis.goadrich, digits = 3), "Calibrated (70 sim)"),
+    paste(round(pr_ss_mw_bliss_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
+    paste(round(pr_ss_mw_bliss_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_ss_mw_bliss_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
+    paste(round(pr_random_mw_bliss$auc.davis.goadrich, digits = 3), "Random")))
+grid(lwd = 0.5)
+```
+
 ### ROC AUC sensitivity {-}
 
 Investigate same thing as described in [here](#roc-combine-1).
@@ -948,10 +1139,51 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
-- Random models perform better than calibrated ones
+- **Random models perform better than calibrated ones**
 - Combining the synergy results using the weighted probability score does not bring any significant difference in performance
-- Using the $\beta$ parameter to boost the ensemble synergy results works only for the HSA results (not the Bliss-based ones)
+- Using the $\beta$ parameter to boost the ensemble synergy results does not work for the Bliss results (improvement was seen only for the HSA results)
 :::
+
+### PR AUC sensitivity {-}
+
+Again we try a linear combination of the predicted scores from the random simulations with the results from the $150$ Gitsbe simulations.
+
+```{r PR AUC sensitivity (Bliss, Cascade 2.0), dpi=300, out.width='80%', fig.align='center', cache=TRUE}
+# Ensemble-wise
+betas = seq(from = -20, to = 20, by = 0.1)
+
+pr_auc_values_ew = sapply(betas, function(beta) {
+  pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * random_score)
+  res = pr.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_ew = as_tibble(cbind(betas, pr_auc_values_ew))
+
+ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+pr_auc_values_mw = sapply(weights, function(w) {
+  pred_mw_bliss = pred_mw_bliss %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_bliss$synergy_prob_ss_150sim + w * pred_mw_bliss$synergy_prob_random)
+  res = pr.curve(scores.class0 = pred_mw_bliss %>% pull(weighted_prob), 
+    weights.class0 = pred_mw_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_pr_mw = as_tibble(cbind(weights, pr_auc_values_mw))
+
+ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "PR-AUC (Area Under PR Curve)",
+  title = TeX("PR-AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
 
 ## Correlation {-}
 
