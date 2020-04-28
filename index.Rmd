@@ -38,6 +38,7 @@ library(stringr)
 library(latex2exp)
 library(corrplot)
 library(PRROC)
+library(equatiomatic)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -841,6 +842,33 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
   title = TeX("PR-AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
   color = my_palette[3]) + grids()
 ```
+
+### Logistic Regression {-}
+
+We tried fitting a model using logistic regression as a different approach to augment the results from calibrated simulations with the random ones (HSA, ensemble-wise results).
+
+```{r model HSA}
+model = glm(formula = observed ~ ss_score_150sim + random_score - 1, data = pred_ew_hsa, family = binomial())
+model_tidy = broom::tidy(model)
+coef1 = model_tidy %>% filter(term == "ss_score_150sim") %>% pull(estimate)
+coef2 = model_tidy %>% filter(term == "random_score") %>% pull(estimate)
+pred_ew_hsa = pred_ew_hsa %>% mutate(glm = coef1 * ss_score_150sim + coef2 * random_score)
+res_roc = get_roc_stats(df = pred_ew_hsa, pred_col = "glm", label_col = "observed")
+res_pr = pr.curve(scores.class0 = pred_ew_hsa %>% pull(glm) %>% (function(x) {-x}), weights.class0 = pred_ew_hsa %>% pull(observed))
+```
+
+The model with the coeeficients is as follows (adding an intercept makes ROC AUC result considerably worse):
+```{r equation, results='asis'}
+extract_eq(model, use_coefs = TRUE)
+```
+
+:::{.orange-box}
+The ROC AUC produced with a logistic regression model is lower than the calibrated models (with $150$ Gitsbe simulations): `r res_roc$AUC` (PR-AUC is also lower: `r res_pr$auc.davis.goadrich`).
+:::
+
+### Regularized logistic regression: ridge and LASSO
+
+TODO???
 
 ## Calibrated vs Random (Bliss) {-}
 
