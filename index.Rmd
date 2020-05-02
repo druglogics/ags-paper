@@ -12,7 +12,7 @@ site: bookdown::bookdown_site
 
 ```{r include = FALSE}
 # automatically create a bib database for R packages
-knitr::write_bib(c(.packages(), 'emba', 'usefun', 'rtemps', 'PRROC', 'glmnet'), 'packages.bib')
+knitr::write_bib(c(.packages(), 'emba', 'usefun', 'rtemps', 'PRROC', 'glmnet', 'MAMSE'), 'packages.bib')
 ```
 
 # Intro {-}
@@ -42,6 +42,7 @@ library(PRROC)
 library(equatiomatic)
 library(glmnet)
 library(knitr)
+library(MAMSE)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -907,6 +908,25 @@ data %>% arrange(desc(ROC_AUC)) %>% slice(1:4) %>% kable()
 :::{.orange-box}
 The best ROC AUC produced with a regularized logistic regression model is also lower than the one using calibrated models alone (with $150$ Gitsbe simulations).
 :::
+
+### MAMSE ROC {-}
+
+Using the `MAMSE` R package [@R-MAMSE] we try another method to combine the predictor values from the calibrated and random models.
+The resulting ROC curve gets a little bit distored and AUC is not statistically better from the reference sample population (i.e. the calibrated `Gitsbe` models with $150$):
+
+```{r MAMSE test}
+# healthy => non-synergy, diseased => synergy
+healthy = list()
+healthy[[1]] = pred_ew_hsa %>% filter(observed == 0) %>% pull(ss_score_150sim)
+healthy[[2]] = pred_ew_hsa %>% filter(observed == 0) %>% pull(random_score)
+
+diseased = list()
+diseased[[1]] = pred_ew_hsa %>% filter(observed == 1) %>% pull(ss_score_150sim)
+diseased[[2]] = pred_ew_hsa %>% filter(observed == 1) %>% pull(random_score)
+
+plot(roc(healthy = healthy, diseased = diseased, smalldiseased=TRUE, AUC=TRUE,
+  wh=NULL, wd=NULL, FPR=NULL, method="np"))
+```
 
 ## Calibrated vs Random (Bliss) {-}
 
