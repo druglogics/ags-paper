@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I simulation results"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 27 April, 2020"
+date: "Last updated: 02 May, 2020"
 description: "AGS paper I simulation results"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -15,6 +15,7 @@ site: bookdown::bookdown_site
 # Intro {-}
 
 This report has the AGS-Paper I data analysis and resulting figures.
+Unless otherwise specified, the `Gitsbe` models have only [link operator mutations](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm).
 
 For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (based on [@Grau2015]).
 
@@ -36,6 +37,9 @@ library(stringr)
 library(latex2exp)
 library(corrplot)
 library(PRROC)
+library(equatiomatic)
+library(glmnet)
+library(knitr)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -909,6 +913,84 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
 
 <img src="index_files/figure-html/PR AUC sensitivity (HSA, Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
+### Logistic Regression {-}
+
+We tried fitting a model using logistic regression as a different approach to augment the results from calibrated simulations with the random ones (**HSA, ensemble-wise results**).
+
+
+```r
+model = glm(formula = observed ~ ss_score_150sim + random_score - 1, data = pred_ew_hsa, family = binomial())
+model_tidy = broom::tidy(model)
+coef1 = model_tidy %>% filter(term == "ss_score_150sim") %>% pull(estimate)
+coef2 = model_tidy %>% filter(term == "random_score") %>% pull(estimate)
+pred_ew_hsa = pred_ew_hsa %>% mutate(glm = coef1 * ss_score_150sim + coef2 * random_score)
+res_roc = get_roc_stats(df = pred_ew_hsa, pred_col = "glm", label_col = "observed")
+res_pr = pr.curve(scores.class0 = pred_ew_hsa %>% pull(glm) %>% (function(x) {-x}), weights.class0 = pred_ew_hsa %>% pull(observed))
+```
+
+The model with the coefficients is as follows (note that adding an intercept makes ROC AUC result considerably worse):
+
+```r
+extract_eq(model, use_coefs = TRUE)
+```
+
+$$
+\log\left[ \frac { P( \text{observed} = \text{1} ) }{ 1 - P( \text{observed} = \text{1} ) } \right] = 13.37(\text{ss\_score\_150sim}) + 11.83(\text{random\_score}) + \epsilon
+$$
+
+:::{.orange-box}
+The ROC AUC produced with a logistic regression model is lower than the calibrated models (with $150$ Gitsbe simulations): 0.6938776 (PR-AUC is also lower: 0.0652647).
+:::
+
+### Regularized Logistic Regression {-}
+
+We try a regularized logistic regression approach using the `glmnet` R package [@R-glmnet].
+We cross validate the $\lambda$ parameter and try with different $\alpha \in [0,1]$ ($\alpha=0$ means Ridge regression, $\alpha=1$ means LASSO, in between means Elastic net) while either minimizing the missclassification error (`type.measure="class"`) or maximizing the ROC-AUC (`type.measure = "auc"`).
+For each respective $\alpha$ we choose the $\lambda_{min}$ as the one the minimizes the average CV error.
+The intercept was again excluded as it resulted in worse AUC performance.
+
+
+```r
+x = pred_ew_hsa %>% select(ss_score_150sim, random_score) %>% as.matrix()
+y = pred_ew_hsa %>% pull(observed)
+
+set.seed(42) # for reproducibility
+
+data_list = list()
+index = 1
+for (i in 0:10) { # from Ridge to LASSO
+  a = i/10
+  for (measure in c("auc", "class")) {
+    cvfit = cv.glmnet(x, y, family = "binomial", type.measure = measure, intercept = FALSE, alpha = a)
+    coef_mat = coef(cvfit, s = "lambda.min")
+    pred_ew_hsa = pred_ew_hsa %>% mutate(glm_reg = coef_mat[1] + coef_mat[2] * ss_score_150sim + coef_mat[3] * random_score)
+    res_roc = get_roc_stats(df = pred_ew_hsa, pred_col = "glm_reg", label_col = "observed")
+    pr_roc = pr.curve(scores.class0 = pred_ew_hsa %>% pull(glm_reg) %>% (function(x) {-x}), 
+      weights.class0 = pred_ew_hsa %>% pull(observed))
+    data_list[[index]] = as_tibble_row(list(alpha = a, measure = measure, ROC_AUC = res_roc$AUC, PR_AUC = pr_roc$auc.davis.goadrich))
+    index = index + 1
+  }
+}
+
+data = bind_rows(data_list)
+
+# List the best two results
+data %>% arrange(desc(ROC_AUC)) %>% slice(1:4) %>% kable()
+```
+
+
+
+ alpha  measure      ROC_AUC      PR_AUC
+------  --------  ----------  ----------
+   0.7  class      0.6893424   0.0639602
+   0.0  class      0.6870748   0.0634616
+   0.0  auc        0.6848073   0.0629667
+   0.2  class      0.6848073   0.0628084
+
+:::{.orange-box}
+The best ROC AUC produced with a regularized logistic regression model is also lower than the one using calibrated models alone (with $150$ Gitsbe simulations).
+:::
+
 ## Calibrated vs Random (Bliss) {-}
 
 :::{.note}
@@ -1392,41 +1474,44 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  assertthat_0.2.1    backports_1.1.6     base64enc_0.1.3    
-  BH_1.72.0.3         bibtex_0.4.2.2      bookdown_0.18      
-  callr_3.4.3         Ckmeans.1d.dp_4.3.2 cli_2.0.2          
-  clipr_0.7.0         colorspace_1.4-1    compiler_3.6.3     
-  corrplot_0.84       cowplot_1.0.0       crayon_1.3.4       
-  crosstalk_1.1.0.1   desc_1.2.0          digest_0.6.25      
-  dplyr_0.8.5         DT_0.13             ellipsis_0.3.0     
-  emba_0.1.4          evaluate_0.14       fansi_0.4.1        
-  farver_2.0.3        gbRd_0.4-11         ggplot2_3.3.0      
-  ggpubr_0.2.5        ggrepel_0.8.2       ggsci_2.9          
-  ggsignif_0.6.0      glue_1.4.0          graphics_3.6.3     
-  grDevices_3.6.3     grid_3.6.3          gridExtra_2.3      
-  gtable_0.3.0        highr_0.8           hms_0.5.3          
-  htmltools_0.4.0     htmlwidgets_1.5.1   igraph_1.2.5       
-  isoband_0.2.1       jsonlite_1.6.1      knitr_1.28         
-  labeling_0.3        later_1.0.0         latex2exp_0.4.0    
-  lattice_0.20.41     lazyeval_0.2.2      lifecycle_0.2.0    
-  magrittr_1.5        markdown_1.1        MASS_7.3.51.5      
-  Matrix_1.2.18       methods_3.6.3       mgcv_1.8.31        
-  mime_0.9            munsell_0.5.0       nlme_3.1.145       
-  pillar_1.4.3        pkgbuild_1.0.6      pkgconfig_2.0.3    
-  pkgload_1.0.2       plogr_0.2.0         polynom_1.4.0      
-  praise_1.0.0        prettyunits_1.1.1   processx_3.4.2     
-  promises_1.1.0      PRROC_1.3.1         ps_1.3.2           
-  purrr_0.3.3         R6_2.4.1            RColorBrewer_1.1-2 
-  Rcpp_1.0.4.6        Rdpack_0.11-1       readr_1.3.1        
-  rje_1.10.15         rlang_0.4.5         rmarkdown_2.1      
-  rprojroot_1.3.2     rstudioapi_0.11     scales_1.1.0       
-  splines_3.6.3       stats_3.6.3         stringi_1.4.6      
-  stringr_1.4.0       testthat_2.3.2      tibble_3.0.0       
-  tidyr_1.0.2         tidyselect_1.0.0    tinytex_0.21       
-  tools_3.6.3         usefun_0.4.5        utf8_1.1.4         
-  utils_3.6.3         vctrs_0.2.4         viridisLite_0.3.0  
-  visNetwork_2.0.9    withr_2.1.2         xfun_0.12          
-  yaml_2.2.1         
+  assertthat_0.2.1        backports_1.1.6         base64enc_0.1.3        
+  BH_1.72.0.3             bibtex_0.4.2.2          bookdown_0.18          
+  broom_0.5.6             callr_3.4.3             Ckmeans.1d.dp_4.3.2    
+  cli_2.0.2               clipr_0.7.0             codetools_0.2-16       
+  colorspace_1.4-1        compiler_3.6.3          corrplot_0.84          
+  cowplot_1.0.0           crayon_1.3.4            crosstalk_1.1.0.1      
+  desc_1.2.0              digest_0.6.25           dplyr_0.8.5            
+  DT_0.13                 ellipsis_0.3.0          emba_0.1.4             
+  equatiomatic_0.0.0.9000 evaluate_0.14           fansi_0.4.1            
+  farver_2.0.3            foreach_1.5.0           gbRd_0.4-11            
+  generics_0.0.2          ggplot2_3.3.0           ggpubr_0.2.5           
+  ggrepel_0.8.2           ggsci_2.9               ggsignif_0.6.0         
+  glmnet_3.0-2            glue_1.4.0              graphics_3.6.3         
+  grDevices_3.6.3         grid_3.6.3              gridExtra_2.3          
+  gtable_0.3.0            highr_0.8               hms_0.5.3              
+  htmltools_0.4.0         htmlwidgets_1.5.1       igraph_1.2.5           
+  isoband_0.2.1           iterators_1.0.12        jsonlite_1.6.1         
+  knitr_1.28              labeling_0.3            later_1.0.0            
+  latex2exp_0.4.0         lattice_0.20-41         lazyeval_0.2.2         
+  lifecycle_0.2.0         magrittr_1.5            markdown_1.1           
+  MASS_7.3.51.5           Matrix_1.2-18           methods_3.6.3          
+  mgcv_1.8.31             mime_0.9                munsell_0.5.0          
+  nlme_3.1-145            pillar_1.4.3            pkgbuild_1.0.6         
+  pkgconfig_2.0.3         pkgload_1.0.2           plogr_0.2.0            
+  plyr_1.8.6              polynom_1.4.0           praise_1.0.0           
+  prettyunits_1.1.1       processx_3.4.2          promises_1.1.0         
+  PRROC_1.3.1             ps_1.3.2                purrr_0.3.3            
+  R6_2.4.1                RColorBrewer_1.1-2      Rcpp_1.0.4.6           
+  Rdpack_0.11-1           readr_1.3.1             reshape2_1.4.4         
+  rje_1.10.15             rlang_0.4.5             rmarkdown_2.1          
+  rprojroot_1.3.2         rstudioapi_0.11         scales_1.1.0           
+  shape_1.4.4             splines_3.6.3           stats_3.6.3            
+  stringi_1.4.6           stringr_1.4.0           testthat_2.3.2         
+  tibble_3.0.0            tidyr_1.0.2             tidyselect_1.0.0       
+  tinytex_0.21            tools_3.6.3             usefun_0.4.5           
+  utf8_1.1.4              utils_3.6.3             vctrs_0.2.4            
+  viridisLite_0.3.0       visNetwork_2.0.9        withr_2.1.2            
+  xfun_0.12               yaml_2.2.1             
 ```
 
 # References {-}

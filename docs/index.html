@@ -886,6 +886,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-2"><i class="fa fa-check"></i>ROC AUC sensitivity</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-2"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#logistic-regression"><i class="fa fa-check"></i>Logistic Regression</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#regularized-logistic-regression"><i class="fa fa-check"></i>Regularized Logistic Regression</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#calibrated-vs-random-bliss-1"><i class="fa fa-check"></i>Calibrated vs Random (Bliss)</a>
 <ul>
@@ -927,11 +929,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">AGS paper I simulation results</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 27 April, 2020</em></p>
+<p class="date"><em>Last updated: 02 May, 2020</em></p>
 </div>
 <div id="intro" class="section level1 unnumbered" number="">
 <h1>Intro</h1>
-<p>This report has the AGS-Paper I data analysis and resulting figures.</p>
+<p>This report has the AGS-Paper I data analysis and resulting figures.
+Unless otherwise specified, the <code>Gitsbe</code> models have only <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm">link operator mutations</a>.</p>
 <p>For the ROC curves we used the function <code>get_roc_stats()</code> from <span class="citation">(Zobolas <a href="references.html#ref-R-usefun" role="doc-biblioref">2020</a>)</span> and for the PR curves the <code>pr.curve()</code> from <span class="citation">(Grau and Keilwagen <a href="references.html#ref-R-PRROC" role="doc-biblioref">2018</a>)</span> (based on <span class="citation">(Grau, Grosse, and Keilwagen <a href="references.html#ref-Grau2015" role="doc-biblioref">2015</a>)</span>).</p>
 </div>
             </section>
