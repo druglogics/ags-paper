@@ -1,8 +1,8 @@
 ---
-title: "AGS paper I simulation results"
+title: "AGS paper I - results investigation"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 02 May, 2020"
-description: "AGS paper I simulation results"
+date: "Last updated: 03 May, 2020"
+description: "AGS paper I results investigation"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
 bibliography: ["references.bib", "packages.bib"]
@@ -14,10 +14,12 @@ site: bookdown::bookdown_site
 
 # Intro {-}
 
-This report has the AGS-Paper I data analysis and resulting figures.
+This report has an investigation related to the AGS-Paper I simulations.
 Unless otherwise specified, the `Gitsbe` models have only [link operator mutations](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm).
 
-For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (based on [@Grau2015]).
+For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (see also [@Grau2015]).
+
+The analysis template is from the `rtemps` R package [@R-rtemps].
 
 # Input {-}
 
@@ -40,6 +42,7 @@ library(PRROC)
 library(equatiomatic)
 library(glmnet)
 library(knitr)
+library(MAMSE)
 ```
 
 # Cascade 1.0 Analysis {-}
@@ -203,7 +206,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (HSA, cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (HSA - cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -224,7 +227,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (HSA, cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (HSA - cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
@@ -254,7 +257,7 @@ ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TR
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (HSA, cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (HSA - cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -276,7 +279,7 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (HSA, cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (HSA - cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 ## Calibrated vs Random (Bliss) {-}
 
@@ -412,7 +415,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (Bliss, cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (Bliss - cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -433,7 +436,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (Bliss, cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (Bliss - cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
@@ -463,7 +466,7 @@ ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TR
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (Bliss, Cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (Bliss - Cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -485,7 +488,7 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (Bliss, Cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (Bliss - Cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 ## Correlation {-}
 
@@ -836,7 +839,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (HSA, cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (HSA - cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -857,7 +860,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
   color = my_palette[3]) + grids() #+ ylim(0.4, 0.9)
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (HSA, cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (HSA - cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
@@ -889,7 +892,7 @@ ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TR
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (HSA, Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (HSA - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -911,7 +914,7 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (HSA, Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (HSA - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 ### Logistic Regression {-}
 
@@ -954,13 +957,12 @@ The intercept was again excluded as it resulted in worse AUC performance.
 x = pred_ew_hsa %>% select(ss_score_150sim, random_score) %>% as.matrix()
 y = pred_ew_hsa %>% pull(observed)
 
-set.seed(42) # for reproducibility
-
 data_list = list()
 index = 1
 for (i in 0:10) { # from Ridge to LASSO
   a = i/10
   for (measure in c("auc", "class")) {
+    set.seed(42) # for reproducibility
     cvfit = cv.glmnet(x, y, family = "binomial", type.measure = measure, intercept = FALSE, alpha = a)
     coef_mat = coef(cvfit, s = "lambda.min")
     pred_ew_hsa = pred_ew_hsa %>% mutate(glm_reg = coef_mat[1] + coef_mat[2] * ss_score_150sim + coef_mat[3] * random_score)
@@ -982,14 +984,39 @@ data %>% arrange(desc(ROC_AUC)) %>% slice(1:4) %>% kable()
 
  alpha  measure      ROC_AUC      PR_AUC
 ------  --------  ----------  ----------
-   0.7  class      0.6893424   0.0639602
    0.0  class      0.6870748   0.0634616
    0.0  auc        0.6848073   0.0629667
-   0.2  class      0.6848073   0.0628084
+   0.1  auc        0.6836735   0.0625847
+   0.5  auc        0.6768707   0.0655809
 
 :::{.orange-box}
 The best ROC AUC produced with a regularized logistic regression model is also lower than the one using calibrated models alone (with $150$ Gitsbe simulations).
+
+Note that we get warnings when using `glmnet` because of the small number of observations for the positive class (observed synergies).
+Resulting coefficients vary, but tend to be either all too small or **larger on the random model predictor**.
 :::
+
+### MAMSE ROC {-}
+
+Using the `MAMSE` R package [@R-MAMSE] we try another method to combine the predictor values from the calibrated and random models.
+The resulting ROC curve gets a little bit distored and AUC is not statistically better from the reference sample population (i.e. the calibrated `Gitsbe` models with $150$):
+
+
+```r
+# healthy => non-synergy, diseased => synergy
+healthy = list()
+healthy[[1]] = pred_ew_hsa %>% filter(observed == 0) %>% pull(ss_score_150sim)
+healthy[[2]] = pred_ew_hsa %>% filter(observed == 0) %>% pull(random_score)
+
+diseased = list()
+diseased[[1]] = pred_ew_hsa %>% filter(observed == 1) %>% pull(ss_score_150sim)
+diseased[[2]] = pred_ew_hsa %>% filter(observed == 1) %>% pull(random_score)
+
+plot(roc(healthy = healthy, diseased = diseased, smalldiseased=TRUE, AUC=TRUE,
+  wh=NULL, wd=NULL, FPR=NULL, method="np"))
+```
+
+<img src="index_files/figure-html/MAMSE test-1.png" width="672" />
 
 ## Calibrated vs Random (Bliss) {-}
 
@@ -1277,7 +1304,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (Bliss, Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -1298,7 +1325,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/AUC sensitivity (Bliss, Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (Bliss - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 :::{.green-box}
 - Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
@@ -1331,7 +1358,7 @@ ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TR
   color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (Bliss, Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
@@ -1353,7 +1380,7 @@ ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = 
   color = my_palette[3]) + grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (Bliss, Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/PR AUC sensitivity (Bliss - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
 ## Correlation {-}
 
@@ -1385,14 +1412,1009 @@ corrplot(corr = M, type ="upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 - **Model-wise don't correlate with ensemble-wise results**.
 :::
 
+## Topology Mutations {-}
+
+:::{.note}
+We run `Gitsbe` simulations with $50$ topology mutations (bootstrap value, reduced to $10$ after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
+
+Results were assessed via `Drabme`'s ensemble and modelwise results, using both the HSA and Bliss method.
+:::
+
+Load the results:
 
 
+```r
+# 'ss' => calibrated models, 'rand' => proliferative models (so not random but kind of!)
+# 'ew' => ensemble-wise, 'mw' => modelwise
+
+## HSA results ss
+topo_ss_hsa_ew_50sim_file = paste0("results/topology-only/cascade_2.0_ss_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topo_ss_hsa_mw_50sim_file = paste0("results/topology-only/cascade_2.0_ss_50sim_fixpoints_hsa_modelwise_synergies.tab")
+topo_ss_hsa_ew_150sim_file = paste0("results/topology-only/cascade_2.0_ss_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topo_ss_hsa_mw_150sim_file = paste0("results/topology-only/cascade_2.0_ss_150sim_fixpoints_hsa_modelwise_synergies.tab")
+
+topo_ss_hsa_ew_synergies_50sim = emba::get_synergy_scores(topo_ss_hsa_ew_50sim_file)
+topo_ss_hsa_mw_synergies_50sim = emba::get_synergy_scores(topo_ss_hsa_mw_50sim_file, file_type = "modelwise")
+topo_ss_hsa_ew_synergies_150sim = emba::get_synergy_scores(topo_ss_hsa_ew_150sim_file)
+topo_ss_hsa_mw_synergies_150sim = emba::get_synergy_scores(topo_ss_hsa_mw_150sim_file, file_type = "modelwise")
+
+## HSA results rand
+topo_rand_hsa_ew_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topo_rand_hsa_mw_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
+topo_rand_hsa_ew_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topo_rand_hsa_mw_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
+
+topo_rand_hsa_ew_synergies_50sim = emba::get_synergy_scores(topo_rand_hsa_ew_50sim_file)
+topo_rand_hsa_mw_synergies_50sim = emba::get_synergy_scores(topo_rand_hsa_mw_50sim_file, file_type = "modelwise")
+topo_rand_hsa_ew_synergies_150sim = emba::get_synergy_scores(topo_rand_hsa_ew_150sim_file)
+topo_rand_hsa_mw_synergies_150sim = emba::get_synergy_scores(topo_rand_hsa_mw_150sim_file, file_type = "modelwise")
+
+## Bliss results ss
+topo_ss_bliss_ew_50sim_file = paste0("results/topology-only/cascade_2.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topo_ss_bliss_mw_50sim_file = paste0("results/topology-only/cascade_2.0_ss_50sim_fixpoints_bliss_modelwise_synergies.tab")
+topo_ss_bliss_ew_150sim_file = paste0("results/topology-only/cascade_2.0_ss_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topo_ss_bliss_mw_150sim_file = paste0("results/topology-only/cascade_2.0_ss_150sim_fixpoints_bliss_modelwise_synergies.tab")
+
+topo_ss_bliss_ew_synergies_50sim = emba::get_synergy_scores(topo_ss_bliss_ew_50sim_file)
+topo_ss_bliss_mw_synergies_50sim = emba::get_synergy_scores(topo_ss_bliss_mw_50sim_file, file_type = "modelwise")
+topo_ss_bliss_ew_synergies_150sim = emba::get_synergy_scores(topo_ss_bliss_ew_150sim_file)
+topo_ss_bliss_mw_synergies_150sim = emba::get_synergy_scores(topo_ss_bliss_mw_150sim_file, file_type = "modelwise")
+
+## Bliss results rand
+topo_rand_bliss_ew_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topo_rand_bliss_mw_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
+topo_rand_bliss_ew_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topo_rand_bliss_mw_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
+
+topo_rand_bliss_ew_synergies_50sim = emba::get_synergy_scores(topo_rand_bliss_ew_50sim_file)
+topo_rand_bliss_mw_synergies_50sim = emba::get_synergy_scores(topo_rand_bliss_mw_50sim_file, file_type = "modelwise")
+topo_rand_bliss_ew_synergies_150sim = emba::get_synergy_scores(topo_rand_bliss_ew_150sim_file)
+topo_rand_bliss_mw_synergies_150sim = emba::get_synergy_scores(topo_rand_bliss_mw_150sim_file, file_type = "modelwise")
+
+# calculate probability of synergy in the modelwise results
+topo_ss_hsa_mw_synergies_50sim = topo_ss_hsa_mw_synergies_50sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_ss_hsa_mw_synergies_150sim = topo_ss_hsa_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_rand_hsa_mw_synergies_50sim = topo_rand_hsa_mw_synergies_50sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_rand_hsa_mw_synergies_150sim = topo_rand_hsa_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_ss_bliss_mw_synergies_50sim = topo_ss_bliss_mw_synergies_50sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_ss_bliss_mw_synergies_150sim = topo_ss_bliss_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_rand_bliss_mw_synergies_50sim = topo_rand_bliss_mw_synergies_50sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topo_rand_bliss_mw_synergies_150sim = topo_rand_bliss_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+
+# Tidy the data
+pred_topo_ew_hsa = bind_cols(
+  topo_ss_hsa_ew_synergies_50sim %>% rename(ss_score_50sim = score),
+  topo_ss_hsa_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
+  topo_rand_hsa_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
+  topo_rand_hsa_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_topo_mw_hsa = bind_cols(
+  topo_ss_hsa_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  topo_ss_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
+  topo_rand_hsa_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
+  topo_rand_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_topo_ew_bliss = bind_cols(
+  topo_ss_bliss_ew_synergies_50sim %>% rename(ss_score_50sim = score),
+  topo_ss_bliss_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
+  topo_rand_bliss_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
+  topo_rand_bliss_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_topo_mw_bliss = bind_cols(
+  topo_ss_bliss_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  topo_ss_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
+  topo_rand_bliss_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
+  topo_rand_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  as_tibble_col(observed, column_name = "observed"))
+```
+
+### ROC curves (HSA) {-}
 
 
+```r
+topo_res_ss_ew_50sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
+topo_res_ss_ew_150sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
+topo_res_rand_ew_50sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "rand_score_50sim", label_col = "observed")
+topo_res_rand_ew_150sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "rand_score_150sim", label_col = "observed")
+
+topo_res_ss_mw_50sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+topo_res_ss_mw_150sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
+topo_res_rand_mw_50sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
+topo_res_rand_mw_150sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+
+# Plot ROCs
+plot(x = topo_res_ss_ew_50sim$roc_stats$FPR, y = topo_res_ss_ew_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topo_res_ss_ew_150sim$roc_stats$FPR, y = topo_res_ss_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topo_res_rand_ew_50sim$roc_stats$FPR, y = topo_res_rand_ew_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topo_res_rand_ew_150sim$roc_stats$FPR, y = topo_res_rand_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topo_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topo_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topo_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+plot(x = topo_res_ss_mw_50sim$roc_stats$FPR, y = topo_res_ss_mw_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topo_res_ss_mw_150sim$roc_stats$FPR, y = topo_res_ss_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topo_res_rand_mw_50sim$roc_stats$FPR, y = topo_res_rand_mw_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topo_res_rand_mw_150sim$roc_stats$FPR, y = topo_res_rand_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topo_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topo_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topo_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+```
+
+<img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - HSA)-2.png" width="50%" />
+
+### PR curves (HSA) {-}
 
 
+```r
+pr_topo_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topo_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE)
+
+pr_topo_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_ss_50sim),
+  weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topo_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_ss_150sim),
+  weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_rand_50sim),
+  weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_rand_150sim),
+  weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE)
+
+plot(pr_topo_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (HSA)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topo_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topo_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topo_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topo_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topo_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+
+plot(pr_topo_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (HSA)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topo_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topo_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topo_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topo_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topo_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - HSA)-2.png" width="50%" />
+
+### ROC-AUC sensitivity (HSA) {-}
+
+Combine the $150$ simulation results (calibrated + proliferative)
+
+```r
+# Ensemble-wise
+betas = seq(from = -20, to = 20, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topo_ew_hsa = pred_topo_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "combined_score", label_col = "observed")
+  auc_value = res$AUC
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology Mutations (HSA - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_topo_mw_hsa = pred_topo_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_topo_mw_hsa$synergy_prob_ss_150sim + w * pred_topo_mw_hsa$synergy_prob_rand_150sim)
+  res = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
+  auc_value = res$AUC
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology Mutations (HSA - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+
+### PR-AUC sensitivity (HSA) {-}
+
+Combine the $150$ simulation results (calibrated + proliferative)
+
+```r
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topo_ew_hsa = pred_topo_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topo_ew_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under PR Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/PR-AUC sensitivity Topology Mutations (HSA - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+### ROC curves (Bliss) {-}
 
 
+```r
+topo_res_ss_ew_50sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "ss_score_50sim", label_col = "observed")
+topo_res_ss_ew_150sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "ss_score_150sim", label_col = "observed")
+topo_res_rand_ew_50sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "rand_score_50sim", label_col = "observed")
+topo_res_rand_ew_150sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "rand_score_150sim", label_col = "observed")
+
+topo_res_ss_mw_50sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+topo_res_ss_mw_150sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
+topo_res_rand_mw_50sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
+topo_res_rand_mw_150sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+
+# Plot ROCs
+plot(x = topo_res_ss_ew_50sim$roc_stats$FPR, y = topo_res_ss_ew_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topo_res_ss_ew_150sim$roc_stats$FPR, y = topo_res_ss_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topo_res_rand_ew_50sim$roc_stats$FPR, y = topo_res_rand_ew_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topo_res_rand_ew_150sim$roc_stats$FPR, y = topo_res_rand_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topo_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topo_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topo_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+plot(x = topo_res_ss_mw_50sim$roc_stats$FPR, y = topo_res_ss_mw_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topo_res_ss_mw_150sim$roc_stats$FPR, y = topo_res_ss_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topo_res_rand_mw_50sim$roc_stats$FPR, y = topo_res_rand_mw_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topo_res_rand_mw_150sim$roc_stats$FPR, y = topo_res_rand_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topo_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topo_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topo_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+```
+
+<img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - Bliss)-2.png" width="50%" />
+
+### PR curves (Bliss) {-}
+
+
+```r
+pr_topo_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topo_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
+
+pr_topo_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_ss_50sim),
+  weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topo_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_ss_150sim),
+  weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_rand_50sim),
+  weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE)
+pr_topo_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_rand_150sim),
+  weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE)
+
+plot(pr_topo_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topo_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topo_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topo_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topo_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topo_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+
+plot(pr_topo_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topo_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topo_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topo_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topo_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topo_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - Bliss)-2.png" width="50%" />
+
+### ROC-AUC sensitivity (Bliss) {-}
+
+
+```r
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "combined_score", label_col = "observed")
+  auc_value = res$AUC
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology Mutations (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+### PR-AUC sensitivity (Bliss) {-}
+
+
+```r
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topo_ew_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under PR Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/PR-AUC sensitivity Topology Mutations (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+### ROC and PRC for best beta (Bliss) {-}
+
+
+```r
+best_beta = -1
+pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(best_score = ss_score_150sim + best_beta * rand_score_150sim)
+
+roc_best_res = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "best_score", label_col = "observed")
+pr_best_res = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(best_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+# Plot best ROC
+plot(x = roc_best_res$roc_stats$FPR, y = roc_best_res$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = TeX('ROC curve (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+legend('bottomright', title = TeX('AUC ($\\beta$ = -1)'), col = my_palette[1], pch = 19,
+  legend = paste(round(roc_best_res$AUC, digits = 2), 'Bliss (150 sim)'))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+# Plot best PRC
+plot(pr_best_res, main = TeX('PR curve (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
+  auc.main = FALSE, color = my_palette[2], rand.plot = TRUE)
+legend('topright', title = TeX('AUC ($\\beta$ = -1)'), col = my_palette[2], pch = 19,
+  legend = paste(round(pr_best_res$auc.davis.goadrich, digits = 3), 'Bliss (150 sim)'))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/ROC and PRC for best beta - Topology Mutations (Bliss - Cascade 2.0)-1.png" width="50%" /><img src="index_files/figure-html/ROC and PRC for best beta - Topology Mutations (Bliss - Cascade 2.0)-2.png" width="50%" />
+
+## Both Topology & Link Operator Mutations {-}
+
+:::{.note}
+We run `Gitsbe` simulations with $50$ topology mutations and $3000$ link operator mutations (bootstrap values, reduced to $10$ and $3$ respectively after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
+
+Results were assessed via `Drabme`'s ensemble and modelwise results, using both the HSA and Bliss method.
+:::
+
+
+```r
+# 'ss' => calibrated models, 'rand' => proliferative models (so not random but kind of!)
+# 'ew' => ensemble-wise, 'mw' => modelwise
+
+## HSA results ss
+topolink_ss_hsa_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_ss_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topolink_ss_hsa_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_ss_50sim_fixpoints_hsa_modelwise_synergies.tab")
+topolink_ss_hsa_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_ss_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topolink_ss_hsa_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_ss_150sim_fixpoints_hsa_modelwise_synergies.tab")
+
+topolink_ss_hsa_ew_synergies_50sim = emba::get_synergy_scores(topolink_ss_hsa_ew_50sim_file)
+topolink_ss_hsa_mw_synergies_50sim = emba::get_synergy_scores(topolink_ss_hsa_mw_50sim_file, file_type = "modelwise")
+topolink_ss_hsa_ew_synergies_150sim = emba::get_synergy_scores(topolink_ss_hsa_ew_150sim_file)
+topolink_ss_hsa_mw_synergies_150sim = emba::get_synergy_scores(topolink_ss_hsa_mw_150sim_file, file_type = "modelwise")
+
+## HSA results rand
+topolink_rand_hsa_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topolink_rand_hsa_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
+topolink_rand_hsa_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topolink_rand_hsa_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
+
+topolink_rand_hsa_ew_synergies_50sim = emba::get_synergy_scores(topolink_rand_hsa_ew_50sim_file)
+topolink_rand_hsa_mw_synergies_50sim = emba::get_synergy_scores(topolink_rand_hsa_mw_50sim_file, file_type = "modelwise")
+topolink_rand_hsa_ew_synergies_150sim = emba::get_synergy_scores(topolink_rand_hsa_ew_150sim_file)
+topolink_rand_hsa_mw_synergies_150sim = emba::get_synergy_scores(topolink_rand_hsa_mw_150sim_file, file_type = "modelwise")
+
+## Bliss results ss
+topolink_ss_bliss_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topolink_ss_bliss_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_ss_50sim_fixpoints_bliss_modelwise_synergies.tab")
+topolink_ss_bliss_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_ss_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topolink_ss_bliss_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_ss_150sim_fixpoints_bliss_modelwise_synergies.tab")
+
+topolink_ss_bliss_ew_synergies_50sim = emba::get_synergy_scores(topolink_ss_bliss_ew_50sim_file)
+topolink_ss_bliss_mw_synergies_50sim = emba::get_synergy_scores(topolink_ss_bliss_mw_50sim_file, file_type = "modelwise")
+topolink_ss_bliss_ew_synergies_150sim = emba::get_synergy_scores(topolink_ss_bliss_ew_150sim_file)
+topolink_ss_bliss_mw_synergies_150sim = emba::get_synergy_scores(topolink_ss_bliss_mw_150sim_file, file_type = "modelwise")
+
+## Bliss results rand
+topolink_rand_bliss_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topolink_rand_bliss_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
+topolink_rand_bliss_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topolink_rand_bliss_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
+
+topolink_rand_bliss_ew_synergies_50sim = emba::get_synergy_scores(topolink_rand_bliss_ew_50sim_file)
+topolink_rand_bliss_mw_synergies_50sim = emba::get_synergy_scores(topolink_rand_bliss_mw_50sim_file, file_type = "modelwise")
+topolink_rand_bliss_ew_synergies_150sim = emba::get_synergy_scores(topolink_rand_bliss_ew_150sim_file)
+topolink_rand_bliss_mw_synergies_150sim = emba::get_synergy_scores(topolink_rand_bliss_mw_150sim_file, file_type = "modelwise")
+
+# calculate probability of synergy in the modelwise results
+topolink_ss_hsa_mw_synergies_50sim = topolink_ss_hsa_mw_synergies_50sim %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_ss_hsa_mw_synergies_150sim = topolink_ss_hsa_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_rand_hsa_mw_synergies_50sim = topolink_rand_hsa_mw_synergies_50sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_rand_hsa_mw_synergies_150sim = topolink_rand_hsa_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_ss_bliss_mw_synergies_50sim = topolink_ss_bliss_mw_synergies_50sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_ss_bliss_mw_synergies_150sim = topolink_ss_bliss_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_rand_bliss_mw_synergies_50sim = topolink_rand_bliss_mw_synergies_50sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+topolink_rand_bliss_mw_synergies_150sim = topolink_rand_bliss_mw_synergies_150sim %>%
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+
+# Tidy the data
+pred_topolink_ew_hsa = bind_cols(
+  topolink_ss_hsa_ew_synergies_50sim %>% rename(ss_score_50sim = score),
+  topolink_ss_hsa_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
+  topolink_rand_hsa_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
+  topolink_rand_hsa_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_topolink_mw_hsa = bind_cols(
+  topolink_ss_hsa_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  topolink_ss_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
+  topolink_rand_hsa_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
+  topolink_rand_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_topolink_ew_bliss = bind_cols(
+  topolink_ss_bliss_ew_synergies_50sim %>% rename(ss_score_50sim = score),
+  topolink_ss_bliss_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
+  topolink_rand_bliss_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
+  topolink_rand_bliss_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  as_tibble_col(observed, column_name = "observed"))
+
+pred_topolink_mw_bliss = bind_cols(
+  topolink_ss_bliss_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  topolink_ss_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
+  topolink_rand_bliss_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
+  topolink_rand_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  as_tibble_col(observed, column_name = "observed"))
+```
+
+### ROC curves (HSA) {-}
+
+
+```r
+topolink_res_ss_ew_50sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
+topolink_res_ss_ew_150sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
+topolink_res_rand_ew_50sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "rand_score_50sim", label_col = "observed")
+topolink_res_rand_ew_150sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "rand_score_150sim", label_col = "observed")
+
+topolink_res_ss_mw_50sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+topolink_res_ss_mw_150sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
+topolink_res_rand_mw_50sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
+topolink_res_rand_mw_150sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+
+# Plot ROCs
+plot(x = topolink_res_ss_ew_50sim$roc_stats$FPR, y = topolink_res_ss_ew_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topolink_res_ss_ew_150sim$roc_stats$FPR, y = topolink_res_ss_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topolink_res_rand_ew_50sim$roc_stats$FPR, y = topolink_res_rand_ew_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topolink_res_rand_ew_150sim$roc_stats$FPR, y = topolink_res_rand_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topolink_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topolink_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topolink_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+plot(x = topolink_res_ss_mw_50sim$roc_stats$FPR, y = topolink_res_ss_mw_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topolink_res_ss_mw_150sim$roc_stats$FPR, y = topolink_res_ss_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topolink_res_rand_mw_50sim$roc_stats$FPR, y = topolink_res_rand_mw_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topolink_res_rand_mw_150sim$roc_stats$FPR, y = topolink_res_rand_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topolink_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topolink_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topolink_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+```
+
+<img src="index_files/figure-html/ROC curves Topology and Link Operator Mutations (Cascade 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology and Link Operator Mutations (Cascade 2.0 - HSA)-2.png" width="50%" />
+
+### PR curves (HSA) {-}
+
+
+```r
+pr_topolink_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topolink_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE)
+
+pr_topolink_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_ss_50sim),
+  weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topolink_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_ss_150sim),
+  weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_rand_50sim),
+  weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_rand_150sim),
+  weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE)
+
+plot(pr_topolink_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (HSA)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topolink_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topolink_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topolink_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topolink_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topolink_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+
+plot(pr_topolink_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (HSA)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topolink_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topolink_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topolink_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topolink_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topolink_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/PR curves Topology and Link Mutations (Cascade 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology and Link Mutations (Cascade 2.0 - HSA)-2.png" width="50%" />
+
+### ROC-AUC sensitivity (HSA) {-}
+
+Combine the $150$ simulation results (calibrated + proliferative)
+
+```r
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "combined_score", label_col = "observed")
+  auc_value = res$AUC
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", label.rectangle = TRUE, repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (HSA - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_topolink_mw_hsa = pred_topolink_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_rand_150sim)
+  res = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
+  auc_value = res$AUC
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (HSA - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+
+### PR-AUC sensitivity (HSA) {-}
+
+Combine the $150$ simulation results (calibrated + proliferative)
+
+```r
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under PR Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", label.rectangle = TRUE, repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (HSA - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_topolink_mw_hsa = pred_topolink_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_rand_150sim)
+  res = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(weighted_prob), 
+    weights.class0 = pred_topolink_mw_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under PR Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (HSA - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+
+### ROC curves (Bliss) {-}
+
+
+```r
+topolink_res_ss_ew_50sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "ss_score_50sim", label_col = "observed")
+topolink_res_ss_ew_150sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "ss_score_150sim", label_col = "observed")
+topolink_res_rand_ew_50sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "rand_score_50sim", label_col = "observed")
+topolink_res_rand_ew_150sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "rand_score_150sim", label_col = "observed")
+
+topolink_res_ss_mw_50sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
+topolink_res_ss_mw_150sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
+topolink_res_rand_mw_50sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
+topolink_res_rand_mw_150sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+
+# Plot ROCs
+plot(x = topolink_res_ss_ew_50sim$roc_stats$FPR, y = topolink_res_ss_ew_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topolink_res_ss_ew_150sim$roc_stats$FPR, y = topolink_res_ss_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topolink_res_rand_ew_50sim$roc_stats$FPR, y = topolink_res_rand_ew_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topolink_res_rand_ew_150sim$roc_stats$FPR, y = topolink_res_rand_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topolink_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topolink_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topolink_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+plot(x = topolink_res_ss_mw_50sim$roc_stats$FPR, y = topolink_res_ss_mw_50sim$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = topolink_res_ss_mw_150sim$roc_stats$FPR, y = topolink_res_ss_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = topolink_res_rand_mw_50sim$roc_stats$FPR, y = topolink_res_rand_mw_50sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+lines(x = topolink_res_rand_mw_150sim$roc_stats$FPR, y = topolink_res_rand_mw_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(topolink_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
+    paste(round(topolink_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
+    paste(round(topolink_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+```
+
+<img src="index_files/figure-html/ROC curves Topology and Link Mutations (Cascade 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology and Link Mutations (Cascade 2.0 - Bliss)-2.png" width="50%" />
+
+### PR curves (Bliss) {-}
+
+
+```r
+pr_topolink_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topolink_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+  weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
+
+pr_topolink_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_ss_50sim),
+  weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_topolink_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_ss_150sim),
+  weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_rand_50sim),
+  weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE)
+pr_topolink_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_rand_150sim),
+  weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE)
+
+plot(pr_topolink_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topolink_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topolink_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topolink_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topolink_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topolink_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+
+plot(pr_topolink_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_topolink_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
+plot(pr_topolink_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
+  legend = c(paste(round(pr_topolink_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+    paste(round(pr_topolink_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
+    paste(round(pr_topolink_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/PR curves Topology and Link Mutations (Cascade 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology and Link Mutations (Cascade 2.0 - Bliss)-2.png" width="50%" />
+
+### ROC-AUC sensitivity (Bliss) {-}
+
+Combine the $150$ simulation results (calibrated + proliferative)
+
+```r
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "combined_score", label_col = "observed")
+  auc_value = res$AUC
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_topolink_mw_bliss = pred_topolink_mw_bliss %>% 
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_rand_150sim)
+  res = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "weighted_prob", label_col = "observed", direction = ">")
+  auc_value = res$AUC
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (Bliss - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+
+### PR-AUC sensitivity (Bliss) {-}
+
+Combine the $150$ simulation results (calibrated + proliferative)
+
+```r
+# Ensemble-wise
+betas = seq(from = -10, to = 10, by = 0.1)
+
+auc_values_ew = sapply(betas, function(beta) {
+  pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  res = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_ew = as_tibble(cbind(betas, auc_values_ew))
+
+ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under PR Curve)",
+  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
+  color = my_palette[2], label = "betas", repel = TRUE,
+  label.select = list(criteria = "`y` == max(`y`)"),
+  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+```
+
+<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+
+```r
+# Model-wise
+weights = seq(from = 0, to = 1, by = 0.05)
+
+auc_values_mw = sapply(weights, function(w) {
+  pred_topolink_mw_bliss = pred_topolink_mw_bliss %>% 
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_rand_150sim)
+  res = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(weighted_prob), 
+    weights.class0 = pred_topolink_mw_bliss %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
+
+df_mw = as_tibble(cbind(weights, auc_values_mw))
+
+ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under PR Curve)",
+  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
+  color = my_palette[3]) + grids()
+```
+
+<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (Bliss - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+
+### ROC and PRC for best beta (HSA & Bliss) {-}
+
+Use the best betas from the PR-AUC sensitivity graphs (separately for Bliss and HSA)!
+
+
+```r
+best_beta_hsa = -1
+best_best_bliss = -1.3
+pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(best_score = ss_score_150sim + best_beta_hsa * rand_score_150sim)
+pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(best_score = ss_score_150sim + best_best_bliss * rand_score_150sim)
+
+roc_best_res_hsa = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "best_score", label_col = "observed")
+roc_best_res_bliss = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "best_score", label_col = "observed")
+
+pr_best_res_hsa = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(best_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_best_res_bliss = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(best_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
+
+# Plot best ROCs
+plot(x = roc_best_res_hsa$roc_stats$FPR, y = roc_best_res_hsa$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = TeX('ROC curve (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = roc_best_res_bliss$roc_stats$FPR, y = roc_best_res_bliss$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+legend('bottomright', title = TeX('AUC ($\\beta_{HSA}$ = -1, $\\beta_{Bliss}$ = -1.3)'), 
+  col = c(my_palette[1], my_palette[3]), pch = 19,
+  legend = c(paste(round(roc_best_res_hsa$AUC, digits = 2), 'HSA (150 sim)'),
+    paste(round(roc_best_res_bliss$AUC, digits = 2), 'Bliss (150 sim)')))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+# Plot best PRCs
+plot(pr_best_res_hsa, main = TeX('PR curve (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_best_res_bliss, add = TRUE, color = my_palette[3])
+legend('topright', title = TeX('AUC ($\\beta_{HSA}$ = -1, $\\beta_{Bliss}$ = -1.3)'), col = c(my_palette[1], my_palette[3]), pch = 19,
+  legend = c(paste(round(pr_best_res_hsa$auc.davis.goadrich, digits = 2), 'HSA (150 sim)'),
+    paste(round(pr_best_res_bliss$auc.davis.goadrich, digits = 2), 'Bliss (150 sim)')))
+grid(lwd = 0.5)
+```
+
+<img src="index_files/figure-html/ROC and PRC for best beta - Topology and Link Mutations (HSA and Bliss - Cascade 2.0)-1.png" width="50%" /><img src="index_files/figure-html/ROC and PRC for best beta - Topology and Link Mutations (HSA and Bliss - Cascade 2.0)-2.png" width="50%" />
 
 ## Fitness vs performance {-}
 
@@ -1493,25 +2515,25 @@ Package version:
   isoband_0.2.1           iterators_1.0.12        jsonlite_1.6.1         
   knitr_1.28              labeling_0.3            later_1.0.0            
   latex2exp_0.4.0         lattice_0.20-41         lazyeval_0.2.2         
-  lifecycle_0.2.0         magrittr_1.5            markdown_1.1           
-  MASS_7.3.51.5           Matrix_1.2-18           methods_3.6.3          
-  mgcv_1.8.31             mime_0.9                munsell_0.5.0          
-  nlme_3.1-145            pillar_1.4.3            pkgbuild_1.0.6         
-  pkgconfig_2.0.3         pkgload_1.0.2           plogr_0.2.0            
-  plyr_1.8.6              polynom_1.4.0           praise_1.0.0           
-  prettyunits_1.1.1       processx_3.4.2          promises_1.1.0         
-  PRROC_1.3.1             ps_1.3.2                purrr_0.3.3            
-  R6_2.4.1                RColorBrewer_1.1-2      Rcpp_1.0.4.6           
-  Rdpack_0.11-1           readr_1.3.1             reshape2_1.4.4         
-  rje_1.10.15             rlang_0.4.5             rmarkdown_2.1          
-  rprojroot_1.3.2         rstudioapi_0.11         scales_1.1.0           
-  shape_1.4.4             splines_3.6.3           stats_3.6.3            
-  stringi_1.4.6           stringr_1.4.0           testthat_2.3.2         
-  tibble_3.0.0            tidyr_1.0.2             tidyselect_1.0.0       
-  tinytex_0.21            tools_3.6.3             usefun_0.4.5           
-  utf8_1.1.4              utils_3.6.3             vctrs_0.2.4            
-  viridisLite_0.3.0       visNetwork_2.0.9        withr_2.1.2            
-  xfun_0.12               yaml_2.2.1             
+  lifecycle_0.2.0         magrittr_1.5            MAMSE_0.2-1            
+  markdown_1.1            MASS_7.3.51.5           Matrix_1.2-18          
+  methods_3.6.3           mgcv_1.8.31             mime_0.9               
+  munsell_0.5.0           nlme_3.1-145            pillar_1.4.3           
+  pkgbuild_1.0.6          pkgconfig_2.0.3         pkgload_1.0.2          
+  plogr_0.2.0             plyr_1.8.6              polynom_1.4.0          
+  praise_1.0.0            prettyunits_1.1.1       processx_3.4.2         
+  promises_1.1.0          PRROC_1.3.1             ps_1.3.2               
+  purrr_0.3.3             R6_2.4.1                RColorBrewer_1.1-2     
+  Rcpp_1.0.4.6            Rdpack_0.11-1           readr_1.3.1            
+  reshape2_1.4.4          rje_1.10.15             rlang_0.4.5            
+  rmarkdown_2.1           rprojroot_1.3.2         rstudioapi_0.11        
+  scales_1.1.0            shape_1.4.4             splines_3.6.3          
+  stats_3.6.3             stringi_1.4.6           stringr_1.4.0          
+  testthat_2.3.2          tibble_3.0.0            tidyr_1.0.2            
+  tidyselect_1.0.0        tinytex_0.21            tools_3.6.3            
+  usefun_0.4.5            utf8_1.1.4              utils_3.6.3            
+  vctrs_0.2.4             viridisLite_0.3.0       visNetwork_2.0.9       
+  withr_2.1.2             xfun_0.12               yaml_2.2.1             
 ```
 
 # References {-}

@@ -4,21 +4,21 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>AGS paper I simulation results</title>
-  <meta name="description" content="AGS paper I simulation results" />
+  <title>AGS paper I - results investigation</title>
+  <meta name="description" content="AGS paper I results investigation" />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="AGS paper I simulation results" />
+  <meta property="og:title" content="AGS paper I - results investigation" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://username.github.io/reponame/" />
   
-  <meta property="og:description" content="AGS paper I simulation results" />
+  <meta property="og:description" content="AGS paper I results investigation" />
   <meta name="github-repo" content="username/reponame" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="AGS paper I simulation results" />
+  <meta name="twitter:title" content="AGS paper I - results investigation" />
   
-  <meta name="twitter:description" content="AGS paper I simulation results" />
+  <meta name="twitter:description" content="AGS paper I results investigation" />
   
 
 <meta name="author" content="John Zobolas" />
@@ -888,6 +888,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-2"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#logistic-regression"><i class="fa fa-check"></i>Logistic Regression</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#regularized-logistic-regression"><i class="fa fa-check"></i>Regularized Logistic Regression</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#mamse-roc"><i class="fa fa-check"></i>MAMSE ROC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#calibrated-vs-random-bliss-1"><i class="fa fa-check"></i>Calibrated vs Random (Bliss)</a>
 <ul>
@@ -897,6 +898,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-3"><i class="fa fa-check"></i>PR AUC sensitivity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#topology-mutations"><i class="fa fa-check"></i>Topology Mutations</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-curves-hsa"><i class="fa fa-check"></i>ROC curves (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-hsa"><i class="fa fa-check"></i>PR curves (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-hsa"><i class="fa fa-check"></i>ROC-AUC sensitivity (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-hsa"><i class="fa fa-check"></i>PR-AUC sensitivity (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-curves-bliss"><i class="fa fa-check"></i>ROC curves (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-bliss"><i class="fa fa-check"></i>PR curves (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-bliss"><i class="fa fa-check"></i>ROC-AUC sensitivity (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-bliss"><i class="fa fa-check"></i>PR-AUC sensitivity (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-and-prc-for-best-beta-bliss"><i class="fa fa-check"></i>ROC and PRC for best beta (Bliss)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#both-topology-link-operator-mutations"><i class="fa fa-check"></i>Both Topology &amp; Link Operator Mutations</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-curves-hsa-1"><i class="fa fa-check"></i>ROC curves (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-hsa-1"><i class="fa fa-check"></i>PR curves (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-hsa-1"><i class="fa fa-check"></i>ROC-AUC sensitivity (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-hsa-1"><i class="fa fa-check"></i>PR-AUC sensitivity (HSA)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-curves-bliss-1"><i class="fa fa-check"></i>ROC curves (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-curves-bliss-1"><i class="fa fa-check"></i>PR curves (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-auc-sensitivity-bliss-1"><i class="fa fa-check"></i>ROC-AUC sensitivity (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#pr-auc-sensitivity-bliss-1"><i class="fa fa-check"></i>PR-AUC sensitivity (Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#roc-and-prc-for-best-beta-hsa-bliss"><i class="fa fa-check"></i>ROC and PRC for best beta (HSA &amp; Bliss)</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis.html"><a href="cascade-2-0-analysis.html#fitness-vs-performance"><i class="fa fa-check"></i>Fitness vs performance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
@@ -918,7 +943,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AGS paper I simulation results</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AGS paper I - results investigation</a>
           </h1>
         </div>
 
@@ -927,15 +952,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">AGS paper I simulation results</h1>
+<h1 class="title">AGS paper I - results investigation</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 02 May, 2020</em></p>
+<p class="date"><em>Last updated: 03 May, 2020</em></p>
 </div>
 <div id="intro" class="section level1 unnumbered" number="">
 <h1>Intro</h1>
-<p>This report has the AGS-Paper I data analysis and resulting figures.
+<p>This report has an investigation related to the AGS-Paper I simulations.
 Unless otherwise specified, the <code>Gitsbe</code> models have only <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm">link operator mutations</a>.</p>
-<p>For the ROC curves we used the function <code>get_roc_stats()</code> from <span class="citation">(Zobolas <a href="references.html#ref-R-usefun" role="doc-biblioref">2020</a>)</span> and for the PR curves the <code>pr.curve()</code> from <span class="citation">(Grau and Keilwagen <a href="references.html#ref-R-PRROC" role="doc-biblioref">2018</a>)</span> (based on <span class="citation">(Grau, Grosse, and Keilwagen <a href="references.html#ref-Grau2015" role="doc-biblioref">2015</a>)</span>).</p>
+<p>For the ROC curves we used the function <code>get_roc_stats()</code> from <span class="citation">(Zobolas <a href="references.html#ref-R-usefun" role="doc-biblioref">2020</a><a href="references.html#ref-R-usefun" role="doc-biblioref">b</a>)</span> and for the PR curves the <code>pr.curve()</code> from <span class="citation">(Grau and Keilwagen <a href="references.html#ref-R-PRROC" role="doc-biblioref">2018</a>)</span> (see also <span class="citation">(Grau, Grosse, and Keilwagen <a href="references.html#ref-Grau2015" role="doc-biblioref">2015</a>)</span>).</p>
+<p>The analysis template is from the <code>rtemps</code> R package <span class="citation">(Zobolas <a href="references.html#ref-R-rtemps" role="doc-biblioref">2020</a><a href="references.html#ref-R-rtemps" role="doc-biblioref">a</a>)</span>.</p>
 </div>
             </section>
 
