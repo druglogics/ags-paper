@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - SI"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 05 May, 2020"
+date: "Last updated: 07 May, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -14,23 +14,23 @@ site: bookdown::bookdown_site
 
 # Intro {-}
 
-This report is the supplementary material for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as guidelines for reproducing the results.
+This report is the **supplementary material** for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as guidelines for reproducing the results.
 
 A list of things that change between the simulations and the presented graphs are:
 
 - The number of `Gitsbe` simulations: more simulations, more models generated.
 - The type of mutation that `Gitsbe` models have:
 unless otherwise specified, the `Gitsbe` models have only [link operator mutations](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm).
-[Topology mutations] were also tested as well as a combination of topology and link operator mutations.
-- The training data for the `Gitsbe` models: *steady state* (calibrated models) vs *proliferative profile* (proliferative models).
+[Topology mutations] were also tested as well as a combination of [topology and link operator mutations].
+- The [training data](https://druglogics.github.io/druglogics-doc/training-data.html) for the `Gitsbe` models: *steady state* (calibrated models) vs *proliferative profile* (proliferative models).
 Also *randomly generated models* were produced for the link operator mutations using the [abmlog module](https://github.com/druglogics/abmlog).
-- The type of mathematical model (HSA or Bliss) used in `Drabme` to evaluate the synergies from the [@Flobak2019] dataset.
-More info see [here](https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description).
+- The type of mathematical model (HSA or Bliss) used in `Drabme` to evaluate the synergies either from the [@Flobak2015] for the [Cascade 1.0 Analysis] or from the [@Flobak2019] dataset for the [Cascade 2.0 Analysis].
+More info on the calcualtions that Drabme does [see here](https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description).
 - The type of output used from `Drabme`: ensemble-wise or model-wise [synergy results](https://druglogics.github.io/druglogics-doc/drabme-install.html#drabme-output).
 
 For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (see also [@Grau2015]).
 
-The analysis template is from the `rtemps` R package [@R-rtemps].
+The report template is from the `rtemps` R package [@R-rtemps].
 
 # Input {-}
 
@@ -62,33 +62,42 @@ library(MAMSE)
 Performance of automatically parameterized models against published data in [@Flobak2015]
 :::
 
-## Calibrated vs Random (HSA) {-}
+## HSA results {-}
 
 :::{.note}
 - *HSA* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
-- We test performance using ROC AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
-- **Calibrated** models: fitted to steady state
+- We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
+- **Calibrated** models: fitted to steady state ($50$ simulations)
+- **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response)
 - **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: hsa`
+- Mutations on **link operator** only
 :::
 
 Load results:
 
 ```r
-# 'ss' => calibrated models, 'random' => random models
+# 'ss' => calibrated models, 'random' => random models, 'prolif' => proliferative models
+# 'ew' => ensemble-wise, 'mw' => model-wise
 
 ## HSA results
-ss_hsa_ensemblewise_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_modelwise_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-random_hsa_ensemblewise_file = paste0("results/hsa/cascade_1.0_random_ensemblewise_synergies.tab")
-random_hsa_modelwise_file = paste0("results/hsa/cascade_1.0_random_modelwise_synergies.tab")
+ss_hsa_ew_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
+ss_hsa_mw_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab")
+prolif_hsa_ew_file = paste0("results/hsa/cascade_1.0_rand_50sim_fixpoints_ensemblewise_synergies.tab")
+prolif_hsa_mw_file = paste0("results/hsa/cascade_1.0_rand_50sim_fixpoints_modelwise_synergies.tab")
+random_hsa_ew_file = paste0("results/hsa/cascade_1.0_random_ensemblewise_synergies.tab")
+random_hsa_mw_file = paste0("results/hsa/cascade_1.0_random_modelwise_synergies.tab")
 
-ss_hsa_ensemblewise_synergies = emba::get_synergy_scores(ss_hsa_ensemblewise_file)
-ss_hsa_modelwise_synergies = emba::get_synergy_scores(ss_hsa_modelwise_file, file_type = "modelwise")
-random_hsa_ensemblewise_synergies = emba::get_synergy_scores(random_hsa_ensemblewise_file)
-random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_modelwise_file, file_type = "modelwise")
+ss_hsa_ensemblewise_synergies = emba::get_synergy_scores(ss_hsa_ew_file)
+ss_hsa_modelwise_synergies = emba::get_synergy_scores(ss_hsa_mw_file, file_type = "modelwise")
+prolif_hsa_ensemblewise_synergies = emba::get_synergy_scores(prolif_hsa_ew_file)
+prolif_hsa_modelwise_synergies = emba::get_synergy_scores(prolif_hsa_mw_file, file_type = "modelwise")
+random_hsa_ensemblewise_synergies = emba::get_synergy_scores(random_hsa_ew_file)
+random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_mw_file, file_type = "modelwise")
 
 # calculate probability of synergy in the modelwise results
 ss_hsa_modelwise_synergies = ss_hsa_modelwise_synergies %>% 
+  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
+prolif_hsa_modelwise_synergies = prolif_hsa_modelwise_synergies %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 random_hsa_modelwise_synergies = random_hsa_modelwise_synergies %>%
   mutate(synergy_prob_random = synergies/(synergies + `non-synergies`))
@@ -104,19 +113,23 @@ observed = sapply(random_hsa_modelwise_synergies$perturbation %in% observed_syne
 
 ```r
 # 'ew' => ensemble-wise, 'mw' => model-wise
-pred_ew_hsa = bind_cols(ss_hsa_ensemblewise_synergies %>% rename(ss_score = score), 
+pred_ew_hsa = bind_cols(ss_hsa_ensemblewise_synergies %>% rename(ss_score = score),
+  prolif_hsa_ensemblewise_synergies %>% select(score) %>% rename(prolif_score = score),
   random_hsa_ensemblewise_synergies %>% select(score) %>% rename(random_score = score), 
   as_tibble_col(observed, column_name = "observed"))
 
 pred_mw_hsa = bind_cols(
   ss_hsa_modelwise_synergies %>% select(perturbation, synergy_prob_ss),
+  prolif_hsa_modelwise_synergies %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif = synergy_prob_ss),
   random_hsa_modelwise_synergies %>% select(synergy_prob_random),
   as_tibble_col(observed, column_name = "observed"))
 
 res_ss_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score", label_col = "observed")
+res_prolif_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "prolif_score", label_col = "observed")
 res_random_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "random_score", label_col = "observed")
 
 res_ss_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss", label_col = "observed", direction = ">")
+res_prolif_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_prolif", label_col = "observed", direction = ">")
 res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random", label_col = "observed", direction = ">")
 
 # Plot ROCs
@@ -125,10 +138,13 @@ my_palette = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 plot(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
-lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
+lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
-legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
+lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
+  lwd = 3, col = my_palette[3])
+legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
   legend = c(paste(round(res_ss_ew$AUC, digits = 3), "Calibrated"), 
+    paste(round(res_prolif_ew$AUC, digits = 3), "Proliferative"),
     paste(round(res_random_ew$AUC, digits = 3), "Random")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
@@ -136,10 +152,13 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 plot(x = res_ss_mw$roc_stats$FPR, y = res_ss_mw$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
-lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
+lines(x = res_prolif_mw$roc_stats$FPR, y = res_prolif_mw$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
-legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(res_ss_mw$AUC, digits = 3), "Calibrated"), 
+lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
+  lwd = 3, col = my_palette[3])
+legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
+  legend = c(paste(round(res_ss_mw$AUC, digits = 3), "Calibrated"),
+    paste(round(res_prolif_mw$AUC, digits = 3), "Proliferative"), 
     paste(round(res_random_mw$AUC, digits = 3), "Random")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
@@ -153,27 +172,35 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```r
 pr_ss_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_prolif_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(prolif_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 pr_random_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(random_score) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 
 pr_ss_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_prolif_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_prolif), 
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 pr_random_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_random), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 
 plot(pr_ss_ew_hsa, main = 'PR curve, Ensemble-wise synergies (HSA)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_random_ew_hsa, add = TRUE, color = my_palette[2])
-legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19,
+plot(pr_prolif_ew_hsa, add = TRUE, color = my_palette[2])
+plot(pr_random_ew_hsa, add = TRUE, color = my_palette[3])
+legend('topright', title = 'AUC', col = my_palette[1:3], pch = 19,
   legend = c(paste(round(pr_ss_ew_hsa$auc.davis.goadrich, digits = 3), "Calibrated"), 
+    paste(round(pr_prolif_ew_hsa$auc.davis.goadrich, digits = 3), "Proliferative"),
     paste(round(pr_random_ew_hsa$auc.davis.goadrich, digits = 3), "Random")))
 grid(lwd = 0.5)
 
 plot(pr_ss_mw_hsa, main = 'PR curve, Model-wise synergies (HSA)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_random_mw_hsa, add = TRUE, color = my_palette[2])
-legend('left', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(pr_ss_mw_hsa$auc.davis.goadrich, digits = 3), "Calibrated"), 
+plot(pr_prolif_mw_hsa, add = TRUE, color = my_palette[2])
+plot(pr_random_mw_hsa, add = TRUE, color = my_palette[3])
+legend('left', title = 'AUC', col = my_palette[1:3], pch = 19,
+  legend = c(paste(round(pr_ss_mw_hsa$auc.davis.goadrich, digits = 3), "Calibrated"),
+    paste(round(pr_prolif_mw_hsa$auc.davis.goadrich, digits = 3), "Proliferative"),
     paste(round(pr_random_mw_hsa$auc.davis.goadrich, digits = 3), "Random")))
 grid(lwd = 0.5)
 ```
@@ -181,21 +208,20 @@ grid(lwd = 0.5)
 <img src="index_files/figure-html/PR HSA Cascade 1.0-1.png" width="50%" /><img src="index_files/figure-html/PR HSA Cascade 1.0-2.png" width="50%" />
 
 :::{.green-box}
-- PR curves show better the performance advantage of calibrated models over random ones
-- PR AUCs suggest that the **model-wise approach is better than the ensemble-wise** in our imbalanced dataset
+- Calibrated models perform a lot better than either the random or proliferative ones
 :::
 
-### ROC AUC sensitivity {-}
+### AUC sensitivity {-}
 
-:::{#roc-combine-1 .blue-box}
-- Investigate **combining the synergy results of calibrated and random models**
-  - How information from the 'random' models is augmenting calibrated (to steady state) results?
-- **Ensemble-wise** scenario: $score = calibrated + \beta \times random$
-  - $\beta \rightarrow +\infty$: mostly **random model predictions**
-  - $\beta \rightarrow -\infty$: mostly **reverse random model predictions**
-- **Model-wise** scenario: $(1-w) \times prob_{ss} + w \times prob_{rand}, w \in[0,1]$
+:::{#auc-sensitivity .blue-box}
+- Investigate **combining the synergy results of calibrated and proliferative (random) models**
+- Quantify the amount of information from the *proliferative* (*random*) models that can be used to augment the calibrated results?
+- **Ensemble-wise** scenario: $score = calibrated + \beta \times proliferative$ ($random$)
+  - $\beta \rightarrow +\infty$: mostly **proliferative (random) model predictions**
+  - $\beta \rightarrow -\infty$: mostly **reverse proliferative (random) model predictions**
+- **Model-wise** scenario: $(1-w) \times prob_{cal} + w \times prob_{rand}, w \in[0,1]$
   - $w=0$: only calibrated model predictions
-  - $w=1$: only random model predictions
+  - $w=1$: only proliferative (random) model predictions
 :::
 
 
@@ -203,78 +229,74 @@ grid(lwd = 0.5)
 # Ensemble-wise
 betas = seq(from = -20, to = 20, by = 0.1)
 
-auc_values_ew = sapply(betas, function(beta) {
+random_roc = sapply(betas, function(beta) {
   pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score + beta * random_score)
-  res = get_roc_stats(df = pred_ew_hsa, pred_col = "combined_score", label_col = "observed")
-  auc_value = res$AUC
+  res = roc.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_hsa %>% pull(observed))
+  auc_value = res$auc
 })
 
-df_ew = as_tibble(cbind(betas, auc_values_ew))
-
-ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
-  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
-  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
-```
-
-<img src="index_files/figure-html/AUC sensitivity (HSA - cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
-
-```r
-# Model-wise
-weights = seq(from = 0, to = 1, by = 0.05)
-
-auc_values_mw = sapply(weights, function(w) {
-  pred_mw_hsa = pred_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss + w * pred_mw_hsa$synergy_prob_random)
-  res = get_roc_stats(df = pred_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
-  auc_value = res$AUC
+prolif_roc = sapply(betas, function(beta) {
+  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score + beta * prolif_score)
+  res = roc.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_hsa %>% pull(observed))
+  auc_value = res$auc
 })
 
-df_mw = as_tibble(cbind(weights, auc_values_mw))
-
-ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
-  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
-  color = my_palette[3]) + grids()
-```
-
-<img src="index_files/figure-html/AUC sensitivity (HSA - cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
-
-:::{.green-box}
-- Symmetricity (Ensemble-wise): $AUC_{\beta \rightarrow +\infty} + AUC_{\beta \rightarrow -\infty} \approx 1$
-- Random models perform worse than calibrated ones
-- There are $\beta$ values that can boost the predictive performance of the combined synergy classifier but no $w$ weight in the model-wise case
-:::
-
-### PR AUC sensitivity {-}
-
-
-```r
-# Ensemble-wise
-betas = seq(from = -20, to = 20, by = 0.1)
-
-pr_auc_values_ew = sapply(betas, function(beta) {
+random_pr = sapply(betas, function(beta) {
   pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score + beta * random_score)
   res = pr.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_ew_hsa %>% pull(observed))
   auc_value = res$auc.davis.goadrich
 })
 
-df_pr_ew = as_tibble(cbind(betas, pr_auc_values_ew))
+prolif_pr = sapply(betas, function(beta) {
+  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score + beta * prolif_score)
+  res = pr.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
 
-ggline(data = df_pr_ew, x = "betas", y = "pr_auc_values_ew", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "PR-AUC (Area Under PR Curve)",
-  title = TeX("PR-AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
-  color = my_palette[2]) + geom_vline(xintercept = 0) + grids()
+df_ew = as_tibble(cbind(betas, random_roc, prolif_roc, random_pr, prolif_pr))
+df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AUC")
+
+ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
+  legend = "none", facet.by = "type", palette = my_palette,
+  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
+    "ROC: calibrated + β x proliferative", "PR: calibrated + β x random", 
+    "ROC: calibrated + β x random")),
+  title = TeX("AUC sensitivity to $\\beta$ parameter (HSA, Cascade 1.0)")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_vline(xintercept = 0) +
+  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_text(aes(x=-2, label="β = -1", y=0.25), colour="black", angle=90) + 
+  grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (HSA - cascade 1.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (HSA - Cascade 1.0)-1.png" width="2100" style="display: block; margin: auto;" />
 
 ```r
 # Model-wise
 weights = seq(from = 0, to = 1, by = 0.05)
 
-pr_auc_values_mw = sapply(weights, function(w) {
+random_roc_mw = sapply(weights, function(w) {
+  pred_mw_hsa = pred_mw_hsa %>%
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss + w * pred_mw_hsa$synergy_prob_random)
+  res = roc.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob),
+    weights.class0 = pred_mw_hsa %>% pull(observed))
+  auc_value = res$auc
+})
+
+prolif_roc_mw = sapply(weights, function(w) {
+  pred_mw_hsa = pred_mw_hsa %>%
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss + w * pred_mw_hsa$synergy_prob_prolif)
+  res = roc.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob),
+    weights.class0 = pred_mw_hsa %>% pull(observed))
+  auc_value = res$auc
+})
+
+random_pr_mw = sapply(weights, function(w) {
   pred_mw_hsa = pred_mw_hsa %>% 
     mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss + w * pred_mw_hsa$synergy_prob_random)
   res = pr.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob), 
@@ -282,17 +304,37 @@ pr_auc_values_mw = sapply(weights, function(w) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_pr_mw = as_tibble(cbind(weights, pr_auc_values_mw))
+prolif_pr_mw = sapply(weights, function(w) {
+  pred_mw_hsa = pred_mw_hsa %>% 
+    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss + w * pred_mw_hsa$synergy_prob_prolif)
+  res = pr.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob), 
+    weights.class0 = pred_mw_hsa %>% pull(observed))
+  auc_value = res$auc.davis.goadrich
+})
 
-ggline(data = df_pr_mw, x = "weights", y = "pr_auc_values_mw", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("weight $w$"), ylab = "PR-AUC (Area Under PR Curve)",
-  title = TeX("PR-AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
-  color = my_palette[3]) + grids()
+df_mw = as_tibble(cbind(weights, random_roc_mw, prolif_roc_mw, random_pr_mw, prolif_pr_mw))
+df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "AUC")
+
+ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
+  legend = "none", facet.by = "type", palette = my_palette,
+  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
+    "ROC: (1-w) x prob(ss) + w x prob(prolif)", "PR: (1-w) x prob(ss) + w x prob(random)", 
+    "ROC: (1-w) x prob(ss) + w x prob(random)")), title.position = "center",
+  title = TeX("AUC sensitivity to weighted average score (HSA, Cascade 1.0)")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  grids()
 ```
 
-<img src="index_files/figure-html/PR AUC sensitivity (HSA - cascade 1.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="index_files/figure-html/AUC sensitivity (HSA - Cascade 1.0)-2.png" width="2100" style="display: block; margin: auto;" />
 
-## Calibrated vs Random (Bliss) {-}
+:::{.green-box}
+- There are $\beta$ values that can boost the predictive performance of the calibrated models (ensemble-wise) but no $w$ weight in the model-wise case.
+- $\beta=-1$ seems to be a common value that maximizes both the ROC-AUC and the PR-AUC.
+- The PR-AUC is **more sensitive** than the ROC-AUC, so a better indicator of performance.
+:::
+
+## Bliss results {-}
 
 :::{.note}
 - *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
@@ -405,7 +447,7 @@ grid(lwd = 0.5)
 
 ### ROC AUC sensitivity {-}
 
-Investigate same thing as described in [here](#roc-combine-1).
+Investigate same thing as described in [here](#auc-sensitivity).
 
 
 ```r
@@ -801,7 +843,7 @@ When I saw the above I was like:
 
 ### ROC AUC sensitivity {-}
 
-Investigate same thing as described in [here](#roc-combine-1).
+Investigate same thing as described in [here](#auc-sensitivity).
 We will combine the synergy scores from the random simulations with the results from the $150$ Gitsbe simulations.
 
 
@@ -1266,7 +1308,7 @@ grid(lwd = 0.5)
 
 ### ROC AUC sensitivity {-}
 
-Investigate same thing as described in [here](#roc-combine-1).
+Investigate same thing as described in [here](#auc-sensitivity).
 We will combine the synergy scores from the random simulations with the results from the $50$ Gitsbe simulations.
 
 
