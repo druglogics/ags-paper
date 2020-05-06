@@ -1,8 +1,8 @@
 ---
-title: "AGS paper I - results investigation"
+title: "AGS paper I - SI"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 03 May, 2020"
-description: "AGS paper I results investigation"
+date: "Last updated: 05 May, 2020"
+description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
 bibliography: ["references.bib", "packages.bib"]
@@ -14,8 +14,19 @@ site: bookdown::bookdown_site
 
 # Intro {-}
 
-This report has an investigation related to the AGS-Paper I simulations.
-Unless otherwise specified, the `Gitsbe` models have only [link operator mutations](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm).
+This report is the supplementary material for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as guidelines for reproducing the results.
+
+A list of things that change between the simulations and the presented graphs are:
+
+- The number of `Gitsbe` simulations: more simulations, more models generated.
+- The type of mutation that `Gitsbe` models have:
+unless otherwise specified, the `Gitsbe` models have only [link operator mutations](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm).
+[Topology mutations] were also tested as well as a combination of topology and link operator mutations.
+- The training data for the `Gitsbe` models: *steady state* (calibrated models) vs *proliferative profile* (proliferative models).
+Also *randomly generated models* were produced for the link operator mutations using the [abmlog module](https://github.com/druglogics/abmlog).
+- The type of mathematical model (HSA or Bliss) used in `Drabme` to evaluate the synergies from the [@Flobak2019] dataset.
+More info see [here](https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description).
+- The type of output used from `Drabme`: ensemble-wise or model-wise [synergy results](https://druglogics.github.io/druglogics-doc/drabme-install.html#drabme-output).
 
 For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (see also [@Grau2015]).
 
@@ -602,8 +613,6 @@ Load results:
 # 'ss' => calibrated models, 'random' => random models
 
 ## HSA results
-ss_hsa_ensemblewise_5sim_file = paste0("results/hsa/cascade_2.0_ss_5sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_modelwise_5sim_file = paste0("results/hsa/cascade_2.0_ss_5sim_fixpoints_modelwise_synergies.tab")
 ss_hsa_ensemblewise_50sim_file = paste0("results/hsa/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
 ss_hsa_modelwise_50sim_file = paste0("results/hsa/cascade_2.0_ss_50sim_fixpoints_modelwise_synergies.tab")
 ss_hsa_ensemblewise_100sim_file = paste0("results/hsa/cascade_2.0_ss_100sim_fixpoints_ensemblewise_synergies.tab")
@@ -615,8 +624,6 @@ ss_hsa_modelwise_200sim_file = paste0("results/hsa/cascade_2.0_ss_200sim_fixpoin
 random_hsa_ensemblewise_file = paste0("results/hsa/cascade_2.0_random_ensemblewise_synergies.tab")
 random_hsa_modelwise_file = paste0("results/hsa/cascade_2.0_random_modelwise_synergies.tab")
 
-ss_hsa_ensemblewise_synergies_5sim = emba::get_synergy_scores(ss_hsa_ensemblewise_5sim_file)
-ss_hsa_modelwise_synergies_5sim = emba::get_synergy_scores(ss_hsa_modelwise_5sim_file, file_type = "modelwise")
 ss_hsa_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_hsa_ensemblewise_50sim_file)
 ss_hsa_modelwise_synergies_50sim = emba::get_synergy_scores(ss_hsa_modelwise_50sim_file, file_type = "modelwise")
 ss_hsa_ensemblewise_synergies_100sim = emba::get_synergy_scores(ss_hsa_ensemblewise_100sim_file)
@@ -629,8 +636,6 @@ random_hsa_ensemblewise_synergies = emba::get_synergy_scores(random_hsa_ensemble
 random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_modelwise_file, file_type = "modelwise")
 
 # calculate probability of synergy in the modelwise results
-ss_hsa_modelwise_synergies_5sim = ss_hsa_modelwise_synergies_5sim %>% 
-  mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 ss_hsa_modelwise_synergies_50sim = ss_hsa_modelwise_synergies_50sim %>% 
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 ss_hsa_modelwise_synergies_100sim = ss_hsa_modelwise_synergies_100sim %>% 
@@ -653,7 +658,7 @@ observed = sapply(random_hsa_modelwise_synergies$perturbation %in% observed_syne
 
 ```r
 # 'ew' => ensemble-wise, 'mw' => model-wise
-pred_ew_hsa = bind_cols(ss_hsa_ensemblewise_synergies_5sim %>% rename(ss_score_5sim = score), 
+pred_ew_hsa = bind_cols(
   ss_hsa_ensemblewise_synergies_50sim %>% select(score) %>% rename(ss_score_50sim = score),
   ss_hsa_ensemblewise_synergies_100sim %>% select(score) %>% rename(ss_score_100sim = score),
   ss_hsa_ensemblewise_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
@@ -662,22 +667,19 @@ pred_ew_hsa = bind_cols(ss_hsa_ensemblewise_synergies_5sim %>% rename(ss_score_5
   as_tibble_col(observed, column_name = "observed"))
 
 pred_mw_hsa = bind_cols(
-  ss_hsa_modelwise_synergies_5sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_5sim = synergy_prob_ss),
-  ss_hsa_modelwise_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
+  ss_hsa_modelwise_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
   ss_hsa_modelwise_synergies_100sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_100sim = synergy_prob_ss),
   ss_hsa_modelwise_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
   ss_hsa_modelwise_synergies_200sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_200sim = synergy_prob_ss),
   random_hsa_modelwise_synergies %>% select(synergy_prob_random),
   as_tibble_col(observed, column_name = "observed"))
 
-res_ss_ew_5sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_5sim", label_col = "observed")
 res_ss_ew_50sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
 res_ss_ew_100sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_100sim", label_col = "observed")
 res_ss_ew_150sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
 res_ss_ew_200sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_200sim", label_col = "observed")
 res_random_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "random_score", label_col = "observed")
 
-res_ss_mw_5sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_5sim", label_col = "observed", direction = ">")
 res_ss_mw_50sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 res_ss_mw_100sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_100sim", label_col = "observed", direction = ">")
 res_ss_mw_150sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
@@ -687,22 +689,19 @@ res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random"
 # Plot ROCs
 my_palette = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 
-plot(x = res_ss_ew_5sim$roc_stats$FPR, y = res_ss_ew_5sim$roc_stats$TPR,
+plot(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
-lines(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[2])
 lines(x = res_ss_ew_100sim$roc_stats$FPR, y = res_ss_ew_100sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[3])
+  lwd = 3, col = my_palette[2])
 lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[4])
+  lwd = 3, col = my_palette[3])
 lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[5])
+  lwd = 3, col = my_palette[4])
 lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 3, col = my_palette[6])
-legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
-  legend = c(paste(round(res_ss_ew_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
-    paste(round(res_ss_ew_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
+  lwd = 3, col = my_palette[5])
+legend('bottomright', title = 'AUC', col = my_palette[1:5], pch = 19,
+  legend = c(paste(round(res_ss_ew_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
     paste(round(res_ss_ew_100sim$AUC, digits = 3), "Calibrated (100 sim)"),
     paste(round(res_ss_ew_150sim$AUC, digits = 3), "Calibrated (150 sim)"),
     paste(round(res_ss_ew_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
@@ -710,22 +709,19 @@ legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
-plot(x = res_ss_mw_5sim$roc_stats$FPR, y = res_ss_mw_5sim$roc_stats$TPR,
+plot(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Model-wise synergies (HSA)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
-lines(x = res_ss_mw_50sim$roc_stats$FPR, y = res_ss_mw_50sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[2])
 lines(x = res_ss_mw_100sim$roc_stats$FPR, y = res_ss_mw_100sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[3])
+  lwd = 3, col = my_palette[2])
 lines(x = res_ss_mw_150sim$roc_stats$FPR, y = res_ss_mw_150sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[4])
+  lwd = 3, col = my_palette[3])
 lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR, 
-  lwd = 3, col = my_palette[5])
+  lwd = 3, col = my_palette[4])
 lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 3, col = my_palette[6])
-legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
-  legend = c(paste(round(res_ss_mw_5sim$AUC, digits = 3), "Calibrated (5 sim)"),
-    paste(round(res_ss_mw_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
+  lwd = 3, col = my_palette[5])
+legend('bottomright', title = 'AUC', col = my_palette[1:5], pch = 19,
+  legend = c(paste(round(res_ss_mw_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
     paste(round(res_ss_mw_100sim$AUC, digits = 3), "Calibrated (100 sim)"),
     paste(round(res_ss_mw_150sim$AUC, digits = 3), "Calibrated (150 sim)"),
     paste(round(res_ss_mw_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
@@ -736,18 +732,12 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 <img src="index_files/figure-html/ROC HSA Cascade 2.0-1.png" width="50%" /><img src="index_files/figure-html/ROC HSA Cascade 2.0-2.png" width="50%" />
 
-:::{.green-box}
-- Model-wise results *scale* with respect to the number of `Gitsbe` simulations (more **calibrated** models, better performance).
-:::
-
 ### PR curves {-}
 
 
 ```r
-pr_ss_ew_hsa_5sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_5sim) %>% (function(x) {-x}), 
-  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_ss_ew_hsa_50sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_50sim) %>% (function(x) {-x}), 
-  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
+  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_ss_ew_hsa_100sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_100sim) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 pr_ss_ew_hsa_150sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
@@ -757,10 +747,8 @@ pr_ss_ew_hsa_200sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_200
 pr_random_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(random_score) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 
-pr_ss_mw_hsa_5sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_5sim), 
-  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_ss_mw_hsa_50sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_50sim), 
-  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
+  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_ss_mw_hsa_100sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_100sim), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 pr_ss_mw_hsa_150sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_150sim), 
@@ -770,32 +758,28 @@ pr_ss_mw_hsa_200sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob
 pr_random_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_random), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 
-plot(pr_ss_ew_hsa_5sim, main = 'PR curve, Ensemble-wise synergies (HSA)', 
+plot(pr_ss_ew_hsa_50sim, main = 'PR curve, Ensemble-wise synergies (HSA)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_ss_ew_hsa_50sim, add = TRUE, color = my_palette[2])
-plot(pr_ss_ew_hsa_100sim, add = TRUE, color = my_palette[3])
-plot(pr_ss_ew_hsa_150sim, add = TRUE, color = my_palette[4])
-plot(pr_ss_ew_hsa_200sim, add = TRUE, color = my_palette[5])
-plot(pr_random_ew_hsa, add = TRUE, color = my_palette[6])
-legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
-  legend = c(paste(round(pr_ss_ew_hsa_5sim$auc.davis.goadrich, digits = 3), "Calibrated (5 sim)"),
-    paste(round(pr_ss_ew_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+plot(pr_ss_ew_hsa_100sim, add = TRUE, color = my_palette[2])
+plot(pr_ss_ew_hsa_150sim, add = TRUE, color = my_palette[3])
+plot(pr_ss_ew_hsa_200sim, add = TRUE, color = my_palette[4])
+plot(pr_random_ew_hsa, add = TRUE, color = my_palette[5])
+legend('topright', title = 'AUC', col = my_palette[1:5], pch = 19,
+  legend = c(paste(round(pr_ss_ew_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_ss_ew_hsa_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
     paste(round(pr_ss_ew_hsa_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
     paste(round(pr_ss_ew_hsa_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
     paste(round(pr_random_ew_hsa$auc.davis.goadrich, digits = 3), "Random")))
 grid(lwd = 0.5)
 
-plot(pr_ss_mw_hsa_5sim, main = 'PR curve, Model-wise synergies (HSA)',
+plot(pr_ss_mw_hsa_50sim, main = 'PR curve, Model-wise synergies (HSA)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_ss_mw_hsa_50sim, add = TRUE, color = my_palette[2])
-plot(pr_ss_mw_hsa_100sim, add = TRUE, color = my_palette[3])
-plot(pr_ss_mw_hsa_150sim, add = TRUE, color = my_palette[4])
-plot(pr_ss_mw_hsa_200sim, add = TRUE, color = my_palette[5])
-plot(pr_random_mw_hsa, add = TRUE, color = my_palette[6])
-legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
-  legend = c(paste(round(pr_ss_mw_hsa_5sim$auc.davis.goadrich, digits = 3), "Calibrated (5 sim)"),
-    paste(round(pr_ss_mw_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
+plot(pr_ss_mw_hsa_100sim, add = TRUE, color = my_palette[2])
+plot(pr_ss_mw_hsa_150sim, add = TRUE, color = my_palette[3])
+plot(pr_ss_mw_hsa_200sim, add = TRUE, color = my_palette[4])
+plot(pr_random_mw_hsa, add = TRUE, color = my_palette[5])
+legend('topright', title = 'AUC', col = my_palette[1:5], pch = 19,
+  legend = c(paste(round(pr_ss_mw_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_ss_mw_hsa_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
     paste(round(pr_ss_mw_hsa_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
     paste(round(pr_ss_mw_hsa_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
@@ -1873,7 +1857,7 @@ grid(lwd = 0.5)
 
 <img src="index_files/figure-html/ROC and PRC for best beta - Topology Mutations (Bliss - Cascade 2.0)-1.png" width="50%" /><img src="index_files/figure-html/ROC and PRC for best beta - Topology Mutations (Bliss - Cascade 2.0)-2.png" width="50%" />
 
-## Both Topology & Link Operator Mutations {-}
+## Topology and Link Operator Mutations {-}
 
 :::{.note}
 We run `Gitsbe` simulations with $50$ topology mutations and $3000$ link operator mutations (bootstrap values, reduced to $10$ and $3$ respectively after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
