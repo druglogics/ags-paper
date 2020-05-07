@@ -708,7 +708,7 @@ grid(lwd = 0.5)
 <img src="index_files/figure-html/fitness evolution-1.png" width="2100" style="display: block; margin: auto;" />
 
 
-# Cascade 2.0 Analysis {-}
+# Cascade 2.0 Analysis (Link Operator Mutations) {-}
 
 :::{.blue-box}
 Performance of automatically parameterized models against a new dataset (SINTEF, AGS only)
@@ -1513,7 +1513,21 @@ corrplot(corr = M, type ="upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 - **Model-wise don't correlate with ensemble-wise results**.
 :::
 
-## Topology Mutations {-}
+## Fitness vs Performance {-}
+
+The idea here is to generate many training data files from the steady state as used in the simulations above for the AGS, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
+That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations above.
+
+Using the `gen_training_data.R` script, we first choose a few number of flips ($11$ flips) ranging from $1$ to $24$ (all nodes) in the steady state.
+Then, for each such *flipping-nodes* value, we generated $20$ new steady states with a randomly chosen set of nodes whose value is going to flip.
+Thus, in total, $205$ training data files were produced ($205 = 9 \times 20 + 24 + 1$, where from the $11$ number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).
+
+Running the script `run_druglogics_synergy_training.sh` from the `druglogics-synergy` repository root, we get the simulation results for each of these training data files.
+The only difference in the cascade 2.0 configuration file was the number of simulations ($15$) for each training data file and the attractor tool used (`biolqm_stable_states`).
+
+We now load the data from these simulations:
+
+# Cascade 2.0 Analysis (Topology Mutations) {-}
 
 :::{.note}
 We run `Gitsbe` simulations with $50$ topology mutations (bootstrap value, reduced to $10$ after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
@@ -1620,7 +1634,7 @@ pred_topo_mw_bliss = bind_cols(
   as_tibble_col(observed, column_name = "observed"))
 ```
 
-### ROC curves (HSA) {-}
+## ROC curves (HSA) {-}
 
 
 ```r
@@ -1672,7 +1686,7 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 <img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - HSA)-2.png" width="50%" />
 
-### PR curves (HSA) {-}
+## PR curves (HSA) {-}
 
 
 ```r
@@ -1721,7 +1735,7 @@ grid(lwd = 0.5)
 
 <img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - HSA)-2.png" width="50%" />
 
-### ROC-AUC sensitivity (HSA) {-}
+## ROC-AUC sensitivity (HSA) {-}
 
 Combine the $150$ simulation results (calibrated + proliferative)
 
@@ -1766,7 +1780,7 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 
 <img src="index_files/figure-html/ROC-AUC sensitivity Topology Mutations (HSA - Cascade 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
 
-### PR-AUC sensitivity (HSA) {-}
+## PR-AUC sensitivity (HSA) {-}
 
 Combine the $150$ simulation results (calibrated + proliferative)
 
@@ -1793,7 +1807,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
 
 <img src="index_files/figure-html/PR-AUC sensitivity Topology Mutations (HSA - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
-### ROC curves (Bliss) {-}
+## ROC curves (Bliss) {-}
 
 
 ```r
@@ -1845,7 +1859,7 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 <img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology Mutations (Cascade 2.0 - Bliss)-2.png" width="50%" />
 
-### PR curves (Bliss) {-}
+## PR curves (Bliss) {-}
 
 
 ```r
@@ -1894,7 +1908,7 @@ grid(lwd = 0.5)
 
 <img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology Mutations (Cascade 2.0 - Bliss)-2.png" width="50%" />
 
-### ROC-AUC sensitivity (Bliss) {-}
+## ROC-AUC sensitivity (Bliss) {-}
 
 
 ```r
@@ -1918,7 +1932,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
 
 <img src="index_files/figure-html/ROC-AUC sensitivity Topology Mutations (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
-### PR-AUC sensitivity (Bliss) {-}
+## PR-AUC sensitivity (Bliss) {-}
 
 
 ```r
@@ -1944,7 +1958,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
 
 <img src="index_files/figure-html/PR-AUC sensitivity Topology Mutations (Bliss - Cascade 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
 
-### ROC and PRC for best beta (Bliss) {-}
+## ROC and PRC for best beta (Bliss) {-}
 
 
 ```r
@@ -1974,7 +1988,7 @@ grid(lwd = 0.5)
 
 <img src="index_files/figure-html/ROC and PRC for best beta - Topology Mutations (Bliss - Cascade 2.0)-1.png" width="50%" /><img src="index_files/figure-html/ROC and PRC for best beta - Topology Mutations (Bliss - Cascade 2.0)-2.png" width="50%" />
 
-## Topology and Link Operator Mutations {-}
+# Cascade 2.0 Analysis (Topology and Link Operator Mutations) {-}
 
 :::{.note}
 We run `Gitsbe` simulations with $50$ topology mutations and $3000$ link operator mutations (bootstrap values, reduced to $10$ and $3$ respectively after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
@@ -2516,20 +2530,6 @@ grid(lwd = 0.5)
 ```
 
 <img src="index_files/figure-html/ROC and PRC for best beta - Topology and Link Mutations (HSA and Bliss - Cascade 2.0)-1.png" width="50%" /><img src="index_files/figure-html/ROC and PRC for best beta - Topology and Link Mutations (HSA and Bliss - Cascade 2.0)-2.png" width="50%" />
-
-## Fitness vs performance {-}
-
-The idea here is to generate many training data files from the steady state as used in the simulations above for the AGS, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
-That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations above.
-
-Using the `gen_training_data.R` script, we first choose a few number of flips ($11$ flips) ranging from $1$ to $24$ (all nodes) in the steady state.
-Then, for each such *flipping-nodes* value, we generated $20$ new steady states with a randomly chosen set of nodes whose value is going to flip.
-Thus, in total, $205$ training data files were produced ($205 = 9 \times 20 + 24 + 1$, where from the $11$ number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).
-
-Running the script `run_druglogics_synergy_training.sh` from the `druglogics-synergy` repository root, we get the simulation results for each of these training data files.
-The only difference in the cascade 2.0 configuration file was the number of simulations ($15$) for each training data file and the attractor tool used (`biolqm_stable_states`).
-
-We now load the data from these simulations:
 
 # Reproduce simulation results {-}
 
