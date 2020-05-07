@@ -571,11 +571,11 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 
 ## Correlation {-}
 
-We test for correlation between all the results shown in the ROC curves.
+We test for correlation between all the synergy predictor results shown in the previous curves.
 This means *ensemble-wise* vs *model-wise*, *random* models vs *proliferative* vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment.
 *P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*) and the correlation coefficient is calculated using Kendall's *tau* statistic.
 
-```{r Correlation of ROC results (Cascade 1.0), dpi=300, warning=FALSE, cache=TRUE}
+```{r cor-plot-cascade1, dpi=300, warning=FALSE, cache=TRUE, fig.align='center', fig.cap='Correlation Plot for Cascade 1.0 Results'}
 synergy_scores = bind_cols(
   pred_ew_hsa %>% select(ss_score, prolif_score, random_score) %>% rename(ss_ew_hsa = ss_score, prolif_ew_hsa = prolif_score, random_ew_hsa = random_score),
   pred_ew_bliss %>% select(ss_score, prolif_score, random_score) %>% rename(ss_ew_bliss = ss_score, prolif_ew_bliss = prolif_score, random_ew_bliss = random_score),
@@ -603,7 +603,7 @@ Results are from the simulation result with $50$ Gitsbe simulations, fitting to 
 We show only $10$ simulations - the first ones that spanned the maximum defined generations in the configuration ($20$), meaning that they did not surpass the target fitness threhold specified ($0.99$).
 Each data point is the average fitness in that generation out of $20$ models.
 
-```{r fitness evolution, dpi=300, fig.align='center', cache=TRUE}
+```{r fit-evolution, dpi=300, fig.align='center', cache=TRUE, fig.cap='Fitness Evolution (Cascade 1.0, HSA Results)'}
 fitness_summary_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_summary.txt")
 
 read_summary_file = function(file_name) {
@@ -652,7 +652,6 @@ for (fit_data in fit_res) {
 }
 grid(lwd = 0.5)
 ```
-
 
 # Cascade 2.0 Analysis (Link Operator Mutations) {-}
 
