@@ -7,6 +7,21 @@ h1,h2,h3,h4,h5 {
   text-align: left;
 }
 
+.book .book-summary {
+  width: 350px;
+  position:absolute;
+  top:0;
+  left:-350px;
+}
+
+.book.with-summary .book-header.fixed {
+  left: 350px;
+}
+
+.book.with-summary .book-body {
+  left: 350px;
+}
+
 .blue-box {
   background-color: #e6f0ff;
   border-radius: 5px;
