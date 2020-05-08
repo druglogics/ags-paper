@@ -8,18 +8,18 @@ h1,h2,h3,h4,h5 {
 }
 
 .book .book-summary {
-  width: 350px;
+  width: 400px;
   position:absolute;
   top:0;
-  left:-350px;
+  left:-400px;
 }
 
 .book.with-summary .book-header.fixed {
-  left: 350px;
+  left: 400px;
 }
 
 .book.with-summary .book-body {
-  left: 350px;
+  left: 400px;
 }
 
 .blue-box {
