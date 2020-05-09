@@ -659,7 +659,7 @@ Each data point is the average fitness in that generation out of $20$ models.
 
 
 ```r
-fitness_summary_file = paste0("results/hsa/cascade_1.0_ss_50sim_fixpoints_summary.txt")
+fitness_summary_file = paste0("results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_summary.txt")
 
 read_summary_file = function(file_name) {
   lines = readr::read_lines(file = fitness_summary_file, skip = 5, skip_empty_rows = TRUE)
@@ -694,7 +694,7 @@ fit_res = read_summary_file(file_name = fitness_summary_file)
 first_sim_data = colMeans(fit_res[[1]])
 plot(1:length(first_sim_data), y = first_sim_data, ylim = c(0,1), 
   xlim = c(0,20), type = 'l', lwd = 1.5, 
-  main = 'Fitness vs Generation (10 Simulations)', xlab = 'Generations', 
+  main = 'Fitness Evolution across Generations', xlab = 'Generations', 
   ylab = 'Average Fitness', col = usefun:::colors.100[1])
 index = 2
 for (fit_data in fit_res) {
