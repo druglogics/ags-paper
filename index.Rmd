@@ -2467,6 +2467,7 @@ cd pathTo/druglogics-synergy/ags_cascade_2.0
 Run Drabme via `druglogics-synergy`:
 
 ```
+cd ags_cascade_2.0/
 java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
 ```
 
