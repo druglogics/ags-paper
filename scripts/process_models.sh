@@ -6,8 +6,6 @@ files=`ls | grep gitsbe`
 for file in ${files}; do
   ss_num=`cat $file | grep stablestate | wc -l`
   if [ ${ss_num} != 1 ] 
-  then
-    rm $file
-  else
+  then rm $file
   fi
 done
