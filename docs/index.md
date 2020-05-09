@@ -21,7 +21,7 @@ A list of things that change between the simulations and the presented graphs ar
 - The number of `Gitsbe` simulations: more simulations, more models generated.
 - The type of mutation that `Gitsbe` models have:
 unless otherwise specified, the `Gitsbe` models have only [link operator mutations](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#genetic-algorithm).
-[Topology mutations] were also tested as well as a combination of [topology and link operator mutations].
+[Topology mutations](#cascade-2.0-analysis-topology-mutations) were also tested as well as a combination of [topology and link operator mutations](#cascade-2.0-analysis-topology-and-link-operator-mutations).
 - The [training data](https://druglogics.github.io/druglogics-doc/training-data.html) for the `Gitsbe` models: *steady state* (calibrated models) vs *proliferative profile* (proliferative models).
 Also *randomly generated models* were produced for the link operator mutations using the [abmlog module](https://github.com/druglogics/abmlog).
 - The type of mathematical model (HSA or Bliss) used in `Drabme` to evaluate the synergies either from the [@Flobak2015] for the CASCADE 1.0 analysis or from the [@Flobak2019] dataset for the CASCADE 2.0 analysis.
@@ -653,16 +653,16 @@ corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 
 ## Fitness Evolution {-}
 
-Results are from the simulation result with $50$ Gitsbe simulations, fitting to steady state (**calibrated models**) and *HSA* Drabme synergy assessment.
-We show only $10$ simulations - the first ones that spanned the maximum defined generations in the configuration ($20$), meaning that they did not surpass the target fitness threhold specified ($0.99$).
+We did a test run of `Gitsbe` with $1000$ simulations, fitting to steady state (generating thus **calibrated models**).
+The only difference between the foloowing results and the ones above is the total number of simulations specified in the configuration.
+
+Firstly, we show only $10$ simulations - the first ones that spanned the maximum defined generations in the configuration ($20$), meaning that they did not surpass the target fitness threhold specified ($0.99$).
 Each data point is the average fitness in that generation out of $20$ models.
 
 
 ```r
-fitness_summary_file = paste0("results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_summary.txt")
-
 read_summary_file = function(file_name) {
-  lines = readr::read_lines(file = fitness_summary_file, skip = 5, skip_empty_rows = TRUE)
+  lines = readr::read_lines(file = file_name, skip = 5, skip_empty_rows = TRUE)
   
   data_list = list()
   index = 1
@@ -689,12 +689,16 @@ read_summary_file = function(file_name) {
   return(data_list)
 }
 
+fitness_summary_file = paste0("results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt")
+
+# rows = simulations, columns = generations
+# value in (sim,gen) cell = average fitness of models in that particular (sim,gen) combination
 fit_res = read_summary_file(file_name = fitness_summary_file)
 
 first_sim_data = colMeans(fit_res[[1]])
 plot(1:length(first_sim_data), y = first_sim_data, ylim = c(0,1), 
   xlim = c(0,20), type = 'l', lwd = 1.5, 
-  main = 'Fitness Evolution across Generations', xlab = 'Generations', 
+  main = 'Fitness Evolution across Generations', xlab = 'Generations',
   ylab = 'Average Fitness', col = usefun:::colors.100[1])
 index = 2
 for (fit_data in fit_res) {
@@ -709,9 +713,51 @@ grid(lwd = 0.5)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/fit-evolution-1.png" alt="Fitness Evolution (CASCADE 1.0, HSA Results)" width="2100" />
-<p class="caption">(\#fig:fit-evolution)Fitness Evolution (CASCADE 1.0, HSA Results)</p>
+<img src="index_files/figure-html/fit-evolution-1.png" alt="Fitness Evolution (10 simulations, CASCADE 1.0)" width="2100" />
+<p class="caption">(\#fig:fit-evolution)Fitness Evolution (10 simulations, CASCADE 1.0)</p>
 </div>
+
+Next, we plot the average fitness + standard deviation error per generation across all $1000$ simulations:
+
+
+```r
+avg_fit = do.call(dplyr::bind_rows, sapply(fit_res, colMeans))
+colnames(avg_fit) = 1:ncol(avg_fit)
+
+avg_fit_long = avg_fit %>% pivot_longer(cols = everything()) %>% mutate(name = as.integer(name))
+
+ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
+  add = "mean_sd", add.params = list(color = "black"), ylim = c(0.2, 0.9),
+  main = "Fitness Evolution across Generations", 
+  xlab = "Generations", ylab = "Fitness") + 
+  theme(plot.title = element_text(hjust = 0.5)) + grids()
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/fit-evolution-2-1.png" alt="Fitness Evolution (1000 simulations, CASCADE 1.0)" width="2100" />
+<p class="caption">(\#fig:fit-evolution-2)Fitness Evolution (1000 simulations, CASCADE 1.0)</p>
+</div>
+
+```r
+# DIY way:
+# df = avg_fit_long %>% group_by(name) %>%
+#   summarise(median = median(value, na.rm = TRUE),
+#     mean = mean(value, na.rm = TRUE),
+#     sd = sd(value, na.rm = TRUE))
+# 
+# ggplot(data = df, aes(x=name, y=mean)) +
+#   ggtitle("Fitness Evolution across Generations") +
+#   xlab("Generations") + ylab("Fitness") +
+#   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.2) +
+#   geom_line(color='steelblue') +
+#   geom_point(color='steelblue') +
+#   theme_pubr() + theme(plot.title = element_text(hjust = 0.5)) +
+#   grids()
+```
+
+:::{.green-box}
+- The average fitness stabilizes after $5-10$ generations but also the standard deviation: new models are still getting created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.
+:::
 
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
 
@@ -1563,6 +1609,34 @@ The **HSA ensemble-wise** results do so (at some degree).
 - Between the **ensemble-wise** results there is no strong correlation (*topleft*) while between the **model-wise** (*bottomright*) there is strong correlation.
 - **Ensemble-wise calibrated** results seem to correlate more with the **proliferative** than with the **random results** (*topleft*).
 :::
+
+## Fitness Evolution {-}
+
+Results are from the run with $200$ Gitsbe simulations, fitting to steady state (**calibrated models**).
+
+
+```r
+fitness_summary_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt")
+fit_res = read_summary_file(file_name = fitness_summary_file)
+
+# rows = simulations, columns = generations
+# value in (sim,gen) cell = average fitness of models in that particular (sim,gen) combination
+avg_fit_link = do.call(dplyr::bind_rows, sapply(fit_res, colMeans))
+colnames(avg_fit_link) = 1:ncol(avg_fit_link)
+
+avg_fit_long_link = avg_fit_link %>% pivot_longer(cols = everything()) %>% mutate(name = as.integer(name))
+
+ggline(data = avg_fit_long_link, x = "name", y = "value", color = my_palette[2],
+  add = "mean_sd", add.params = list(color = "black"), 
+  main = "Fitness Evolution across Generations", 
+  xlab = "Generations", ylab = "Fitness") + 
+  theme(plot.title = element_text(hjust = 0.5)) + grids()
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/fit-evolution-3-1.png" alt="Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)" width="2100" />
+<p class="caption">(\#fig:fit-evolution-3)Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)</p>
+</div>
 
 ## Fitness vs Performance {-}
 
