@@ -965,25 +965,26 @@ To generate the ROC curves, we use the ensemble-wise and model-wise synergies fo
 </div>
 <div id="random-model-results" class="section level2 unnumbered" number="">
 <h2>Random model results</h2>
+<p>Use the <code>druglogics-synergy</code> module, version <code>1.2.0</code>: <code>git checkout v1.2.0</code> and the <a href="https://github.com/druglogics/abmlog">abmlog</a> module, version <code>1.5.0</code>: <code>git checkout v1.5.0</code>.</p>
 <p>The CASCADE 1.0 and 2.0 <code>.sif</code> network files can be found at the directories <code>ags_cascade_1.0</code> and <code>ags_cascade_2.0</code> on the
-<code>druglogics-synergy</code> repository.</p>
+<code>druglogics-synergy</code> repository.
+Copy these two network files inside the <code>test</code> dir of the <code>abmlog</code> repository root.</p>
 <p>Run the <code>abmlog</code> for the CASCADE 2.0 topology:</p>
 <pre><code>java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000</code></pre>
-<p>Next, prune the resulting models to only the ones that have 1 stable state (<span class="math inline">\(1292\)</span>) using the simple bash script <code>process_models.sh</code> inside the generated <code>models</code> directory from <code>abmlog</code>.</p>
+<p>Next, prune the resulting models to only the ones that have 1 stable state (should be <span class="math inline">\(1292\)</span>) using the simple bash script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/process_models.sh">process_models.sh</a> inside the generated <code>models</code> directory from <code>abmlog</code>.</p>
 <pre><code>cd pathTo/druglogics-synergy/ags_cascade_2.0</code></pre>
 <ul>
-<li>Move the <code>models</code> dir inside the <code>ags_cascade_2.0</code> dir</li>
-<li>Use attractor_tool: <code>biolqm_stable_states</code> in the config file</li>
-<li>Use <code>synergy_method: hsa</code> or <code>synergy_method: bliss</code> (or run twice)</li>
-<li>Run drabme via <code>druglogics-synergy</code>:</li>
+<li>Move the <code>abmlog</code>-generated <code>models</code> dir inside the <code>ags_cascade_2.0</code> dir</li>
+<li>Use <code>attractor_tool</code>: <code>biolqm_stable_states</code> in the <code>config</code> file</li>
+<li>Use <code>synergy_method: hsa</code> or <code>synergy_method: bliss</code> in the <code>config</code> file (run twice below command, changing the <code>project</code> to <code>cascade_2.0_random_bliss</code>)</li>
 </ul>
-<pre><code>java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
-java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_bliss --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs</code></pre>
+<p>Run Drabme via <code>druglogics-synergy</code>:</p>
+<pre><code>java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs</code></pre>
 <p>The above procedure is the same for CASCADE 1.0. Changes:</p>
 <ul>
-<li>Network file is now the <code>cascade_1_0.sif</code></li>
-<li>The <code>models</code> directory should be put inside the <code>ags_cascade_1.0</code> of <code>druglogics-synergy</code></li>
-<li>The drabme command should be run with <code>--project=cascade_1.0_random_hsa</code> and <code>--project=cascade_1.0_random_bliss</code> respectively</li>
+<li>The <code>abmlog</code>-generated <code>models</code> directory should be put inside the <code>ags_cascade_1.0</code> of <code>druglogics-synergy</code></li>
+<li>The network file is now for the CASCADE 1.0 (<code>network.sif</code> inside the <code>ags_cascade_1.0</code>)</li>
+<li>The Drabme command should be run with <code>--project=cascade_1.0_random_hsa</code> and <code>--project=cascade_1.0_random_bliss</code> respectively</li>
 </ul>
 </div>
 </div>

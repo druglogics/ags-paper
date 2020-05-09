@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 08 May, 2020"
+date: "Last updated: 09 May, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -1397,6 +1397,13 @@ grid(lwd = 0.5)
 <p class="caption">(\#fig:pr-bliss-cascade2)PR curves (CASCADE 2.0, Bliss synergy method)</p>
 </div>
 
+:::{.green-box}
+- To minimize the resulting performance variance, $150$ seems to be a good number of `Gitsbe` simulations to run for the CASCADE 2.0 network.
+- Individual predictor **model-wise** results (when looking at the ROC curves) show good performance.
+- Individual predictor **ensemble-wise** results show that *proliferative* and *calibrated* models have poor performance whereas *random* models perform like proper random models ($AUC\sim0.5$))
+- The PR curves show that the **performance of all individual predictors is poor** compared to the baseline.
+:::
+
 ### AUC sensitivity {-}
 
 Investigate same thing as described in [here](#auc-sensitivity).
@@ -1559,15 +1566,15 @@ The **HSA ensemble-wise** results do so (at some degree).
 
 ## Fitness vs Performance {-}
 
-The idea here is to generate many training data files from the steady state as used in the simulations above for the AGS, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
-That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations above.
+The idea here is to generate many training data files from the steady state as used in the simulations above, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
+That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations.
 
-Using the `gen_training_data.R` script, we first choose a few number of flips ($11$ flips) ranging from $1$ to $24$ (all nodes) in the steady state.
+Using the [gen_training_data.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_training_data.R) script, we first choose a few number of flips ($11$ flips) ranging from $1$ to $24$ (all nodes) in the steady state.
 Then, for each such *flipping-nodes* value, we generated $20$ new steady states with a randomly chosen set of nodes whose value is going to flip.
 Thus, in total, $205$ training data files were produced ($205 = 9 \times 20 + 24 + 1$, where from the $11$ number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).
 
-Running the script `run_druglogics_synergy_training.sh` from the `druglogics-synergy` repository root, we get the simulation results for each of these training data files.
-The only difference in the cascade 2.0 configuration file was the number of simulations ($15$) for each training data file and the attractor tool used (`biolqm_stable_states`).
+Running the script [run_druglogics_synergy_training.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root, we get the simulation results for each of these training data files.
+Note that in the CASCADE 2.0 configuration file we changed the number of simulations to ($15$) for each training data file, the attractor tool used was `biolqm_stable_states` (as is with every analysis in this report) and the `synergy_method: hsa`.
 
 We now load the data from these simulations:
 
@@ -1598,15 +1605,15 @@ topo_ss_hsa_ew_synergies_150sim = emba::get_synergy_scores(topo_ss_hsa_ew_150sim
 topo_ss_hsa_mw_synergies_150sim = emba::get_synergy_scores(topo_ss_hsa_mw_150sim_file, file_type = "modelwise")
 
 ## HSA results rand
-topo_rand_hsa_ew_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
-topo_rand_hsa_mw_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
-topo_rand_hsa_ew_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
-topo_rand_hsa_mw_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
+topo_prolif_hsa_ew_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topo_prolif_hsa_mw_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
+topo_prolif_hsa_ew_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topo_prolif_hsa_mw_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
 
-topo_rand_hsa_ew_synergies_50sim = emba::get_synergy_scores(topo_rand_hsa_ew_50sim_file)
-topo_rand_hsa_mw_synergies_50sim = emba::get_synergy_scores(topo_rand_hsa_mw_50sim_file, file_type = "modelwise")
-topo_rand_hsa_ew_synergies_150sim = emba::get_synergy_scores(topo_rand_hsa_ew_150sim_file)
-topo_rand_hsa_mw_synergies_150sim = emba::get_synergy_scores(topo_rand_hsa_mw_150sim_file, file_type = "modelwise")
+topo_prolif_hsa_ew_synergies_50sim = emba::get_synergy_scores(topo_prolif_hsa_ew_50sim_file)
+topo_prolif_hsa_mw_synergies_50sim = emba::get_synergy_scores(topo_prolif_hsa_mw_50sim_file, file_type = "modelwise")
+topo_prolif_hsa_ew_synergies_150sim = emba::get_synergy_scores(topo_prolif_hsa_ew_150sim_file)
+topo_prolif_hsa_mw_synergies_150sim = emba::get_synergy_scores(topo_prolif_hsa_mw_150sim_file, file_type = "modelwise")
 
 ## Bliss results ss
 topo_ss_bliss_ew_50sim_file = paste0("results/topology-only/cascade_2.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
@@ -1620,61 +1627,61 @@ topo_ss_bliss_ew_synergies_150sim = emba::get_synergy_scores(topo_ss_bliss_ew_15
 topo_ss_bliss_mw_synergies_150sim = emba::get_synergy_scores(topo_ss_bliss_mw_150sim_file, file_type = "modelwise")
 
 ## Bliss results rand
-topo_rand_bliss_ew_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
-topo_rand_bliss_mw_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
-topo_rand_bliss_ew_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
-topo_rand_bliss_mw_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
+topo_prolif_bliss_ew_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topo_prolif_bliss_mw_50sim_file = paste0("results/topology-only/cascade_2.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
+topo_prolif_bliss_ew_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topo_prolif_bliss_mw_150sim_file = paste0("results/topology-only/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
 
-topo_rand_bliss_ew_synergies_50sim = emba::get_synergy_scores(topo_rand_bliss_ew_50sim_file)
-topo_rand_bliss_mw_synergies_50sim = emba::get_synergy_scores(topo_rand_bliss_mw_50sim_file, file_type = "modelwise")
-topo_rand_bliss_ew_synergies_150sim = emba::get_synergy_scores(topo_rand_bliss_ew_150sim_file)
-topo_rand_bliss_mw_synergies_150sim = emba::get_synergy_scores(topo_rand_bliss_mw_150sim_file, file_type = "modelwise")
+topo_prolif_bliss_ew_synergies_50sim = emba::get_synergy_scores(topo_prolif_bliss_ew_50sim_file)
+topo_prolif_bliss_mw_synergies_50sim = emba::get_synergy_scores(topo_prolif_bliss_mw_50sim_file, file_type = "modelwise")
+topo_prolif_bliss_ew_synergies_150sim = emba::get_synergy_scores(topo_prolif_bliss_ew_150sim_file)
+topo_prolif_bliss_mw_synergies_150sim = emba::get_synergy_scores(topo_prolif_bliss_mw_150sim_file, file_type = "modelwise")
 
 # calculate probability of synergy in the modelwise results
 topo_ss_hsa_mw_synergies_50sim = topo_ss_hsa_mw_synergies_50sim %>% 
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 topo_ss_hsa_mw_synergies_150sim = topo_ss_hsa_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topo_rand_hsa_mw_synergies_50sim = topo_rand_hsa_mw_synergies_50sim %>%
+topo_prolif_hsa_mw_synergies_50sim = topo_prolif_hsa_mw_synergies_50sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topo_rand_hsa_mw_synergies_150sim = topo_rand_hsa_mw_synergies_150sim %>%
+topo_prolif_hsa_mw_synergies_150sim = topo_prolif_hsa_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 topo_ss_bliss_mw_synergies_50sim = topo_ss_bliss_mw_synergies_50sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 topo_ss_bliss_mw_synergies_150sim = topo_ss_bliss_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topo_rand_bliss_mw_synergies_50sim = topo_rand_bliss_mw_synergies_50sim %>%
+topo_prolif_bliss_mw_synergies_50sim = topo_prolif_bliss_mw_synergies_50sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topo_rand_bliss_mw_synergies_150sim = topo_rand_bliss_mw_synergies_150sim %>%
+topo_prolif_bliss_mw_synergies_150sim = topo_prolif_bliss_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 
 # Tidy the data
 pred_topo_ew_hsa = bind_cols(
   topo_ss_hsa_ew_synergies_50sim %>% rename(ss_score_50sim = score),
   topo_ss_hsa_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
-  topo_rand_hsa_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
-  topo_rand_hsa_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  topo_prolif_hsa_ew_synergies_50sim %>% select(score) %>% rename(prolif_score_50sim = score),
+  topo_prolif_hsa_ew_synergies_150sim %>% select(score) %>% rename(prolif_score_150sim = score),
   as_tibble_col(observed, column_name = "observed"))
 
 pred_topo_mw_hsa = bind_cols(
   topo_ss_hsa_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
   topo_ss_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
-  topo_rand_hsa_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
-  topo_rand_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  topo_prolif_hsa_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_50sim = synergy_prob_ss),
+  topo_prolif_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_150sim = synergy_prob_ss),
   as_tibble_col(observed, column_name = "observed"))
 
 pred_topo_ew_bliss = bind_cols(
   topo_ss_bliss_ew_synergies_50sim %>% rename(ss_score_50sim = score),
   topo_ss_bliss_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
-  topo_rand_bliss_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
-  topo_rand_bliss_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  topo_prolif_bliss_ew_synergies_50sim %>% select(score) %>% rename(prolif_score_50sim = score),
+  topo_prolif_bliss_ew_synergies_150sim %>% select(score) %>% rename(prolif_score_150sim = score),
   as_tibble_col(observed, column_name = "observed"))
 
 pred_topo_mw_bliss = bind_cols(
   topo_ss_bliss_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
   topo_ss_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
-  topo_rand_bliss_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
-  topo_rand_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  topo_prolif_bliss_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_50sim = synergy_prob_ss),
+  topo_prolif_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_150sim = synergy_prob_ss),
   as_tibble_col(observed, column_name = "observed"))
 ```
 
@@ -1684,13 +1691,13 @@ pred_topo_mw_bliss = bind_cols(
 ```r
 topo_res_ss_ew_50sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
 topo_res_ss_ew_150sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
-topo_res_rand_ew_50sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "rand_score_50sim", label_col = "observed")
-topo_res_rand_ew_150sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "rand_score_150sim", label_col = "observed")
+topo_res_prolif_ew_50sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "prolif_score_50sim", label_col = "observed")
+topo_res_prolif_ew_150sim = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "prolif_score_150sim", label_col = "observed")
 
 topo_res_ss_mw_50sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 topo_res_ss_mw_150sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
-topo_res_rand_mw_50sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
-topo_res_rand_mw_150sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+topo_res_prolif_mw_50sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_prolif_50sim", label_col = "observed", direction = ">")
+topo_res_prolif_mw_150sim = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "synergy_prob_prolif_150sim", label_col = "observed", direction = ">")
 
 # Plot ROCs
 plot(x = topo_res_ss_ew_50sim$roc_stats$FPR, y = topo_res_ss_ew_50sim$roc_stats$TPR,
@@ -1698,15 +1705,15 @@ plot(x = topo_res_ss_ew_50sim$roc_stats$FPR, y = topo_res_ss_ew_50sim$roc_stats$
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topo_res_ss_ew_150sim$roc_stats$FPR, y = topo_res_ss_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topo_res_rand_ew_50sim$roc_stats$FPR, y = topo_res_rand_ew_50sim$roc_stats$TPR,
+lines(x = topo_res_prolif_ew_50sim$roc_stats$FPR, y = topo_res_prolif_ew_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topo_res_rand_ew_150sim$roc_stats$FPR, y = topo_res_rand_ew_150sim$roc_stats$TPR,
+lines(x = topo_res_prolif_ew_150sim$roc_stats$FPR, y = topo_res_prolif_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topo_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topo_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topo_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topo_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topo_res_prolif_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_prolif_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -1715,15 +1722,15 @@ plot(x = topo_res_ss_mw_50sim$roc_stats$FPR, y = topo_res_ss_mw_50sim$roc_stats$
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topo_res_ss_mw_150sim$roc_stats$FPR, y = topo_res_ss_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topo_res_rand_mw_50sim$roc_stats$FPR, y = topo_res_rand_mw_50sim$roc_stats$TPR,
+lines(x = topo_res_prolif_mw_50sim$roc_stats$FPR, y = topo_res_prolif_mw_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topo_res_rand_mw_150sim$roc_stats$FPR, y = topo_res_rand_mw_150sim$roc_stats$TPR,
+lines(x = topo_res_prolif_mw_150sim$roc_stats$FPR, y = topo_res_prolif_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topo_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topo_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topo_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topo_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topo_res_prolif_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_prolif_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -1738,42 +1745,42 @@ pr_topo_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(ss_
   weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topo_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+pr_topo_res_prolif_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(prolif_score_50sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+pr_topo_res_prolif_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(prolif_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topo_ew_hsa %>% pull(observed), curve = TRUE)
 
 pr_topo_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_ss_50sim),
   weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topo_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_ss_150sim),
   weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_rand_50sim),
+pr_topo_res_prolif_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_prolif_50sim),
   weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_rand_150sim),
+pr_topo_res_prolif_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_hsa %>% pull(synergy_prob_prolif_150sim),
   weights.class0 = pred_topo_mw_hsa %>% pull(observed), curve = TRUE)
 
 plot(pr_topo_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (HSA)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topo_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topo_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topo_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topo_res_prolif_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_prolif_ew_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topo_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topo_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topo_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topo_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topo_res_prolif_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_prolif_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 
 plot(pr_topo_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (HSA)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topo_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topo_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topo_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topo_res_prolif_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_prolif_mw_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topo_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topo_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topo_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topo_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topo_res_prolif_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_prolif_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 ```
 
@@ -1785,10 +1792,10 @@ Combine the $150$ simulation results (calibrated + proliferative)
 
 ```r
 # Ensemble-wise
-betas = seq(from = -20, to = 20, by = 0.1)
+betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topo_ew_hsa = pred_topo_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topo_ew_hsa = pred_topo_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = get_roc_stats(df = pred_topo_ew_hsa, pred_col = "combined_score", label_col = "observed")
   auc_value = res$AUC
 })
@@ -1809,7 +1816,7 @@ weights = seq(from = 0, to = 1, by = 0.05)
 
 auc_values_mw = sapply(weights, function(w) {
   pred_topo_mw_hsa = pred_topo_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_topo_mw_hsa$synergy_prob_ss_150sim + w * pred_topo_mw_hsa$synergy_prob_rand_150sim)
+    mutate(weighted_prob = (1 - w) * pred_topo_mw_hsa$synergy_prob_ss_150sim + w * pred_topo_mw_hsa$synergy_prob_prolif_150sim)
   res = get_roc_stats(df = pred_topo_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
   auc_value = res$AUC
 })
@@ -1833,7 +1840,7 @@ Combine the $150$ simulation results (calibrated + proliferative)
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topo_ew_hsa = pred_topo_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topo_ew_hsa = pred_topo_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = pr.curve(scores.class0 = pred_topo_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_topo_ew_hsa %>% pull(observed))
   auc_value = res$auc.davis.goadrich
@@ -1857,13 +1864,13 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
 ```r
 topo_res_ss_ew_50sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "ss_score_50sim", label_col = "observed")
 topo_res_ss_ew_150sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "ss_score_150sim", label_col = "observed")
-topo_res_rand_ew_50sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "rand_score_50sim", label_col = "observed")
-topo_res_rand_ew_150sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "rand_score_150sim", label_col = "observed")
+topo_res_prolif_ew_50sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "prolif_score_50sim", label_col = "observed")
+topo_res_prolif_ew_150sim = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "prolif_score_150sim", label_col = "observed")
 
 topo_res_ss_mw_50sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 topo_res_ss_mw_150sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
-topo_res_rand_mw_50sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
-topo_res_rand_mw_150sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+topo_res_prolif_mw_50sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_prolif_50sim", label_col = "observed", direction = ">")
+topo_res_prolif_mw_150sim = get_roc_stats(df = pred_topo_mw_bliss, pred_col = "synergy_prob_prolif_150sim", label_col = "observed", direction = ">")
 
 # Plot ROCs
 plot(x = topo_res_ss_ew_50sim$roc_stats$FPR, y = topo_res_ss_ew_50sim$roc_stats$TPR,
@@ -1871,15 +1878,15 @@ plot(x = topo_res_ss_ew_50sim$roc_stats$FPR, y = topo_res_ss_ew_50sim$roc_stats$
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topo_res_ss_ew_150sim$roc_stats$FPR, y = topo_res_ss_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topo_res_rand_ew_50sim$roc_stats$FPR, y = topo_res_rand_ew_50sim$roc_stats$TPR,
+lines(x = topo_res_prolif_ew_50sim$roc_stats$FPR, y = topo_res_prolif_ew_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topo_res_rand_ew_150sim$roc_stats$FPR, y = topo_res_rand_ew_150sim$roc_stats$TPR,
+lines(x = topo_res_prolif_ew_150sim$roc_stats$FPR, y = topo_res_prolif_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topo_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topo_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topo_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topo_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topo_res_prolif_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_prolif_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -1888,15 +1895,15 @@ plot(x = topo_res_ss_mw_50sim$roc_stats$FPR, y = topo_res_ss_mw_50sim$roc_stats$
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topo_res_ss_mw_150sim$roc_stats$FPR, y = topo_res_ss_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topo_res_rand_mw_50sim$roc_stats$FPR, y = topo_res_rand_mw_50sim$roc_stats$TPR,
+lines(x = topo_res_prolif_mw_50sim$roc_stats$FPR, y = topo_res_prolif_mw_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topo_res_rand_mw_150sim$roc_stats$FPR, y = topo_res_rand_mw_150sim$roc_stats$TPR,
+lines(x = topo_res_prolif_mw_150sim$roc_stats$FPR, y = topo_res_prolif_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topo_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topo_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topo_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topo_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topo_res_prolif_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topo_res_prolif_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -1911,42 +1918,42 @@ pr_topo_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(s
   weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topo_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+pr_topo_res_prolif_ew_50sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(prolif_score_50sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+pr_topo_res_prolif_ew_150sim = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(prolif_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
 
 pr_topo_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_ss_50sim),
   weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topo_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_ss_150sim),
   weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_rand_50sim),
+pr_topo_res_prolif_mw_50sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_prolif_50sim),
   weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE)
-pr_topo_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_rand_150sim),
+pr_topo_res_prolif_mw_150sim = pr.curve(scores.class0 = pred_topo_mw_bliss %>% pull(synergy_prob_prolif_150sim),
   weights.class0 = pred_topo_mw_bliss %>% pull(observed), curve = TRUE)
 
 plot(pr_topo_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topo_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topo_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topo_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topo_res_prolif_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_prolif_ew_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topo_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topo_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topo_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topo_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topo_res_prolif_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_prolif_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 
 plot(pr_topo_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topo_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topo_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topo_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topo_res_prolif_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topo_res_prolif_mw_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topo_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topo_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topo_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topo_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topo_res_prolif_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topo_res_prolif_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 ```
 
@@ -1959,7 +1966,7 @@ grid(lwd = 0.5)
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "combined_score", label_col = "observed")
   auc_value = res$AUC
 })
@@ -1984,7 +1991,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_topo_ew_bliss %>% pull(observed))
   auc_value = res$auc.davis.goadrich
@@ -2007,7 +2014,7 @@ ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
 
 ```r
 best_beta = -1
-pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(best_score = ss_score_150sim + best_beta * rand_score_150sim)
+pred_topo_ew_bliss = pred_topo_ew_bliss %>% mutate(best_score = ss_score_150sim + best_beta * prolif_score_150sim)
 
 roc_best_res = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "best_score", label_col = "observed")
 pr_best_res = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(best_score) %>% (function(x) {-x}), 
@@ -2057,15 +2064,15 @@ topolink_ss_hsa_ew_synergies_150sim = emba::get_synergy_scores(topolink_ss_hsa_e
 topolink_ss_hsa_mw_synergies_150sim = emba::get_synergy_scores(topolink_ss_hsa_mw_150sim_file, file_type = "modelwise")
 
 ## HSA results rand
-topolink_rand_hsa_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
-topolink_rand_hsa_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
-topolink_rand_hsa_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
-topolink_rand_hsa_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
+topolink_prolif_hsa_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topolink_prolif_hsa_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
+topolink_prolif_hsa_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+topolink_prolif_hsa_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
 
-topolink_rand_hsa_ew_synergies_50sim = emba::get_synergy_scores(topolink_rand_hsa_ew_50sim_file)
-topolink_rand_hsa_mw_synergies_50sim = emba::get_synergy_scores(topolink_rand_hsa_mw_50sim_file, file_type = "modelwise")
-topolink_rand_hsa_ew_synergies_150sim = emba::get_synergy_scores(topolink_rand_hsa_ew_150sim_file)
-topolink_rand_hsa_mw_synergies_150sim = emba::get_synergy_scores(topolink_rand_hsa_mw_150sim_file, file_type = "modelwise")
+topolink_prolif_hsa_ew_synergies_50sim = emba::get_synergy_scores(topolink_prolif_hsa_ew_50sim_file)
+topolink_prolif_hsa_mw_synergies_50sim = emba::get_synergy_scores(topolink_prolif_hsa_mw_50sim_file, file_type = "modelwise")
+topolink_prolif_hsa_ew_synergies_150sim = emba::get_synergy_scores(topolink_prolif_hsa_ew_150sim_file)
+topolink_prolif_hsa_mw_synergies_150sim = emba::get_synergy_scores(topolink_prolif_hsa_mw_150sim_file, file_type = "modelwise")
 
 ## Bliss results ss
 topolink_ss_bliss_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
@@ -2079,61 +2086,61 @@ topolink_ss_bliss_ew_synergies_150sim = emba::get_synergy_scores(topolink_ss_bli
 topolink_ss_bliss_mw_synergies_150sim = emba::get_synergy_scores(topolink_ss_bliss_mw_150sim_file, file_type = "modelwise")
 
 ## Bliss results rand
-topolink_rand_bliss_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
-topolink_rand_bliss_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
-topolink_rand_bliss_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
-topolink_rand_bliss_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
+topolink_prolif_bliss_ew_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topolink_prolif_bliss_mw_50sim_file = paste0("results/topo-and-link/cascade_2.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
+topolink_prolif_bliss_ew_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+topolink_prolif_bliss_mw_150sim_file = paste0("results/topo-and-link/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
 
-topolink_rand_bliss_ew_synergies_50sim = emba::get_synergy_scores(topolink_rand_bliss_ew_50sim_file)
-topolink_rand_bliss_mw_synergies_50sim = emba::get_synergy_scores(topolink_rand_bliss_mw_50sim_file, file_type = "modelwise")
-topolink_rand_bliss_ew_synergies_150sim = emba::get_synergy_scores(topolink_rand_bliss_ew_150sim_file)
-topolink_rand_bliss_mw_synergies_150sim = emba::get_synergy_scores(topolink_rand_bliss_mw_150sim_file, file_type = "modelwise")
+topolink_prolif_bliss_ew_synergies_50sim = emba::get_synergy_scores(topolink_prolif_bliss_ew_50sim_file)
+topolink_prolif_bliss_mw_synergies_50sim = emba::get_synergy_scores(topolink_prolif_bliss_mw_50sim_file, file_type = "modelwise")
+topolink_prolif_bliss_ew_synergies_150sim = emba::get_synergy_scores(topolink_prolif_bliss_ew_150sim_file)
+topolink_prolif_bliss_mw_synergies_150sim = emba::get_synergy_scores(topolink_prolif_bliss_mw_150sim_file, file_type = "modelwise")
 
 # calculate probability of synergy in the modelwise results
 topolink_ss_hsa_mw_synergies_50sim = topolink_ss_hsa_mw_synergies_50sim %>% 
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 topolink_ss_hsa_mw_synergies_150sim = topolink_ss_hsa_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topolink_rand_hsa_mw_synergies_50sim = topolink_rand_hsa_mw_synergies_50sim %>%
+topolink_prolif_hsa_mw_synergies_50sim = topolink_prolif_hsa_mw_synergies_50sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topolink_rand_hsa_mw_synergies_150sim = topolink_rand_hsa_mw_synergies_150sim %>%
+topolink_prolif_hsa_mw_synergies_150sim = topolink_prolif_hsa_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 topolink_ss_bliss_mw_synergies_50sim = topolink_ss_bliss_mw_synergies_50sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 topolink_ss_bliss_mw_synergies_150sim = topolink_ss_bliss_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topolink_rand_bliss_mw_synergies_50sim = topolink_rand_bliss_mw_synergies_50sim %>%
+topolink_prolif_bliss_mw_synergies_50sim = topolink_prolif_bliss_mw_synergies_50sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
-topolink_rand_bliss_mw_synergies_150sim = topolink_rand_bliss_mw_synergies_150sim %>%
+topolink_prolif_bliss_mw_synergies_150sim = topolink_prolif_bliss_mw_synergies_150sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 
 # Tidy the data
 pred_topolink_ew_hsa = bind_cols(
   topolink_ss_hsa_ew_synergies_50sim %>% rename(ss_score_50sim = score),
   topolink_ss_hsa_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
-  topolink_rand_hsa_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
-  topolink_rand_hsa_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  topolink_prolif_hsa_ew_synergies_50sim %>% select(score) %>% rename(prolif_score_50sim = score),
+  topolink_prolif_hsa_ew_synergies_150sim %>% select(score) %>% rename(prolif_score_150sim = score),
   as_tibble_col(observed, column_name = "observed"))
 
 pred_topolink_mw_hsa = bind_cols(
   topolink_ss_hsa_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
   topolink_ss_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
-  topolink_rand_hsa_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
-  topolink_rand_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  topolink_prolif_hsa_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_50sim = synergy_prob_ss),
+  topolink_prolif_hsa_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_150sim = synergy_prob_ss),
   as_tibble_col(observed, column_name = "observed"))
 
 pred_topolink_ew_bliss = bind_cols(
   topolink_ss_bliss_ew_synergies_50sim %>% rename(ss_score_50sim = score),
   topolink_ss_bliss_ew_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
-  topolink_rand_bliss_ew_synergies_50sim %>% select(score) %>% rename(rand_score_50sim = score),
-  topolink_rand_bliss_ew_synergies_150sim %>% select(score) %>% rename(rand_score_150sim = score),
+  topolink_prolif_bliss_ew_synergies_50sim %>% select(score) %>% rename(prolif_score_50sim = score),
+  topolink_prolif_bliss_ew_synergies_150sim %>% select(score) %>% rename(prolif_score_150sim = score),
   as_tibble_col(observed, column_name = "observed"))
 
 pred_topolink_mw_bliss = bind_cols(
   topolink_ss_bliss_mw_synergies_50sim %>% select(perturbation, synergy_prob_ss) %>% rename(synergy_prob_ss_50sim = synergy_prob_ss),
   topolink_ss_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
-  topolink_rand_bliss_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_50sim = synergy_prob_ss),
-  topolink_rand_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_rand_150sim = synergy_prob_ss),
+  topolink_prolif_bliss_mw_synergies_50sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_50sim = synergy_prob_ss),
+  topolink_prolif_bliss_mw_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_prolif_150sim = synergy_prob_ss),
   as_tibble_col(observed, column_name = "observed"))
 ```
 
@@ -2143,13 +2150,13 @@ pred_topolink_mw_bliss = bind_cols(
 ```r
 topolink_res_ss_ew_50sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "ss_score_50sim", label_col = "observed")
 topolink_res_ss_ew_150sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
-topolink_res_rand_ew_50sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "rand_score_50sim", label_col = "observed")
-topolink_res_rand_ew_150sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "rand_score_150sim", label_col = "observed")
+topolink_res_prolif_ew_50sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "prolif_score_50sim", label_col = "observed")
+topolink_res_prolif_ew_150sim = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "prolif_score_150sim", label_col = "observed")
 
 topolink_res_ss_mw_50sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 topolink_res_ss_mw_150sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
-topolink_res_rand_mw_50sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
-topolink_res_rand_mw_150sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+topolink_res_prolif_mw_50sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_prolif_50sim", label_col = "observed", direction = ">")
+topolink_res_prolif_mw_150sim = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "synergy_prob_prolif_150sim", label_col = "observed", direction = ">")
 
 # Plot ROCs
 plot(x = topolink_res_ss_ew_50sim$roc_stats$FPR, y = topolink_res_ss_ew_50sim$roc_stats$TPR,
@@ -2157,15 +2164,15 @@ plot(x = topolink_res_ss_ew_50sim$roc_stats$FPR, y = topolink_res_ss_ew_50sim$ro
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topolink_res_ss_ew_150sim$roc_stats$FPR, y = topolink_res_ss_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topolink_res_rand_ew_50sim$roc_stats$FPR, y = topolink_res_rand_ew_50sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_ew_50sim$roc_stats$FPR, y = topolink_res_prolif_ew_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topolink_res_rand_ew_150sim$roc_stats$FPR, y = topolink_res_rand_ew_150sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_ew_150sim$roc_stats$FPR, y = topolink_res_prolif_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topolink_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topolink_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topolink_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topolink_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topolink_res_prolif_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_prolif_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -2174,15 +2181,15 @@ plot(x = topolink_res_ss_mw_50sim$roc_stats$FPR, y = topolink_res_ss_mw_50sim$ro
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topolink_res_ss_mw_150sim$roc_stats$FPR, y = topolink_res_ss_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topolink_res_rand_mw_50sim$roc_stats$FPR, y = topolink_res_rand_mw_50sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_mw_50sim$roc_stats$FPR, y = topolink_res_prolif_mw_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topolink_res_rand_mw_150sim$roc_stats$FPR, y = topolink_res_rand_mw_150sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_mw_150sim$roc_stats$FPR, y = topolink_res_prolif_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topolink_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topolink_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topolink_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topolink_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topolink_res_prolif_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_prolif_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -2197,42 +2204,42 @@ pr_topolink_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% 
   weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topolink_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+pr_topolink_res_prolif_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(prolif_score_50sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+pr_topolink_res_prolif_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(prolif_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topolink_ew_hsa %>% pull(observed), curve = TRUE)
 
 pr_topolink_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_ss_50sim),
   weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topolink_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_ss_150sim),
   weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_rand_50sim),
+pr_topolink_res_prolif_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_prolif_50sim),
   weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_rand_150sim),
+pr_topolink_res_prolif_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(synergy_prob_prolif_150sim),
   weights.class0 = pred_topolink_mw_hsa %>% pull(observed), curve = TRUE)
 
 plot(pr_topolink_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (HSA)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topolink_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topolink_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topolink_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topolink_res_prolif_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_prolif_ew_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topolink_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topolink_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topolink_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topolink_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topolink_res_prolif_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_prolif_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 
 plot(pr_topolink_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (HSA)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topolink_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topolink_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topolink_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topolink_res_prolif_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_prolif_mw_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topolink_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topolink_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topolink_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topolink_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topolink_res_prolif_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_prolif_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 ```
 
@@ -2247,7 +2254,7 @@ Combine the $150$ simulation results (calibrated + proliferative)
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "combined_score", label_col = "observed")
   auc_value = res$AUC
 })
@@ -2270,7 +2277,7 @@ weights = seq(from = 0, to = 1, by = 0.05)
 
 auc_values_mw = sapply(weights, function(w) {
   pred_topolink_mw_hsa = pred_topolink_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_rand_150sim)
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_prolif_150sim)
   res = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
   auc_value = res$AUC
 })
@@ -2294,7 +2301,7 @@ Combine the $150$ simulation results (calibrated + proliferative)
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_topolink_ew_hsa %>% pull(observed))
   auc_value = res$auc.davis.goadrich
@@ -2318,7 +2325,7 @@ weights = seq(from = 0, to = 1, by = 0.05)
 
 auc_values_mw = sapply(weights, function(w) {
   pred_topolink_mw_hsa = pred_topolink_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_rand_150sim)
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_prolif_150sim)
   res = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(weighted_prob), 
     weights.class0 = pred_topolink_mw_hsa %>% pull(observed))
   auc_value = res$auc.davis.goadrich
@@ -2340,13 +2347,13 @@ ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
 ```r
 topolink_res_ss_ew_50sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "ss_score_50sim", label_col = "observed")
 topolink_res_ss_ew_150sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "ss_score_150sim", label_col = "observed")
-topolink_res_rand_ew_50sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "rand_score_50sim", label_col = "observed")
-topolink_res_rand_ew_150sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "rand_score_150sim", label_col = "observed")
+topolink_res_prolif_ew_50sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "prolif_score_50sim", label_col = "observed")
+topolink_res_prolif_ew_150sim = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "prolif_score_150sim", label_col = "observed")
 
 topolink_res_ss_mw_50sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 topolink_res_ss_mw_150sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
-topolink_res_rand_mw_50sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_rand_50sim", label_col = "observed", direction = ">")
-topolink_res_rand_mw_150sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_rand_150sim", label_col = "observed", direction = ">")
+topolink_res_prolif_mw_50sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_prolif_50sim", label_col = "observed", direction = ">")
+topolink_res_prolif_mw_150sim = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "synergy_prob_prolif_150sim", label_col = "observed", direction = ">")
 
 # Plot ROCs
 plot(x = topolink_res_ss_ew_50sim$roc_stats$FPR, y = topolink_res_ss_ew_50sim$roc_stats$TPR,
@@ -2354,15 +2361,15 @@ plot(x = topolink_res_ss_ew_50sim$roc_stats$FPR, y = topolink_res_ss_ew_50sim$ro
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topolink_res_ss_ew_150sim$roc_stats$FPR, y = topolink_res_ss_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topolink_res_rand_ew_50sim$roc_stats$FPR, y = topolink_res_rand_ew_50sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_ew_50sim$roc_stats$FPR, y = topolink_res_prolif_ew_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topolink_res_rand_ew_150sim$roc_stats$FPR, y = topolink_res_rand_ew_150sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_ew_150sim$roc_stats$FPR, y = topolink_res_prolif_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topolink_res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topolink_res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topolink_res_rand_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topolink_res_rand_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topolink_res_prolif_ew_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_prolif_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -2371,15 +2378,15 @@ plot(x = topolink_res_ss_mw_50sim$roc_stats$FPR, y = topolink_res_ss_mw_50sim$ro
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = topolink_res_ss_mw_150sim$roc_stats$FPR, y = topolink_res_ss_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-lines(x = topolink_res_rand_mw_50sim$roc_stats$FPR, y = topolink_res_rand_mw_50sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_mw_50sim$roc_stats$FPR, y = topolink_res_prolif_mw_50sim$roc_stats$TPR,
   lwd = 3, col = my_palette[3])
-lines(x = topolink_res_rand_mw_150sim$roc_stats$FPR, y = topolink_res_rand_mw_150sim$roc_stats$TPR,
+lines(x = topolink_res_prolif_mw_150sim$roc_stats$FPR, y = topolink_res_prolif_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(topolink_res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(topolink_res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
-    paste(round(topolink_res_rand_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
-    paste(round(topolink_res_rand_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
+    paste(round(topolink_res_prolif_mw_50sim$AUC, digits = 2), "Proliferative (50 sim)"),
+    paste(round(topolink_res_prolif_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -2394,42 +2401,42 @@ pr_topolink_res_ss_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>
   weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topolink_res_ss_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(ss_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(rand_score_50sim) %>% (function(x) {-x}), 
+pr_topolink_res_prolif_ew_50sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(prolif_score_50sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(rand_score_150sim) %>% (function(x) {-x}), 
+pr_topolink_res_prolif_ew_150sim = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(prolif_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
 
 pr_topolink_res_ss_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_ss_50sim),
   weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_topolink_res_ss_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_ss_150sim),
   weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_rand_50sim),
+pr_topolink_res_prolif_mw_50sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_prolif_50sim),
   weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE)
-pr_topolink_res_rand_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_rand_150sim),
+pr_topolink_res_prolif_mw_150sim = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(synergy_prob_prolif_150sim),
   weights.class0 = pred_topolink_mw_bliss %>% pull(observed), curve = TRUE)
 
 plot(pr_topolink_res_ss_ew_50sim, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topolink_res_ss_ew_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topolink_res_rand_ew_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topolink_res_rand_ew_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topolink_res_prolif_ew_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_prolif_ew_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topolink_res_ss_ew_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topolink_res_ss_ew_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topolink_res_rand_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topolink_res_rand_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topolink_res_prolif_ew_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_prolif_ew_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 
 plot(pr_topolink_res_ss_mw_50sim, main = 'PR curve, Model-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_topolink_res_ss_mw_150sim, add = TRUE, color = my_palette[2])
-plot(pr_topolink_res_rand_mw_50sim, add = TRUE, color = my_palette[3])
-plot(pr_topolink_res_rand_mw_150sim, add = TRUE, color = my_palette[4])
+plot(pr_topolink_res_prolif_mw_50sim, add = TRUE, color = my_palette[3])
+plot(pr_topolink_res_prolif_mw_150sim, add = TRUE, color = my_palette[4])
 legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_topolink_res_ss_mw_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_topolink_res_ss_mw_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
-    paste(round(pr_topolink_res_rand_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
-    paste(round(pr_topolink_res_rand_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
+    paste(round(pr_topolink_res_prolif_mw_50sim$auc.davis.goadrich, digits = 3), "Proliferative (50 sim)"),
+    paste(round(pr_topolink_res_prolif_mw_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)")))
 grid(lwd = 0.5)
 ```
 
@@ -2444,7 +2451,7 @@ Combine the $150$ simulation results (calibrated + proliferative)
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "combined_score", label_col = "observed")
   auc_value = res$AUC
 })
@@ -2467,7 +2474,7 @@ weights = seq(from = 0, to = 1, by = 0.05)
 
 auc_values_mw = sapply(weights, function(w) {
   pred_topolink_mw_bliss = pred_topolink_mw_bliss %>% 
-    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_rand_150sim)
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_prolif_150sim)
   res = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "weighted_prob", label_col = "observed", direction = ">")
   auc_value = res$AUC
 })
@@ -2491,7 +2498,7 @@ Combine the $150$ simulation results (calibrated + proliferative)
 betas = seq(from = -10, to = 10, by = 0.1)
 
 auc_values_ew = sapply(betas, function(beta) {
-  pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * rand_score_150sim)
+  pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_topolink_ew_bliss %>% pull(observed))
   auc_value = res$auc.davis.goadrich
@@ -2515,7 +2522,7 @@ weights = seq(from = 0, to = 1, by = 0.05)
 
 auc_values_mw = sapply(weights, function(w) {
   pred_topolink_mw_bliss = pred_topolink_mw_bliss %>% 
-    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_rand_150sim)
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_prolif_150sim)
   res = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(weighted_prob), 
     weights.class0 = pred_topolink_mw_bliss %>% pull(observed))
   auc_value = res$auc.davis.goadrich
@@ -2539,8 +2546,8 @@ Use the best betas from the PR-AUC sensitivity graphs (separately for Bliss and 
 ```r
 best_beta_hsa = -1
 best_best_bliss = -1.3
-pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(best_score = ss_score_150sim + best_beta_hsa * rand_score_150sim)
-pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(best_score = ss_score_150sim + best_best_bliss * rand_score_150sim)
+pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(best_score = ss_score_150sim + best_beta_hsa * prolif_score_150sim)
+pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(best_score = ss_score_150sim + best_best_bliss * prolif_score_150sim)
 
 roc_best_res_hsa = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "best_score", label_col = "observed")
 roc_best_res_bliss = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "best_score", label_col = "observed")
@@ -2590,35 +2597,38 @@ To generate the ROC curves, we use the ensemble-wise and model-wise synergies fo
 
 ## Random model results {-}
 
+Use the `druglogics-synergy` module, version `1.2.0`: `git checkout v1.2.0` and the [abmlog](https://github.com/druglogics/abmlog) module, version `1.5.0`: `git checkout v1.5.0`.
+
 The CASCADE 1.0 and 2.0 `.sif` network files can be found at the directories `ags_cascade_1.0` and `ags_cascade_2.0` on the
 `druglogics-synergy` repository.
+Copy these two network files inside the `test` dir of the `abmlog` repository root.
 
 Run the `abmlog` for the CASCADE 2.0 topology:
 ```
 java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000
 ```
 
-Next, prune the resulting models to only the ones that have 1 stable state ($1292$) using the simple bash script `process_models.sh` inside the generated `models` directory from `abmlog`.
+Next, prune the resulting models to only the ones that have 1 stable state (should be $1292$) using the simple bash script [process_models.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/process_models.sh) inside the generated `models` directory from `abmlog`.
 
 ```
 cd pathTo/druglogics-synergy/ags_cascade_2.0
 ```
 
-- Move the `models` dir inside the `ags_cascade_2.0` dir
-- Use attractor_tool: `biolqm_stable_states` in the config file
-- Use `synergy_method: hsa` or `synergy_method: bliss` (or run twice)
-- Run drabme via `druglogics-synergy`:
+- Move the `abmlog`-generated `models` dir inside the `ags_cascade_2.0` dir
+- Use `attractor_tool`: `biolqm_stable_states` in the `config` file
+- Use `synergy_method: hsa` or `synergy_method: bliss` in the `config` file (run twice below command, changing the `project` to `cascade_2.0_random_bliss`)
+
+Run Drabme via `druglogics-synergy`:
 
 ```
 java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
-java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_bliss --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
 ```
 
 The above procedure is the same for CASCADE 1.0. Changes:
 
-- Network file is now the `cascade_1_0.sif`
-- The `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
-- The drabme command should be run with `--project=cascade_1.0_random_hsa` and `--project=cascade_1.0_random_bliss` respectively
+- The `abmlog`-generated `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
+- The network file is now for the CASCADE 1.0 (`network.sif` inside the `ags_cascade_1.0`)
+- The Drabme command should be run with `--project=cascade_1.0_random_hsa` and `--project=cascade_1.0_random_bliss` respectively
 
 # R session info {-}
 
