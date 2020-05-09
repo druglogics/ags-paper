@@ -1277,6 +1277,13 @@ legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
 grid(lwd = 0.5)
 ```
 
+:::{.green-box}
+- To minimize the resulting performance variance, $150$ seems to be a good number of `Gitsbe` simulations to run for the CASCADE 2.0 network.
+- Individual predictor **model-wise** results (when looking at the ROC curves) show good performance.
+- Individual predictor **ensemble-wise** results show that *proliferative* and *calibrated* models have poor performance whereas *random* models perform like proper random models ($AUC\sim0.5$))
+- The PR curves show that the **performance of all individual predictors is poor** compared to the baseline.
+:::
+
 ### AUC sensitivity {-}
 
 Investigate same thing as described in [here](#auc-sensitivity).
@@ -1421,15 +1428,15 @@ The **HSA ensemble-wise** results do so (at some degree).
 
 ## Fitness vs Performance {-}
 
-The idea here is to generate many training data files from the steady state as used in the simulations above for the AGS, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
-That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations above.
+The idea here is to generate many training data files from the steady state as used in the simulations above, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
+That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations.
 
 Using the `gen_training_data.R` script, we first choose a few number of flips ($11$ flips) ranging from $1$ to $24$ (all nodes) in the steady state.
 Then, for each such *flipping-nodes* value, we generated $20$ new steady states with a randomly chosen set of nodes whose value is going to flip.
 Thus, in total, $205$ training data files were produced ($205 = 9 \times 20 + 24 + 1$, where from the $11$ number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).
 
 Running the script `run_druglogics_synergy_training.sh` from the `druglogics-synergy` repository root, we get the simulation results for each of these training data files.
-The only difference in the cascade 2.0 configuration file was the number of simulations ($15$) for each training data file and the attractor tool used (`biolqm_stable_states`).
+Note that in the cascade 2.0 configuration file we changed the number of simulations to ($15$) for each training data file and the attractor tool used was `biolqm_stable_states` (as is with every analysis in this report).
 
 We now load the data from these simulations:
 
