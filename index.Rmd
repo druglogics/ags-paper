@@ -84,8 +84,8 @@ Load results:
 ## HSA results
 ss_hsa_ew_file = paste0("results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
 ss_hsa_mw_file = paste0("results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-prolif_hsa_ew_file = paste0("results/link-only/hsa/cascade_1.0_rand_50sim_fixpoints_ensemblewise_synergies.tab")
-prolif_hsa_mw_file = paste0("results/link-only/hsa/cascade_1.0_rand_50sim_fixpoints_modelwise_synergies.tab")
+prolif_hsa_ew_file = paste0("results/link-only/hsa/cascade_1.0_prolif_50sim_fixpoints_ensemblewise_synergies.tab")
+prolif_hsa_mw_file = paste0("results/link-only/hsa/cascade_1.0_prolif_50sim_fixpoints_modelwise_synergies.tab")
 random_hsa_ew_file = paste0("results/link-only/hsa/cascade_1.0_random_ensemblewise_synergies.tab")
 random_hsa_mw_file = paste0("results/link-only/hsa/cascade_1.0_random_modelwise_synergies.tab")
 
@@ -344,8 +344,8 @@ Load results:
 ## Bliss results
 ss_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
 ss_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-prolif_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_1.0_rand_50sim_fixpoints_ensemblewise_synergies.tab")
-prolif_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_1.0_rand_50sim_fixpoints_modelwise_synergies.tab")
+prolif_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_1.0_prolif_50sim_fixpoints_ensemblewise_synergies.tab")
+prolif_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_1.0_prolif_50sim_fixpoints_modelwise_synergies.tab")
 random_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_1.0_random_bliss_ensemblewise_synergies.tab")
 random_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_1.0_random_bliss_modelwise_synergies.tab")
 
@@ -723,8 +723,8 @@ ss_hsa_ensemblewise_150sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_1
 ss_hsa_modelwise_150sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_150sim_fixpoints_modelwise_synergies.tab")
 ss_hsa_ensemblewise_200sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_ensemblewise_synergies.tab")
 ss_hsa_modelwise_200sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
-prolif_hsa_ensemblewise_file = paste0("results/link-only/hsa/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
-prolif_hsa_modelwise_file = paste0("results/link-only/hsa/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
+prolif_hsa_ensemblewise_file = paste0("results/link-only/hsa/cascade_2.0_prolif_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+prolif_hsa_modelwise_file = paste0("results/link-only/hsa/cascade_2.0_prolif_150sim_fixpoints_hsa_modelwise_synergies.tab")
 random_hsa_ensemblewise_file = paste0("results/link-only/hsa/cascade_2.0_random_ensemblewise_synergies.tab")
 random_hsa_modelwise_file = paste0("results/link-only/hsa/cascade_2.0_random_modelwise_synergies.tab")
 
@@ -1135,8 +1135,8 @@ ss_bliss_ensemblewise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_
 ss_bliss_modelwise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_150sim_fixpoints_modelwise_synergies.tab")
 ss_bliss_ensemblewise_200sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_200sim_fixpoints_ensemblewise_synergies.tab")
 ss_bliss_modelwise_200sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
-prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
-prolif_bliss_modelwise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
+prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_prolif_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+prolif_bliss_modelwise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_prolif_150sim_fixpoints_bliss_modelwise_synergies.tab")
 random_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_2.0_random_bliss_ensemblewise_synergies.tab")
 random_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_2.0_random_bliss_modelwise_synergies.tab")
 
@@ -1503,7 +1503,7 @@ We now load the data from these simulations:
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
 
 :::{.note}
-We run `Gitsbe` simulations with $50$ topology mutations (bootstrap value, reduced to $10$ after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
+We run `Gitsbe` simulations with $50$ topology mutations (bootstrap value, reduced to $10$ after models with stable states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are testing topology mutations).
 
 Results were assessed via `Drabme`'s ensemble and modelwise results, using both the HSA and Bliss method.
 :::
@@ -1932,7 +1932,7 @@ grid(lwd = 0.5)
 # CASCADE 2.0 Analysis (Topology and Link Operator Mutations) {-}
 
 :::{.note}
-We run `Gitsbe` simulations with $50$ topology mutations and $3000$ link operator mutations (bootstrap values, reduced to $10$ and $3$ respectively after models with stabla states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are discussing topology mutations).
+We run `Gitsbe` simulations with $50$ topology mutations and $3000$ link operator mutations (bootstrap values, reduced to $10$ and $3$ respectively after models with stable states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are testing topology mutations).
 
 Results were assessed via `Drabme`'s ensemble and modelwise results, using both the HSA and Bliss method.
 :::
@@ -2430,16 +2430,30 @@ grid(lwd = 0.5)
 
 # Reproduce simulation results {-}
 
-## ROC curves {-}
+## Get output files {-}
 
-- Install `druglogics-synergy`
-- Run the script `run_druglogics_synergy.sh` in the above repo using the configuration settings: 
-  - `simulations: 50`
-  - `attractor_tool: biolqm_stable_states`
-  - `synergy_method: hsa` (also rerun the script chaning the synergy method `bliss`)
+- Use the `druglogics-synergy` module, version `1.2.0`: `git checkout v1.2.0`
+- Run the script `run_druglogics_synergy.sh` in the above repo.
 
-Thus you will get a directory per simulation and inside will be several result files.
-To generate the ROC curves, we use the ensemble-wise and model-wise synergies found in each respective simulation.
+You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run).
+To get the results for the topology mutations for CASCADE 2.0 you need to change the `ags_cascade_2.0/config` file option `topology_mutations: 10` (it is $0$ by default - no topology mutations, only link-operator/balance mutations).
+If you wish to get the results from both mutations, set both `balance_mutations` and `topology_mutations` options to a non-zero value ($3$ and $10$ were used in the simulations).
+
+Each `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
+For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
+
+## Repo results structure {-}
+
+We have gathered all the necessary output files from the above simulations to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report. 
+The `results` directory has 3 sub-directories: 
+
+1. [`link-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only): results from the link-operator mutated models only (used in the sections [Cascade 1.0 Analysis] and [CASCADE 2.0 Analysis (Link Operator Mutations)])
+2. [`topology-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topology-only): results from the topology-mutated models only (used in the section [CASCADE 2.0 Analysis (Topology Mutations)])
+3. [`topo-and-link`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
+
+:::{.note}
+Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
+:::
 
 ## Random model results {-}
 
