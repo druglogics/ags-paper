@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 11 May, 2020"
+date: "Last updated: 12 May, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -14,7 +14,7 @@ site: bookdown::bookdown_site
 
 # Intro {-}
 
-This report is the **supplementary material** for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as guidelines for reproducing the results.
+This report is the **supplementary material** for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as instructions for reproducing the results.
 
 A list of things that change between the simulations and the presented graphs are:
 
@@ -30,11 +30,13 @@ More info on the calcualtions that Drabme does [see here](https://druglogics.git
 
 For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (see also [@Grau2015]).
 
+The AUC sensitivity analysis (for a description see [here](#auc-sensitivity)) was inspired by work from [@Pepe2000].
+
 The report template is from the `rtemps` R package [@R-rtemps].
 
-# Input {-}
+# R Libraries {-}
 
-Loading libraries:
+Loading libraries that will be used in this report:
 
 ```r
 library(DT)
@@ -1121,7 +1123,7 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 For $\beta=-1$ we do not observe performance improvement in this case.
 :::
 
-### Logistic Regression {-}
+### Logistic Regression Analysis {-}
 
 We tried fitting a model using logistic regression as a different approach to combine/augment the results from calibrated simulations with the proliferative ones (for the HSA-assessed ensemble-wise results where there was a minimal benefit).
 
@@ -1150,7 +1152,7 @@ $$
 The ROC AUC produced with a logistic regression model is lower than the calibrated models (with $150$ Gitsbe simulations): **0.5782313** (PR-AUC is also lower: **0.0527052**).
 :::
 
-### Regularized Logistic Regression {-}
+### Regularized Logistic Regression Analysis {-}
 
 Because the coefficient values found from the above approach are large, we try a regularized logistic regression approach using the `glmnet` R package [@R-glmnet].
 We cross validate the $\lambda$ parameter and try with different $\alpha \in [0,1]$ ($\alpha=0$ means Ridge regression, $\alpha=1$ means LASSO, in between means Elastic net) while either minimizing the missclassification error (`type.measure="class"`) or maximizing the ROC-AUC (`type.measure = "auc"`).
@@ -1201,7 +1203,7 @@ Note that we get warnings when using `glmnet` because of the small number of obs
 Resulting coefficients vary, but tend to be either all too small or **larger on the proliferative model predictor**.
 :::
 
-### MAMSE ROC {-}
+### MAMSE ROC Analysis {-}
 
 Using the `MAMSE` R package [@R-MAMSE] we try another method to combine the predictor values from the calibrated and proliferative models.
 The resulting ROC curve gets a little bit distored and AUC is not statistically better from the reference sample population (i.e. the calibrated `Gitsbe` models with $150$ simulations):
@@ -1575,6 +1577,53 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 For $\beta=-1$ we still see **significant performance improvement**.
 :::
 
+## Best ROC and PRC {-}
+
+For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
+So, the best ROC and PR curves we can get with our simulations when using models with topology mutations are (we also include the curves with $\beta=-1$):
+
+
+```r
+best_beta1 = -1.6
+best_beta2 = -1
+pred_ew_bliss = pred_ew_bliss %>% 
+  mutate(best_score1 = ss_score_150sim + best_beta1 * prolif_score_150sim, 
+         best_score2 = ss_score_150sim + best_beta2 * prolif_score_150sim)
+
+roc_best_res1 = get_roc_stats(df = pred_ew_bliss, pred_col = "best_score1", label_col = "observed")
+roc_best_res2 = get_roc_stats(df = pred_ew_bliss, pred_col = "best_score2", label_col = "observed")
+pr_best_res1 = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score1) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+pr_best_res2 = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score2) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+
+# Plot best ROCs
+plot(x = roc_best_res1$roc_stats$FPR, y = roc_best_res1$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = TeX('ROC curve (Ensemble-wise, Bliss), $calibrated + \\beta \\times proliferative$'),
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = roc_best_res2$roc_stats$FPR, y = roc_best_res2$roc_stats$TPR, 
+  lwd = 3, col = my_palette[2])
+legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
+  legend = c(paste(round(roc_best_res1$AUC, digits = 2), '(β = -1.6)'), 
+             paste(round(roc_best_res2$AUC, digits = 2), '(β = -1)')))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+# Plot best PRCs
+plot(pr_best_res1, main = TeX('PR curve (Ensemble-wise, Bliss), $calibrated + \\beta \\times proliferative$'),
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_best_res2, add = TRUE, color = my_palette[2])
+legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19,
+  legend = c(paste(round(pr_best_res1$auc.davis.goadrich, digits = 3), '(β = -1.6)'),
+    paste(round(pr_best_res2$auc.davis.goadrich, digits = 3), '(β = -1)')))
+grid(lwd = 0.5)
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/best-beta-cascade2-link-1.png" alt="ROC and PR curve for best beta (CASCADE 2.0, Link Operator Mutations)" width="50%" /><img src="index_files/figure-html/best-beta-cascade2-link-2.png" alt="ROC and PR curve for best beta (CASCADE 2.0, Link Operator Mutations)" width="50%" />
+<p class="caption">(\#fig:best-beta-cascade2-link)ROC and PR curve for best beta (CASCADE 2.0, Link Operator Mutations)</p>
+</div>
+
 ## Correlation {-}
 
 We test for correlation between some of the results shown in the ROC curves.
@@ -1759,7 +1808,7 @@ pred_topo_mw_bliss = bind_cols(
 - We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state ($50,150$ simulations)
 - **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($50,150$ simulations)
-- `Gitsbe` models have only topology mutations ($50$ mutations as a bootstrap value, $10$ after models with stable states are found)
+- `Gitsbe` models have **only topology mutations** ($50$ mutations as a bootstrap value, $10$ after models with stable states are found)
 :::
 
 ### ROC curves {-}
@@ -1973,7 +2022,7 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 - We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state ($50,150$ simulations)
 - **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($50,150$ simulations)
-- `Gitsbe` models have only topology mutations ($50$ mutations as a bootstrap value, $10$ after models with stable states are found)
+- `Gitsbe` models have **only topology mutations** ($50$ mutations as a bootstrap value, $10$ after models with stable states are found)
 :::
 
 ### ROC curves {-}
@@ -2182,7 +2231,7 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 
 ## Best ROC and PRC {-}
 
-For the Bliss ensemble-wise results we demonstrated above that a value of $\beta_{best}=-1$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
+For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
 So, the best ROC and PR curves we can get with our simulations when using models with topology mutations are:
 
 
@@ -2217,12 +2266,6 @@ grid(lwd = 0.5)
 </div>
 
 # CASCADE 2.0 Analysis (Topology and Link Operator Mutations) {-}
-
-:::{.note}
-We run `Gitsbe` simulations with $50$ topology mutations and $3000$ link operator mutations (bootstrap values, reduced to $10$ and $3$ respectively after models with stable states have been found), both for $50$ and $150$ simulations and both **fitting to steady state** (calibrated models) and to a **proliferative phenotype** (so not random models but as close as it can get to that since we are testing topology mutations).
-
-Results were assessed via `Drabme`'s ensemble and modelwise results, using both the HSA and Bliss method.
-:::
 
 
 ```r
@@ -2321,7 +2364,17 @@ pred_topolink_mw_bliss = bind_cols(
   as_tibble_col(observed, column_name = "observed"))
 ```
 
-### ROC curves (HSA) {-}
+## HSA Results {-}
+
+:::{.note}
+- *HSA* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
+- We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
+- **Calibrated** models: fitted to steady state ($50,150$ simulations)
+- **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($50,150$ simulations)
+- `Gitsbe` models have **both balance and topology mutations** ($3000,50$ mutations as a bootstrap value, $3$ and $10$ respectively after models with stable states are found)
+:::
+
+### ROC curves {-}
 
 
 ```r
@@ -2371,9 +2424,12 @@ grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
-<img src="index_files/figure-html/ROC curves Topology and Link Operator Mutations (CASCADE 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology and Link Operator Mutations (CASCADE 2.0 - HSA)-2.png" width="50%" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/roc-hsa-cascade2-topo-and-link-1.png" alt="ROC curves (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method)" width="50%" /><img src="index_files/figure-html/roc-hsa-cascade2-topo-and-link-2.png" alt="ROC curves (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method)" width="50%" />
+<p class="caption">(\#fig:roc-hsa-cascade2-topo-and-link)ROC curves (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method)</p>
+</div>
 
-### PR curves (HSA) {-}
+### PR curves {-}
 
 
 ```r
@@ -2420,87 +2476,77 @@ legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
 grid(lwd = 0.5)
 ```
 
-<img src="index_files/figure-html/PR curves Topology and Link Mutations (CASCADE 2.0 - HSA)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology and Link Mutations (CASCADE 2.0 - HSA)-2.png" width="50%" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/pr-hsa-cascade2-topo-and-link-1.png" alt="PR curves (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method)" width="50%" /><img src="index_files/figure-html/pr-hsa-cascade2-topo-and-link-2.png" alt="PR curves (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method)" width="50%" />
+<p class="caption">(\#fig:pr-hsa-cascade2-topo-and-link)PR curves (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method)</p>
+</div>
 
-### ROC-AUC sensitivity (HSA) {-}
+:::{.green-box}
+- The PR curves show that the **performance of each individual predictor is poor** compared to the baseline.
+Someone looking at the ROC curves only might reach a different conclusion.
+- The *model-wise* approach produces slightly better ROC results than the *ensemble-wise* approach
+:::
 
-Combine the $150$ simulation results (calibrated + proliferative)
+### AUC sensitivity {-}
+
+Investigate same thing as described in [here](#auc-sensitivity).
+This is very crucial since the PR performance is poor for the individual predictors, but a combined predictor might be able to counter this.
+We will combine the synergy scores from the *proliferative* simulations with the results from the *calibrated* Gitsbe simulations (number of simulations: $150$).
+
 
 ```r
 # Ensemble-wise
 betas = seq(from = -10, to = 10, by = 0.1)
 
-auc_values_ew = sapply(betas, function(beta) {
+prolif_roc_topo = sapply(betas, function(beta) {
   pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
-  res = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "combined_score", label_col = "observed")
-  auc_value = res$AUC
+  res = roc.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_hsa %>% pull(observed))
+  auc_value = res$auc
 })
 
-df_ew = as_tibble(cbind(betas, auc_values_ew))
-
-ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
-  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
-  color = my_palette[2], label = "betas", label.rectangle = TRUE, repel = TRUE,
-  label.select = list(criteria = "`y` == max(`y`)"),
-  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
-```
-
-<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (HSA - CASCADE 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
-
-```r
-# Model-wise
-weights = seq(from = 0, to = 1, by = 0.05)
-
-auc_values_mw = sapply(weights, function(w) {
-  pred_topolink_mw_hsa = pred_topolink_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_prolif_150sim)
-  res = get_roc_stats(df = pred_topolink_mw_hsa, pred_col = "weighted_prob", label_col = "observed", direction = ">")
-  auc_value = res$AUC
-})
-
-df_mw = as_tibble(cbind(weights, auc_values_mw))
-
-ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
-  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
-  color = my_palette[3]) + grids()
-```
-
-<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (HSA - CASCADE 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
-
-### PR-AUC sensitivity (HSA) {-}
-
-Combine the $150$ simulation results (calibrated + proliferative)
-
-```r
-# Ensemble-wise
-betas = seq(from = -10, to = 10, by = 0.1)
-
-auc_values_ew = sapply(betas, function(beta) {
+prolif_pr_topo = sapply(betas, function(beta) {
   pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = pr.curve(scores.class0 = pred_topolink_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_topolink_ew_hsa %>% pull(observed))
   auc_value = res$auc.davis.goadrich
 })
 
-df_ew = as_tibble(cbind(betas, auc_values_ew))
+df_ew = as_tibble(cbind(betas, prolif_roc_topo, prolif_pr_topo))
+df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AUC")
 
-ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under PR Curve)",
-  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
-  color = my_palette[2], label = "betas", label.rectangle = TRUE, repel = TRUE,
-  label.select = list(criteria = "`y` == max(`y`)"),
-  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
+  legend = "none", facet.by = "type", palette = my_palette,
+  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
+   "ROC: calibrated + β x proliferative")),
+  title = TeX("AUC sensitivity to $\\beta$ parameter (HSA, CASCADE 2.0)")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_vline(xintercept = 0) +
+  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_text(aes(x=-1.8, label="β = -1", y=0.3), colour="black", angle=90) +
+  grids()
 ```
 
-<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (HSA - CASCADE 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/auc-sen-ew-hsa-cascade2-topo-and-link-1.png" alt="AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method, Ensemble-wise results)" width="2100" />
+<p class="caption">(\#fig:auc-sen-ew-hsa-cascade2-topo-and-link)AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method, Ensemble-wise results)</p>
+</div>
+
 
 ```r
 # Model-wise
 weights = seq(from = 0, to = 1, by = 0.05)
 
-auc_values_mw = sapply(weights, function(w) {
+prolif_roc_mw = sapply(weights, function(w) {
+  pred_topolink_mw_hsa = pred_topolink_mw_hsa %>%
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_prolif_150sim)
+  res = roc.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(weighted_prob),
+    weights.class0 = pred_topolink_mw_hsa %>% pull(observed))
+  auc_value = res$auc
+})
+
+prolif_pr_mw = sapply(weights, function(w) {
   pred_topolink_mw_hsa = pred_topolink_mw_hsa %>% 
     mutate(weighted_prob = (1 - w) * pred_topolink_mw_hsa$synergy_prob_ss_150sim + w * pred_topolink_mw_hsa$synergy_prob_prolif_150sim)
   res = pr.curve(scores.class0 = pred_topolink_mw_hsa %>% pull(weighted_prob), 
@@ -2508,17 +2554,41 @@ auc_values_mw = sapply(weights, function(w) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_mw = as_tibble(cbind(weights, auc_values_mw))
+df_mw = as_tibble(cbind(weights, prolif_roc_mw, prolif_pr_mw))
+df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "AUC")
 
-ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under PR Curve)",
-  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
-  color = my_palette[3]) + grids()
+ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
+  legend = "none", facet.by = "type", palette = my_palette,
+  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
+    "ROC: (1-w) x prob(ss) + w x prob(prolif)")), title.position = "center",
+  title = TeX("AUC sensitivity to weighted average score (HSA, CASCADE 2.0)")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  grids()
 ```
 
-<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (HSA - CASCADE 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/auc-sen-mw-hsa-cascade2-topo-and-link-1.png" alt="AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method, Model-wise results)" width="2100" />
+<p class="caption">(\#fig:auc-sen-mw-hsa-cascade2-topo-and-link)AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, HSA synergy method, Model-wise results)</p>
+</div>
 
-### ROC curves (Bliss) {-}
+:::{.green-box}
+- No added benefit when using the *model-wise* approach.
+- The proliferative models can be used to normalize against the predictions of the calibrated models and thus bring significant contribution to the calibrated models performance (PR-AUC shows much more sensitivity in that regard - it increases substantially more than the ROC-AUC).
+- The $\beta_{best}$ value of the **combined calibrated and proliferative model predictor** that maximizes both the ROC-AUC and PR-AUC is $\beta_{best}=-1$.
+:::
+
+## Bliss Results {-}
+
+:::{.note}
+- *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
+- We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
+- **Calibrated** models: fitted to steady state ($50,150$ simulations)
+- **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($50,150$ simulations)
+- `Gitsbe` models have  **both balance and topology mutations** ($3000,50$ mutations as a bootstrap value, $3$ and $10$ respectively after models with stable states are found)
+:::
+
+### ROC curves {-}
 
 
 ```r
@@ -2568,9 +2638,12 @@ grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
-<img src="index_files/figure-html/ROC curves Topology and Link Mutations (CASCADE 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/ROC curves Topology and Link Mutations (CASCADE 2.0 - Bliss)-2.png" width="50%" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/roc-bliss-cascade2-topo-and-link-1.png" alt="ROC curves (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method)" width="50%" /><img src="index_files/figure-html/roc-bliss-cascade2-topo-and-link-2.png" alt="ROC curves (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method)" width="50%" />
+<p class="caption">(\#fig:roc-bliss-cascade2-topo-and-link)ROC curves (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method)</p>
+</div>
 
-### PR curves (Bliss) {-}
+### PR curves {-}
 
 
 ```r
@@ -2617,87 +2690,76 @@ legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
 grid(lwd = 0.5)
 ```
 
-<img src="index_files/figure-html/PR curves Topology and Link Mutations (CASCADE 2.0 - Bliss)-1.png" width="50%" /><img src="index_files/figure-html/PR curves Topology and Link Mutations (CASCADE 2.0 - Bliss)-2.png" width="50%" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/pr-bliss-cascade2-topo-and-link-1.png" alt="PR curves (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method)" width="50%" /><img src="index_files/figure-html/pr-bliss-cascade2-topo-and-link-2.png" alt="PR curves (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method)" width="50%" />
+<p class="caption">(\#fig:pr-bliss-cascade2-topo-and-link)PR curves (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method)</p>
+</div>
 
-### ROC-AUC sensitivity (Bliss) {-}
+:::{.green-box}
+- The PR curves show that the **performance of each individual predictor is poor** compared to the baseline.
+- The *model-wise* approach produces better ROC and PR results than the *ensemble-wise* approach (performance in terms of AUC value is almost *doubled*)
+:::
 
-Combine the $150$ simulation results (calibrated + proliferative)
+### AUC sensitivity {-}
+
+Investigate same thing as described in [here](#auc-sensitivity).
+This is very crucial since the PR performance is poor for the individual predictors, but a combined predictor might be able to counter this.
+We will combine the synergy scores from the *proliferative* simulations with the results from the *calibrated* Gitsbe simulations (number of simulations: $150$).
+
 
 ```r
 # Ensemble-wise
 betas = seq(from = -10, to = 10, by = 0.1)
 
-auc_values_ew = sapply(betas, function(beta) {
+prolif_roc = sapply(betas, function(beta) {
   pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
-  res = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "combined_score", label_col = "observed")
-  auc_value = res$AUC
+  res = roc.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_bliss %>% pull(observed))
+  auc_value = res$auc
 })
 
-df_ew = as_tibble(cbind(betas, auc_values_ew))
-
-ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under ROC Curve)",
-  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
-  color = my_palette[2], label = "betas", repel = TRUE,
-  label.select = list(criteria = "`y` == max(`y`)"),
-  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
-```
-
-<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (Bliss - CASCADE 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
-
-```r
-# Model-wise
-weights = seq(from = 0, to = 1, by = 0.05)
-
-auc_values_mw = sapply(weights, function(w) {
-  pred_topolink_mw_bliss = pred_topolink_mw_bliss %>% 
-    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_prolif_150sim)
-  res = get_roc_stats(df = pred_topolink_mw_bliss, pred_col = "weighted_prob", label_col = "observed", direction = ">")
-  auc_value = res$AUC
-})
-
-df_mw = as_tibble(cbind(weights, auc_values_mw))
-
-ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under ROC Curve)",
-  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
-  color = my_palette[3]) + grids()
-```
-
-<img src="index_files/figure-html/ROC-AUC sensitivity Topology and Link Mutations (Bliss - CASCADE 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
-
-### PR-AUC sensitivity (Bliss) {-}
-
-Combine the $150$ simulation results (calibrated + proliferative)
-
-```r
-# Ensemble-wise
-betas = seq(from = -10, to = 10, by = 0.1)
-
-auc_values_ew = sapply(betas, function(beta) {
+prolif_pr = sapply(betas, function(beta) {
   pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_topolink_ew_bliss %>% pull(observed))
   auc_value = res$auc.davis.goadrich
 })
 
-df_ew = as_tibble(cbind(betas, auc_values_ew))
+df_ew = as_tibble(cbind(betas, prolif_roc, prolif_pr))
+df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AUC")
 
-ggline(data = df_ew, x = "betas", y = "auc_values_ew", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under PR Curve)",
-  title = TeX("AUC sensitivity to $\\beta$ parameter: $calibrated + \\beta \\times random$"),
-  color = my_palette[2], label = "betas", repel = TRUE,
-  label.select = list(criteria = "`y` == max(`y`)"),
-  font.label = list(size = 14)) + geom_vline(xintercept = 0) + grids()
+ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
+  plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
+  legend = "none", facet.by = "type", palette = my_palette,
+  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
+    "ROC: calibrated + β x proliferative")),
+  title = TeX("AUC sensitivity to $\\beta$ parameter (Bliss, CASCADE 2.0)")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_vline(xintercept = 0) +
+  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_text(aes(x=-2, label="β = -1", y=0.15), colour="black", angle = 90) + 
+  grids()
 ```
 
-<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (Bliss - CASCADE 2.0)-1.png" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/auc-sen-ew-bliss-cascade2-topo-and-link-1.png" alt="AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method, Ensemble-wise results)" width="2100" />
+<p class="caption">(\#fig:auc-sen-ew-bliss-cascade2-topo-and-link)AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method, Ensemble-wise results)</p>
+</div>
+
 
 ```r
 # Model-wise
 weights = seq(from = 0, to = 1, by = 0.05)
 
-auc_values_mw = sapply(weights, function(w) {
+prolif_roc_mw = sapply(weights, function(w) {
+  pred_topolink_mw_bliss = pred_topolink_mw_bliss %>%
+    mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_prolif_150sim)
+  res = roc.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(weighted_prob),
+    weights.class0 = pred_topolink_mw_bliss %>% pull(observed))
+  auc_value = res$auc
+})
+
+prolif_pr_mw = sapply(weights, function(w) {
   pred_topolink_mw_bliss = pred_topolink_mw_bliss %>% 
     mutate(weighted_prob = (1 - w) * pred_topolink_mw_bliss$synergy_prob_ss_150sim + w * pred_topolink_mw_bliss$synergy_prob_prolif_150sim)
   res = pr.curve(scores.class0 = pred_topolink_mw_bliss %>% pull(weighted_prob), 
@@ -2705,26 +2767,41 @@ auc_values_mw = sapply(weights, function(w) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_mw = as_tibble(cbind(weights, auc_values_mw))
+df_mw = as_tibble(cbind(weights, prolif_roc_mw, prolif_pr_mw))
+df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "AUC")
 
-ggline(data = df_mw, x = "weights", y = "auc_values_mw", numeric.x.axis = TRUE,
-  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under PR Curve)",
-  title = TeX("AUC sensitivity to weighted average score: $(1-w) \\times prob_{ss} + w \\times prob_{rand}$"),
-  color = my_palette[3]) + grids()
+ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
+  plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
+  legend = "none", facet.by = "type", palette = my_palette,
+  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
+    "ROC: (1-w) x prob(ss) + w x prob(prolif)")), title.position = "center",
+  title = TeX("AUC sensitivity to weighted average score (Bliss, CASCADE 2.0)")) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  grids()
 ```
 
-<img src="index_files/figure-html/PR-AUC sensitivity Topology and Link Mutations (Bliss - CASCADE 2.0)-2.png" width="80%" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/auc-sen-mw-bliss-cascade2-topo-and-link-1.png" alt="AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method, Model-wise results)" width="2100" />
+<p class="caption">(\#fig:auc-sen-mw-bliss-cascade2-topo-and-link)AUC sensitivity (CASCADE 2.0, Link Operator and Topology Mutations, Bliss synergy method, Model-wise results)</p>
+</div>
 
-### ROC and PRC for best beta (HSA & Bliss) {-}
+:::{.green-box}
+- No added benefit when using the *model-wise* approach.
+- The proliferative models can be used to normalize against the predictions of the calibrated models and thus bring significant contribution to the calibrated models performance (both ROC-AUC and PR-AUC are increased).
+- The $\beta_{best}$ values of the **combined calibrated and proliferative model predictor** that maximize the ROC-AUC and PR-AUC respectively are $\beta_{best}^{\text{ROC-AUC}}=-1.1$ and $\beta_{best}^{\text{PR-AUC}}=-1.3$.
+For $\beta=-1$ we still see **significant performance improvement**.
+:::
 
-Use the best betas from the PR-AUC sensitivity graphs (separately for Bliss and HSA)!
+## Best ROC and PRC {-}
+
+For both the Bliss and HSA ensemble-wise results we demonstrated above that a value of $\beta_{best}=-1$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
+So, the best ROC and PR curves we can get with our simulations when using models with both link operator (balance) and topology mutations are:
 
 
 ```r
-best_beta_hsa = -1
-best_best_bliss = -1.3
-pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(best_score = ss_score_150sim + best_beta_hsa * prolif_score_150sim)
-pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(best_score = ss_score_150sim + best_best_bliss * prolif_score_150sim)
+best_beta = -1
+pred_topolink_ew_hsa = pred_topolink_ew_hsa %>% mutate(best_score = ss_score_150sim + best_beta * prolif_score_150sim)
+pred_topolink_ew_bliss = pred_topolink_ew_bliss %>% mutate(best_score = ss_score_150sim + best_beta * prolif_score_150sim)
 
 roc_best_res_hsa = get_roc_stats(df = pred_topolink_ew_hsa, pred_col = "best_score", label_col = "observed")
 roc_best_res_bliss = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "best_score", label_col = "observed")
@@ -2739,9 +2816,9 @@ plot(x = roc_best_res_hsa$roc_stats$FPR, y = roc_best_res_hsa$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], main = TeX('ROC curve (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
 lines(x = roc_best_res_bliss$roc_stats$FPR, y = roc_best_res_bliss$roc_stats$TPR,
-  lwd = 3, col = my_palette[3])
-legend('bottomright', title = TeX('AUC ($\\beta_{HSA}$ = -1, $\\beta_{Bliss}$ = -1.3)'), 
-  col = c(my_palette[1], my_palette[3]), pch = 19,
+  lwd = 3, col = my_palette[2])
+legend('bottomright', title = TeX('AUC ($\\beta$ = -1)'), 
+  col = c(my_palette[1:2]), pch = 19,
   legend = c(paste(round(roc_best_res_hsa$AUC, digits = 2), 'HSA (150 sim)'),
     paste(round(roc_best_res_bliss$AUC, digits = 2), 'Bliss (150 sim)')))
 grid(lwd = 0.5)
@@ -2750,14 +2827,17 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 # Plot best PRCs
 plot(pr_best_res_hsa, main = TeX('PR curve (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_best_res_bliss, add = TRUE, color = my_palette[3])
-legend('topright', title = TeX('AUC ($\\beta_{HSA}$ = -1, $\\beta_{Bliss}$ = -1.3)'), col = c(my_palette[1], my_palette[3]), pch = 19,
+plot(pr_best_res_bliss, add = TRUE, color = my_palette[2])
+legend('topright', title = TeX('AUC ($\\beta$ = -1)'), col = c(my_palette[1:2]), pch = 19,
   legend = c(paste(round(pr_best_res_hsa$auc.davis.goadrich, digits = 2), 'HSA (150 sim)'),
     paste(round(pr_best_res_bliss$auc.davis.goadrich, digits = 2), 'Bliss (150 sim)')))
 grid(lwd = 0.5)
 ```
 
-<img src="index_files/figure-html/ROC and PRC for best beta - Topology and Link Mutations (HSA and Bliss - CASCADE 2.0)-1.png" width="50%" /><img src="index_files/figure-html/ROC and PRC for best beta - Topology and Link Mutations (HSA and Bliss - CASCADE 2.0)-2.png" width="50%" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/best-beta-cascade2-topo-and-link-1.png" alt="ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)" width="50%" /><img src="index_files/figure-html/best-beta-cascade2-topo-and-link-2.png" alt="ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)" width="50%" />
+<p class="caption">(\#fig:best-beta-cascade2-topo-and-link)ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)</p>
+</div>
 
 # Reproduce simulation results {-}
 

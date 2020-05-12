@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="input.html"/>
+<link rel="prev" href="r-libraries.html"/>
 <link rel="next" href="cascade-2-0-analysis-link-operator-mutations.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -854,11 +854,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">DrugLogics Paper I: An AGS story</a></li>
+<li><a href="./index.html">DrugLogics Paper I: An AGS story</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
-<li class="chapter" data-level="" data-path="input.html"><a href="input.html"><i class="fa fa-check"></i>Input</a></li>
+<li class="chapter" data-level="" data-path="r-libraries.html"><a href="r-libraries.html"><i class="fa fa-check"></i>R Libraries</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
@@ -883,9 +883,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#logistic-regression"><i class="fa fa-check"></i>Logistic Regression</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#regularized-logistic-regression"><i class="fa fa-check"></i>Regularized Logistic Regression</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#mamse-roc"><i class="fa fa-check"></i>MAMSE ROC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
@@ -893,6 +893,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-vs-performance"><i class="fa fa-check"></i>Fitness vs Performance</a></li>
@@ -911,19 +912,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-hsa"><i class="fa fa-check"></i>ROC curves (HSA)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-hsa"><i class="fa fa-check"></i>PR curves (HSA)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-auc-sensitivity-hsa"><i class="fa fa-check"></i>ROC-AUC sensitivity (HSA)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-auc-sensitivity-hsa"><i class="fa fa-check"></i>PR-AUC sensitivity (HSA)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-bliss"><i class="fa fa-check"></i>ROC curves (Bliss)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-bliss"><i class="fa fa-check"></i>PR curves (Bliss)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-auc-sensitivity-bliss"><i class="fa fa-check"></i>ROC-AUC sensitivity (Bliss)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-auc-sensitivity-bliss"><i class="fa fa-check"></i>PR-AUC sensitivity (Bliss)</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-and-prc-for-best-beta-hsa-bliss"><i class="fa fa-check"></i>ROC and PRC for best beta (HSA &amp; Bliss)</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
 <ul>
@@ -1634,7 +1639,7 @@ Figure 11: Fitness Evolution (1000 simulations, CASCADE 1.0)
           </div>
         </div>
       </div>
-<a href="input.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="r-libraries.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="cascade-2-0-analysis-link-operator-mutations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
