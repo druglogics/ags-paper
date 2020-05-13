@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 12 May, 2020"
+date: "Last updated: 13 May, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -658,8 +658,9 @@ corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 We did a test run of `Gitsbe` with $1000$ simulations, fitting to steady state (generating thus **calibrated models**).
 The only difference between the foloowing results and the ones above is the total number of simulations specified in the configuration.
 
-Firstly, we show only $10$ simulations - the first ones that spanned the maximum defined generations in the configuration ($20$), meaning that they did not surpass the target fitness threhold specified ($0.99$).
+Firstly, we show the fitness evolution of the first $20$ simulations.
 Each data point is the average fitness in that generation out of $20$ models.
+Note that some simulations end because the target fitness is reached ($0.99$).
 
 
 ```r
@@ -704,8 +705,8 @@ plot(1:length(first_sim_data), y = first_sim_data, ylim = c(0,1),
   ylab = 'Average Fitness', col = usefun:::colors.100[1])
 index = 2
 for (fit_data in fit_res) {
-  if (index > 10) break
-  if (ncol(fit_data) != 20) next
+  if (index > 20) break
+  #if (ncol(fit_data) != 20) next
   mean_fit_per_gen = colMeans(fit_data)
   lines(x = 1:length(mean_fit_per_gen), y = mean_fit_per_gen, lwd = 1.5,
     col = usefun:::colors.100[index])
@@ -719,7 +720,7 @@ grid(lwd = 0.5)
 <p class="caption">(\#fig:fit-evolution)Fitness Evolution (10 simulations, CASCADE 1.0)</p>
 </div>
 
-Next, we plot the average fitness + standard deviation error per generation across all $1000$ simulations:
+Next, we plot the average fitness + standard deviation per generation across all $1000$ simulations:
 
 
 ```r
