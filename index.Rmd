@@ -420,8 +420,8 @@ grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
-The **ROC ensemble-wise statistics data** from the calibrated models are as follows:
-```{r calibrated-bliss-dt, fig.align='center', fig.cap="ROC Ensemble-wise data for Calibrated Models (CASCADE 1.0, Bliss synergy method)"}
+The **ROC statistics data** for the calibrated models are as follows:
+```{r calibrated-bliss-dt, fig.align='center', fig.cap="ROC data for Calibrated Models (CASCADE 1.0, Bliss synergy method)"}
 DT::datatable(data = res_ss_ew$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>% 
   formatRound(c(1,6,7,8,9), digits = 3)
@@ -1448,15 +1448,14 @@ For $\beta=-1$ we still see **significant performance improvement**.
 ## Best ROC and PRC {-}
 
 For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
-So, the best ROC and PR curves we can get with our simulations when using models with topology mutations are (we also include the curves with $\beta=-1$):
+So, the best ROC and PR curves we can get with our simulations when using models with link operator mutations are (we also include the single predictor curves):
 
-```{r best-beta-cascade2-link, fig.width=6, fig.height=6, fig.align='center', dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='ROC and PR curve for best beta (CASCADE 2.0, Link Operator Mutations)'}
+```{r best-beta-cascade2-link, fig.width=6, fig.height=6, fig.align='center', dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='ROC and PR curves for single and best combined predictor (CASCADE 2.0, Link Operator Mutations)'}
 best_beta1 = -1.6
 best_beta2 = -1
 pred_ew_bliss = pred_ew_bliss %>% 
-  mutate(best_score1 = ss_score_150sim + best_beta1 * prolif_score_150sim, 
+  mutate(best_score1 = ss_score_150sim + best_beta1 * prolif_score_150sim,
          best_score2 = ss_score_150sim + best_beta2 * prolif_score_150sim)
-
 roc_best_res1 = get_roc_stats(df = pred_ew_bliss, pred_col = "best_score1", label_col = "observed")
 roc_best_res2 = get_roc_stats(df = pred_ew_bliss, pred_col = "best_score2", label_col = "observed")
 pr_best_res1 = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score1) %>% (function(x) {-x}), 
@@ -1466,24 +1465,37 @@ pr_best_res2 = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score2) %>% 
 
 # Plot best ROCs
 plot(x = roc_best_res1$roc_stats$FPR, y = roc_best_res1$roc_stats$TPR,
-  type = 'l', lwd = 3, col = my_palette[1], main = TeX('ROC curve (Ensemble-wise, Bliss), $calibrated + \\beta \\times proliferative$'),
+  type = 'l', lwd = 3, col = my_palette[1], 
+  main = ('ROC curves: Combined vs Single Predictors (Bliss)'),
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
-lines(x = roc_best_res2$roc_stats$FPR, y = roc_best_res2$roc_stats$TPR, 
+lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[2])
-legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(roc_best_res1$AUC, digits = 2), '(β = -1.6)'), 
-             paste(round(roc_best_res2$AUC, digits = 2), '(β = -1)')))
+lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats$TPR,
+  lwd = 2, col = my_palette[3])
+legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19, cex = 0.75,
+  legend = c(paste(round(roc_best_res1$AUC, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'), 
+             paste(round(res_ss_ew_150sim$AUC, digits = 2), 'Calibrated (150 sim)'),
+             paste(round(res_prolif_ew_150sim$AUC, digits = 2), 'Proliferative (150 sim)')))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 # Plot best PRCs
-plot(pr_best_res1, main = TeX('PR curve (Ensemble-wise, Bliss), $calibrated + \\beta \\times proliferative$'),
+plot(pr_best_res1, main = 'PR curves: Combined vs Single Predictors (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_best_res2, add = TRUE, color = my_palette[2])
-legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(pr_best_res1$auc.davis.goadrich, digits = 3), '(β = -1.6)'),
-    paste(round(pr_best_res2$auc.davis.goadrich, digits = 3), '(β = -1)')))
+plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[2])
+plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[3], lwd = 2)
+legend('topright', title = 'AUC', col = my_palette[1:3], pch = 19,
+  legend = c(paste(round(pr_best_res1$auc.davis.goadrich, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'),
+    paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Calibrated (150 sim)'), 
+    paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Proliferative (150 sim)')))
 grid(lwd = 0.5)
+```
+
+The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1.6$) are as follows:
+```{r comb-pred-best-link-dt, fig.align='center', fig.cap="ROC data for Best Combined Predictor (CASCADE 2.0, Link Operator Mutations, Bliss synergy method)"}
+DT::datatable(data = roc_best_res1$roc_stats, options = 
+  list(pageLength = 5, lengthMenu = c(5, 20, 40), searching = FALSE)) %>% 
+  formatRound(c(1,6,7,8,9), digits = 3)
 ```
 
 ## Correlation {-}
