@@ -420,6 +420,13 @@ grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
 
+The **ROC ensemble-wise statistics data** from the calibrated models are as follows:
+```{r calibrated-bliss-dt, fig.align='center', fig.cap="ROC Ensemble-wise data for Calibrated Models (CASCADE 1.0, Bliss synergy method)"}
+DT::datatable(data = res_ss_ew$roc_stats, options = 
+  list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>% 
+  formatRound(c(1,6,7,8,9), digits = 3)
+```
+
 ### PR curves {-}
 
 ```{r pr-bliss-cascade1, fig.width=5, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='PR curves (CASCADE 1.0, Bliss synergy method)', fig.align='center'}
@@ -2631,6 +2638,7 @@ java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.
 
 The above procedure is the same for CASCADE 1.0. Changes:
 
+- The number of models after pruning to those that have only 1 stable state should be $950$
 - The `abmlog`-generated `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
 - The network file is now for the CASCADE 1.0 (`network.sif` inside the `ags_cascade_1.0`)
 - The Drabme command should be run with `--project=cascade_1.0_random_hsa` and `--project=cascade_1.0_random_bliss` respectively
