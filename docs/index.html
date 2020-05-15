@@ -865,7 +865,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./index.html">DrugLogics Paper I: An AGS story</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#methodologyinput-overview"><i class="fa fa-check"></i>Methodology/Input Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="r-libraries.html"><a href="r-libraries.html"><i class="fa fa-check"></i>R Libraries</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
 <ul>
@@ -938,6 +942,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="parameterization-performance-comparison.html"><a href="parameterization-performance-comparison.html"><i class="fa fa-check"></i>Parameterization Performance Comparison</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#get-output-files"><i class="fa fa-check"></i>Get output files</a></li>
@@ -969,11 +974,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">AGS paper I - Supplementary Information (SI)</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 13 May, 2020</em></p>
+<p class="date"><em>Last updated: 15 May, 2020</em></p>
 </div>
 <div id="intro" class="section level1 unnumbered" number="">
 <h1>Intro</h1>
 <p>This report is the <strong>supplementary material</strong> for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as instructions for reproducing the results.</p>
+<div id="methodologyinput-overview" class="section level2 unnumbered" number="">
+<h2>Methodology/Input Overview</h2>
 <p>A list of things that change between the simulations and the presented graphs are:</p>
 <ul>
 <li>The number of <code>Gitsbe</code> simulations: more simulations, more models generated.</li>
@@ -986,9 +993,28 @@ Also <em>randomly generated models</em> were produced for the link operator muta
 More info on the calcualtions that Drabme does <a href="https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description">see here</a>.</li>
 <li>The type of output used from <code>Drabme</code>: ensemble-wise or model-wise <a href="https://druglogics.github.io/druglogics-doc/drabme-install.html#drabme-output">synergy results</a>.</li>
 </ul>
-<p>For the ROC curves we used the function <code>get_roc_stats()</code> from <span class="citation">(Zobolas <a href="references.html#ref-R-usefun" role="doc-biblioref">2020</a><a href="references.html#ref-R-usefun" role="doc-biblioref">b</a>)</span> and for the PR curves the <code>pr.curve()</code> from <span class="citation">(Grau and Keilwagen <a href="references.html#ref-R-PRROC" role="doc-biblioref">2018</a>)</span> (see also <span class="citation">(Grau, Grosse, and Keilwagen <a href="references.html#ref-Grau2015" role="doc-biblioref">2015</a>)</span>).</p>
-<p>The AUC sensitivity analysis (for a description see <a href="cascade-1-0-analysis.html#auc-sensitivity">here</a>) was inspired by work from <span class="citation">(Pepe <a href="references.html#ref-Pepe2000" role="doc-biblioref">2000</a>)</span>.</p>
-<p>The report template is from the <code>rtemps</code> R package <span class="citation">(Zobolas <a href="references.html#ref-R-rtemps" role="doc-biblioref">2020</a><a href="references.html#ref-R-rtemps" role="doc-biblioref">a</a>)</span>.</p>
+</div>
+<div id="summary" class="section level2 unnumbered" number="">
+<h2>Summary</h2>
+<p>Observing the results across the whole report, we reach the following conclusions:</p>
+<ul>
+<li>To minimize the expected performance variance, executing <span class="math inline">\(150\)</span> <code>Gitsbe</code> simulations is a good choice (no need for more, no matter the other input parameters).</li>
+<li><em>Ensemble-wise</em> results do not correlate with <em>model-wise</em> results (see correlation results for <a href="cascade-1-0-analysis.html#correlation">CASCADE 1.0</a> and <a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1">CASCADE 2.0</a>).
+This happens because some drug perturbed models do not have stable states and thus cannot be evaluated for synergy.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></li>
+<li><em>Model-wise</em> ROC results are always better compared to <em>ensemble-wise</em> ROC results for the single predictor models (e.g. the <em>calibrated</em> model results).</li>
+<li>When using a combined model predictor (see <a href="cascade-1-0-analysis.html#auc-sensitivity">here</a>) to augment/correct the calibrated models results, Drabme’s <em>Bliss</em> synergy assessement always brings significant performance benefit for the ensemble-wise results.
+When using <em>HSA</em>, that is not always the case (see <a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-2">one example</a> and <a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5">another</a>).</li>
+<li>The <em>model-wise</em> results do not bring any performance benefit when used to combine the predictor results.</li>
+<li>The value of <span class="math inline">\(\beta = -1\)</span> is a good estimation for the value that maximizes the combined predictor’s performance (<span class="math inline">\(calibrated + \beta \times proliferative\)</span>) across all of the report’s relavant investigations.</li>
+<li>Comparing the different parameterization schemes for the CASCADE 2.0 analysis (using the combined predictors with <span class="math inline">\(\beta = -1\)</span>), we observe that <strong>topology mutations outperform link operator mutations</strong>.</li>
+</ul>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Using minimal trapspaces, where there is almost always an attractor found and the global output of the model can be <a href="https://druglogics.github.io/druglogics-doc/modeloutputs.html">calculated</a>, we observed higher correlation between <em>ensemble-wise</em> and <em>model-wise</em> results (as expected)<a href="index.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 

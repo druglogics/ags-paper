@@ -865,7 +865,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./index.html">DrugLogics Paper I: An AGS story</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#methodologyinput-overview"><i class="fa fa-check"></i>Methodology/Input Overview</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="r-libraries.html"><a href="r-libraries.html"><i class="fa fa-check"></i>R Libraries</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
 <ul>
@@ -938,6 +942,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="parameterization-performance-comparison.html"><a href="parameterization-performance-comparison.html"><i class="fa fa-check"></i>Parameterization Performance Comparison</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#get-output-files"><i class="fa fa-check"></i>Get output files</a></li>
@@ -968,7 +973,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="r-libraries" class="section level1 unnumbered" number="">
 <h1>R Libraries</h1>
-<p>Loading libraries that will be used in this report:</p>
+<p>For the ROC curves we used the function <code>get_roc_stats()</code> from <span class="citation">(Zobolas <a href="references.html#ref-R-usefun" role="doc-biblioref">2020</a><a href="references.html#ref-R-usefun" role="doc-biblioref">b</a>)</span> and for the PR curves the <code>pr.curve()</code> from <span class="citation">(Grau and Keilwagen <a href="references.html#ref-R-PRROC" role="doc-biblioref">2018</a>)</span> (see also <span class="citation">(Grau, Grosse, and Keilwagen <a href="references.html#ref-Grau2015" role="doc-biblioref">2015</a>)</span>).</p>
+<p>The AUC sensitivity analysis (for a description see <a href="cascade-1-0-analysis.html#auc-sensitivity">here</a>) was inspired by work from <span class="citation">(Pepe <a href="references.html#ref-Pepe2000" role="doc-biblioref">2000</a>)</span>.</p>
+<p>The report template is from the <code>rtemps</code> R package <span class="citation">(Zobolas <a href="references.html#ref-R-rtemps" role="doc-biblioref">2020</a><a href="references.html#ref-R-rtemps" role="doc-biblioref">a</a>)</span>.</p>
+<p>Loading libraries that are used in this report:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="r-libraries.html#cb1-1"></a><span class="kw">library</span>(DT)</span>
 <span id="cb1-2"><a href="r-libraries.html#cb1-2"></a><span class="kw">library</span>(ggpubr)</span>
 <span id="cb1-3"><a href="r-libraries.html#cb1-3"></a><span class="kw">library</span>(RColorBrewer)</span>

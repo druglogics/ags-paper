@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Reproduce simulation results | AGS paper I - Supplementary Information (SI)</title>
+  <title>Parameterization comparison | AGS paper I - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper I - SI" />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Reproduce simulation results | AGS paper I - Supplementary Information (SI)" />
+  <meta property="og:title" content="Parameterization comparison | AGS paper I - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://username.github.io/reponame/" />
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="username/reponame" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Reproduce simulation results | AGS paper I - Supplementary Information (SI)" />
+  <meta name="twitter:title" content="Parameterization comparison | AGS paper I - Supplementary Information (SI)" />
   
   <meta name="twitter:description" content="AGS paper I - SI" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="parameterization-performance-comparison.html"/>
-<link rel="next" href="r-session-info.html"/>
+<link rel="prev" href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"/>
+<link rel="next" href="reproduce-simulation-results.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -942,7 +942,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="parameterization-performance-comparison.html"><a href="parameterization-performance-comparison.html"><i class="fa fa-check"></i>Parameterization Performance Comparison</a></li>
+<li class="chapter" data-level="" data-path="parameterization-comparison.html"><a href="parameterization-comparison.html"><i class="fa fa-check"></i>Parameterization comparison</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#get-output-files"><i class="fa fa-check"></i>Get output files</a></li>
@@ -971,67 +971,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="reproduce-simulation-results" class="section level1 unnumbered" number="">
-<h1>Reproduce simulation results</h1>
-<div id="get-output-files" class="section level2 unnumbered" number="">
-<h2>Get output files</h2>
-<ul>
-<li>Use the <code>druglogics-synergy</code> module, version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
-<li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo.</li>
-</ul>
-<p>You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run, for a complete list of configuration options, see <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html">here</a>).
-To get the results for the topology mutations for CASCADE 2.0 you need to change the <code>ags_cascade_2.0/config</code> file option <code>topology_mutations: 10</code> (it is <span class="math inline">\(0\)</span> by default - no topology mutations, only link-operator/balance mutations).
-If you wish to get the results from both mutations, set both <code>balance_mutations</code> and <code>topology_mutations</code> options to a non-zero value (<span class="math inline">\(3\)</span> and <span class="math inline">\(10\)</span> were used in the simulations).</p>
-<p>Each <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
-For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.</p>
-</div>
-<div id="repo-results-structure" class="section level2 unnumbered" number="">
-<h2>Repo results structure</h2>
-<p>We have gathered all the necessary output files from the above simulations to the directory <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> for ease of use in our report.
-The <code>results</code> directory has 3 sub-directories:</p>
-<ol style="list-style-type: decimal">
-<li><a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only"><code>link-only</code></a>: results from the link-operator mutated models only (used in the sections <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> and <a href="cascade-2-0-analysis-link-operator-mutations.html#cascade-2.0-analysis-link-operator-mutations">CASCADE 2.0 Analysis (Link Operator Mutations)</a>)</li>
-<li><a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/topology-only"><code>topology-only</code></a>: results from the topology-mutated models only (used in the section <a href="cascade-2-0-analysis-topology-mutations.html#cascade-2.0-analysis-topology-mutations">CASCADE 2.0 Analysis (Topology Mutations)</a>)</li>
-<li><a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link"><code>topo-and-link</code></a>: results where both mutations applied to the generated boolean models (used in section <a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#cascade-2.0-analysis-topology-and-link-operator-mutations">CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>)</li>
-</ol>
-<div class="note">
-<p>Because the simulation results using <strong>only link operator mutations</strong> were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only">link-only-mutations results</a> to 2 directories (<code>hsa</code> and <code>bliss</code>) having the results from the different synergy assessment methods (check Drabme’s <code>synergy_method</code> <a href="#https://druglogics.github.io/druglogics-doc/drabme-config.html">configuration option</a>).</p>
-</div>
-</div>
-<div id="random-model-results" class="section level2 unnumbered" number="">
-<h2>Random model results</h2>
-<p>Use the <code>druglogics-synergy</code> module, version <code>1.2.0</code>: <code>git checkout v1.2.0</code> and the <a href="https://github.com/druglogics/abmlog">abmlog</a> module, version <code>1.5.0</code>: <code>git checkout v1.5.0</code>.</p>
-<p>The CASCADE 1.0 and 2.0 <code>.sif</code> network files can be found at the directories <code>ags_cascade_1.0</code> and <code>ags_cascade_2.0</code> on the
-<code>druglogics-synergy</code> repository.
-Copy these two network files inside the <code>test</code> dir of the <code>abmlog</code> repository root.</p>
-<p>Run the <code>abmlog</code> for the CASCADE 2.0 topology:</p>
-<pre><code>java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000</code></pre>
-<p>Next, prune the resulting models to only the ones that have 1 stable state (should be <span class="math inline">\(1292\)</span>) using the simple bash script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/process_models.sh">process_models.sh</a> inside the generated <code>models</code> directory from <code>abmlog</code>.</p>
-<pre><code>cd pathTo/druglogics-synergy/ags_cascade_2.0</code></pre>
-<ul>
-<li>Move the <code>abmlog</code>-generated <code>models</code> dir inside the <code>ags_cascade_2.0</code> dir</li>
-<li>Use <code>attractor_tool</code>: <code>biolqm_stable_states</code> in the <code>config</code> file</li>
-<li>Use <code>synergy_method: hsa</code> or <code>synergy_method: bliss</code> in the <code>config</code> file (run twice below command, changing the <code>project</code> to <code>cascade_2.0_random_bliss</code>)</li>
-</ul>
-<p>Run Drabme via <code>druglogics-synergy</code>:</p>
-<pre><code>cd ags_cascade_2.0/
-java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs</code></pre>
-<p>The above procedure is the same for CASCADE 1.0. Changes:</p>
-<ul>
-<li>The number of models after pruning to those that have only 1 stable state should be <span class="math inline">\(950\)</span></li>
-<li>The <code>abmlog</code>-generated <code>models</code> directory should be put inside the <code>ags_cascade_1.0</code> of <code>druglogics-synergy</code></li>
-<li>The network file is now for the CASCADE 1.0 (<code>network.sif</code> inside the <code>ags_cascade_1.0</code>)</li>
-<li>The Drabme command should be run with <code>--project=cascade_1.0_random_hsa</code> and <code>--project=cascade_1.0_random_bliss</code> respectively</li>
-</ul>
-</div>
+<div id="parameterization-comparison" class="section level1 unnumbered" number="">
+<h1>Parameterization comparison</h1>
+<p>W</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="parameterization-performance-comparison.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="r-session-info.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="reproduce-simulation-results.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

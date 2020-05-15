@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 13 May, 2020"
+date: "Last updated: 15 May, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -16,6 +16,8 @@ site: bookdown::bookdown_site
 
 This report is the **supplementary material** for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as instructions for reproducing the results.
 
+## Methodology/Input Overview {-}
+
 A list of things that change between the simulations and the presented graphs are:
 
 - The number of `Gitsbe` simulations: more simulations, more models generated.
@@ -28,15 +30,29 @@ Also *randomly generated models* were produced for the link operator mutations u
 More info on the calcualtions that Drabme does [see here](https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description).
 - The type of output used from `Drabme`: ensemble-wise or model-wise [synergy results](https://druglogics.github.io/druglogics-doc/drabme-install.html#drabme-output).
 
+## Summary {-}
+
+Observing the results across the whole report, we reach the following conclusions:
+
+- To minimize the expected performance variance, executing $150$ `Gitsbe` simulations is a good choice (no need for more, no matter the other input parameters).
+- *Ensemble-wise* results do not correlate with *model-wise* results (see correlation results for [CASCADE 1.0](#correlation) and [CASCADE 2.0](#correlation-1)).
+This happens because some drug perturbed models do not have stable states and thus cannot be evaluated for synergy. ^[Using minimal trapspaces, where there is almost always an attractor found and the global output of the model can be [calculated](https://druglogics.github.io/druglogics-doc/modeloutputs.html), we observed higher correlation between *ensemble-wise* and *model-wise* results (as expected)]
+- *Model-wise* ROC results are always better compared to *ensemble-wise* ROC results for the single predictor models (e.g. the *calibrated* model results).
+- When using a combined model predictor (see [here](#auc-sensitivity)) to augment/correct the calibrated models results, Drabme's *Bliss* synergy assessement always brings significant performance benefit for the ensemble-wise results.
+When using *HSA*, that is not always the case (see [one example](#auc-sensitivity-2) and [another](#auc-sensitivity-5)).
+- The *model-wise* results do not bring any performance benefit when used to combine the predictor results.
+- The value of $\beta = -1$ is a good estimation for the value that maximizes the combined predictor's performance ($calibrated + \beta \times proliferative$) across all of the report's relavant investigations.
+- Comparing the different parameterization schemes for the CASCADE 2.0 analysis (using the combined predictors with $\beta = -1$), we observe that **topology mutations outperform link operator mutations**.
+
+# R Libraries {-}
+
 For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (see also [@Grau2015]).
 
 The AUC sensitivity analysis (for a description see [here](#auc-sensitivity)) was inspired by work from [@Pepe2000].
 
 The report template is from the `rtemps` R package [@R-rtemps].
 
-# R Libraries {-}
-
-Loading libraries that will be used in this report:
+Loading libraries that are used in this report:
 
 ```r
 library(DT)
@@ -228,7 +244,7 @@ grid(lwd = 0.5)
 - **Ensemble-wise** scenario: $score = calibrated + \beta \times proliferative$ ($random$)
   - $\beta \rightarrow +\infty$: mostly *proliferative* (random) model predictions
   - $\beta \rightarrow -\infty$: mostly *reverse proliferative* (random) model predictions
-  - $\beta \simeq -1$: calibrated models are *normalized* against proliferative (random) model predictions
+  - $\beta \simeq -1$: calibrated models are *normalized* against proliferative (random) model predictions.
 - **Model-wise** scenario: $(1-w) \times prob_{cal} + w \times prob_{rand}, w \in[0,1]$
   - $w=0$: only calibrated model predictions
   - $w=1$: only proliferative (random) model predictions
@@ -2872,6 +2888,79 @@ grid(lwd = 0.5)
 <img src="index_files/figure-html/best-beta-cascade2-topo-and-link-1.png" alt="ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)" width="50%" /><img src="index_files/figure-html/best-beta-cascade2-topo-and-link-2.png" alt="ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)" width="50%" />
 <p class="caption">(\#fig:best-beta-cascade2-topo-and-link)ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)</p>
 </div>
+
+# Parameterization Performance Comparison {-}
+
+In this section we will compare the best combined predictors ($calibrated + \beta \times proliferative$) across all 3 model parameterizations/mutations we tested in this report for CASCADE 2.0: **link operator mutations, topology mutations and both**.
+We use the normalization parameter $\beta=-1$ for all combined predictors, as it was observed throughout the report that it maximizes the performance of all Bliss-assessed, ensemble-wise combined synergy predictors.
+
+:::{.note}
+Why call $\beta$ a *normalization* parameter?
+
+What matters for the calculation of the ROC and PR points is the *ranking* of the synergy scores.
+Thus if we bring the predictor's synergy scores to the exponential space, a value of $-1$ for $\beta$ translates to a simple normalization technique:
+
+$calibrated + \beta \times proliferative \overset{\beta = -1}{=} calibrated - proliferative \xrightarrow[\text{same ranking}]{e(x) \text{ monotonous}}$
+$exp(calibrated - proliferative)=exp(calibrated)/exp(proliferative)$. 
+:::
+
+
+```r
+# Link operator mutations results (`best_score2` has the results for β = -1, `best_score1` for β = -1.6)
+roc_link_res = get_roc_stats(df = pred_ew_bliss, pred_col = "best_score2", label_col = "observed")
+pr_link_res = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score2) %>% (function(x) {-x}), 
+    weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+# Topology mutations results
+roc_topo_res = get_roc_stats(df = pred_topo_ew_bliss, pred_col = "best_score", label_col = "observed")
+pr_topo_res = pr.curve(scores.class0 = pred_topo_ew_bliss %>% pull(best_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topo_ew_bliss %>% pull(observed), curve = TRUE)
+
+# Both Link Operator and Topology mutations results
+roc_topolink_res = get_roc_stats(df = pred_topolink_ew_bliss, pred_col = "best_score", label_col = "observed")
+pr_topolink_res = pr.curve(scores.class0 = pred_topolink_ew_bliss %>% pull(best_score) %>% (function(x) {-x}), 
+    weights.class0 = pred_topolink_ew_bliss %>% pull(observed), curve = TRUE)
+
+# Plot best ROCs
+plot(x = roc_link_res$roc_stats$FPR, y = roc_link_res$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = TeX('ROC curves (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = roc_topo_res$roc_stats$FPR, y = roc_topo_res$roc_stats$TPR,
+  lwd = 2, col = my_palette[2])
+lines(x = roc_topolink_res$roc_stats$FPR, y = roc_topolink_res$roc_stats$TPR,
+  lwd = 2.3, col = my_palette[3])
+legend('bottomright', title = TeX('AUC ($\\beta$ = -1)'), 
+  col = c(my_palette[1:3]), pch = 19,
+  legend = c(paste(round(roc_link_res$AUC, digits = 2), 'Link Operator Mutations'),
+    paste(round(roc_topo_res$AUC, digits = 2), 'Topology Mutations'), 
+    paste(round(roc_topolink_res$AUC, digits = 2), 'Both Mutations')))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+# Plot best PRCs
+plot(pr_link_res, main = TeX('PR curves (Ensemble-wise), $calibrated + \\beta \\times proliferative$'),
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE, lwd = 3)
+plot(pr_topo_res, add = TRUE, color = my_palette[2], lwd = 2)
+plot(pr_topolink_res, add = TRUE, color = my_palette[3], lwd = 2.3)
+legend('topright', title = TeX('AUC ($\\beta$ = -1)'), col = c(my_palette[1:3]), pch = 19,
+  legend = c(paste(round(pr_link_res$auc.davis.goadrich, digits = 2), 'Link Operator Mutations'),
+    paste(round(pr_topo_res$auc.davis.goadrich, digits = 2), 'Topology Mutations'),
+    paste(round(pr_topolink_res$auc.davis.goadrich, digits = 2), '  Both Mutations')))
+grid(lwd = 0.5)
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/param-comp-1.png" alt="Comparing ROC and PR curves for combined predictors across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" /><img src="index_files/figure-html/param-comp-2.png" alt="Comparing ROC and PR curves for combined predictors across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" />
+<p class="caption">(\#fig:param-comp)Comparing ROC and PR curves for combined predictors across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)</p>
+</div>
+
+:::{.green-box}
+We observe that if we had used the results for the **link operator only** combined predictor with $\beta_{best}=-1.6$ as was demonstrated [here](#best-roc-and-prc), we would have an AUC-ROC of $0.85$ and AUC-PR of $0.27$, which are pretty close to the results we see above for $\beta=-1$, using both link and topology mutations.
+
+Overall, this suggests that parameterizing our boolean models using **topology mutations** can increase the performance of our proposed synergy prediction approach much more than using either link operator (balance) mutations alone or combined with topology parameterization.
+
+Note that the difference in terms of ROC AUC is not significant compared to the difference of PR AUC scores and since the dataset we test our models on is fairly imbalanced, we base our conclusion on the information from the PR plots [@Saito2015].
+:::
 
 # Reproduce simulation results {-}
 
