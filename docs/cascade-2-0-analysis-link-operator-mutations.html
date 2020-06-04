@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>CASCADE 2.0 Analysis (Link Operator Mutations) | AGS paper I - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper I - SI" />
-  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
   <meta property="og:title" content="CASCADE 2.0 Analysis (Link Operator Mutations) | AGS paper I - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
@@ -908,7 +908,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-vs-performance"><i class="fa fa-check"></i>Fitness vs Performance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -1341,7 +1340,7 @@ For <span class="math inline">\(\beta=-1\)</span> we do not observe performance 
 </div>
 <div id="regularized-logistic-regression-analysis" class="section level3 unnumbered" number="">
 <h3>Regularized Logistic Regression Analysis</h3>
-<p>Because the coefficient values found from the above approach are large, we try a regularized logistic regression approach using the <code>glmnet</code> R package <span class="citation">(Friedman et al. <a href="references.html#ref-R-glmnet" role="doc-biblioref">2019</a>)</span>.
+<p>Because the coefficient values found from the above approach are large, we try a regularized logistic regression approach using the <code>glmnet</code> R package <span class="citation">(Friedman et al. <a href="references.html#ref-R-glmnet" role="doc-biblioref">2020</a>)</span>.
 We cross validate the <span class="math inline">\(\lambda\)</span> parameter and try with different <span class="math inline">\(\alpha \in [0,1]\)</span> (<span class="math inline">\(\alpha=0\)</span> means Ridge regression, <span class="math inline">\(\alpha=1\)</span> means LASSO, in between means Elastic net) while either minimizing the missclassification error (<code>type.measure="class"</code>) or maximizing the ROC-AUC (<code>type.measure = "auc"</code>).
 For each respective <span class="math inline">\(\alpha\)</span> we choose the <span class="math inline">\(\lambda_{min}\)</span> as the one the minimizes the average CV error.
 The intercept was again excluded as it resulted in worse AUC performance.</p>
@@ -1890,17 +1889,6 @@ The <strong>HSA ensemble-wise</strong> results do so (at some degree).</li>
 Figure 25: Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)
 </p>
 </div>
-</div>
-<div id="fitness-vs-performance" class="section level2 unnumbered" number="">
-<h2>Fitness vs Performance</h2>
-<p>The idea here is to generate many training data files from the steady state as used in the simulations above, where some of the nodes will have their states <em>flipped</em> to the opposite state (<span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span> and vice versa).
-That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete <em>reversed</em> version of the one used in the simulations.</p>
-<p>Using the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_training_data.R">gen_training_data.R</a> script, we first choose a few number of flips (<span class="math inline">\(11\)</span> flips) ranging from <span class="math inline">\(1\)</span> to <span class="math inline">\(24\)</span> (all nodes) in the steady state.
-Then, for each such <em>flipping-nodes</em> value, we generated <span class="math inline">\(20\)</span> new steady states with a randomly chosen set of nodes whose value is going to flip.
-Thus, in total, <span class="math inline">\(205\)</span> training data files were produced (<span class="math inline">\(205 = 9 \times 20 + 24 + 1\)</span>, where from the <span class="math inline">\(11\)</span> number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).</p>
-<p>Running the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <code>druglogics-synergy</code> repository root, we get the simulation results for each of these training data files.
-Note that in the CASCADE 2.0 configuration file we changed the number of simulations to (<span class="math inline">\(15\)</span>) for each training data file, the attractor tool used was <code>biolqm_stable_states</code> (as is with every analysis in this report) and the <code>synergy_method: hsa</code>.</p>
-<p>We now load the data from these simulations:</p>
 </div>
 </div>
             </section>

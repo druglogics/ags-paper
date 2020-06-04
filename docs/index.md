@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 15 May, 2020"
+date: "Last updated: 04 June, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -1737,19 +1737,6 @@ ggline(data = avg_fit_long_link, x = "name", y = "value", color = my_palette[2],
 <p class="caption">(\#fig:fit-evolution-3)Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)</p>
 </div>
 
-## Fitness vs Performance {-}
-
-The idea here is to generate many training data files from the steady state as used in the simulations above, where some of the nodes will have their states *flipped* to the opposite state ($0$ to $1$ and vice versa).
-That way, we can train models to different steady states, ranging from ones that differ to just a few nodes states up to a steady state that is the complete *reversed* version of the one used in the simulations.
-
-Using the [gen_training_data.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_training_data.R) script, we first choose a few number of flips ($11$ flips) ranging from $1$ to $24$ (all nodes) in the steady state.
-Then, for each such *flipping-nodes* value, we generated $20$ new steady states with a randomly chosen set of nodes whose value is going to flip.
-Thus, in total, $205$ training data files were produced ($205 = 9 \times 20 + 24 + 1$, where from the $11$ number of flips, the one flip happens for every node and flipping all the nodes simultaneously happens once).
-
-Running the script [run_druglogics_synergy_training.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root, we get the simulation results for each of these training data files.
-Note that in the CASCADE 2.0 configuration file we changed the number of simulations to ($15$) for each training data file, the attractor tool used was `biolqm_stable_states` (as is with every analysis in this report) and the `synergy_method: hsa`.
-
-We now load the data from these simulations:
 
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
 
@@ -2894,7 +2881,7 @@ grid(lwd = 0.5)
 In this section we will compare the best combined predictors ($calibrated + \beta \times proliferative$) across all 3 model parameterizations/mutations we tested in this report for CASCADE 2.0: **link operator mutations, topology mutations and both**.
 We use the normalization parameter $\beta=-1$ for all combined predictors, as it was observed throughout the report that it maximizes the performance of all Bliss-assessed, ensemble-wise combined synergy predictors.
 
-:::{.note}
+:::{#beta-as-norm .note}
 Why call $\beta$ a *normalization* parameter?
 
 What matters for the calculation of the ROC and PR points is the *ranking* of the synergy scores.
@@ -3047,44 +3034,54 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  assertthat_0.2.1        backports_1.1.6         base64enc_0.1.3        
-  BH_1.72.0.3             bibtex_0.4.2.2          bookdown_0.18          
-  broom_0.5.6             callr_3.4.3             Ckmeans.1d.dp_4.3.2    
-  cli_2.0.2               clipr_0.7.0             codetools_0.2-16       
-  colorspace_1.4-1        compiler_3.6.3          corrplot_0.84          
-  cowplot_1.0.0           crayon_1.3.4            crosstalk_1.1.0.1      
-  desc_1.2.0              digest_0.6.25           dplyr_0.8.5            
-  DT_0.13                 ellipsis_0.3.0          emba_0.1.4             
-  equatiomatic_0.0.0.9000 evaluate_0.14           fansi_0.4.1            
-  farver_2.0.3            foreach_1.5.0           gbRd_0.4-11            
-  generics_0.0.2          ggplot2_3.3.0           ggpubr_0.2.5           
+  abind_1.4-5             assertthat_0.2.1        backports_1.1.7        
+  base64enc_0.1.3         BH_1.72.0.3             bibtex_0.4.2.2         
+  bookdown_0.19           boot_1.3.25             broom_0.5.6            
+  callr_3.4.3             car_3.0-8               carData_3.0-4          
+  cellranger_1.1.0        Ckmeans.1d.dp_4.3.2     cli_2.0.2              
+  clipr_0.7.0             codetools_0.2-16        colorspace_1.4-1       
+  compiler_3.6.3          corrplot_0.84           cowplot_1.0.0          
+  crayon_1.3.4            crosstalk_1.1.0.1       curl_4.3               
+  data.table_1.12.8       desc_1.2.0              digest_0.6.25          
+  dplyr_0.8.5             DT_0.13                 ellipsis_0.3.1         
+  emba_0.1.5              equatiomatic_0.0.0.9000 evaluate_0.14          
+  fansi_0.4.1             farver_2.0.3            forcats_0.5.0          
+  foreach_1.5.0           foreign_0.8-76          gbRd_0.4-11            
+  generics_0.0.2          ggplot2_3.3.0           ggpubr_0.3.0           
   ggrepel_0.8.2           ggsci_2.9               ggsignif_0.6.0         
-  glmnet_3.0-2            glue_1.4.0              graphics_3.6.3         
+  glmnet_4.0              glue_1.4.1              graphics_3.6.3         
   grDevices_3.6.3         grid_3.6.3              gridExtra_2.3          
-  gtable_0.3.0            highr_0.8               hms_0.5.3              
-  htmltools_0.4.0         htmlwidgets_1.5.1       igraph_1.2.5           
-  isoband_0.2.1           iterators_1.0.12        jsonlite_1.6.1         
-  knitr_1.28              labeling_0.3            later_1.0.0            
-  latex2exp_0.4.0         lattice_0.20-41         lazyeval_0.2.2         
-  lifecycle_0.2.0         magrittr_1.5            MAMSE_0.2-1            
-  markdown_1.1            MASS_7.3.51.5           Matrix_1.2-18          
-  methods_3.6.3           mgcv_1.8.31             mime_0.9               
-  munsell_0.5.0           nlme_3.1-145            pillar_1.4.3           
-  pkgbuild_1.0.6          pkgconfig_2.0.3         pkgload_1.0.2          
-  plogr_0.2.0             plyr_1.8.6              polynom_1.4.0          
-  praise_1.0.0            prettyunits_1.1.1       processx_3.4.2         
-  promises_1.1.0          PRROC_1.3.1             ps_1.3.2               
-  purrr_0.3.3             R6_2.4.1                RColorBrewer_1.1-2     
-  Rcpp_1.0.4.6            Rdpack_0.11-1           readr_1.3.1            
-  reshape2_1.4.4          rje_1.10.15             rlang_0.4.5            
-  rmarkdown_2.1           rprojroot_1.3.2         rstudioapi_0.11        
-  scales_1.1.0            shape_1.4.4             splines_3.6.3          
-  stats_3.6.3             stringi_1.4.6           stringr_1.4.0          
-  testthat_2.3.2          tibble_3.0.0            tidyr_1.0.2            
-  tidyselect_1.0.0        tinytex_0.21            tools_3.6.3            
-  usefun_0.4.5            utf8_1.1.4              utils_3.6.3            
-  vctrs_0.2.4             viridisLite_0.3.0       visNetwork_2.0.9       
-  withr_2.1.2             xfun_0.12               yaml_2.2.1             
+  gtable_0.3.0            haven_2.3.0             highr_0.8              
+  hms_0.5.3               htmltools_0.4.0         htmlwidgets_1.5.1      
+  igraph_1.2.5            isoband_0.2.1           iterators_1.0.12       
+  jsonlite_1.6.1          knitr_1.28              labeling_0.3           
+  later_1.0.0             latex2exp_0.4.0         lattice_0.20-41        
+  lazyeval_0.2.2          lifecycle_0.2.0         lme4_1.1.23            
+  magrittr_1.5            MAMSE_0.2-1             maptools_1.0.1         
+  markdown_1.1            MASS_7.3.51.6           Matrix_1.2-18          
+  MatrixModels_0.4.1      methods_3.6.3           mgcv_1.8.31            
+  mime_0.9                minqa_1.2.4             munsell_0.5.0          
+  nlme_3.1-148            nloptr_1.2.2.1          nnet_7.3.14            
+  openxlsx_4.1.5          parallel_3.6.3          pbkrtest_0.4.8.6       
+  pillar_1.4.4            pkgbuild_1.0.8          pkgconfig_2.0.3        
+  pkgload_1.0.2           plogr_0.2.0             plyr_1.8.6             
+  polynom_1.4.0           praise_1.0.0            prettyunits_1.1.1      
+  processx_3.4.2          progress_1.2.2          promises_1.1.0         
+  PRROC_1.3.1             ps_1.3.3                purrr_0.3.4            
+  quantreg_5.55           R6_2.4.1                RColorBrewer_1.1-2     
+  Rcpp_1.0.4.6            RcppEigen_0.3.3.7.0     Rdpack_0.11-1          
+  readr_1.3.1             readxl_1.3.1            rematch_1.0.1          
+  reshape2_1.4.4          rio_0.5.16              rje_1.10.15            
+  rlang_0.4.6             rmarkdown_2.1           rprojroot_1.3.2        
+  rstatix_0.5.0           rstudioapi_0.11         scales_1.1.1           
+  shape_1.4.4             sp_1.4.2                SparseM_1.78           
+  splines_3.6.3           statmod_1.4.34          stats_3.6.3            
+  stringi_1.4.6           stringr_1.4.0           testthat_2.3.2         
+  tibble_3.0.1            tidyr_1.1.0             tidyselect_1.1.0       
+  tinytex_0.23            tools_3.6.3             usefun_0.4.7           
+  utf8_1.1.4              utils_3.6.3             vctrs_0.3.0            
+  viridisLite_0.3.0       visNetwork_2.0.9        withr_2.2.0            
+  xfun_0.14               yaml_2.2.1              zip_2.0.4              
 ```
 
 # References {-}
