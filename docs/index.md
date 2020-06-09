@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 04 June, 2020"
+date: "Last updated: 09 June, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -686,7 +686,7 @@ corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 ## Fitness Evolution {-}
 
 We did a test run of `Gitsbe` with $1000$ simulations, fitting to steady state (generating thus **calibrated models**).
-The only difference between the foloowing results and the ones above is the total number of simulations specified in the configuration.
+The only difference between the following results and the ones above is the total number of simulations specified in the configuration.
 
 Firstly, we show the fitness evolution of the first $20$ simulations.
 Each data point is the average fitness in that generation out of $20$ models.
@@ -1611,7 +1611,7 @@ For $\beta=-1$ we still see **significant performance improvement**.
 ## Best ROC and PRC {-}
 
 For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
-So, the best ROC and PR curves we can get with our simulations when using models with link operator mutations are (we also include the single predictor curves):
+So, the best ROC and PR curves we can get with our simulations when using models with link operator mutations are (we also include the single predictor curves and the combined predictor for $\beta=-1$ which is the [fold-change normalization](#beta-as-norm)):
 
 
 ```r
@@ -1632,12 +1632,15 @@ plot(x = roc_best_res1$roc_stats$FPR, y = roc_best_res1$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], 
   main = ('ROC curves: Combined vs Single Predictors (Bliss)'),
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = roc_best_res2$roc_stats$FPR, y = roc_best_res2$roc_stats$TPR,
+  lwd = 2, col = my_palette[2])
 lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR,
-  lwd = 3, col = my_palette[2])
+  lwd = 3, col = my_palette[3])
 lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[3])
-legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19, cex = 0.75,
-  legend = c(paste(round(roc_best_res1$AUC, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'), 
+  lwd = 2, col = my_palette[4])
+legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19, cex = 0.65,
+  legend = c(paste(round(roc_best_res1$AUC, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'),
+             paste(round(roc_best_res2$AUC, digits = 2), 'Fold-Change Normalization'),
              paste(round(res_ss_ew_150sim$AUC, digits = 2), 'Calibrated (150 sim)'),
              paste(round(res_prolif_ew_150sim$AUC, digits = 2), 'Proliferative (150 sim)')))
 grid(lwd = 0.5)
@@ -1646,10 +1649,12 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 # Plot best PRCs
 plot(pr_best_res1, main = 'PR curves: Combined vs Single Predictors (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[2])
-plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[3], lwd = 2)
-legend('topright', title = 'AUC', col = my_palette[1:3], pch = 19,
+plot(pr_best_res2, add = TRUE, color = my_palette[2], lwd = 2)
+plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[3], lwd = 1.5)
+plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[4], lwd = 1.5)
+legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
   legend = c(paste(round(pr_best_res1$auc.davis.goadrich, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'),
+    paste(round(pr_best_res2$auc.davis.goadrich, digits = 2), 'Fold-Change Normalization'),
     paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Calibrated (150 sim)'), 
     paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Proliferative (150 sim)')))
 grid(lwd = 0.5)
@@ -2885,7 +2890,7 @@ We use the normalization parameter $\beta=-1$ for all combined predictors, as it
 Why call $\beta$ a *normalization* parameter?
 
 What matters for the calculation of the ROC and PR points is the *ranking* of the synergy scores.
-Thus if we bring the predictor's synergy scores to the exponential space, a value of $-1$ for $\beta$ translates to a simple normalization technique:
+Thus if we bring the predictor's synergy scores to the exponential space, a value of $-1$ for $\beta$ translates to a simple *fold-change normalization* technique:
 
 $calibrated + \beta \times proliferative \overset{\beta = -1}{=} calibrated - proliferative \xrightarrow[\text{same ranking}]{e(x) \text{ monotonous}}$
 $exp(calibrated - proliferative)=exp(calibrated)/exp(proliferative)$. 

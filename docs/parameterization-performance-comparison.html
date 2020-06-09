@@ -977,7 +977,7 @@ We use the normalization parameter <span class="math inline">\(\beta=-1\)</span>
 <div id="beta-as-norm" class="note">
 <p>Why call <span class="math inline">\(\beta\)</span> a <em>normalization</em> parameter?</p>
 <p>What matters for the calculation of the ROC and PR points is the <em>ranking</em> of the synergy scores.
-Thus if we bring the predictor’s synergy scores to the exponential space, a value of <span class="math inline">\(-1\)</span> for <span class="math inline">\(\beta\)</span> translates to a simple normalization technique:</p>
+Thus if we bring the predictor’s synergy scores to the exponential space, a value of <span class="math inline">\(-1\)</span> for <span class="math inline">\(\beta\)</span> translates to a simple <em>fold-change normalization</em> technique:</p>
 <p><span class="math inline">\(calibrated + \beta \times proliferative \overset{\beta = -1}{=} calibrated - proliferative \xrightarrow[\text{same ranking}]{e(x) \text{ monotonous}}\)</span>
 <span class="math inline">\(exp(calibrated - proliferative)=exp(calibrated)/exp(proliferative)\)</span>.</p>
 </div>
