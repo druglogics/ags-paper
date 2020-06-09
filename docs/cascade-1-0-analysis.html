@@ -1561,10 +1561,10 @@ Figure 10: Correlation Plot for CASCADE 1.0 Results
 <div id="fitness-evolution" class="section level2 unnumbered" number="">
 <h2>Fitness Evolution</h2>
 <p>We did a test run of <code>Gitsbe</code> with <span class="math inline">\(1000\)</span> simulations, fitting to steady state (generating thus <strong>calibrated models</strong>).
-The only difference between the following results and the ones above is the total number of simulations specified in the configuration.</p>
+The only difference between the following results and the ones above is the total number of simulations specified in the configuration and that the option <code>bootstrap_mutations_factor</code> was set to <span class="math inline">\(1\)</span> (to avoid reaching good fitness models in the earlier generations).</p>
 <p>Firstly, we show the fitness evolution of the first <span class="math inline">\(20\)</span> simulations.
 Each data point is the average fitness in that generation out of <span class="math inline">\(20\)</span> models.
-Note that some simulations end because the target fitness is reached (<span class="math inline">\(0.99\)</span>).</p>
+Note that some simulations end because the target fitness is reached by some of the models (<span class="math inline">\(0.99\)</span>).</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="cascade-1-0-analysis.html#cb14-1"></a>read_summary_file =<span class="st"> </span><span class="cf">function</span>(file_name) {</span>
 <span id="cb14-2"><a href="cascade-1-0-analysis.html#cb14-2"></a>  lines =<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_lines</span>(<span class="dt">file =</span> file_name, <span class="dt">skip =</span> <span class="dv">5</span>, <span class="dt">skip_empty_rows =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb14-3"><a href="cascade-1-0-analysis.html#cb14-3"></a>  </span>
@@ -1593,7 +1593,7 @@ Note that some simulations end because the target fitness is reached (<span clas
 <span id="cb14-26"><a href="cascade-1-0-analysis.html#cb14-26"></a>  <span class="kw">return</span>(data_list)</span>
 <span id="cb14-27"><a href="cascade-1-0-analysis.html#cb14-27"></a>}</span>
 <span id="cb14-28"><a href="cascade-1-0-analysis.html#cb14-28"></a></span>
-<span id="cb14-29"><a href="cascade-1-0-analysis.html#cb14-29"></a>fitness_summary_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt&quot;</span>)</span>
+<span id="cb14-29"><a href="cascade-1-0-analysis.html#cb14-29"></a>fitness_summary_file =<span class="st"> &quot;results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt&quot;</span></span>
 <span id="cb14-30"><a href="cascade-1-0-analysis.html#cb14-30"></a></span>
 <span id="cb14-31"><a href="cascade-1-0-analysis.html#cb14-31"></a><span class="co"># rows = simulations, columns = generations</span></span>
 <span id="cb14-32"><a href="cascade-1-0-analysis.html#cb14-32"></a><span class="co"># value in (sim,gen) cell = average fitness of models in that particular (sim,gen) combination</span></span>
@@ -1620,14 +1620,14 @@ Note that some simulations end because the target fitness is reached (<span clas
 Figure 11: Fitness Evolution (10 simulations, CASCADE 1.0)
 </p>
 </div>
-<p>Next, we plot the average fitness + standard deviation per generation across all <span class="math inline">\(1000\)</span> simulations:</p>
+<p>Next, we plot the <strong>average fitness + standard deviation</strong> per generation across all <span class="math inline">\(1000\)</span> simulations:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="cascade-1-0-analysis.html#cb15-1"></a>avg_fit =<span class="st"> </span><span class="kw">do.call</span>(dplyr<span class="op">::</span>bind_rows, <span class="kw">sapply</span>(fit_res, colMeans))</span>
 <span id="cb15-2"><a href="cascade-1-0-analysis.html#cb15-2"></a><span class="kw">colnames</span>(avg_fit) =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(avg_fit)</span>
 <span id="cb15-3"><a href="cascade-1-0-analysis.html#cb15-3"></a></span>
 <span id="cb15-4"><a href="cascade-1-0-analysis.html#cb15-4"></a>avg_fit_long =<span class="st"> </span>avg_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">name =</span> <span class="kw">as.integer</span>(name))</span>
 <span id="cb15-5"><a href="cascade-1-0-analysis.html#cb15-5"></a></span>
 <span id="cb15-6"><a href="cascade-1-0-analysis.html#cb15-6"></a><span class="kw">ggline</span>(<span class="dt">data =</span> avg_fit_long, <span class="dt">x =</span> <span class="st">&quot;name&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;value&quot;</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>],</span>
-<span id="cb15-7"><a href="cascade-1-0-analysis.html#cb15-7"></a>  <span class="dt">add =</span> <span class="st">&quot;mean_sd&quot;</span>, <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.9</span>),</span>
+<span id="cb15-7"><a href="cascade-1-0-analysis.html#cb15-7"></a>  <span class="dt">add =</span> <span class="st">&quot;mean_sd&quot;</span>, <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
 <span id="cb15-8"><a href="cascade-1-0-analysis.html#cb15-8"></a>  <span class="dt">main =</span> <span class="st">&quot;Fitness Evolution across Generations&quot;</span>, </span>
 <span id="cb15-9"><a href="cascade-1-0-analysis.html#cb15-9"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Generations&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Fitness&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb15-10"><a href="cascade-1-0-analysis.html#cb15-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
@@ -1653,7 +1653,8 @@ Figure 12: Fitness Evolution (1000 simulations, CASCADE 1.0)
 <span id="cb16-14"><a href="cascade-1-0-analysis.html#cb16-14"></a><span class="co">#   grids()</span></span></code></pre></div>
 <div class="green-box">
 <ul>
-<li>The average fitness stabilizes after <span class="math inline">\(5-10\)</span> generations but also the standard deviation: new models are still getting created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.</li>
+<li>The average fitness stabilizes after <span class="math inline">\(\approx 10-15\)</span> generations but also the standard deviation: new models are still being created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.</li>
+<li>The <em>S</em>-shaped (sigmoid) curve is in agreement with <a href="https://en.wikipedia.org/wiki/Holland%27s_schema_theorem">Holland’s schema theorem</a>.</li>
 </ul>
 </div>
 </div>

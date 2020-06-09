@@ -686,11 +686,11 @@ corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 ## Fitness Evolution {-}
 
 We did a test run of `Gitsbe` with $1000$ simulations, fitting to steady state (generating thus **calibrated models**).
-The only difference between the following results and the ones above is the total number of simulations specified in the configuration.
+The only difference between the following results and the ones above is the total number of simulations specified in the configuration and that the option `bootstrap_mutations_factor` was set to $1$ (to avoid reaching good fitness models in the earlier generations).
 
 Firstly, we show the fitness evolution of the first $20$ simulations.
 Each data point is the average fitness in that generation out of $20$ models.
-Note that some simulations end because the target fitness is reached ($0.99$).
+Note that some simulations end because the target fitness is reached by some of the models ($0.99$).
 
 
 ```r
@@ -722,7 +722,7 @@ read_summary_file = function(file_name) {
   return(data_list)
 }
 
-fitness_summary_file = paste0("results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt")
+fitness_summary_file = "results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt"
 
 # rows = simulations, columns = generations
 # value in (sim,gen) cell = average fitness of models in that particular (sim,gen) combination
@@ -750,7 +750,7 @@ grid(lwd = 0.5)
 <p class="caption">(\#fig:fit-evolution)Fitness Evolution (10 simulations, CASCADE 1.0)</p>
 </div>
 
-Next, we plot the average fitness + standard deviation per generation across all $1000$ simulations:
+Next, we plot the **average fitness + standard deviation** per generation across all $1000$ simulations:
 
 
 ```r
@@ -760,7 +760,7 @@ colnames(avg_fit) = 1:ncol(avg_fit)
 avg_fit_long = avg_fit %>% pivot_longer(cols = everything()) %>% mutate(name = as.integer(name))
 
 ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
-  add = "mean_sd", add.params = list(color = "black"), ylim = c(0.2, 0.9),
+  add = "mean_sd", add.params = list(color = "black"), ylim = c(0, 1),
   main = "Fitness Evolution across Generations", 
   xlab = "Generations", ylab = "Fitness") + 
   theme(plot.title = element_text(hjust = 0.5)) + grids()
@@ -789,7 +789,8 @@ ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
 ```
 
 :::{.green-box}
-- The average fitness stabilizes after $5-10$ generations but also the standard deviation: new models are still getting created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.
+- The average fitness stabilizes after $\approx 10-15$ generations but also the standard deviation: new models are still being created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.
+- The *S*-shaped (sigmoid) curve is in agreement with [Holland's schema theorem](https://en.wikipedia.org/wiki/Holland%27s_schema_theorem).
 :::
 
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
