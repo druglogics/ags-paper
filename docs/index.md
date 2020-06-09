@@ -790,7 +790,7 @@ ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
 
 :::{.green-box}
 - The average fitness stabilizes after $\approx 10-15$ generations but also the standard deviation: new models are still being created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.
-- The *S*-shaped (sigmoid) curve is in agreement with [Holland's schema theorem](https://en.wikipedia.org/wiki/Holland%27s_schema_theorem).
+- The *S*-shaped (sigmoid) curve is in agreement with Holland's schema theorem [@holland1992adaptation].
 :::
 
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
