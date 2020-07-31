@@ -1827,7 +1827,9 @@ So, the best ROC and PR curves we can get with our simulations when using models
 Figure 24: ROC and PR curves for single and best combined predictor (CASCADE 2.0, Link Operator Mutations)
 </p>
 </div>
+<div id="comb-pred-best-link-dt">
 <p>The <strong>ROC ensemble-wise statistics data</strong> for the combined predictor (<span class="math inline">\(\beta_{best}=-1.6\)</span>) are as follows:</p>
+</div>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb34-1"></a>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">data =</span> roc_best_res1<span class="op">$</span>roc_stats, <span class="dt">options =</span> </span>
 <span id="cb34-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb34-2"></a>  <span class="kw">list</span>(<span class="dt">pageLength =</span> <span class="dv">5</span>, <span class="dt">lengthMenu =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">40</span>), <span class="dt">searching =</span> <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb34-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb34-3"></a><span class="st">  </span><span class="kw">formatRound</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>), <span class="dt">digits =</span> <span class="dv">3</span>)</span></code></pre></div>

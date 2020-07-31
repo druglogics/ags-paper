@@ -1442,7 +1442,9 @@ legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
 grid(lwd = 0.5)
 ```
 
+:::{#comb-pred-best-link-dt}
 The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1.6$) are as follows:
+:::
 ```{r comb-pred-best-link-dt, fig.align='center', fig.cap="ROC data for Best Combined Predictor (CASCADE 2.0, Link Operator Mutations, Bliss synergy method)"}
 DT::datatable(data = roc_best_res1$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 20, 40), searching = FALSE)) %>% 

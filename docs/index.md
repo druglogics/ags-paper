@@ -1608,7 +1608,9 @@ grid(lwd = 0.5)
 <p class="caption">(\#fig:best-beta-cascade2-link)ROC and PR curves for single and best combined predictor (CASCADE 2.0, Link Operator Mutations)</p>
 </div>
 
+:::{#comb-pred-best-link-dt}
 The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1.6$) are as follows:
+:::
 
 ```r
 DT::datatable(data = roc_best_res1$roc_stats, options = 
