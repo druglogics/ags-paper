@@ -1325,6 +1325,11 @@ The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{be
 DT::datatable(data = roc_best_res2$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 20, 40), searching = FALSE)) %>% 
   formatRound(c(1,6,7,8,9), digits = 3)
+
+# TP synergies at a specified threshold (0 below)
+# pred_ew_bliss %>% 
+#  select(perturbation, observed, best_score2) %>% 
+#  filter(best_score2 < 0, observed == 1)
 ```
 
 ## Correlation {-}
