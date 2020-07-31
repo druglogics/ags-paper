@@ -478,10 +478,12 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 :::{.green-box}
 - There are $\beta$ values that can boost the predictive performance of the calibrated models (ensemble-wise) but no $w$ weight in the model-wise case.
 - The PR-AUC is **more sensitive** than the ROC-AUC, so a better indicator of performance.
-- $\beta=-1$ seems to be a common value that maximizes both the ROC-AUC and the PR-AUC.
+- A value very close to $\beta=-1$ seems to be the one maximizes both the ROC-AUC and the PR-AUC.
 :::
 
+:::{#combined-pred-bliss-dt}
 The **ROC ensemble-wise statistics data** for the combined predictor $calibrated + \beta \times random, \beta=-1$ are:
+:::
 ```{r combined-pred-bliss-dt, fig.align='center', fig.cap="ROC data for Combined Predictor (CASCADE 1.0, Bliss synergy method)"}
 beta = -1
 pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score + beta * prolif_score)

@@ -444,7 +444,7 @@ grid(lwd = 0.5)
 </div>
 
 :::{.green-box}
-- Calibrated models perform a lot better than the random ones
+Calibrated models perform a lot better than the random ones
 :::
 
 ### AUC sensitivity {-}
@@ -533,11 +533,12 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 :::{.green-box}
 - There are $\beta$ values that can boost the predictive performance of the calibrated models (ensemble-wise) but no $w$ weight in the model-wise case.
 - The PR-AUC is **more sensitive** than the ROC-AUC, so a better indicator of performance.
-- $\beta=-1$ seems to be a common value that maximizes both the ROC-AUC and the PR-AUC.
+- A value very close to $\beta=-1$ seems to be the one maximizes both the ROC-AUC and the PR-AUC.
 :::
 
-The **ROC statistics data** for the combined predictor $calibrated + \beta \times random, \beta=-1$ are:
-
+:::{#combined-pred-bliss-dt}
+The **ROC ensemble-wise statistics data** for the combined predictor $calibrated + \beta \times random, \beta=-1$ are:
+:::
 
 ```r
 beta = -1
@@ -558,7 +559,7 @@ DT::datatable(data = res_comb_pred$roc_stats, options =
 ## Best ROC and PRC {-}
 
 :::{.note}
-In the next plot, **calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+In the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
 

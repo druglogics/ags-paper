@@ -1324,9 +1324,7 @@ Figure 7: PR curves (CASCADE 1.0, Bliss synergy method)
 </p>
 </div>
 <div class="green-box">
-<ul>
-<li>Calibrated models perform a lot better than the random ones</li>
-</ul>
+<p>Calibrated models perform a lot better than the random ones</p>
 </div>
 </div>
 <div id="auc-sensitivity-1" class="section level3 unnumbered" number="">
@@ -1409,10 +1407,12 @@ Figure 9: AUC sensitivity (CASCADE 1.0, Bliss synergy method, Model-wise results
 <ul>
 <li>There are <span class="math inline">\(\beta\)</span> values that can boost the predictive performance of the calibrated models (ensemble-wise) but no <span class="math inline">\(w\)</span> weight in the model-wise case.</li>
 <li>The PR-AUC is <strong>more sensitive</strong> than the ROC-AUC, so a better indicator of performance.</li>
-<li><span class="math inline">\(\beta=-1\)</span> seems to be a common value that maximizes both the ROC-AUC and the PR-AUC.</li>
+<li>A value very close to <span class="math inline">\(\beta=-1\)</span> seems to be the one maximizes both the ROC-AUC and the PR-AUC.</li>
 </ul>
 </div>
-<p>The <strong>ROC statistics data</strong> for the combined predictor <span class="math inline">\(calibrated + \beta \times random, \beta=-1\)</span> are:</p>
+<div id="combined-pred-bliss-dt">
+<p>The <strong>ROC ensemble-wise statistics data</strong> for the combined predictor <span class="math inline">\(calibrated + \beta \times random, \beta=-1\)</span> are:</p>
+</div>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="cascade-1-0-analysis.html#cb13-1"></a>beta =<span class="st"> </span><span class="dv">-1</span></span>
 <span id="cb13-2"><a href="cascade-1-0-analysis.html#cb13-2"></a>pred_ew_bliss =<span class="st"> </span>pred_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>prolif_score)</span>
 <span id="cb13-3"><a href="cascade-1-0-analysis.html#cb13-3"></a>res_comb_pred =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_bliss, <span class="dt">pred_col =</span> <span class="st">&quot;combined_score&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
@@ -1432,7 +1432,7 @@ Figure 10: ROC data for Combined Predictor (CASCADE 1.0, Bliss synergy method)
 <div id="best-roc-and-prc" class="section level2 unnumbered" number="">
 <h2>Best ROC and PRC</h2>
 <div class="note">
-<p>In the next plot, <strong>calibrated</strong> stands for the combined predictor results, i.e. <span class="math inline">\(calibrated + \beta \times random, \beta=-1\)</span>.</p>
+<p>In the next plot, <strong>Calibrated</strong> stands for the combined predictor results, i.e. <span class="math inline">\(calibrated + \beta \times random, \beta=-1\)</span>.</p>
 </div>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="cascade-1-0-analysis.html#cb14-1"></a><span class="kw">plot</span>(<span class="dt">x =</span> res_comb_pred<span class="op">$</span>roc_stats<span class="op">$</span>FPR, <span class="dt">y =</span> res_comb_pred<span class="op">$</span>roc_stats<span class="op">$</span>TPR,</span>
 <span id="cb14-2"><a href="cascade-1-0-analysis.html#cb14-2"></a>  <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> my_palette[<span class="dv">1</span>], <span class="dt">main =</span> <span class="st">&#39;ROC curve, Ensemble-wise synergies (Bliss)&#39;</span>,</span>
