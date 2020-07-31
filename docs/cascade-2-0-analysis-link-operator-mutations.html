@@ -1256,7 +1256,7 @@ Figure 18: AUC sensitivity (CASCADE 2.0, HSA synergy method, Model-wise results)
 <ul>
 <li>No added benefit when using the <em>model-wise</em> approach.</li>
 <li>The proliferative models seem to add a small contribution to the calibrated models performance (right panel ensemble-wise results =&gt; ROC-AUC increases, PR-AUC is insignificantly changed nonetheless).</li>
-<li>The <span class="math inline">\(\beta_{best}\)</span> that maximizes the ROC and PR AUC for the <strong>combination of proliferative and calibrated models</strong> and is equal to <span class="math inline">\(\beta_{best}=-0.3\)</span>.
+<li>The <span class="math inline">\(\beta_{best}\)</span> that maximizes the ROC and PR AUC for the <strong>combination of random and calibrated models</strong> and is equal to <span class="math inline">\(\beta_{best}=-0.3\)</span>.
 For <span class="math inline">\(\beta=-1\)</span> we do not observe performance improvement in this case.</li>
 </ul>
 </div>
@@ -1659,7 +1659,7 @@ For <span class="math inline">\(\beta=-1\)</span> we still see <strong>significa
 <div id="best-roc-and-prc-1" class="section level2 unnumbered" number="">
 <h2>Best ROC and PRC</h2>
 <p>For the <strong>Bliss ensemble-wise results</strong> we demonstrated above that a value of <span class="math inline">\(\beta_{best}=-1.6\)</span> can result in significant performance gain of the combined predictor (<span class="math inline">\(calibrated + \beta \times proliferative\)</span>) using the results from the <span class="math inline">\(150\)</span> simulation runs (the results for <span class="math inline">\(\beta=-1\)</span> were still better than the single predictors).
-Here, we present the ROC and PR curves for the calibrated (normalized to random model) predictions compared to the random proliferative model results.</p>
+Here, we present the ROC and PR curves for the <strong>calibrated (normalized to random model)</strong> predictions compared to the <strong>random proliferative</strong> model results.</p>
 <div id="idsomething" class="note">
 <p>Only for the next plot, <strong>Calibrated</strong> stands for the combined predictor results, i.e. <span class="math inline">\(calibrated + \beta \times random, \beta=-1\)</span>.</p>
 </div>
@@ -1754,7 +1754,7 @@ The <strong>HSA ensemble-wise</strong> results do so (at some degree).</li>
 <div id="fitness-evolution-1" class="section level2 unnumbered" number="">
 <h2>Fitness Evolution</h2>
 <p>Results are from the run with <span class="math inline">\(200\)</span> Gitsbe simulations, fitting to steady state (<strong>calibrated models</strong>).</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-1"></a>fitness_summary_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt&quot;</span>)</span>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-1"></a>fitness_summary_file =<span class="st"> &quot;results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt&quot;</span></span>
 <span id="cb36-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-2"></a>fit_res =<span class="st"> </span><span class="kw">read_summary_file</span>(<span class="dt">file_name =</span> fitness_summary_file)</span>
 <span id="cb36-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-3"></a></span>
 <span id="cb36-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-4"></a><span class="co"># rows = simulations, columns = generations</span></span>
@@ -1770,9 +1770,9 @@ The <strong>HSA ensemble-wise</strong> results do so (at some degree).</li>
 <span id="cb36-14"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-14"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Generations&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Fitness&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb36-15"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb36-15"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:fit-evolution-3"></span>
-<img src="index_files/figure-html/fit-evolution-3-1.png" alt="Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)" width="2100" />
+<img src="index_files/figure-html/fit-evolution-3-1.png" alt="Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)" width="2100" />
 <p class="caption">
-Figure 27: Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)
+Figure 27: Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)
 </p>
 </div>
 </div>

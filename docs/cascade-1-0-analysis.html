@@ -1507,61 +1507,63 @@ Note that some simulations end because the target fitness is reached by some of 
 <span id="cb16-9"><a href="cascade-1-0-analysis.html#cb16-9"></a>  <span class="cf">for</span> (line_index <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(lines)) {</span>
 <span id="cb16-10"><a href="cascade-1-0-analysis.html#cb16-10"></a>    line =<span class="st"> </span>lines[line_index]</span>
 <span id="cb16-11"><a href="cascade-1-0-analysis.html#cb16-11"></a>    <span class="cf">if</span> (stringr<span class="op">::</span><span class="kw">str_detect</span>(<span class="dt">string =</span> line, <span class="dt">pattern =</span> <span class="st">&quot;Simulation&quot;</span>)) {</span>
-<span id="cb16-12"><a href="cascade-1-0-analysis.html#cb16-12"></a>      data_list[[index]] =<span class="st"> </span><span class="kw">bind_cols</span>(gen_fit_list)</span>
+<span id="cb16-12"><a href="cascade-1-0-analysis.html#cb16-12"></a>      data_list[[index]] =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_cols</span>(gen_fit_list)</span>
 <span id="cb16-13"><a href="cascade-1-0-analysis.html#cb16-13"></a>      index =<span class="st"> </span>index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
 <span id="cb16-14"><a href="cascade-1-0-analysis.html#cb16-14"></a>      </span>
 <span id="cb16-15"><a href="cascade-1-0-analysis.html#cb16-15"></a>      gen_fit_list =<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb16-16"><a href="cascade-1-0-analysis.html#cb16-16"></a>      gen_index =<span class="st"> </span><span class="dv">1</span></span>
 <span id="cb16-17"><a href="cascade-1-0-analysis.html#cb16-17"></a>    } <span class="cf">else</span> { <span class="co"># read fitness values</span></span>
-<span id="cb16-18"><a href="cascade-1-0-analysis.html#cb16-18"></a>      gen_fit_list[[gen_index]] =<span class="st"> </span><span class="kw">as_tibble_col</span>(<span class="kw">as.numeric</span>(<span class="kw">unlist</span>(<span class="kw">strsplit</span>(line, <span class="dt">split =</span> <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>))))</span>
+<span id="cb16-18"><a href="cascade-1-0-analysis.html#cb16-18"></a>      gen_fit_list[[gen_index]] =<span class="st"> </span>tibble<span class="op">::</span><span class="kw">as_tibble_col</span>(<span class="kw">as.numeric</span>(<span class="kw">unlist</span>(<span class="kw">strsplit</span>(line, <span class="dt">split =</span> <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>))), <span class="dt">column_name =</span> <span class="kw">paste0</span>(gen_index))</span>
 <span id="cb16-19"><a href="cascade-1-0-analysis.html#cb16-19"></a>      gen_index =<span class="st"> </span>gen_index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
 <span id="cb16-20"><a href="cascade-1-0-analysis.html#cb16-20"></a>    }</span>
 <span id="cb16-21"><a href="cascade-1-0-analysis.html#cb16-21"></a>  }</span>
 <span id="cb16-22"><a href="cascade-1-0-analysis.html#cb16-22"></a>  </span>
 <span id="cb16-23"><a href="cascade-1-0-analysis.html#cb16-23"></a>  <span class="co"># add the last simulation&#39;s values</span></span>
-<span id="cb16-24"><a href="cascade-1-0-analysis.html#cb16-24"></a>  data_list[[index]] =<span class="st"> </span><span class="kw">bind_cols</span>(gen_fit_list)</span>
+<span id="cb16-24"><a href="cascade-1-0-analysis.html#cb16-24"></a>  data_list[[index]] =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_cols</span>(gen_fit_list)</span>
 <span id="cb16-25"><a href="cascade-1-0-analysis.html#cb16-25"></a>  </span>
 <span id="cb16-26"><a href="cascade-1-0-analysis.html#cb16-26"></a>  <span class="kw">return</span>(data_list)</span>
 <span id="cb16-27"><a href="cascade-1-0-analysis.html#cb16-27"></a>}</span>
 <span id="cb16-28"><a href="cascade-1-0-analysis.html#cb16-28"></a></span>
 <span id="cb16-29"><a href="cascade-1-0-analysis.html#cb16-29"></a>fitness_summary_file =<span class="st"> &quot;results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt&quot;</span></span>
 <span id="cb16-30"><a href="cascade-1-0-analysis.html#cb16-30"></a></span>
-<span id="cb16-31"><a href="cascade-1-0-analysis.html#cb16-31"></a><span class="co"># rows = simulations, columns = generations</span></span>
-<span id="cb16-32"><a href="cascade-1-0-analysis.html#cb16-32"></a><span class="co"># value in (sim,gen) cell = average fitness of models in that particular (sim,gen) combination</span></span>
-<span id="cb16-33"><a href="cascade-1-0-analysis.html#cb16-33"></a>fit_res =<span class="st"> </span><span class="kw">read_summary_file</span>(<span class="dt">file_name =</span> fitness_summary_file)</span>
-<span id="cb16-34"><a href="cascade-1-0-analysis.html#cb16-34"></a></span>
-<span id="cb16-35"><a href="cascade-1-0-analysis.html#cb16-35"></a>first_sim_data =<span class="st"> </span><span class="kw">colMeans</span>(fit_res[[<span class="dv">1</span>]])</span>
-<span id="cb16-36"><a href="cascade-1-0-analysis.html#cb16-36"></a><span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(first_sim_data), <span class="dt">y =</span> first_sim_data, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
-<span id="cb16-37"><a href="cascade-1-0-analysis.html#cb16-37"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.5</span>, </span>
-<span id="cb16-38"><a href="cascade-1-0-analysis.html#cb16-38"></a>  <span class="dt">main =</span> <span class="st">&#39;Fitness Evolution across Generations&#39;</span>, <span class="dt">xlab =</span> <span class="st">&#39;Generations&#39;</span>,</span>
-<span id="cb16-39"><a href="cascade-1-0-analysis.html#cb16-39"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Average Fitness&#39;</span>, <span class="dt">col =</span> usefun<span class="op">:::</span>colors<span class="fl">.100</span>[<span class="dv">1</span>])</span>
-<span id="cb16-40"><a href="cascade-1-0-analysis.html#cb16-40"></a>index =<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb16-41"><a href="cascade-1-0-analysis.html#cb16-41"></a><span class="cf">for</span> (fit_data <span class="cf">in</span> fit_res) {</span>
-<span id="cb16-42"><a href="cascade-1-0-analysis.html#cb16-42"></a>  <span class="cf">if</span> (index <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>) <span class="cf">break</span></span>
-<span id="cb16-43"><a href="cascade-1-0-analysis.html#cb16-43"></a>  <span class="co">#if (ncol(fit_data) != 20) next</span></span>
-<span id="cb16-44"><a href="cascade-1-0-analysis.html#cb16-44"></a>  mean_fit_per_gen =<span class="st"> </span><span class="kw">colMeans</span>(fit_data)</span>
-<span id="cb16-45"><a href="cascade-1-0-analysis.html#cb16-45"></a>  <span class="kw">lines</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(mean_fit_per_gen), <span class="dt">y =</span> mean_fit_per_gen, <span class="dt">lwd =</span> <span class="fl">1.5</span>,</span>
-<span id="cb16-46"><a href="cascade-1-0-analysis.html#cb16-46"></a>    <span class="dt">col =</span> usefun<span class="op">:::</span>colors<span class="fl">.100</span>[index])</span>
-<span id="cb16-47"><a href="cascade-1-0-analysis.html#cb16-47"></a>  index =<span class="st"> </span>index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb16-48"><a href="cascade-1-0-analysis.html#cb16-48"></a>}</span>
-<span id="cb16-49"><a href="cascade-1-0-analysis.html#cb16-49"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<span id="cb16-31"><a href="cascade-1-0-analysis.html#cb16-31"></a><span class="co"># `fit_res` is a list of tibbles</span></span>
+<span id="cb16-32"><a href="cascade-1-0-analysis.html#cb16-32"></a><span class="co"># Each tibble has the fitness results of a simulation</span></span>
+<span id="cb16-33"><a href="cascade-1-0-analysis.html#cb16-33"></a><span class="co"># Rows represent the models and columns are the generations</span></span>
+<span id="cb16-34"><a href="cascade-1-0-analysis.html#cb16-34"></a>fit_res =<span class="st"> </span><span class="kw">read_summary_file</span>(<span class="dt">file_name =</span> fitness_summary_file)</span>
+<span id="cb16-35"><a href="cascade-1-0-analysis.html#cb16-35"></a></span>
+<span id="cb16-36"><a href="cascade-1-0-analysis.html#cb16-36"></a>first_sim_data =<span class="st"> </span><span class="kw">colMeans</span>(fit_res[[<span class="dv">1</span>]])</span>
+<span id="cb16-37"><a href="cascade-1-0-analysis.html#cb16-37"></a><span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(first_sim_data), <span class="dt">y =</span> first_sim_data, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
+<span id="cb16-38"><a href="cascade-1-0-analysis.html#cb16-38"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>, <span class="dt">lwd =</span> <span class="fl">1.5</span>, </span>
+<span id="cb16-39"><a href="cascade-1-0-analysis.html#cb16-39"></a>  <span class="dt">main =</span> <span class="st">&#39;Fitness Evolution across Generations&#39;</span>, <span class="dt">xlab =</span> <span class="st">&#39;Generations&#39;</span>,</span>
+<span id="cb16-40"><a href="cascade-1-0-analysis.html#cb16-40"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Average Fitness&#39;</span>, <span class="dt">col =</span> usefun<span class="op">:::</span>colors<span class="fl">.100</span>[<span class="dv">1</span>])</span>
+<span id="cb16-41"><a href="cascade-1-0-analysis.html#cb16-41"></a>index =<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb16-42"><a href="cascade-1-0-analysis.html#cb16-42"></a><span class="cf">for</span> (fit_data <span class="cf">in</span> fit_res) {</span>
+<span id="cb16-43"><a href="cascade-1-0-analysis.html#cb16-43"></a>  <span class="cf">if</span> (index <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>) <span class="cf">break</span></span>
+<span id="cb16-44"><a href="cascade-1-0-analysis.html#cb16-44"></a>  <span class="co">#if (ncol(fit_data) != 20) next</span></span>
+<span id="cb16-45"><a href="cascade-1-0-analysis.html#cb16-45"></a>  mean_fit_per_gen =<span class="st"> </span><span class="kw">colMeans</span>(fit_data)</span>
+<span id="cb16-46"><a href="cascade-1-0-analysis.html#cb16-46"></a>  <span class="kw">lines</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(mean_fit_per_gen), <span class="dt">y =</span> mean_fit_per_gen, <span class="dt">lwd =</span> <span class="fl">1.5</span>,</span>
+<span id="cb16-47"><a href="cascade-1-0-analysis.html#cb16-47"></a>    <span class="dt">col =</span> usefun<span class="op">:::</span>colors<span class="fl">.100</span>[index])</span>
+<span id="cb16-48"><a href="cascade-1-0-analysis.html#cb16-48"></a>  index =<span class="st"> </span>index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb16-49"><a href="cascade-1-0-analysis.html#cb16-49"></a>}</span>
+<span id="cb16-50"><a href="cascade-1-0-analysis.html#cb16-50"></a><span class="kw">grid</span>(<span class="dt">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:fit-evolution"></span>
-<img src="index_files/figure-html/fit-evolution-1.png" alt="Fitness Evolution (10 simulations, CASCADE 1.0)" width="2100" />
+<img src="index_files/figure-html/fit-evolution-1.png" alt="Fitness Evolution (20 simulations, CASCADE 1.0)" width="2100" />
 <p class="caption">
-Figure 13: Fitness Evolution (10 simulations, CASCADE 1.0)
+Figure 13: Fitness Evolution (20 simulations, CASCADE 1.0)
 </p>
 </div>
 <p>Next, we plot the <strong>average fitness + standard deviation</strong> per generation across all <span class="math inline">\(1000\)</span> simulations:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="cascade-1-0-analysis.html#cb17-1"></a>avg_fit =<span class="st"> </span><span class="kw">do.call</span>(dplyr<span class="op">::</span>bind_rows, <span class="kw">sapply</span>(fit_res, colMeans))</span>
-<span id="cb17-2"><a href="cascade-1-0-analysis.html#cb17-2"></a><span class="kw">colnames</span>(avg_fit) =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(avg_fit)</span>
-<span id="cb17-3"><a href="cascade-1-0-analysis.html#cb17-3"></a></span>
-<span id="cb17-4"><a href="cascade-1-0-analysis.html#cb17-4"></a>avg_fit_long =<span class="st"> </span>avg_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">name =</span> <span class="kw">as.integer</span>(name))</span>
-<span id="cb17-5"><a href="cascade-1-0-analysis.html#cb17-5"></a></span>
-<span id="cb17-6"><a href="cascade-1-0-analysis.html#cb17-6"></a><span class="kw">ggline</span>(<span class="dt">data =</span> avg_fit_long, <span class="dt">x =</span> <span class="st">&quot;name&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;value&quot;</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>],</span>
-<span id="cb17-7"><a href="cascade-1-0-analysis.html#cb17-7"></a>  <span class="dt">add =</span> <span class="st">&quot;mean_sd&quot;</span>, <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb17-8"><a href="cascade-1-0-analysis.html#cb17-8"></a>  <span class="dt">main =</span> <span class="st">&quot;Fitness Evolution across Generations&quot;</span>, </span>
-<span id="cb17-9"><a href="cascade-1-0-analysis.html#cb17-9"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Generations&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Fitness&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb17-10"><a href="cascade-1-0-analysis.html#cb17-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="cascade-1-0-analysis.html#cb17-1"></a><span class="co"># `avg_fit` is a tibble with rows the number of simulations and </span></span>
+<span id="cb17-2"><a href="cascade-1-0-analysis.html#cb17-2"></a><span class="co"># columns the generations. Each value in a (sim,gen) cell is the average </span></span>
+<span id="cb17-3"><a href="cascade-1-0-analysis.html#cb17-3"></a><span class="co"># fitness of models in that particular (sim,gen) combination</span></span>
+<span id="cb17-4"><a href="cascade-1-0-analysis.html#cb17-4"></a>avg_fit =<span class="st"> </span><span class="kw">do.call</span>(dplyr<span class="op">::</span>bind_rows, <span class="kw">sapply</span>(fit_res, colMeans))</span>
+<span id="cb17-5"><a href="cascade-1-0-analysis.html#cb17-5"></a>avg_fit_long =<span class="st"> </span>avg_fit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">name =</span> <span class="kw">as.integer</span>(name))</span>
+<span id="cb17-6"><a href="cascade-1-0-analysis.html#cb17-6"></a></span>
+<span id="cb17-7"><a href="cascade-1-0-analysis.html#cb17-7"></a><span class="kw">ggline</span>(<span class="dt">data =</span> avg_fit_long, <span class="dt">x =</span> <span class="st">&quot;name&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;value&quot;</span>, <span class="dt">color =</span> my_palette[<span class="dv">2</span>],</span>
+<span id="cb17-8"><a href="cascade-1-0-analysis.html#cb17-8"></a>  <span class="dt">add =</span> <span class="st">&quot;mean_sd&quot;</span>, <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb17-9"><a href="cascade-1-0-analysis.html#cb17-9"></a>  <span class="dt">main =</span> <span class="st">&quot;Fitness Evolution across Generations&quot;</span>, </span>
+<span id="cb17-10"><a href="cascade-1-0-analysis.html#cb17-10"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Generations&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Fitness&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-11"><a href="cascade-1-0-analysis.html#cb17-11"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">grids</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:fit-evolution-2"></span>
 <img src="index_files/figure-html/fit-evolution-2-1.png" alt="Fitness Evolution (1000 simulations, CASCADE 1.0)" width="2100" />
 <p class="caption">

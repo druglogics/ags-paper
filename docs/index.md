@@ -643,27 +643,28 @@ read_summary_file = function(file_name) {
   for (line_index in 1:length(lines)) {
     line = lines[line_index]
     if (stringr::str_detect(string = line, pattern = "Simulation")) {
-      data_list[[index]] = bind_cols(gen_fit_list)
+      data_list[[index]] = dplyr::bind_cols(gen_fit_list)
       index = index + 1
       
       gen_fit_list = list()
       gen_index = 1
     } else { # read fitness values
-      gen_fit_list[[gen_index]] = as_tibble_col(as.numeric(unlist(strsplit(line, split = '\t'))))
+      gen_fit_list[[gen_index]] = tibble::as_tibble_col(as.numeric(unlist(strsplit(line, split = '\t'))), column_name = paste0(gen_index))
       gen_index = gen_index + 1
     }
   }
   
   # add the last simulation's values
-  data_list[[index]] = bind_cols(gen_fit_list)
+  data_list[[index]] = dplyr::bind_cols(gen_fit_list)
   
   return(data_list)
 }
 
 fitness_summary_file = "results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt"
 
-# rows = simulations, columns = generations
-# value in (sim,gen) cell = average fitness of models in that particular (sim,gen) combination
+# `fit_res` is a list of tibbles
+# Each tibble has the fitness results of a simulation
+# Rows represent the models and columns are the generations
 fit_res = read_summary_file(file_name = fitness_summary_file)
 
 first_sim_data = colMeans(fit_res[[1]])
@@ -684,17 +685,17 @@ grid(lwd = 0.5)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/fit-evolution-1.png" alt="Fitness Evolution (10 simulations, CASCADE 1.0)" width="2100" />
-<p class="caption">(\#fig:fit-evolution)Fitness Evolution (10 simulations, CASCADE 1.0)</p>
+<img src="index_files/figure-html/fit-evolution-1.png" alt="Fitness Evolution (20 simulations, CASCADE 1.0)" width="2100" />
+<p class="caption">(\#fig:fit-evolution)Fitness Evolution (20 simulations, CASCADE 1.0)</p>
 </div>
 
 Next, we plot the **average fitness + standard deviation** per generation across all $1000$ simulations:
 
-
 ```r
+# `avg_fit` is a tibble with rows the number of simulations and 
+# columns the generations. Each value in a (sim,gen) cell is the average 
+# fitness of models in that particular (sim,gen) combination
 avg_fit = do.call(dplyr::bind_rows, sapply(fit_res, colMeans))
-colnames(avg_fit) = 1:ncol(avg_fit)
-
 avg_fit_long = avg_fit %>% pivot_longer(cols = everything()) %>% mutate(name = as.integer(name))
 
 ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
@@ -1029,7 +1030,7 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 :::{.green-box}
 - No added benefit when using the *model-wise* approach.
 - The proliferative models seem to add a small contribution to the calibrated models performance (right panel ensemble-wise results => ROC-AUC increases, PR-AUC is insignificantly changed nonetheless).
-- The $\beta_{best}$ that maximizes the ROC and PR AUC for the **combination of proliferative and calibrated models** and is equal to $\beta_{best}=-0.3$.
+- The $\beta_{best}$ that maximizes the ROC and PR AUC for the **combination of random and calibrated models** and is equal to $\beta_{best}=-0.3$.
 For $\beta=-1$ we do not observe performance improvement in this case.
 :::
 
@@ -1432,7 +1433,7 @@ For $\beta=-1$ we still see **significant performance improvement**.
 ## Best ROC and PRC {-}
 
 For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$) using the results from the $150$ simulation runs (the results for $\beta=-1$ were still better than the single predictors).
-Here, we present the ROC and PR curves for the calibrated (normalized to random model) predictions compared to the random proliferative model results.
+Here, we present the ROC and PR curves for the **calibrated (normalized to random model)** predictions compared to the **random proliferative** model results.
 
 :::{.note #idsomething}
 Only for the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
@@ -1539,7 +1540,7 @@ Results are from the run with $200$ Gitsbe simulations, fitting to steady state 
 
 
 ```r
-fitness_summary_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt")
+fitness_summary_file = "results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt"
 fit_res = read_summary_file(file_name = fitness_summary_file)
 
 # rows = simulations, columns = generations
@@ -1557,8 +1558,8 @@ ggline(data = avg_fit_long_link, x = "name", y = "value", color = my_palette[2],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/fit-evolution-3-1.png" alt="Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)" width="2100" />
-<p class="caption">(\#fig:fit-evolution-3)Fitness Evolution (150 simulations, link operator mutations, CASCADE 2.0)</p>
+<img src="index_files/figure-html/fit-evolution-3-1.png" alt="Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)" width="2100" />
+<p class="caption">(\#fig:fit-evolution-3)Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)</p>
 </div>
 
 
