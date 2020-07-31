@@ -227,7 +227,7 @@ Calibrated models perform a lot better than the random ones
 
 ```r
 # Ensemble-wise
-betas = seq(from = -20, to = 20, by = 0.1)
+betas = seq(from = -12, to = 12, by = 0.1)
 
 prolif_roc = sapply(betas, function(beta) {
   pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score + beta * prolif_score)
@@ -249,12 +249,11 @@ df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AU
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x random", 
-    "ROC: calibrated + β x random")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (HSA, CASCADE 1.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-2, label="β = -1", y=0.25), colour="black", angle=90) + 
   grids()
 ```
@@ -291,8 +290,7 @@ df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(cal) + w x prob(rand)", 
-    "ROC: (1-w) x prob(cal) + w x prob(prolif)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (HSA, CASCADE 1.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -454,7 +452,7 @@ Investigate same thing as described in [here](#auc-sensitivity).
 
 ```r
 # Ensemble-wise
-betas = seq(from = -20, to = 20, by = 0.1)
+betas = seq(from = -12, to = 12, by = 0.1)
 
 prolif_roc = sapply(betas, function(beta) {
   pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score + beta * prolif_score)
@@ -476,12 +474,11 @@ df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AU
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x random", 
-    "ROC: calibrated + β x random")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (Bliss, CASCADE 1.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-2, label="β = -1", y=0.25), colour="black", angle=90) + 
   grids()
 ```
@@ -518,8 +515,7 @@ df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(cal) + w x prob(rand)", 
-    "ROC: (1-w) x prob(cal) + w x prob(rand)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (Bliss, CASCADE 1.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -559,7 +555,7 @@ DT::datatable(data = res_comb_pred$roc_stats, options =
 ## Best ROC and PRC {-}
 
 :::{.note}
-In the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+Only for the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
 
@@ -747,8 +743,7 @@ Performance of automatically parameterized models against SINTEF dataset [@Floba
 - *HSA* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
 - We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state ($50,100,150,200$ simulations)
-- **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($150$ simulations)
-- **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: hsa`
+- **Random** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($150$ simulations)
 - `Gitsbe` models have mutations on **link operator** only
 :::
 
@@ -756,7 +751,7 @@ Load results:
 
 
 ```r
-# 'ss' => calibrated models, 'random' => random models, 'prolif' => proliferative models
+# 'ss' => calibrated models, 'prolif' => random models
 # 'ew' => ensemble-wise, 'mw' => model-wise
 
 ## HSA results
@@ -770,8 +765,6 @@ ss_hsa_ensemblewise_200sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_2
 ss_hsa_modelwise_200sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
 prolif_hsa_ensemblewise_file = paste0("results/link-only/hsa/cascade_2.0_prolif_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
 prolif_hsa_modelwise_file = paste0("results/link-only/hsa/cascade_2.0_prolif_150sim_fixpoints_hsa_modelwise_synergies.tab")
-random_hsa_ensemblewise_file = paste0("results/link-only/hsa/cascade_2.0_random_ensemblewise_synergies.tab")
-random_hsa_modelwise_file = paste0("results/link-only/hsa/cascade_2.0_random_modelwise_synergies.tab")
 
 ss_hsa_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_hsa_ensemblewise_50sim_file)
 ss_hsa_modelwise_synergies_50sim = emba::get_synergy_scores(ss_hsa_modelwise_50sim_file, file_type = "modelwise")
@@ -783,8 +776,6 @@ ss_hsa_ensemblewise_synergies_200sim = emba::get_synergy_scores(ss_hsa_ensemblew
 ss_hsa_modelwise_synergies_200sim = emba::get_synergy_scores(ss_hsa_modelwise_200sim_file, file_type = "modelwise")
 prolif_hsa_ensemblewise_synergies_150sim = emba::get_synergy_scores(prolif_hsa_ensemblewise_file)
 prolif_hsa_modelwise_synergies_150sim = emba::get_synergy_scores(prolif_hsa_modelwise_file, file_type = "modelwise")
-random_hsa_ensemblewise_synergies = emba::get_synergy_scores(random_hsa_ensemblewise_file)
-random_hsa_modelwise_synergies = emba::get_synergy_scores(random_hsa_modelwise_file, file_type = "modelwise")
 
 # calculate probability of synergy in the modelwise results
 ss_hsa_modelwise_synergies_50sim = ss_hsa_modelwise_synergies_50sim %>% 
@@ -797,13 +788,11 @@ ss_hsa_modelwise_synergies_200sim = ss_hsa_modelwise_synergies_200sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 prolif_hsa_modelwise_synergies_150sim = prolif_hsa_modelwise_synergies_150sim %>%
   mutate(synergy_prob_prolif = synergies/(synergies + `non-synergies`))
-random_hsa_modelwise_synergies = random_hsa_modelwise_synergies %>%
-  mutate(synergy_prob_random = synergies/(synergies + `non-synergies`))
 
 observed_synergies_file = paste0("results/observed_synergies_cascade_2.0")
 observed_synergies = get_observed_synergies(observed_synergies_file)
 # 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
-observed = sapply(random_hsa_modelwise_synergies$perturbation %in% observed_synergies, as.integer)
+observed = sapply(prolif_hsa_modelwise_synergies_150sim$perturbation %in% observed_synergies, as.integer)
 
 # 'ew' => ensemble-wise, 'mw' => model-wise
 pred_ew_hsa = bind_cols(
@@ -812,7 +801,6 @@ pred_ew_hsa = bind_cols(
   ss_hsa_ensemblewise_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
   ss_hsa_ensemblewise_synergies_200sim %>% select(score) %>% rename(ss_score_200sim = score),
   prolif_hsa_ensemblewise_synergies_150sim %>% select(score) %>% rename(prolif_score_150sim = score),
-  random_hsa_ensemblewise_synergies %>% select(score) %>% rename(random_score = score), 
   as_tibble_col(observed, column_name = "observed"))
 
 pred_mw_hsa = bind_cols(
@@ -821,7 +809,6 @@ pred_mw_hsa = bind_cols(
   ss_hsa_modelwise_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
   ss_hsa_modelwise_synergies_200sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_200sim = synergy_prob_ss),
   prolif_hsa_modelwise_synergies_150sim %>% select(synergy_prob_prolif) %>% rename(synergy_prob_prolif_150sim = synergy_prob_prolif),
-  random_hsa_modelwise_synergies %>% select(synergy_prob_random),
   as_tibble_col(observed, column_name = "observed"))
 ```
 
@@ -834,14 +821,12 @@ res_ss_ew_100sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_100sim",
 res_ss_ew_150sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_150sim", label_col = "observed")
 res_ss_ew_200sim = get_roc_stats(df = pred_ew_hsa, pred_col = "ss_score_200sim", label_col = "observed")
 res_prolif_ew_150sim = get_roc_stats(df = pred_ew_hsa, pred_col = "prolif_score_150sim", label_col = "observed")
-res_random_ew = get_roc_stats(df = pred_ew_hsa, pred_col = "random_score", label_col = "observed")
 
 res_ss_mw_50sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 res_ss_mw_100sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_100sim", label_col = "observed", direction = ">")
 res_ss_mw_150sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
 res_ss_mw_200sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_ss_200sim", label_col = "observed", direction = ">")
 res_prolif_mw_150sim = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_prolif_150sim", label_col = "observed", direction = ">")
-res_random_mw = get_roc_stats(df = pred_mw_hsa, pred_col = "synergy_prob_random", label_col = "observed", direction = ">")
 
 # Plot ROCs
 plot(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR,
@@ -855,15 +840,12 @@ lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats$TPR, 
   lwd = 3, col = my_palette[5])
-lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 3, col = my_palette[6])
-legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
+legend('bottomright', title = 'AUC', col = my_palette[1:5], pch = 19,
   legend = c(paste(round(res_ss_ew_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
     paste(round(res_ss_ew_100sim$AUC, digits = 3), "Calibrated (100 sim)"),
     paste(round(res_ss_ew_150sim$AUC, digits = 3), "Calibrated (150 sim)"),
     paste(round(res_ss_ew_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
-    paste(round(res_prolif_ew_150sim$AUC, digits = 3), "Proliferative (150 sim)"),
-    paste(round(res_random_ew$AUC, digits = 3), "Random")), cex = 0.9)
+    paste(round(res_prolif_ew_150sim$AUC, digits = 3), "Random (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -878,15 +860,12 @@ lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 lines(x = res_prolif_mw_150sim$roc_stats$FPR, y = res_prolif_mw_150sim$roc_stats$TPR, 
   lwd = 3, col = my_palette[5])
-lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 3, col = my_palette[6])
-legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19,
+legend('bottomright', title = 'AUC', col = my_palette[1:5], pch = 19,
   legend = c(paste(round(res_ss_mw_50sim$AUC, digits = 3), "Calibrated (50 sim)"),
     paste(round(res_ss_mw_100sim$AUC, digits = 3), "Calibrated (100 sim)"),
     paste(round(res_ss_mw_150sim$AUC, digits = 3), "Calibrated (150 sim)"),
     paste(round(res_ss_mw_200sim$AUC, digits = 3), "Calibrated (200 sim)"),
-    paste(round(res_prolif_mw_150sim$AUC, digits = 3), "Proliferative (150 sim)"),
-    paste(round(res_random_mw$AUC, digits = 3), "Random")), cex = 0.9)
+    paste(round(res_prolif_mw_150sim$AUC, digits = 3), "Random (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -910,8 +889,6 @@ pr_ss_ew_hsa_200sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(ss_score_200
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 pr_prolif_ew_hsa_150sim = pr.curve(scores.class0 = pred_ew_hsa %>% pull(prolif_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
-pr_random_ew_hsa = pr.curve(scores.class0 = pred_ew_hsa %>% pull(random_score) %>% (function(x) {-x}), 
-  weights.class0 = pred_ew_hsa %>% pull(observed), curve = TRUE)
 
 pr_ss_mw_hsa_50sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_ss_50sim), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE, rand.compute = TRUE)
@@ -923,8 +900,6 @@ pr_ss_mw_hsa_200sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 pr_prolif_mw_hsa_150sim = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_prolif_150sim), 
   weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
-pr_random_mw_hsa = pr.curve(scores.class0 = pred_mw_hsa %>% pull(synergy_prob_random), 
-  weights.class0 = pred_mw_hsa %>% pull(observed), curve = TRUE)
 
 plot(pr_ss_ew_hsa_50sim, main = 'PR curve, Ensemble-wise synergies (HSA)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
@@ -932,14 +907,12 @@ plot(pr_ss_ew_hsa_100sim, add = TRUE, color = my_palette[2])
 plot(pr_ss_ew_hsa_150sim, add = TRUE, color = my_palette[3])
 plot(pr_ss_ew_hsa_200sim, add = TRUE, color = my_palette[4])
 plot(pr_prolif_ew_hsa_150sim, add = TRUE, color = my_palette[5])
-plot(pr_random_ew_hsa, add = TRUE, color = my_palette[6])
-legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
+legend('topright', title = 'AUC', col = my_palette[1:5], pch = 19,
   legend = c(paste(round(pr_ss_ew_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_ss_ew_hsa_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
     paste(round(pr_ss_ew_hsa_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
     paste(round(pr_ss_ew_hsa_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
-    paste(round(pr_prolif_ew_hsa_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)"),
-    paste(round(pr_random_ew_hsa$auc.davis.goadrich, digits = 3), "Random")))
+    paste(round(pr_prolif_ew_hsa_150sim$auc.davis.goadrich, digits = 3), "Random (150 sim)")))
 grid(lwd = 0.5)
 
 plot(pr_ss_mw_hsa_50sim, main = 'PR curve, Model-wise synergies (HSA)',
@@ -948,14 +921,12 @@ plot(pr_ss_mw_hsa_100sim, add = TRUE, color = my_palette[2])
 plot(pr_ss_mw_hsa_150sim, add = TRUE, color = my_palette[3])
 plot(pr_ss_mw_hsa_200sim, add = TRUE, color = my_palette[4])
 plot(pr_prolif_mw_hsa_150sim, add = TRUE, color = my_palette[5])
-plot(pr_random_mw_hsa, add = TRUE, color = my_palette[6])
-legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
+legend('topright', title = 'AUC', col = my_palette[1:5], pch = 19,
   legend = c(paste(round(pr_ss_mw_hsa_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_ss_mw_hsa_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
     paste(round(pr_ss_mw_hsa_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
     paste(round(pr_ss_mw_hsa_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
-    paste(round(pr_prolif_mw_hsa_150sim$auc.davis.goadrich, digits = 3), "Proliferative (200 sim)"),
-    paste(round(pr_random_mw_hsa$auc.davis.goadrich, digits = 3), "Random")))
+    paste(round(pr_prolif_mw_hsa_150sim$auc.davis.goadrich, digits = 3), "Random (200 sim)")))
 grid(lwd = 0.5)
 ```
 
@@ -967,8 +938,8 @@ grid(lwd = 0.5)
 :::{.green-box}
 - To minimize the resulting performance variance, $150$ seems to be a good number of `Gitsbe` simulations to run for the CASCADE 2.0 network.
 - The PR curves show that the **performance of each individual predictor is poor** compared to the baseline.
-Someone looking at the ROC curves only might reach a different conclusion.
-- *Proliferative* and *random* models perform almost equally well to *calibrated* models.
+Someone looking at the ROC curves only, might reach a different conclusion.
+- *Random* models perform almost equally well to *calibrated* models.
 - The *model-wise* approach produces slightly better ROC results than the *ensemble-wise* approach
 :::
 
@@ -976,32 +947,18 @@ Someone looking at the ROC curves only might reach a different conclusion.
 
 Investigate same thing as described in [here](#auc-sensitivity).
 This is very crucial since the PR performance is poor for the individual predictors, but a combined predictor might be able to counter this.
-We will combine the synergy scores from the *random* and *proliferative* simulations with the results from the *calibrated* Gitsbe simulations (number of simulations: $150$).
+We will combine the synergy scores from the *random proliferative* simulations with the results from the *calibrated* Gitsbe simulations (using the results from the $150$ simulation runs).
 
 
 ```r
 # Ensemble-wise
 betas = seq(from = -7.5, to = 7.5, by = 0.1)
 
-random_roc = sapply(betas, function(beta) {
-  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * random_score)
-  res = roc.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
-    weights.class0 = pred_ew_hsa %>% pull(observed))
-  auc_value = res$auc
-})
-
 prolif_roc = sapply(betas, function(beta) {
   pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * prolif_score_150sim)
   res = roc.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_ew_hsa %>% pull(observed))
   auc_value = res$auc
-})
-
-random_pr = sapply(betas, function(beta) {
-  pred_ew_hsa = pred_ew_hsa %>% mutate(combined_score = ss_score_150sim + beta * random_score)
-  res = pr.curve(scores.class0 = pred_ew_hsa %>% pull(combined_score) %>% (function(x) {-x}), 
-    weights.class0 = pred_ew_hsa %>% pull(observed))
-  auc_value = res$auc.davis.goadrich
 })
 
 prolif_pr = sapply(betas, function(beta) {
@@ -1011,19 +968,17 @@ prolif_pr = sapply(betas, function(beta) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_ew = as_tibble(cbind(betas, random_roc, prolif_roc, random_pr, prolif_pr))
+df_ew = as_tibble(cbind(betas, prolif_roc, prolif_pr))
 df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AUC")
 
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
-    "ROC: calibrated + β x proliferative", "PR: calibrated + β x random", 
-    "ROC: calibrated + β x random")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (HSA, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-1.5, label="β = -1", y=0.25), colour="black", angle=90) +
   grids()
 ```
@@ -1038,28 +993,12 @@ ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "typ
 # Model-wise
 weights = seq(from = 0, to = 1, by = 0.05)
 
-random_roc_mw = sapply(weights, function(w) {
-  pred_mw_hsa = pred_mw_hsa %>%
-    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_150sim + w * pred_mw_hsa$synergy_prob_random)
-  res = roc.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob),
-    weights.class0 = pred_mw_hsa %>% pull(observed))
-  auc_value = res$auc
-})
-
 prolif_roc_mw = sapply(weights, function(w) {
   pred_mw_hsa = pred_mw_hsa %>%
     mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_150sim + w * pred_mw_hsa$synergy_prob_prolif_150sim)
   res = roc.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob),
     weights.class0 = pred_mw_hsa %>% pull(observed))
   auc_value = res$auc
-})
-
-random_pr_mw = sapply(weights, function(w) {
-  pred_mw_hsa = pred_mw_hsa %>% 
-    mutate(weighted_prob = (1 - w) * pred_mw_hsa$synergy_prob_ss_150sim + w * pred_mw_hsa$synergy_prob_random)
-  res = pr.curve(scores.class0 = pred_mw_hsa %>% pull(weighted_prob), 
-    weights.class0 = pred_mw_hsa %>% pull(observed))
-  auc_value = res$auc.davis.goadrich
 })
 
 prolif_pr_mw = sapply(weights, function(w) {
@@ -1070,15 +1009,13 @@ prolif_pr_mw = sapply(weights, function(w) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_mw = as_tibble(cbind(weights, random_roc_mw, prolif_roc_mw, random_pr_mw, prolif_pr_mw))
+df_mw = as_tibble(cbind(weights, prolif_roc_mw, prolif_pr_mw))
 df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "AUC")
 
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
-    "ROC: (1-w) x prob(ss) + w x prob(prolif)", "PR: (1-w) x prob(ss) + w x prob(random)", 
-    "ROC: (1-w) x prob(ss) + w x prob(random)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (HSA, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -1091,15 +1028,14 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 
 :::{.green-box}
 - No added benefit when using the *model-wise* approach.
-- Neither the random nor the proliferative models bring any significant change to the prediction performance of the calibrated models (ensemble-wise). 
-- Only the proliferative models seem to add a small contribution to the calibrated models performance (top-right panel => ROC-AUC increases, PR-AUC is insignificantly changed nonetheless).
+- The proliferative models seem to add a small contribution to the calibrated models performance (right panel ensemble-wise results => ROC-AUC increases, PR-AUC is insignificantly changed nonetheless).
 - The $\beta_{best}$ that maximizes the ROC and PR AUC for the **combination of proliferative and calibrated models** and is equal to $\beta_{best}=-0.3$.
 For $\beta=-1$ we do not observe performance improvement in this case.
 :::
 
 ### Logistic Regression Analysis {-}
 
-We tried fitting a model using logistic regression as a different approach to combine/augment the results from calibrated simulations with the proliferative ones (for the HSA-assessed ensemble-wise results where there was a minimal benefit).
+We tried fitting a model using logistic regression as a different approach to combine/augment the results from calibrated simulations with the random proliferative ones (for the HSA-assessed ensemble-wise results where there was a minimal benefit).
 
 
 ```r
@@ -1174,12 +1110,12 @@ data %>% arrange(desc(ROC_AUC)) %>% slice(1:4) %>% kable()
 The best ROC AUC produced with a regularized logistic regression model is also lower than the one using calibrated models alone (with $150$ Gitsbe simulations).
 
 Note that we get warnings when using `glmnet` because of the small number of observations for the positive class (observed synergies).
-Resulting coefficients vary, but tend to be either all too small or **larger on the proliferative model predictor**.
+Resulting coefficients vary, but tend to be either all too small or **larger on the random proliferative model predictor**.
 :::
 
 ### MAMSE ROC Analysis {-}
 
-Using the `MAMSE` R package [@R-MAMSE] we try another method to combine the predictor values from the calibrated and proliferative models.
+Using the `MAMSE` R package [@R-MAMSE] we try another method to combine the predictor values from the calibrated and the random proliferative models.
 The resulting ROC curve gets a little bit distored and AUC is not statistically better from the reference sample population (i.e. the calibrated `Gitsbe` models with $150$ simulations):
 
 
@@ -1208,15 +1144,14 @@ plot(roc(healthy = healthy, diseased = diseased, smalldiseased=TRUE, AUC=TRUE,
 - *Bliss* refers to the synergy method used in `Drabme` to assess the synergies from the `gitsbe` models
 - We test performance using ROC and PR AUC for both the *ensemble-wise* and *model-wise* synergies from `Drabme`
 - **Calibrated** models: fitted to steady state ($50,100,150,200$ simulations)
-- **Proliferative** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($150$ simulations)
-- **Random** models: produced via `abmlog` (see [here](#random-model-results) and used in `Drabme` with `synergy_method: bliss`
+- **Random** models: fitted to [proliferation profile](https://druglogics.github.io/druglogics-doc/training-data.html#unperturbed-condition---globaloutput-response) ($150$ simulations)
 - `Gitsbe` models have mutations on **link operator** only
 :::
 
 Load results:
 
 ```r
-# 'ss' => calibrated models, 'random' => random models
+# 'ss' => calibrated models, 'prolif' => random proliferative models
 
 ## Bliss results
 ss_bliss_ensemblewise_50sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
@@ -1229,8 +1164,6 @@ ss_bliss_ensemblewise_200sim_file = paste0("results/link-only/bliss/cascade_2.0_
 ss_bliss_modelwise_200sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
 prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_prolif_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
 prolif_bliss_modelwise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_prolif_150sim_fixpoints_bliss_modelwise_synergies.tab")
-random_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_2.0_random_bliss_ensemblewise_synergies.tab")
-random_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_2.0_random_bliss_modelwise_synergies.tab")
 
 ss_bliss_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_bliss_ensemblewise_50sim_file)
 ss_bliss_modelwise_synergies_50sim = emba::get_synergy_scores(ss_bliss_modelwise_50sim_file, file_type = "modelwise")
@@ -1242,8 +1175,6 @@ ss_bliss_ensemblewise_synergies_200sim = emba::get_synergy_scores(ss_bliss_ensem
 ss_bliss_modelwise_synergies_200sim = emba::get_synergy_scores(ss_bliss_modelwise_200sim_file, file_type = "modelwise")
 prolif_bliss_ensemblewise_synergies_150sim = emba::get_synergy_scores(prolif_bliss_ensemblewise_150sim_file)
 prolif_bliss_modelwise_synergies_150sim = emba::get_synergy_scores(prolif_bliss_modelwise_150sim_file, file_type = "modelwise")
-random_bliss_ensemblewise_synergies = emba::get_synergy_scores(random_bliss_ensemblewise_file)
-random_bliss_modelwise_synergies = emba::get_synergy_scores(random_bliss_modelwise_file, file_type = "modelwise")
 
 # calculate probability of synergy in the modelwise results
 ss_bliss_modelwise_synergies_50sim = ss_bliss_modelwise_synergies_50sim %>% 
@@ -1256,8 +1187,6 @@ ss_bliss_modelwise_synergies_200sim = ss_bliss_modelwise_synergies_200sim %>%
   mutate(synergy_prob_ss = synergies/(synergies + `non-synergies`))
 prolif_bliss_modelwise_synergies_150sim = prolif_bliss_modelwise_synergies_150sim %>%
   mutate(synergy_prob_prolif = synergies/(synergies + `non-synergies`))
-random_bliss_modelwise_synergies = random_bliss_modelwise_synergies %>%
-  mutate(synergy_prob_random = synergies/(synergies + `non-synergies`))
 
 # tidy data
 pred_ew_bliss = bind_cols(
@@ -1266,7 +1195,6 @@ pred_ew_bliss = bind_cols(
   ss_bliss_ensemblewise_synergies_150sim %>% select(score) %>% rename(ss_score_150sim = score),
   ss_bliss_ensemblewise_synergies_200sim %>% select(score) %>% rename(ss_score_200sim = score),
   prolif_bliss_ensemblewise_synergies_150sim %>% select(score) %>% rename(prolif_score_150sim = score),
-  random_bliss_ensemblewise_synergies %>% select(score) %>% rename(random_score = score), 
   as_tibble_col(observed, column_name = "observed"))
 
 pred_mw_bliss = bind_cols(
@@ -1275,7 +1203,6 @@ pred_mw_bliss = bind_cols(
   ss_bliss_modelwise_synergies_150sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_150sim = synergy_prob_ss),
   ss_bliss_modelwise_synergies_200sim %>% select(synergy_prob_ss) %>% rename(synergy_prob_ss_200sim = synergy_prob_ss),
   prolif_bliss_modelwise_synergies_150sim %>% select(synergy_prob_prolif) %>% rename(synergy_prob_prolif_150sim = synergy_prob_prolif),
-  random_bliss_modelwise_synergies %>% select(synergy_prob_random),
   as_tibble_col(observed, column_name = "observed"))
 ```
 
@@ -1289,14 +1216,12 @@ res_ss_ew_100sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_100sim
 res_ss_ew_150sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_150sim", label_col = "observed")
 res_ss_ew_200sim = get_roc_stats(df = pred_ew_bliss, pred_col = "ss_score_200sim", label_col = "observed")
 res_prolif_ew_150sim = get_roc_stats(df = pred_ew_bliss, pred_col = "prolif_score_150sim", label_col = "observed")
-res_random_ew = get_roc_stats(df = pred_ew_bliss, pred_col = "random_score", label_col = "observed")
 
 res_ss_mw_50sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_50sim", label_col = "observed", direction = ">")
 res_ss_mw_100sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_100sim", label_col = "observed", direction = ">")
 res_ss_mw_150sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_150sim", label_col = "observed", direction = ">")
 res_ss_mw_200sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_ss_200sim", label_col = "observed", direction = ">")
 res_prolif_mw_150sim = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_prolif_150sim", label_col = "observed", direction = ">")
-res_random_mw = get_roc_stats(df = pred_mw_bliss, pred_col = "synergy_prob_random", label_col = "observed", direction = ">")
 
 # Plot ROCs
 plot(x = res_ss_ew_50sim$roc_stats$FPR, y = res_ss_ew_50sim$roc_stats$TPR,
@@ -1310,15 +1235,12 @@ lines(x = res_ss_ew_200sim$roc_stats$FPR, y = res_ss_ew_200sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[5])
-lines(x = res_random_ew$roc_stats$FPR, y = res_random_ew$roc_stats$TPR, 
-  lwd = 3, col = my_palette[6])
-legend('topleft', title = 'AUC', col = my_palette[1:6], pch = 19,
+legend('topleft', title = 'AUC', col = my_palette[1:5], pch = 19,
   legend = c(paste(round(res_ss_ew_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(res_ss_ew_100sim$AUC, digits = 2), "Calibrated (100 sim)"),
     paste(round(res_ss_ew_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
     paste(round(res_ss_ew_200sim$AUC, digits = 2), "Calibrated (200 sim)"),
-    paste(round(res_prolif_ew_150sim$AUC, digits = 2), "Proliferative (150 sim)"),
-    paste(round(res_random_ew$AUC, digits = 2), "Random")), cex = 0.8)
+    paste(round(res_prolif_ew_150sim$AUC, digits = 2), "Random (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -1333,15 +1255,12 @@ lines(x = res_ss_mw_200sim$roc_stats$FPR, y = res_ss_mw_200sim$roc_stats$TPR,
   lwd = 3, col = my_palette[4])
 lines(x = res_prolif_mw_150sim$roc_stats$FPR, y = res_prolif_mw_150sim$roc_stats$TPR,
   lwd = 3, col = my_palette[5])
-lines(x = res_random_mw$roc_stats$FPR, y = res_random_mw$roc_stats$TPR, 
-  lwd = 3, col = my_palette[6])
-legend('bottomright', title = 'AUC', col = my_palette[1:6], pch = 19, cex = 0.9,
+legend('bottomright', title = 'AUC', col = my_palette[1:5], pch = 19, cex = 0.9,
   legend = c(paste(round(res_ss_mw_50sim$AUC, digits = 2), "Calibrated (50 sim)"),
     paste(round(res_ss_mw_100sim$AUC, digits = 2), "Calibrated (100 sim)"),
     paste(round(res_ss_mw_150sim$AUC, digits = 2), "Calibrated (150 sim)"),
     paste(round(res_ss_mw_200sim$AUC, digits = 2), "Calibrated (200 sim)"),
-    paste(round(res_prolif_mw_150sim$AUC, digits = 2), "Proliferative (150 sim)"),
-    paste(round(res_random_mw$AUC, digits = 2), "Random")))
+    paste(round(res_prolif_mw_150sim$AUC, digits = 2), "Random (150 sim)")))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -1365,8 +1284,6 @@ pr_ss_ew_bliss_200sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(ss_score
   weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
 pr_prolif_ew_bliss_150sim = pr.curve(scores.class0 = pred_ew_bliss %>% pull(prolif_score_150sim) %>% (function(x) {-x}), 
   weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
-pr_random_ew_bliss = pr.curve(scores.class0 = pred_ew_bliss %>% pull(random_score) %>% (function(x) {-x}), 
-  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
 
 pr_ss_mw_bliss_50sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_ss_50sim), 
   weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
@@ -1378,8 +1295,6 @@ pr_ss_mw_bliss_200sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_
   weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
 pr_prolif_mw_bliss_150sim = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_prolif_150sim), 
   weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
-pr_random_mw_bliss = pr.curve(scores.class0 = pred_mw_bliss %>% pull(synergy_prob_random), 
-  weights.class0 = pred_mw_bliss %>% pull(observed), curve = TRUE)
 
 plot(pr_ss_ew_bliss_50sim, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
@@ -1387,14 +1302,12 @@ plot(pr_ss_ew_bliss_100sim, add = TRUE, color = my_palette[2])
 plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[3])
 plot(pr_ss_ew_bliss_200sim, add = TRUE, color = my_palette[4])
 plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[5])
-plot(pr_random_ew_bliss, add = TRUE, color = my_palette[6])
 legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
   legend = c(paste(round(pr_ss_ew_bliss_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_ss_ew_bliss_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
     paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
     paste(round(pr_ss_ew_bliss_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
-    paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)"),
-    paste(round(pr_random_ew_bliss$auc.davis.goadrich, digits = 3), "Random")))
+    paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 3), "Random (150 sim)")))
 grid(lwd = 0.5)
 
 plot(pr_ss_mw_bliss_50sim, main = 'PR curve, Model-wise synergies (Bliss)', 
@@ -1403,14 +1316,12 @@ plot(pr_ss_mw_bliss_100sim, add = TRUE, color = my_palette[2])
 plot(pr_ss_mw_bliss_150sim, add = TRUE, color = my_palette[3])
 plot(pr_ss_mw_bliss_200sim, add = TRUE, color = my_palette[4])
 plot(pr_prolif_mw_bliss_150sim, add = TRUE, color = my_palette[5])
-plot(pr_random_mw_bliss, add = TRUE, color = my_palette[6])
-legend('topright', title = 'AUC', col = my_palette[1:6], pch = 19,
+legend('topright', title = 'AUC', col = my_palette[1:5], pch = 19,
   legend = c(paste(round(pr_ss_mw_bliss_50sim$auc.davis.goadrich, digits = 3), "Calibrated (50 sim)"),
     paste(round(pr_ss_mw_bliss_100sim$auc.davis.goadrich, digits = 3), "Calibrated (100 sim)"),
     paste(round(pr_ss_mw_bliss_150sim$auc.davis.goadrich, digits = 3), "Calibrated (150 sim)"),
     paste(round(pr_ss_mw_bliss_200sim$auc.davis.goadrich, digits = 3), "Calibrated (200 sim)"),
-    paste(round(pr_prolif_mw_bliss_150sim$auc.davis.goadrich, digits = 3), "Proliferative (150 sim)"),
-    paste(round(pr_random_mw_bliss$auc.davis.goadrich, digits = 3), "Random")))
+    paste(round(pr_prolif_mw_bliss_150sim$auc.davis.goadrich, digits = 3), "Random (150 sim)")))
 grid(lwd = 0.5)
 ```
 
@@ -1422,7 +1333,7 @@ grid(lwd = 0.5)
 :::{.green-box}
 - To minimize the resulting performance variance, $150$ seems to be a good number of `Gitsbe` simulations to run for the CASCADE 2.0 network.
 - Individual predictor **model-wise** results (when looking at the ROC curves) show good performance.
-- Individual predictor **ensemble-wise** results show that *proliferative* and *calibrated* models have poor performance whereas *random* models perform like proper random models ($AUC\sim0.5$))
+- Individual predictor **ensemble-wise** results show that *random* and *calibrated* models have poor performance.
 - The PR curves show that the **performance of all individual predictors is poor** compared to the baseline.
 :::
 
@@ -1430,32 +1341,18 @@ grid(lwd = 0.5)
 
 Investigate same thing as described in [here](#auc-sensitivity).
 This is very crucial since the PR performance is poor for the individual predictors and the ensemble-wise predictors were really bad in terms of AUC-ROC, but a combined predictor might be able to counter this.
-We will combine the synergy scores from the *random* and *proliferative* simulations with the results from the *calibrated* Gitsbe simulations (number of simulations: $150$).
+We will combine the synergy scores from the *random proliferative* simulations with the results from the *calibrated* Gitsbe simulations (number of simulations: $150$).
 
 
 ```r
 # Ensemble-wise
-betas = seq(from = -10, to = 10, by = 0.1)
-
-random_roc = sapply(betas, function(beta) {
-  pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score_50sim + beta * random_score)
-  res = roc.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
-    weights.class0 = pred_ew_bliss %>% pull(observed))
-  auc_value = res$auc
-})
+betas = seq(from = -5, to = 5, by = 0.1)
 
 prolif_roc = sapply(betas, function(beta) {
   pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score_50sim + beta * prolif_score_150sim)
   res = roc.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
     weights.class0 = pred_ew_bliss %>% pull(observed))
   auc_value = res$auc
-})
-
-random_pr = sapply(betas, function(beta) {
-  pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score_50sim + beta * random_score)
-  res = pr.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
-    weights.class0 = pred_ew_bliss %>% pull(observed))
-  auc_value = res$auc.davis.goadrich
 })
 
 prolif_pr = sapply(betas, function(beta) {
@@ -1465,20 +1362,20 @@ prolif_pr = sapply(betas, function(beta) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_ew = as_tibble(cbind(betas, random_roc, prolif_roc, random_pr, prolif_pr))
+df_ew = as_tibble(cbind(betas, prolif_roc, prolif_pr))
 df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AUC")
 
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
-  legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
-    "ROC: calibrated + β x proliferative", "PR: calibrated + β x random", 
-    "ROC: calibrated + β x random")),
-  title = TeX("AUC sensitivity to $\\beta$ parameter (Bliss, CASCADE 2.0)")) + 
+  legend = "none", facet.by = "type", palette = my_palette, ylim = c(0,0.85),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
+  title = TeX("AUC sensitivity to $\\beta$ parameter")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1.6, color = "red", size = 0.3, linetype = "dashed") + 
-  geom_text(aes(x=-4, label="β = -1.6", y=0.15), colour="black") + 
+  geom_vline(xintercept = -1.6, color = "black", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
+  geom_text(aes(x=-2, y=0.4, label="β = -1.6"), angle=90, colour="black") + 
+  geom_text(aes(x=-0.75, y=0.38, label="β = -1"), angle=90, colour="black") +
   grids()
 ```
 
@@ -1492,28 +1389,12 @@ ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "typ
 # Model-wise
 weights = seq(from = 0, to = 1, by = 0.05)
 
-random_roc_mw = sapply(weights, function(w) {
-  pred_mw_bliss = pred_mw_bliss %>%
-    mutate(weighted_prob = (1 - w) * pred_mw_bliss$synergy_prob_ss_150sim + w * pred_mw_bliss$synergy_prob_random)
-  res = roc.curve(scores.class0 = pred_mw_bliss %>% pull(weighted_prob),
-    weights.class0 = pred_mw_bliss %>% pull(observed))
-  auc_value = res$auc
-})
-
 prolif_roc_mw = sapply(weights, function(w) {
   pred_mw_bliss = pred_mw_bliss %>%
     mutate(weighted_prob = (1 - w) * pred_mw_bliss$synergy_prob_ss_150sim + w * pred_mw_bliss$synergy_prob_prolif_150sim)
   res = roc.curve(scores.class0 = pred_mw_bliss %>% pull(weighted_prob),
     weights.class0 = pred_mw_bliss %>% pull(observed))
   auc_value = res$auc
-})
-
-random_pr_mw = sapply(weights, function(w) {
-  pred_mw_bliss = pred_mw_bliss %>% 
-    mutate(weighted_prob = (1 - w) * pred_mw_bliss$synergy_prob_ss_150sim + w * pred_mw_bliss$synergy_prob_random)
-  res = pr.curve(scores.class0 = pred_mw_bliss %>% pull(weighted_prob), 
-    weights.class0 = pred_mw_bliss %>% pull(observed))
-  auc_value = res$auc.davis.goadrich
 })
 
 prolif_pr_mw = sapply(weights, function(w) {
@@ -1524,15 +1405,13 @@ prolif_pr_mw = sapply(weights, function(w) {
   auc_value = res$auc.davis.goadrich
 })
 
-df_mw = as_tibble(cbind(weights, random_roc_mw, prolif_roc_mw, random_pr_mw, prolif_pr_mw))
+df_mw = as_tibble(cbind(weights, prolif_roc_mw, prolif_pr_mw))
 df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "AUC")
 
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
-    "ROC: (1-w) x prob(ss) + w x prob(prolif)", "PR: (1-w) x prob(ss) + w x prob(random)", 
-    "ROC: (1-w) x prob(ss) + w x prob(random)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (Bliss, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -1545,16 +1424,19 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 
 :::{.green-box}
 - No added benefit when using the *model-wise* approach.
-- The random models do not augment the prediction performance of the calibrated models at all.
-- The proliferative models can be used to normalize against the predictions of the calibrated models and thus bring significant contribution to the calibrated models performance (both ROC-AUC and PR-AUC are increased).
+- The **random proliferative** models can be used to normalize against the predictions of the calibrated models and thus bring significant contribution to the calibrated models performance (both ROC-AUC and PR-AUC are increased).
 - The $\beta_{best}$ that maximizes the ROC and PR AUC for the **combination of proliferative and calibrated models** and is equal to $\beta_{best}=-1.6$.
 For $\beta=-1$ we still see **significant performance improvement**.
 :::
 
 ## Best ROC and PRC {-}
 
-For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$).
-So, the best ROC and PR curves we can get with our simulations when using models with link operator mutations are (we also include the single predictor curves and the combined predictor for $\beta=-1$ which is the [fold-change normalization](#beta-as-norm)):
+For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times proliferative$) using the results from the $150$ simulation runs (the results for $\beta=-1$ were still better than the single predictors).
+Here, we present the ROC and PR curves for the calibrated (normalized to random model) predictions compared to the random proliferative model results.
+
+:::{.note #idsomething}
+Only for the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+:::
 
 
 ```r
@@ -1568,77 +1450,70 @@ roc_best_res2 = get_roc_stats(df = pred_ew_bliss, pred_col = "best_score2", labe
 pr_best_res1 = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score1) %>% (function(x) {-x}), 
     weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 pr_best_res2 = pr.curve(scores.class0 = pred_ew_bliss %>% pull(best_score2) %>% (function(x) {-x}), 
-    weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE)
+    weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
 
 # Plot best ROCs
-plot(x = roc_best_res1$roc_stats$FPR, y = roc_best_res1$roc_stats$TPR,
+plot(x = roc_best_res2$roc_stats$FPR, y = roc_best_res2$roc_stats$TPR,
   type = 'l', lwd = 3, col = my_palette[1], 
-  main = ('ROC curves: Combined vs Single Predictors (Bliss)'),
+  main = ('ROC curve, Ensemble-wise synergies (Bliss)'),
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
-lines(x = roc_best_res2$roc_stats$FPR, y = roc_best_res2$roc_stats$TPR,
-  lwd = 2, col = my_palette[2])
-lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR,
-  lwd = 3, col = my_palette[3])
 lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats$TPR,
-  lwd = 2, col = my_palette[4])
-legend('bottomright', title = 'AUC', col = my_palette[1:4], pch = 19, cex = 0.65,
-  legend = c(paste(round(roc_best_res1$AUC, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'),
-             paste(round(roc_best_res2$AUC, digits = 2), 'Fold-Change Normalization'),
-             paste(round(res_ss_ew_150sim$AUC, digits = 2), 'Calibrated (150 sim)'),
-             paste(round(res_prolif_ew_150sim$AUC, digits = 2), 'Proliferative (150 sim)')))
+  lwd = 3, col = my_palette[2])
+#lines(x = roc_best_res1$roc_stats$FPR, y = roc_best_res1$roc_stats$TPR,
+#  lwd = 2, col = my_palette[3])
+legend('topleft', title = 'AUC', col = my_palette[1:4], pch = 19, cex = 1.5,
+  legend = c(paste(round(roc_best_res2$AUC, digits = 2), 'Calibrated'),
+             paste(round(res_prolif_ew_150sim$AUC, digits = 2), 'Random')))
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
 # Plot best PRCs
-plot(pr_best_res1, main = 'PR curves: Combined vs Single Predictors (Bliss)',
-  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
-plot(pr_best_res2, add = TRUE, color = my_palette[2], lwd = 2)
-plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[3], lwd = 1.5)
-plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[4], lwd = 1.5)
-legend('topright', title = 'AUC', col = my_palette[1:4], pch = 19,
-  legend = c(paste(round(pr_best_res1$auc.davis.goadrich, digits = 2), 'Calibrated + β * Proliferative (β = -1.6)'),
-    paste(round(pr_best_res2$auc.davis.goadrich, digits = 2), 'Fold-Change Normalization'),
-    paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Calibrated (150 sim)'), 
-    paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Proliferative (150 sim)')))
+plot(pr_best_res2, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE, lwd = 3)
+plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[2], lwd = 3)
+#plot(pr_best_res1, add = TRUE, color = my_palette[3], lwd = 2)
+legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19, cex = 1.5,
+  legend = c(paste(round(pr_best_res2$auc.davis.goadrich, digits = 2), 'Calibrated'),
+    paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Random')))
 grid(lwd = 0.5)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/best-beta-cascade2-link-1.png" alt="ROC and PR curves for single and best combined predictor (CASCADE 2.0, Link Operator Mutations)" width="50%" /><img src="index_files/figure-html/best-beta-cascade2-link-2.png" alt="ROC and PR curves for single and best combined predictor (CASCADE 2.0, Link Operator Mutations)" width="50%" />
-<p class="caption">(\#fig:best-beta-cascade2-link)ROC and PR curves for single and best combined predictor (CASCADE 2.0, Link Operator Mutations)</p>
+<img src="index_files/figure-html/best-beta-cascade2-link-1.png" alt="ROC and PR curves for Random and Combined Predictor (CASCADE 2.0, Link Operator Mutations)" width="50%" /><img src="index_files/figure-html/best-beta-cascade2-link-2.png" alt="ROC and PR curves for Random and Combined Predictor (CASCADE 2.0, Link Operator Mutations)" width="50%" />
+<p class="caption">(\#fig:best-beta-cascade2-link)ROC and PR curves for Random and Combined Predictor (CASCADE 2.0, Link Operator Mutations)</p>
 </div>
 
 :::{#comb-pred-best-link-dt}
-The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1.6$) are as follows:
+The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1$, the **Calibrated** in the above plot) are as follows:
 :::
 
 ```r
-DT::datatable(data = roc_best_res1$roc_stats, options = 
+DT::datatable(data = roc_best_res2$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 20, 40), searching = FALSE)) %>% 
   formatRound(c(1,6,7,8,9), digits = 3)
 ```
 
 <div class="figure" style="text-align: center">
 <!--html_preserve--><div id="htmlwidget-f888dc62471906a988fd" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f888dc62471906a988fd">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143"],[null,-0.133403995491167,-0.120689045993601,-0.0739957289831027,-0.0690111932025076,-0.0519083556350855,-0.0421399442487546,-0.0214766814404288,-0.0202656782781292,-0.0186294727350858,-0.0118248005229118,-0.0102999049940738,-0.00917702245565431,-0.00868252922720534,-0.00820151622272587,-0.00699576719576733,-0.00677906249313502,-0.00674717364722066,-0.00654714646212151,-0.0064590758807839,-0.00632118732963369,-0.00621989626527737,-0.00610518102372051,-0.0060784125640861,-0.00531160515495774,-0.00487540769934354,-0.00466289456637512,-0.00368409638579037,-0.00363975234233378,-0.0035660127641669,-0.00258872597085154,-0.00245037661925169,-0.00235131961711605,-0.00218307666528912,-0.00201213050315865,-0.00194156630153362,-0.0018005199273726,-0.00173033010672619,-0.00158563984124602,-0.00128411751485653,-0.000698101392104068,-0.000641041636013262,-0.000571389510315878,-0.000569394199392038,-0.000518832281685744,-0.000308837198041934,-0.000308627025362585,-0.000308020671131404,-0.00029826001260842,-0.000297631186111591,-0.000280619221531931,-0.000280108952469194,-0.000277837384152458,-0.000256727308539162,-0.000244704126283013,-0.000240797826323069,-0.000239096677294803,-0.000230278362026448,-0.000226301476301538,-0.000225432098765399,-0.000225270849080328,-0.000225234117944862,-0.000223456790123411,-0.000220732599063389,-0.000216588966589026,-0.00021537515291028,-0.000211290582361112,-0.000210683698178294,-0.000209470544369861,-0.00020211640211647,-0.000201796365654161,-0.000190394128439064,-0.000188395061728475,-0.000176140085663956,-0.000173348519362282,-0.000151515151514881,-8.45742209926838e-05,-8.16312743561424e-05,-6.23790413306624e-05,-5.22373251841124e-05,-5.01518640039001e-05,-4.8446440647121e-05,-4.64993327814914e-05,-3.82716049386112e-05,-9.47804094719729e-06,1.11360402274439e-05,2.0892619670909e-05,7.12983621287576e-05,7.25054235256369e-05,0.000138453539784721,0.000212579120762646,0.00029413563302052,0.000384387333113123,0.00044481047038607,0.000465905080682782,0.000719990707171925,0.000796109407998946,0.00103355445033579,0.00127505899661389,0.0012798614315072,0.00128331528233576,0.00129071353562809,0.0017192886744539,0.00175550916009799,0.00176369161480578,0.00177936213031671,0.0019258573613063,0.00195528192824073,0.00195727327879984,0.00284479080051703,0.00285581465878975,0.00303338460717892,0.00342977127999728,0.00346822631408552,0.00361985084387013,0.00374053051651244,0.00383279037184765,0.00396031820475393,0.00409771907113206,0.00455590409397981,0.00663753305400052,0.00706314201744751,0.00763727394385707,0.00798209432009012,0.00899701325578965,0.0090183891798209,0.0140042720137196,0.0141132547674186,0.0162390389189631,0.0165666744151093,0.016877788464689,0.0174851698373661,0.0209551759913038,0.0242368153107698,0.0295578659680418,0.0338462205922934,0.0366767873406173,0.0482137626671916,0.0549891123744886,0.0713087141434756,0.0869773462392702,0.111539054435079,0.164098603980836],[0,0,0,1,2,2,2,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],[6,6,6,5,4,4,4,3,3,3,3,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[147,146,145,145,145,144,143,143,142,141,140,140,139,138,137,136,135,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,104,103,102,101,100,99,98,97,95,94,93,92,90,88,86,85,84,83,82,80,78,76,74,72,70,69,68,67,66,65,64,63,61,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],[0,1,2,2,2,3,4,4,5,6,7,7,8,9,10,11,12,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,52,53,54,55,57,59,61,62,63,64,65,67,69,71,73,75,77,78,79,80,81,82,83,84,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147],[0,0.00680272108843537,0.0136054421768707,0.0136054421768707,0.0136054421768707,0.0204081632653061,0.0272108843537415,0.0272108843537415,0.0340136054421769,0.0408163265306122,0.0476190476190476,0.0476190476190476,0.054421768707483,0.0612244897959184,0.0680272108843537,0.0748299319727891,0.0816326530612245,0.0816326530612245,0.0884353741496599,0.0952380952380952,0.102040816326531,0.108843537414966,0.115646258503401,0.122448979591837,0.129251700680272,0.136054421768707,0.142857142857143,0.149659863945578,0.156462585034014,0.163265306122449,0.170068027210884,0.17687074829932,0.183673469387755,0.19047619047619,0.197278911564626,0.204081632653061,0.210884353741497,0.217687074829932,0.224489795918367,0.231292517006803,0.238095238095238,0.244897959183673,0.251700680272109,0.258503401360544,0.26530612244898,0.272108843537415,0.27891156462585,0.285714285714286,0.292517006802721,0.299319727891156,0.306122448979592,0.312925170068027,0.319727891156463,0.326530612244898,0.333333333333333,0.340136054421769,0.353741496598639,0.360544217687075,0.36734693877551,0.374149659863946,0.387755102040816,0.401360544217687,0.414965986394558,0.421768707482993,0.428571428571429,0.435374149659864,0.442176870748299,0.45578231292517,0.469387755102041,0.482993197278912,0.496598639455782,0.510204081632653,0.523809523809524,0.530612244897959,0.537414965986395,0.54421768707483,0.551020408163265,0.557823129251701,0.564625850340136,0.571428571428571,0.585034013605442,0.591836734693878,0.598639455782313,0.605442176870748,0.612244897959184,0.619047619047619,0.625850340136054,0.63265306122449,0.639455782312925,0.646258503401361,0.653061224489796,0.659863945578231,0.666666666666667,0.673469387755102,0.680272108843537,0.687074829931973,0.693877551020408,0.700680272108844,0.707482993197279,0.714285714285714,0.72108843537415,0.727891156462585,0.73469387755102,0.73469387755102,0.741496598639456,0.748299319727891,0.755102040816326,0.761904761904762,0.768707482993197,0.775510204081633,0.782312925170068,0.789115646258503,0.795918367346939,0.802721088435374,0.80952380952381,0.816326530612245,0.82312925170068,0.829931972789116,0.836734693877551,0.843537414965986,0.850340136054422,0.857142857142857,0.863945578231292,0.870748299319728,0.877551020408163,0.884353741496599,0.891156462585034,0.897959183673469,0.904761904761905,0.91156462585034,0.918367346938776,0.925170068027211,0.931972789115646,0.938775510204082,0.945578231292517,0.952380952380952,0.959183673469388,0.965986394557823,0.972789115646258,0.979591836734694,0.986394557823129,0.993197278911565,1],[0,0,0,0.166666666666667,0.333333333333333,0.333333333333333,0.333333333333333,0.5,0.5,0.5,0.5,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,-0.00680272108843537,-0.0136054421768707,0.153061224489796,0.319727891156463,0.312925170068027,0.306122448979592,0.472789115646259,0.465986394557823,0.459183673469388,0.452380952380952,0.619047619047619,0.612244897959184,0.605442176870748,0.598639455782313,0.591836734693878,0.585034013605442,0.751700680272109,0.744897959183674,0.738095238095238,0.731292517006803,0.724489795918367,0.717687074829932,0.710884353741497,0.704081632653061,0.697278911564626,0.69047619047619,0.683673469387755,0.67687074829932,0.670068027210884,0.663265306122449,0.656462585034014,0.649659863945578,0.642857142857143,0.636054421768708,0.629251700680272,0.622448979591837,0.615646258503401,0.608843537414966,0.602040816326531,0.595238095238095,0.58843537414966,0.581632653061225,0.574829931972789,0.568027210884354,0.561224489795918,0.554421768707483,0.547619047619048,0.540816326530612,0.534013605442177,0.527210884353742,0.520408163265306,0.513605442176871,0.506802721088435,0.5,0.493197278911565,0.479591836734694,0.472789115646259,0.465986394557823,0.459183673469388,0.445578231292517,0.431972789115646,0.418367346938776,0.41156462585034,0.404761904761905,0.397959183673469,0.391156462585034,0.377551020408163,0.363945578231293,0.350340136054422,0.336734693877551,0.32312925170068,0.30952380952381,0.302721088435374,0.295918367346939,0.289115646258503,0.282312925170068,0.275510204081633,0.268707482993197,0.261904761904762,0.248299319727891,0.241496598639456,0.23469387755102,0.227891156462585,0.22108843537415,0.214285714285714,0.207482993197279,0.200680272108844,0.193877551020408,0.187074829931973,0.180272108843538,0.173469387755102,0.166666666666667,0.159863945578231,0.153061224489796,0.146258503401361,0.139455782312925,0.13265306122449,0.125850340136054,0.119047619047619,0.112244897959184,0.105442176870748,0.0986394557823129,0.26530612244898,0.258503401360544,0.251700680272109,0.244897959183674,0.238095238095238,0.231292517006803,0.224489795918367,0.217687074829932,0.210884353741497,0.204081632653061,0.197278911564626,0.19047619047619,0.183673469387755,0.17687074829932,0.170068027210884,0.163265306122449,0.156462585034014,0.149659863945578,0.142857142857143,0.136054421768708,0.129251700680272,0.122448979591837,0.115646258503401,0.108843537414966,0.102040816326531,0.0952380952380952,0.0884353741496599,0.0816326530612245,0.0748299319727891,0.0680272108843537,0.0612244897959183,0.0544217687074829,0.0476190476190477,0.0408163265306123,0.0340136054421769,0.0272108843537415,0.0204081632653061,0.0136054421768708,0.00680272108843538,0],[1,1.00004627701421,1.00018510805683,0.694629552501273,0.444629552501273,0.444860937572308,0.445184876671757,0.250740432227313,0.251156925355176,0.251665972511454,0.252267573696145,0.113378684807256,0.114072840020362,0.114859549261882,0.115738812531815,0.116710629830163,0.117775001156925,0.034441667823592,0.0355985931787681,0.0368480725623583,0.0381901059743625,0.0396246934147809,0.0411518348836133,0.0427715303808598,0.0444837799065204,0.0462885834605951,0.0481859410430839,0.0501758526539868,0.0522583182933037,0.0544333379610347,0.0567009116571799,0.0590610393817391,0.0615137211347124,0.0640589569160998,0.0666967467259012,0.0694270905641168,0.0722499884307464,0.0751654403257902,0.078173446249248,0.0812740062011199,0.0844671201814059,0.087752788190106,0.0911310102272201,0.0946017862927484,0.0981651163866907,0.101821000509047,0.105569438659818,0.109410430839002,0.113343977046601,0.117370077282614,0.121488731547041,0.125699939839882,0.130003702161137,0.134400018510806,0.138888888888889,0.143470313295386,0.152910824193623,0.157769910685363,0.162721551205516,0.167765745754084,0.178131796936462,0.188868064232496,0.199974547642186,0.205666620389652,0.211451247165533,0.217328427969827,0.223298162802536,0.235515294553195,0.248102642417511,0.261060206395483,0.274387986487112,0.288085982692397,0.302154195011338,0.30932713221343,0.316592623443935,0.323950668702855,0.331401267990189,0.338944421305937,0.346580128650099,0.354308390022676,0.37004257485307,0.378048498310889,0.386146975797122,0.394338007311768,0.402621592854829,0.410997732426304,0.419466426026193,0.428027673654496,0.436681475311213,0.445427830996344,0.454266740709889,0.463198204451849,0.472222222222222,0.48133879402101,0.490547919848211,0.499849599703827,0.509243833587857,0.518730621500301,0.528309963441159,0.537981859410431,0.547746309408117,0.557603313434217,0.567552871488732,0.539775093710954,0.549817205793882,0.559951871905225,0.570179092044981,0.580498866213152,0.590911194409737,0.601416076634736,0.612013512888148,0.622703503169975,0.633486047480217,0.644361145818872,0.655328798185941,0.666389004581424,0.677541765005322,0.688787079457633,0.700124947938359,0.711555370447499,0.723078346985052,0.73469387755102,0.746401962145402,0.758202600768198,0.770095793419408,0.782081540099033,0.794159840807071,0.806330695543524,0.81859410430839,0.830950067101671,0.843398583923365,0.855939654773474,0.868573279651997,0.881299458558934,0.894118191494285,0.90702947845805,0.920033319450229,0.933129714470822,0.94631866351983,0.959600166597251,0.972974223703087,0.986440834837336,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>threshold<\/th>\n      <th>TP<\/th>\n      <th>FN<\/th>\n      <th>TN<\/th>\n      <th>FP<\/th>\n      <th>FPR<\/th>\n      <th>TPR<\/th>\n      <th>dist_from_chance<\/th>\n      <th>dist_from_0_1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,20,40],"searching":false,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":6,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":7,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":8,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":9,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render"],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-f888dc62471906a988fd">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143"],[null,-0.068949991876718,-0.0573031929504698,-0.0540320767370723,-0.051161731775937,-0.0347096709542208,-0.0332826901960117,-0.0220874729210377,-0.0201082156790868,-0.0134643543774613,-0.0101431322571641,-0.00860748858315574,-0.0075618655771299,-0.00415141869931979,-0.00400096306519326,-0.0038075359059021,-0.00362531682911071,-0.00329735449735458,-0.00283726591760314,-0.00279259378405194,-0.00273434621282587,-0.00247443067546405,-0.00237036125700618,-0.00231684624510442,-0.00227655414885009,-0.00205055877629323,-0.00180129647875638,-0.00178605534742848,-0.00154453965762003,-0.00147155039211921,-0.00132773502991035,-0.000909251675353606,-0.000813809069922788,-0.000409079763060483,-0.000233663777620574,-0.000224419721937874,0.000322659201496767,0.00049737981892517,0.000509280253633948,0.000610652683703972,0.000684252551219178,0.000700469338476117,0.000775150371138844,0.000788598691261799,0.000851485719279621,0.000873154623154626,0.000888714889385911,0.000915761322786812,0.000919753086419672,0.000923379624856446,0.000927412446459996,0.000929157175398543,0.000977926756132508,0.00101358024691334,0.00101498490178908,0.00104171767820338,0.00105125023069919,0.00105237326066354,0.00105275223205803,0.00105493172694193,0.00105981384201359,0.00107019705622191,0.00107161678641987,0.00108202380351408,0.00108470047092268,0.00109232507258827,0.00109476651006324,0.00110070079464664,0.00110134117524863,0.0011038267288267,0.00110493827160496,0.00110503905265813,0.0011050620096178,0.0011061728395062,0.00110719716434504,0.00111122386276441,0.00111347772739823,0.00111377671935764,0.00111491424310217,0.00111534391534385,0.00111855319739207,0.00111919993468601,0.00115056818181836,0.0011696677209786,0.00117121450931812,0.00117319319681775,0.00120087145447623,0.00121318500509326,0.00123574289107464,0.00128698255637016,0.00137608713498105,0.00137958866164756,0.00138311115269407,0.00138588682469309,0.00142550143730447,0.00147893580432135,0.00148550723471086,0.00150595224771111,0.00167770560041258,0.0017428335315145,0.00201836469627881,0.00203239079185924,0.00208293678427018,0.00219920328422152,0.00223700296987506,0.00234757241076877,0.00238117082550848,0.00239443582529397,0.00239568041939342,0.00245600821423941,0.00249263128919919,0.00252183096178815,0.00254612096512274,0.00284301135062126,0.00310911977919504,0.00314102041824649,0.0031769131174384,0.00325523730706068,0.00335892354845191,0.00335957801768794,0.00348962223768057,0.00349201075343786,0.00372757984075411,0.00376137168094148,0.0037994517442701,0.0040921159846633,0.00432318823859379,0.00841093456241571,0.00843512720733408,0.00949064476474837,0.00961879828198209,0.00977768200971718,0.0108274874294566,0.0110912847266457,0.0118469237065569,0.0142384471467639,0.0173547695010796,0.0238486865323302,0.0310127404318757,0.0351279174562775,0.0590061495821371,0.0690202769729064,0.0801928133788918],[0,0,0,0,0,1,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],[6,6,6,6,6,5,4,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[147,146,145,144,143,143,143,143,142,141,140,139,138,137,136,136,135,134,133,132,131,130,129,128,127,126,125,124,123,122,121,120,119,118,117,116,115,114,113,112,111,110,109,108,107,106,105,103,101,100,99,98,96,95,94,93,91,90,89,88,87,86,85,84,83,82,81,80,79,78,77,75,73,71,70,69,67,66,64,62,60,59,58,57,56,55,54,53,52,51,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,22,21,20,19,18,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],[0,1,2,3,4,4,4,4,5,6,7,8,9,10,11,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,46,47,48,49,51,52,53,54,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,72,74,76,77,78,80,81,83,85,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,125,126,127,128,129,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147],[0,0.00680272108843537,0.0136054421768707,0.0204081632653061,0.0272108843537415,0.0272108843537415,0.0272108843537415,0.0272108843537415,0.0340136054421769,0.0408163265306122,0.0476190476190476,0.054421768707483,0.0612244897959184,0.0680272108843537,0.0748299319727891,0.0748299319727891,0.0816326530612245,0.0884353741496599,0.0952380952380952,0.102040816326531,0.108843537414966,0.115646258503401,0.122448979591837,0.129251700680272,0.136054421768707,0.142857142857143,0.149659863945578,0.156462585034014,0.163265306122449,0.170068027210884,0.17687074829932,0.183673469387755,0.19047619047619,0.197278911564626,0.204081632653061,0.210884353741497,0.217687074829932,0.224489795918367,0.231292517006803,0.238095238095238,0.244897959183673,0.251700680272109,0.258503401360544,0.26530612244898,0.272108843537415,0.27891156462585,0.285714285714286,0.299319727891156,0.312925170068027,0.319727891156463,0.326530612244898,0.333333333333333,0.346938775510204,0.353741496598639,0.360544217687075,0.36734693877551,0.380952380952381,0.387755102040816,0.394557823129252,0.401360544217687,0.408163265306122,0.414965986394558,0.421768707482993,0.428571428571429,0.435374149659864,0.442176870748299,0.448979591836735,0.45578231292517,0.462585034013605,0.469387755102041,0.476190476190476,0.489795918367347,0.503401360544218,0.517006802721088,0.523809523809524,0.530612244897959,0.54421768707483,0.551020408163265,0.564625850340136,0.578231292517007,0.591836734693878,0.598639455782313,0.605442176870748,0.612244897959184,0.619047619047619,0.625850340136054,0.63265306122449,0.639455782312925,0.646258503401361,0.653061224489796,0.659863945578231,0.666666666666667,0.673469387755102,0.680272108843537,0.687074829931973,0.693877551020408,0.700680272108844,0.707482993197279,0.714285714285714,0.72108843537415,0.727891156462585,0.73469387755102,0.741496598639456,0.748299319727891,0.755102040816326,0.761904761904762,0.768707482993197,0.775510204081633,0.782312925170068,0.789115646258503,0.795918367346939,0.802721088435374,0.80952380952381,0.816326530612245,0.82312925170068,0.829931972789116,0.836734693877551,0.843537414965986,0.850340136054422,0.850340136054422,0.857142857142857,0.863945578231292,0.870748299319728,0.877551020408163,0.877551020408163,0.884353741496599,0.891156462585034,0.897959183673469,0.904761904761905,0.91156462585034,0.918367346938776,0.925170068027211,0.931972789115646,0.938775510204082,0.945578231292517,0.952380952380952,0.959183673469388,0.965986394557823,0.972789115646258,0.979591836734694,0.986394557823129,0.993197278911565,1],[0,0,0,0,0,0.166666666666667,0.333333333333333,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.666666666666667,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,0.833333333333333,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0,-0.00680272108843537,-0.0136054421768707,-0.0204081632653061,-0.0272108843537415,0.139455782312925,0.306122448979592,0.472789115646259,0.465986394557823,0.459183673469388,0.452380952380952,0.445578231292517,0.438775510204082,0.431972789115646,0.425170068027211,0.591836734693878,0.585034013605442,0.578231292517007,0.571428571428571,0.564625850340136,0.557823129251701,0.551020408163265,0.54421768707483,0.537414965986394,0.530612244897959,0.523809523809524,0.517006802721088,0.510204081632653,0.503401360544218,0.496598639455782,0.489795918367347,0.482993197278912,0.476190476190476,0.469387755102041,0.462585034013605,0.45578231292517,0.448979591836735,0.442176870748299,0.435374149659864,0.428571428571429,0.421768707482993,0.414965986394558,0.408163265306122,0.401360544217687,0.394557823129252,0.387755102040816,0.380952380952381,0.36734693877551,0.353741496598639,0.346938775510204,0.340136054421769,0.333333333333333,0.319727891156463,0.312925170068027,0.306122448979592,0.299319727891156,0.285714285714286,0.27891156462585,0.272108843537415,0.26530612244898,0.258503401360544,0.251700680272109,0.244897959183673,0.238095238095238,0.231292517006803,0.224489795918367,0.217687074829932,0.210884353741497,0.204081632653061,0.197278911564626,0.19047619047619,0.17687074829932,0.163265306122449,0.149659863945578,0.142857142857143,0.136054421768707,0.122448979591837,0.115646258503401,0.102040816326531,0.0884353741496599,0.0748299319727891,0.0680272108843537,0.0612244897959183,0.0544217687074829,0.0476190476190476,0.0408163265306122,0.0340136054421768,0.0272108843537414,0.020408163265306,0.0136054421768708,0.00680272108843538,0,-0.00680272108843538,-0.0136054421768708,-0.0204081632653061,-0.0272108843537415,-0.0340136054421769,-0.0408163265306123,-0.0476190476190477,-0.0544217687074831,-0.0612244897959184,-0.0680272108843538,-0.0748299319727892,-0.0816326530612246,-0.0884353741496599,-0.0952380952380952,-0.102040816326531,-0.108843537414966,-0.115646258503401,-0.122448979591837,-0.129251700680272,-0.136054421768708,-0.142857142857143,-0.149659863945578,-0.156462585034014,-0.163265306122449,-0.170068027210884,-0.17687074829932,-0.183673469387755,-0.0170068027210883,-0.0238095238095237,-0.0306122448979591,-0.0374149659863945,-0.0442176870748299,0.122448979591837,0.115646258503401,0.108843537414966,0.102040816326531,0.0952380952380952,0.0884353741496599,0.0816326530612245,0.0748299319727891,0.0680272108843537,0.0612244897959183,0.0544217687074829,0.0476190476190477,0.0408163265306123,0.0340136054421769,0.0272108843537415,0.0204081632653061,0.0136054421768708,0.00680272108843538,0],[1,1.00004627701421,1.00018510805683,1.00041649312786,1.00074043222731,0.695184876671757,0.445184876671757,0.250740432227313,0.251156925355176,0.251665972511454,0.252267573696145,0.252961728909251,0.253748438150771,0.254627701420704,0.255599518719052,0.116710629830163,0.117775001156925,0.118931926512101,0.120181405895692,0.121523439307696,0.122958026748114,0.124485168216947,0.126104863714193,0.127817113239854,0.129621916793928,0.131519274376417,0.13350918598732,0.135591651626637,0.137766671294368,0.140034244990513,0.142394372715072,0.144847054468046,0.147392290249433,0.150030080059235,0.15276042389745,0.15558332176408,0.158498773659124,0.161506779582581,0.164607339534453,0.167800453514739,0.171086121523439,0.174464343560554,0.177935119626082,0.181498449720024,0.185154333842381,0.188902771993151,0.192743764172336,0.200703410615947,0.209033273173215,0.21333703549447,0.217733351844139,0.222222222222222,0.231477625063631,0.236244157526956,0.241103244018696,0.24605488453885,0.256235827664399,0.261465130269795,0.266786986903605,0.272201397565829,0.277708362256467,0.28330788097552,0.288999953722986,0.294784580498866,0.300661761303161,0.306631496135869,0.312693784996992,0.318848627886529,0.32509602480448,0.331435975750845,0.337868480725624,0.351011152760424,0.364524040908881,0.378407145170994,0.385487528344671,0.392660465546763,0.407284002036189,0.414734601323523,0.429913461983433,0.445462538756999,0.461381831644222,0.469480309130455,0.477671340645102,0.485954926188162,0.494331065759637,0.502799759359526,0.511361006987829,0.520014808644546,0.528761164329678,0.537600074043223,0.546531537785182,0.555555555555556,0.564672127354343,0.573881253181545,0.58318293303716,0.59257716692119,0.602063954833634,0.611643296774492,0.621315192743764,0.63107964274145,0.640936646767551,0.650886204822065,0.660928316904993,0.671062983016336,0.681290203156092,0.691609977324263,0.702022305520848,0.712527187745847,0.72312462399926,0.733814614281087,0.744597158591328,0.755472256929983,0.766439909297052,0.777500115692536,0.788652876116433,0.799898190568745,0.81123605904947,0.82266648155861,0.834189458096164,0.75085612476283,0.762471655328798,0.77417973992318,0.785980378545976,0.797873571197186,0.770095793419408,0.782081540099033,0.794159840807071,0.806330695543524,0.81859410430839,0.830950067101671,0.843398583923365,0.855939654773474,0.868573279651997,0.881299458558934,0.894118191494285,0.90702947845805,0.920033319450229,0.933129714470822,0.94631866351983,0.959600166597251,0.972974223703087,0.986440834837336,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>threshold<\/th>\n      <th>TP<\/th>\n      <th>FN<\/th>\n      <th>TN<\/th>\n      <th>FP<\/th>\n      <th>FPR<\/th>\n      <th>TPR<\/th>\n      <th>dist_from_chance<\/th>\n      <th>dist_from_0_1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,20,40],"searching":false,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":6,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":7,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":8,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":9,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render"],"jsHooks":[]}</script><!--/html_preserve-->
 <p class="caption">(\#fig:comb-pred-best-link-dt)ROC data for Best Combined Predictor (CASCADE 2.0, Link Operator Mutations, Bliss synergy method)</p>
 </div>
 
 ## Correlation {-}
 
 We test for correlation between some of the results shown in the ROC curves.
-The results tested are the *ensemble-wise* vs *model-wise*, *random* models vs *calibrated (ss)* models and *HSA* vs *Bliss* synergy assessment (the calibrated and proliferative models are from the $150$ simulation results).
+The results tested are the *ensemble-wise* vs *model-wise*, *random* models vs *calibrated* models and *HSA* vs *Bliss* synergy assessment (the calibrated and proliferative models are from the $150$ simulation results).
 *P-values* are represented at 3 significant levels: $0.05, 0.01, 0.001$ (\*, \*\*, \*\*\*) and the correlation coefficient is calculated using Kendall's *tau* statistic.
 
 
 ```r
 synergy_scores = bind_cols(
-  pred_ew_hsa %>% select(ss_score_150sim, prolif_score_150sim, random_score) %>% rename(ss_ew_hsa = ss_score_150sim, prolif_ew_hsa = prolif_score_150sim, random_ew_hsa = random_score),
-  pred_ew_bliss %>% select(ss_score_150sim, prolif_score_150sim, random_score) %>% rename(ss_ew_bliss = ss_score_150sim, prolif_ew_bliss = prolif_score_150sim, random_ew_bliss = random_score),
-  pred_mw_hsa %>% select(synergy_prob_ss_150sim, synergy_prob_prolif_150sim, synergy_prob_random) %>% 
-    rename(ss_mw_hsa = synergy_prob_ss_150sim, prolif_mw_hsa = synergy_prob_prolif_150sim, random_mw_hsa = synergy_prob_random),
-  pred_mw_bliss %>% select(synergy_prob_ss_150sim, synergy_prob_prolif_150sim, synergy_prob_random) %>% 
-    rename(ss_mw_bliss = synergy_prob_ss_150sim, prolif_mw_bliss = synergy_prob_prolif_150sim, random_mw_bliss = synergy_prob_random)
+  pred_ew_hsa %>% select(ss_score_150sim, prolif_score_150sim) %>% rename(cal_ew_hsa = ss_score_150sim, random_ew_hsa = prolif_score_150sim),
+  pred_ew_bliss %>% select(ss_score_150sim, prolif_score_150sim) %>% rename(cal_ew_bliss = ss_score_150sim, random_ew_bliss = prolif_score_150sim),
+  pred_mw_hsa %>% select(synergy_prob_ss_150sim, synergy_prob_prolif_150sim) %>% 
+    rename(cal_mw_hsa = synergy_prob_ss_150sim, random_mw_hsa = synergy_prob_prolif_150sim),
+  pred_mw_bliss %>% select(synergy_prob_ss_150sim, synergy_prob_prolif_150sim) %>% 
+    rename(cal_mw_bliss = synergy_prob_ss_150sim, random_mw_bliss = synergy_prob_prolif_150sim)
   )
 
 M = cor(synergy_scores, method = "kendall")
@@ -1656,7 +1531,6 @@ corrplot(corr = M, type = "upper", p.mat = res$p, sig.level = c(.001, .01, .05),
 - **Bliss ensemble-wise** results don't correlate at all with the **model-wise** results (*topright* part of the correlation plot).
 The **HSA ensemble-wise** results do so (at some degree).
 - Between the **ensemble-wise** results there is no strong correlation (*topleft*) while between the **model-wise** (*bottomright*) there is strong correlation.
-- **Ensemble-wise calibrated** results seem to correlate more with the **proliferative** than with the **random results** (*topleft*).
 :::
 
 ## Fitness Evolution {-}
@@ -1943,12 +1817,11 @@ df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AU
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
-   "ROC: calibrated + β x proliferative")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (HSA, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-1.8, label="β = -1", y=0.14), colour="black", angle=90) +
   grids()
 ```
@@ -1985,8 +1858,7 @@ df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
-    "ROC: (1-w) x prob(ss) + w x prob(prolif)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (HSA, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -2156,12 +2028,11 @@ df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AU
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
-    "ROC: calibrated + β x proliferative")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (Bliss, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-2, label="β = -1", y=0.15), colour="black", angle = 90) + 
   grids()
 ```
@@ -2198,8 +2069,7 @@ df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
-    "ROC: (1-w) x prob(ss) + w x prob(prolif)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (Bliss, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -2505,12 +2375,11 @@ df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AU
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
-   "ROC: calibrated + β x proliferative")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (HSA, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-1.8, label="β = -1", y=0.3), colour="black", angle=90) +
   grids()
 ```
@@ -2547,8 +2416,7 @@ df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
-    "ROC: (1-w) x prob(ss) + w x prob(prolif)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (HSA, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
@@ -2718,12 +2586,11 @@ df_ew = df_ew %>% tidyr::pivot_longer(-betas, names_to = "type", values_to = "AU
 ggline(data = df_ew, x = "betas", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("$\\beta$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: calibrated + β x proliferative", 
-    "ROC: calibrated + β x proliferative")),
+  panel.labs = list(type = c("Precision-Recall", "ROC")),
   title = TeX("AUC sensitivity to $\\beta$ parameter (Bliss, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_vline(xintercept = 0) +
-  geom_vline(xintercept = -1, color = "red", size = 0.3, linetype = "dashed") + 
+  geom_vline(xintercept = -1, color = "black", size = 0.3, linetype = "dashed") + 
   geom_text(aes(x=-2, label="β = -1", y=0.15), colour="black", angle = 90) + 
   grids()
 ```
@@ -2760,8 +2627,7 @@ df_mw = df_mw %>% tidyr::pivot_longer(-weights, names_to = "type", values_to = "
 ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "type",
   plot_type = "l", xlab = TeX("weight $w$"), ylab = "AUC (Area Under Curve)", 
   legend = "none", facet.by = "type", palette = my_palette,
-  panel.labs = list(type = c("PR: (1-w) x prob(ss) + w x prob(prolif)", 
-    "ROC: (1-w) x prob(ss) + w x prob(prolif)")), title.position = "center",
+  panel.labs = list(type = c("Precision-Recall", "ROC")), title.position = "center",
   title = TeX("AUC sensitivity to weighted average score (Bliss, CASCADE 2.0)")) + 
   theme(plot.title = element_text(hjust = 0.5)) +
   grids()
