@@ -910,6 +910,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#heatmaps-stable-state-and-parameterization"><i class="fa fa-check"></i>Heatmaps: Stable State and Parameterization</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -948,7 +949,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#get-output-files"><i class="fa fa-check"></i>Get output files</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#random-model-results"><i class="fa fa-check"></i>Random model results</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -998,32 +998,6 @@ The <code>results</code> directory has 3 sub-directories:</p>
 <div class="note">
 <p>Because the simulation results using <strong>only link operator mutations</strong> were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only">link-only-mutations results</a> to 2 directories (<code>hsa</code> and <code>bliss</code>) having the results from the different synergy assessment methods (check Drabme’s <code>synergy_method</code> <a href="#https://druglogics.github.io/druglogics-doc/drabme-config.html">configuration option</a>).</p>
 </div>
-</div>
-<div id="random-model-results" class="section level2 unnumbered" number="">
-<h2>Random model results</h2>
-<p>Use the <code>druglogics-synergy</code> module, version <code>1.2.0</code>: <code>git checkout v1.2.0</code> and the <a href="https://github.com/druglogics/abmlog">abmlog</a> module, version <code>1.5.0</code>: <code>git checkout v1.5.0</code>.</p>
-<p>The CASCADE 1.0 and 2.0 <code>.sif</code> network files can be found at the directories <code>ags_cascade_1.0</code> and <code>ags_cascade_2.0</code> on the
-<code>druglogics-synergy</code> repository.
-Copy these two network files inside the <code>test</code> dir of the <code>abmlog</code> repository root.</p>
-<p>Run the <code>abmlog</code> for the CASCADE 2.0 topology:</p>
-<pre><code>java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000</code></pre>
-<p>Next, prune the resulting models to only the ones that have 1 stable state (should be <span class="math inline">\(1292\)</span>) using the simple bash script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/process_models.sh">process_models.sh</a> inside the generated <code>models</code> directory from <code>abmlog</code>.</p>
-<pre><code>cd pathTo/druglogics-synergy/ags_cascade_2.0</code></pre>
-<ul>
-<li>Move the <code>abmlog</code>-generated <code>models</code> dir inside the <code>ags_cascade_2.0</code> dir</li>
-<li>Use <code>attractor_tool</code>: <code>biolqm_stable_states</code> in the <code>config</code> file</li>
-<li>Use <code>synergy_method: hsa</code> or <code>synergy_method: bliss</code> in the <code>config</code> file (run twice below command, changing the <code>project</code> to <code>cascade_2.0_random_bliss</code>)</li>
-</ul>
-<p>Run Drabme via <code>druglogics-synergy</code>:</p>
-<pre><code>cd ags_cascade_2.0/
-java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs</code></pre>
-<p>The above procedure is the same for CASCADE 1.0. Changes:</p>
-<ul>
-<li>The number of models after pruning to those that have only 1 stable state should be <span class="math inline">\(950\)</span></li>
-<li>The <code>abmlog</code>-generated <code>models</code> directory should be put inside the <code>ags_cascade_1.0</code> of <code>druglogics-synergy</code></li>
-<li>The network file is now for the CASCADE 1.0 (<code>network.sif</code> inside the <code>ags_cascade_1.0</code>)</li>
-<li>The Drabme command should be run with <code>--project=cascade_1.0_random_hsa</code> and <code>--project=cascade_1.0_random_bliss</code> respectively</li>
-</ul>
 </div>
 </div>
             </section>

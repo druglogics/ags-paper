@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 31 July, 2020"
+date: "Last updated: 03 August, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -72,6 +72,8 @@ library(equatiomatic)
 library(glmnet)
 library(knitr)
 library(MAMSE)
+library(circlize)
+library(ComplexHeatmap)
 ```
 
 # CASCADE 1.0 Analysis {-}
@@ -404,6 +406,15 @@ DT::datatable(data = res_ss_ew$roc_stats, options =
 <script type="application/json" data-for="htmlwidget-b20dc2a931752ae4f30d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],[null,-0.157137145141943,-0.105616605616606,-0.0770900362596395,-0.054329351204351,-0.0522697951943235,-0.0315138201374157,-0.0045278795278797,0,0.0104882652959576,0.0290204127331536,0.0351310595349343,0.0495862667993815,0.0759561426228094,0.204588014981273,0.275824574121058],[0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4],[4,3,2,1,1,0,0,0,0,0,0,0,0,0,0,0],[17,17,17,17,16,16,15,14,7,6,5,4,3,2,1,0],[0,0,0,0,1,1,2,3,10,11,12,13,14,15,16,17],[0,0,0,0,0.0588235294117647,0.0588235294117647,0.117647058823529,0.176470588235294,0.588235294117647,0.647058823529412,0.705882352941177,0.764705882352941,0.823529411764706,0.882352941176471,0.941176470588235,1],[0,0.25,0.5,0.75,0.75,1,1,1,1,1,1,1,1,1,1,1],[0,0.25,0.5,0.75,0.691176470588235,0.941176470588235,0.882352941176471,0.823529411764706,0.411764705882353,0.352941176470588,0.294117647058823,0.235294117647059,0.176470588235294,0.117647058823529,0.0588235294117647,0],[1,0.5625,0.25,0.0625,0.0659602076124567,0.00346020761245675,0.013840830449827,0.0311418685121107,0.346020761245675,0.418685121107266,0.498269896193772,0.58477508650519,0.678200692041522,0.778546712802768,0.885813148788927,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>threshold<\/th>\n      <th>TP<\/th>\n      <th>FN<\/th>\n      <th>TN<\/th>\n      <th>FP<\/th>\n      <th>FPR<\/th>\n      <th>TPR<\/th>\n      <th>dist_from_chance<\/th>\n      <th>dist_from_0_1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,16],"searching":false,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":6,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":7,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":8,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":9,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render"],"jsHooks":[]}</script><!--/html_preserve-->
 <p class="caption">(\#fig:calibrated-bliss-dt)ROC data for Calibrated Models (CASCADE 1.0, Bliss synergy method)</p>
 </div>
+
+```r
+# investigate the average threshold as a synergy classification index
+# thres = res_ss_ew$roc_stats %>% pull(threshold)
+# thres = thres[is.finite(thres)] # remove Inf's
+# res_ss_ew$roc_stats %>% 
+#   filter(threshold < mean(thres)) %>% 
+#   slice(n()) %>% kable()
+```
 
 ### PR curves {-}
 
@@ -1500,6 +1511,20 @@ DT::datatable(data = roc_best_res2$roc_stats, options =
 <p class="caption">(\#fig:comb-pred-best-link-dt)ROC data for Best Combined Predictor (CASCADE 2.0, Link Operator Mutations, Bliss synergy method)</p>
 </div>
 
+```r
+# TP synergies at a specified threshold (0 below)
+# pred_ew_bliss %>% 
+#  select(perturbation, observed, best_score2) %>% 
+#  filter(best_score2 < 0, observed == 1)
+
+# investigate the average threshold as a synergy classification index
+# thres = roc_best_res2$roc_stats %>% pull(threshold)
+# thres = thres[is.finite(thres)] # remove Inf's
+# roc_best_res2$roc_stats %>% 
+#   filter(threshold < mean(thres)) %>% 
+#   slice(n()) %>% kable()
+```
+
 ## Correlation {-}
 
 We test for correlation between some of the results shown in the ROC curves.
@@ -1562,6 +1587,111 @@ ggline(data = avg_fit_long_link, x = "name", y = "value", color = my_palette[2],
 <p class="caption">(\#fig:fit-evolution-3)Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)</p>
 </div>
 
+## Heatmaps: Stable State and Parameterization {-}
+
+:::{.note}
+- The drawn heatmaps use the **Calibrated** models (fitted to steady state) from the `Gitsbe` run with $150$ simulations.
+- The colored column (node) names are part of the **AGS training steady state**
+:::
+
+
+```r
+models_dir = "results/link-only/models_cascade_2.0_ss_150sim/"
+
+# Steady States and Link Operators
+models_stable_states = emba::get_stable_state_from_models_dir(models_dir)
+models_link_operators = emba::get_link_operators_from_models_dir(models_dir)
+
+# get the AGS steady state
+steady_state_file = "results/steadystate"
+lines = readLines(steady_state_file)
+ss_data = unlist(strsplit(x = lines[8], split = "\t"))
+ss_mat = stringr::str_split(string = ss_data, pattern = ":", simplify = TRUE)
+colnames(ss_mat) = c("nodes", "states")
+ss_tbl = ss_mat %>% as_tibble() %>% mutate_at(vars(states), as.integer)
+
+steady_state = ss_tbl %>% pull(states)
+names(steady_state) = ss_tbl %>% pull(nodes)
+
+# calculate models fitness to AGS steady state
+models_fit = apply(models_stable_states[, names(steady_state)], 1, 
+  usefun::get_percentage_of_matches, steady_state)
+
+# make sure model name order is ok
+all(names(models_fit) == rownames(models_stable_states))
+all(names(models_fit) == rownames(models_link_operators))
+```
+
+
+```r
+# coloring
+state_colors = c("red", "lightyellow")
+state_col_fun = circlize::colorRamp2(breaks = c(0, 1), colors = state_colors)
+
+fit_col_fun = circlize::colorRamp2(breaks = c(min(models_fit), max(models_fit)), 
+  colors = c("red", "green"))
+
+# define fitness color bar
+fit_annot = rowAnnotation(fitness = anno_simple(x = models_fit, col = fit_col_fun), 
+  show_annotation_name = FALSE)
+
+# color steady state nodes in the heatmap
+ss_nodes_colors = rep("black", length(colnames(models_stable_states)))
+names(ss_nodes_colors) = colnames(models_stable_states)
+ss_nodes_colors[names(ss_nodes_colors) %in% names(steady_state)] = "magenta"
+
+heatmap_ss = ComplexHeatmap::Heatmap(matrix = as.matrix(models_stable_states),
+  name = "heatmap_ss",
+  column_title = "Models Stable States", column_title_gp = gpar(fontsize = 20),
+  column_names_gp = gpar(fontsize = 3, col = ss_nodes_colors),
+  row_dend_width = unit(0.7, "inches"), column_dend_height = unit(1, "inches"),
+  col = state_col_fun, show_row_names = FALSE,
+  left_annotation = fit_annot, 
+  show_heatmap_legend = FALSE)
+  #use_raster = TRUE, raster_device = "png", raster_quality = 20)
+
+# define the 2 legends
+activity_state_legend = Legend(title = "Activity State", 
+  labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
+fit_legend = Legend(title = "Fitness", col = fit_col_fun)
+legend_list = packLegend(activity_state_legend, fit_legend, direction = "vertical")
+
+draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/ss-heatmap-1.png" alt="Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)" width="2100" />
+<p class="caption">(\#fig:ss-heatmap)Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)</p>
+</div>
+
+
+```r
+# color steady state nodes in the heatmap
+lo_nodes_colors = rep("black", length(colnames(models_link_operators)))
+names(lo_nodes_colors) = colnames(models_link_operators)
+lo_nodes_colors[names(lo_nodes_colors) %in% names(steady_state)] = "magenta" # 10 of 24
+
+heatmap_param = ComplexHeatmap::Heatmap(matrix = as.matrix(models_link_operators),
+  name = "heatmap_param",
+  column_title = "Model Parameterization", column_title_gp = gpar(fontsize = 20),
+  column_names_gp = gpar(fontsize = 8, col = lo_nodes_colors),
+  col = state_col_fun, show_row_names = FALSE,
+  left_annotation = fit_annot, 
+  show_heatmap_legend = FALSE)
+  #use_raster = TRUE, raster_device = "png", raster_quality = 20)
+
+# define the 2 legends (`fit_legend` is same as in previous heatmap)
+link_operators_legend = Legend(title = "Link Operator", 
+  labels = c("AND NOT", "OR NOT"), legend_gp = gpar(fill = state_colors))
+legend_list = packLegend(link_operators_legend, fit_legend, direction = "vertical")
+
+draw(heatmap_param, annotation_legend_list = legend_list, annotation_legend_side = "right")
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/link-op-heatmap-1.png" alt="Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)" width="2100" />
+<p class="caption">(\#fig:link-op-heatmap)Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)</p>
+</div>
 
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
 
@@ -2793,43 +2923,6 @@ The `results` directory has 3 sub-directories:
 Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
 :::
 
-## Random model results {-}
-
-Use the `druglogics-synergy` module, version `1.2.0`: `git checkout v1.2.0` and the [abmlog](https://github.com/druglogics/abmlog) module, version `1.5.0`: `git checkout v1.5.0`.
-
-The CASCADE 1.0 and 2.0 `.sif` network files can be found at the directories `ags_cascade_1.0` and `ags_cascade_2.0` on the
-`druglogics-synergy` repository.
-Copy these two network files inside the `test` dir of the `abmlog` repository root.
-
-Run the `abmlog` for the CASCADE 2.0 topology:
-```
-java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000
-```
-
-Next, prune the resulting models to only the ones that have 1 stable state (should be $1292$) using the simple bash script [process_models.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/process_models.sh) inside the generated `models` directory from `abmlog`.
-
-```
-cd pathTo/druglogics-synergy/ags_cascade_2.0
-```
-
-- Move the `abmlog`-generated `models` dir inside the `ags_cascade_2.0` dir
-- Use `attractor_tool`: `biolqm_stable_states` in the `config` file
-- Use `synergy_method: hsa` or `synergy_method: bliss` in the `config` file (run twice below command, changing the `project` to `cascade_2.0_random_bliss`)
-
-Run Drabme via `druglogics-synergy`:
-
-```
-cd ags_cascade_2.0/
-java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
-```
-
-The above procedure is the same for CASCADE 1.0. Changes:
-
-- The number of models after pruning to those that have only 1 stable state should be $950$
-- The `abmlog`-generated `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
-- The network file is now for the CASCADE 1.0 (`network.sif` inside the `ags_cascade_1.0`)
-- The Drabme command should be run with `--project=cascade_1.0_random_hsa` and `--project=cascade_1.0_random_bliss` respectively
-
 # R session info {-}
 
 
@@ -2855,18 +2948,20 @@ Package version:
   base64enc_0.1.3         BH_1.72.0.3             bibtex_0.4.2.2         
   bookdown_0.20           boot_1.3.25             broom_0.5.6            
   callr_3.4.3             car_3.0-8               carData_3.0-4          
-  cellranger_1.1.0        Ckmeans.1d.dp_4.3.2     cli_2.0.2              
-  clipr_0.7.0             codetools_0.2-16        colorspace_1.4-1       
-  compiler_3.6.3          corrplot_0.84           cowplot_1.0.0          
-  crayon_1.3.4            crosstalk_1.1.0.1       curl_4.3               
-  data.table_1.12.8       desc_1.2.0              digest_0.6.25          
-  dplyr_1.0.0             DT_0.14                 ellipsis_0.3.1         
-  emba_0.1.5              equatiomatic_0.0.0.9000 evaluate_0.14          
-  fansi_0.4.1             farver_2.0.3            forcats_0.5.0          
-  foreach_1.5.0           foreign_0.8-75          gbRd_0.4-11            
-  generics_0.0.2          ggplot2_3.3.2           ggpubr_0.4.0           
-  ggrepel_0.8.2           ggsci_2.9               ggsignif_0.6.0         
-  glmnet_4.0-2            glue_1.4.1              graphics_3.6.3         
+  cellranger_1.1.0        circlize_0.4.10         Ckmeans.1d.dp_4.3.2    
+  cli_2.0.2               clipr_0.7.0             clue_0.3-57            
+  cluster_2.1.0           codetools_0.2-16        colorspace_1.4-1       
+  compiler_3.6.3          ComplexHeatmap_2.4.2    corrplot_0.84          
+  cowplot_1.0.0           crayon_1.3.4            crosstalk_1.1.0.1      
+  curl_4.3                data.table_1.12.8       desc_1.2.0             
+  digest_0.6.25           dplyr_1.0.0             DT_0.14                
+  ellipsis_0.3.1          emba_0.1.5              equatiomatic_0.0.0.9000
+  evaluate_0.14           fansi_0.4.1             farver_2.0.3           
+  forcats_0.5.0           foreach_1.5.0           foreign_0.8-75         
+  gbRd_0.4-11             generics_0.0.2          GetoptLong_1.0.0       
+  ggplot2_3.3.2           ggpubr_0.4.0            ggrepel_0.8.2          
+  ggsci_2.9               ggsignif_0.6.0          glmnet_4.0-2           
+  GlobalOptions_0.1.2     glue_1.4.1              graphics_3.6.3         
   grDevices_3.6.3         grid_3.6.3              gridExtra_2.3          
   gtable_0.3.0            haven_2.3.1             highr_0.8              
   hms_0.5.3               htmltools_0.5.0         htmlwidgets_1.5.1      
@@ -2881,24 +2976,25 @@ Package version:
   nlme_3.1-148            nloptr_1.2.2.1          nnet_7.3.14            
   openxlsx_4.1.5          parallel_3.6.3          pbkrtest_0.4.8.6       
   pillar_1.4.4            pkgbuild_1.0.8          pkgconfig_2.0.3        
-  pkgload_1.1.0           plyr_1.8.6              polynom_1.4.0          
-  praise_1.0.0            prettyunits_1.1.1       processx_3.4.2         
-  progress_1.2.2          promises_1.1.1          PRROC_1.3.1            
-  ps_1.3.3                purrr_0.3.4             quantreg_5.55          
-  R6_2.4.1                RColorBrewer_1.1-2      Rcpp_1.0.4.6           
-  RcppEigen_0.3.3.7.0     Rdpack_1.0.0            readr_1.3.1            
-  readxl_1.3.1            rematch_1.0.1           reshape2_1.4.4         
-  rio_0.5.16              rje_1.10.16             rlang_0.4.6            
-  rmarkdown_2.3           rprojroot_1.3.2         rstatix_0.6.0          
-  rstudioapi_0.11         scales_1.1.1            shape_1.4.4            
-  sp_1.4.2                SparseM_1.78            splines_3.6.3          
-  statmod_1.4.34          stats_3.6.3             stringi_1.4.6          
-  stringr_1.4.0           survival_3.2-3          testthat_2.3.2         
-  tibble_3.0.1            tidyr_1.1.0             tidyselect_1.1.0       
-  tinytex_0.24            tools_3.6.3             usefun_0.4.7           
-  utf8_1.1.4              utils_3.6.3             vctrs_0.3.1            
-  viridisLite_0.3.0       visNetwork_2.0.9        withr_2.2.0            
-  xfun_0.15               yaml_2.2.1              zip_2.0.4              
+  pkgload_1.1.0           plyr_1.8.6              png_0.1-7              
+  polynom_1.4.0           praise_1.0.0            prettyunits_1.1.1      
+  processx_3.4.2          progress_1.2.2          promises_1.1.1         
+  PRROC_1.3.1             ps_1.3.3                purrr_0.3.4            
+  quantreg_5.55           R6_2.4.1                RColorBrewer_1.1-2     
+  Rcpp_1.0.4.6            RcppEigen_0.3.3.7.0     Rdpack_1.0.0           
+  readr_1.3.1             readxl_1.3.1            rematch_1.0.1          
+  reshape2_1.4.4          rio_0.5.16              rje_1.10.16            
+  rjson_0.2.20            rlang_0.4.6             rmarkdown_2.3          
+  rprojroot_1.3.2         rstatix_0.6.0           rstudioapi_0.11        
+  scales_1.1.1            shape_1.4.4             sp_1.4.2               
+  SparseM_1.78            splines_3.6.3           statmod_1.4.34         
+  stats_3.6.3             stringi_1.4.6           stringr_1.4.0          
+  survival_3.2-3          testthat_2.3.2          tibble_3.0.1           
+  tidyr_1.1.0             tidyselect_1.1.0        tinytex_0.24           
+  tools_3.6.3             usefun_0.4.7            utf8_1.1.4             
+  utils_3.6.3             vctrs_0.3.1             viridisLite_0.3.0      
+  visNetwork_2.0.9        withr_2.2.0             xfun_0.15              
+  yaml_2.2.1              zip_2.0.4              
 ```
 
 # References {-}

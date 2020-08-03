@@ -20,3 +20,5 @@ glmnet
 knitr
 MAMSE
 tidyr
+circlize
+ComplexHeatmap
