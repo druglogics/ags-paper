@@ -2497,43 +2497,6 @@ The `results` directory has 3 sub-directories:
 Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
 :::
 
-## Random model results {-}
-
-Use the `druglogics-synergy` module, version `1.2.0`: `git checkout v1.2.0` and the [abmlog](https://github.com/druglogics/abmlog) module, version `1.5.0`: `git checkout v1.5.0`.
-
-The CASCADE 1.0 and 2.0 `.sif` network files can be found at the directories `ags_cascade_1.0` and `ags_cascade_2.0` on the
-`druglogics-synergy` repository.
-Copy these two network files inside the `test` dir of the `abmlog` repository root.
-
-Run the `abmlog` for the CASCADE 2.0 topology:
-```
-java -cp target/abmlog-1.5.0-jar-with-dependencies.jar eu.druglogics.abmlog.RandomBooleanModelGenerator --file=test/cascade_2_0.sif --num=3000
-```
-
-Next, prune the resulting models to only the ones that have 1 stable state (should be $1292$) using the simple bash script [process_models.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/process_models.sh) inside the generated `models` directory from `abmlog`.
-
-```
-cd pathTo/druglogics-synergy/ags_cascade_2.0
-```
-
-- Move the `abmlog`-generated `models` dir inside the `ags_cascade_2.0` dir
-- Use `attractor_tool`: `biolqm_stable_states` in the `config` file
-- Use `synergy_method: hsa` or `synergy_method: bliss` in the `config` file (run twice below command, changing the `project` to `cascade_2.0_random_bliss`)
-
-Run Drabme via `druglogics-synergy`:
-
-```
-cd ags_cascade_2.0/
-java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_2.0_random_hsa --modelsDir=models --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs
-```
-
-The above procedure is the same for CASCADE 1.0. Changes:
-
-- The number of models after pruning to those that have only 1 stable state should be $950$
-- The `abmlog`-generated `models` directory should be put inside the `ags_cascade_1.0` of `druglogics-synergy`
-- The network file is now for the CASCADE 1.0 (`network.sif` inside the `ags_cascade_1.0`)
-- The Drabme command should be run with `--project=cascade_1.0_random_hsa` and `--project=cascade_1.0_random_bliss` respectively
-
 # R session info {-}
 
 ```{r session info, comment=""}
