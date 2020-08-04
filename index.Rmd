@@ -1328,7 +1328,7 @@ grid(lwd = 0.5)
 ```
 
 :::{#comb-pred-best-link-dt}
-The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1$, the **Calibrated** in the above plot) are as follows:
+The **ROC ensemble-wise statistics data** for the combined predictor ($\beta=-1$, the **Calibrated** in the above plot) are as follows:
 :::
 ```{r comb-pred-best-link-dt, fig.align='center', fig.cap="ROC data for Best Combined Predictor (CASCADE 2.0, Link Operator Mutations, Bliss synergy method)"}
 DT::datatable(data = roc_best_res2$roc_stats, options = 
@@ -1489,6 +1489,20 @@ link_operators_legend = Legend(title = "Link Operator",
 legend_list = packLegend(link_operators_legend, fit_legend, direction = "vertical")
 
 draw(heatmap_param, annotation_legend_list = legend_list, annotation_legend_side = "right")
+```
+
+```{r emba-performance-biomarkers, eval=FALSE, include=FALSE}
+model_predictions = emba::get_model_predictions("results/link-only/bliss/cascade_2.0_ss_150sim_fixpoints_model_predictions.tab")
+
+# order as above
+model_predictions = model_predictions[rownames(models_stable_states), ]
+all(names(models_fit) == rownames(model_predictions))
+
+mcc_res = emba::biomarker_mcc_analysis(model.predictions = model_predictions, 
+  models.stable.state = models_stable_states, models.link.operator = models_link_operators, 
+  observed.synergies = observed_synergies, num.of.mcc.classes = 5, threshold = 0.6)
+# ACVR1 = ( BMPR2 ), BMPR2 = not ( ( SMURF1 ) or SMURF2 ), SMURF1 = ( SMAD7 ), SMURF2 = ( SMAD7 ) 
+# so pretty much the biomarker results say is that SMAD2, SMAD5 are active and SMAD7 inhibited in the good performance models
 ```
 
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
