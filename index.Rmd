@@ -497,6 +497,9 @@ res_comb_pred = get_roc_stats(df = pred_ew_bliss, pred_col = "combined_score", l
 DT::datatable(data = res_comb_pred$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>% 
   formatRound(c(1,6,7,8,9), digits = 3)
+
+# All observed synergies are in top 6
+# pred_ew_bliss %>% arrange(combined_score)
 ```
 
 ## Best ROC and PRC {-}
