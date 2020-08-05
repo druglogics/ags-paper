@@ -1,7 +1,7 @@
 ---
 title: "AGS paper I - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 03 August, 2020"
+date: "Last updated: 05 August, 2020"
 description: "AGS paper I - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -562,6 +562,11 @@ DT::datatable(data = res_comb_pred$roc_stats, options =
 <script type="application/json" data-for="htmlwidget-7598595affc4f25ab85b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],[null,-0.108851105784475,-0.0498706139461288,-0.0331056962400021,-0.0311179029477264,-0.0305011367363769,-0.0253108561746203,-0.0205876674359666,-0.018270677801874,-0.00117158583470633,0,0.0290004454489178,0.0659397475882574,0.0973759446683109,0.175534594175275,0.214223134438229,0.219820126794381],[0,1,2,3,3,3,4,4,4,4,4,4,4,4,4,4,4],[4,3,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[17,17,17,17,16,15,15,14,13,12,6,5,4,3,2,1,0],[0,0,0,0,1,2,2,3,4,5,11,12,13,14,15,16,17],[0,0,0,0,0.0588235294117647,0.117647058823529,0.117647058823529,0.176470588235294,0.235294117647059,0.294117647058824,0.647058823529412,0.705882352941177,0.764705882352941,0.823529411764706,0.882352941176471,0.941176470588235,1],[0,0.25,0.5,0.75,0.75,0.75,1,1,1,1,1,1,1,1,1,1,1],[0,0.25,0.5,0.75,0.691176470588235,0.632352941176471,0.882352941176471,0.823529411764706,0.764705882352941,0.705882352941176,0.352941176470588,0.294117647058823,0.235294117647059,0.176470588235294,0.117647058823529,0.0588235294117647,0],[1,0.5625,0.25,0.0625,0.0659602076124567,0.076340830449827,0.013840830449827,0.0311418685121107,0.055363321799308,0.0865051903114187,0.418685121107266,0.498269896193772,0.58477508650519,0.678200692041522,0.778546712802768,0.885813148788927,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>threshold<\/th>\n      <th>TP<\/th>\n      <th>FN<\/th>\n      <th>TN<\/th>\n      <th>FP<\/th>\n      <th>FPR<\/th>\n      <th>TPR<\/th>\n      <th>dist_from_chance<\/th>\n      <th>dist_from_0_1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,16],"searching":false,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":6,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":7,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":8,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"targets":9,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 3, 3, \",\", \".\"); }"},{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render"],"jsHooks":[]}</script><!--/html_preserve-->
 <p class="caption">(\#fig:combined-pred-bliss-dt)ROC data for Combined Predictor (CASCADE 1.0, Bliss synergy method)</p>
 </div>
+
+```r
+# All observed synergies are in top 6
+# pred_ew_bliss %>% arrange(combined_score)
+```
 
 ## Best ROC and PRC {-}
 
@@ -1496,7 +1501,7 @@ grid(lwd = 0.5)
 </div>
 
 :::{#comb-pred-best-link-dt}
-The **ROC ensemble-wise statistics data** for the combined predictor ($\beta_{best}=-1$, the **Calibrated** in the above plot) are as follows:
+The **ROC ensemble-wise statistics data** for the combined predictor ($\beta=-1$, the **Calibrated** in the above plot) are as follows:
 :::
 
 ```r
@@ -1654,7 +1659,9 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = as.matrix(models_stable_states),
 activity_state_legend = Legend(title = "Activity State", 
   labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
 fit_legend = Legend(title = "Fitness", col = fit_col_fun)
-legend_list = packLegend(activity_state_legend, fit_legend, direction = "vertical")
+train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta")),
+  labels_gp = gpar(fontface = "bold"))
+legend_list = packLegend(activity_state_legend, fit_legend, train_legend, direction = "vertical")
 
 draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
 ```
@@ -1683,7 +1690,9 @@ heatmap_param = ComplexHeatmap::Heatmap(matrix = as.matrix(models_link_operators
 # define the 2 legends (`fit_legend` is same as in previous heatmap)
 link_operators_legend = Legend(title = "Link Operator", 
   labels = c("AND NOT", "OR NOT"), legend_gp = gpar(fill = state_colors))
-legend_list = packLegend(link_operators_legend, fit_legend, direction = "vertical")
+train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta")),
+  labels_gp = gpar(fontface = "bold"))
+legend_list = packLegend(link_operators_legend, fit_legend, train_legend, direction = "vertical")
 
 draw(heatmap_param, annotation_legend_list = legend_list, annotation_legend_side = "right")
 ```
@@ -1692,6 +1701,8 @@ draw(heatmap_param, annotation_legend_list = legend_list, annotation_legend_side
 <img src="index_files/figure-html/link-op-heatmap-1.png" alt="Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)" width="2100" />
 <p class="caption">(\#fig:link-op-heatmap)Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)</p>
 </div>
+
+
 
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
 
