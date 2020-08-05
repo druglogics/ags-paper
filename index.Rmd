@@ -1466,7 +1466,9 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = as.matrix(models_stable_states),
 activity_state_legend = Legend(title = "Activity State", 
   labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
 fit_legend = Legend(title = "Fitness", col = fit_col_fun)
-legend_list = packLegend(activity_state_legend, fit_legend, direction = "vertical")
+train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta")),
+  labels_gp = gpar(fontface = "bold"))
+legend_list = packLegend(activity_state_legend, fit_legend, train_legend, direction = "vertical")
 
 draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
 ```
@@ -1489,7 +1491,9 @@ heatmap_param = ComplexHeatmap::Heatmap(matrix = as.matrix(models_link_operators
 # define the 2 legends (`fit_legend` is same as in previous heatmap)
 link_operators_legend = Legend(title = "Link Operator", 
   labels = c("AND NOT", "OR NOT"), legend_gp = gpar(fill = state_colors))
-legend_list = packLegend(link_operators_legend, fit_legend, direction = "vertical")
+train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta")),
+  labels_gp = gpar(fontface = "bold"))
+legend_list = packLegend(link_operators_legend, fit_legend, train_legend, direction = "vertical")
 
 draw(heatmap_param, annotation_legend_list = legend_list, annotation_legend_side = "right")
 ```
