@@ -9,7 +9,7 @@ bookdown::gitbook:
     toc:
       collapse: subsection
       before: |
-        <li><a href="./index.html">DrugLogics Paper I: An AGS story</a></li>
+        <li><a href="./index.html">DrugLogics Paper: An AGS story</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
     download: no
