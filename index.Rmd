@@ -1212,7 +1212,7 @@ We want to assess the **statistical significance of this result**, by bootstrapi
 For that purpose, we run the `gitsbe` module via the `druglogics-synergy` (version `1.2.0`), using the script [run_gitsbe_random.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_random.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
 This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
 
-To actually run the bootstrap, we execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory changing appropriately the `models_dir` parameter to point to the previously created models directory.
+To actually run the bootstrap, we execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory changing appropriately the `models_dir` parameter to point to the previously created models directory and the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
 The following code is used to load the results from the `drabme` simulations (we have already saved the result for convenience):
 
