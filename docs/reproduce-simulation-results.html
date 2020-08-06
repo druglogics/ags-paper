@@ -905,6 +905,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
@@ -948,6 +949,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#get-output-files"><i class="fa fa-check"></i>Get output files</a></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#results-dataset"><i class="fa fa-check"></i>Results Dataset</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
@@ -977,14 +979,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="get-output-files" class="section level2 unnumbered" number="">
 <h2>Get output files</h2>
 <ul>
-<li>Use the <code>druglogics-synergy</code> module, version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
 <li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo.</li>
 </ul>
 <p>You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run, for a complete list of configuration options, see <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html">here</a>).
 To get the results for the topology mutations for CASCADE 2.0 you need to change the <code>ags_cascade_2.0/config</code> file option <code>topology_mutations: 10</code> (it is <span class="math inline">\(0\)</span> by default - no topology mutations, only link-operator/balance mutations).
 If you wish to get the results from both mutations, set both <code>balance_mutations</code> and <code>topology_mutations</code> options to a non-zero value (<span class="math inline">\(3\)</span> and <span class="math inline">\(10\)</span> were used in the simulations).</p>
-<p>Each <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
-For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.</p>
+<p>So, for example to get the simulation output directories for the <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> I just run the <code>run_druglogics_synergy.sh</code> script with the following options defined in the loops inside (no need to change any further configuration):
+- <code>cascade_version</code>: <code>1.0</code>
+- <code>train</code>: <code>ss prolif</code>
+- <code>sim_num</code>: <code>50 150</code>
+- <code>attr_tool</code>: <code>fixpoints</code>
+- <code>synergy_method</code>: <code>hsa bliss</code></p>
+<p>Each subsequent <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
+For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.
+For the stable state and parameterization heatmaps we used the directory output with all the <code>gitsbe</code> generated models, as well as the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate">training steady state</a> file.</p>
+</div>
+<div id="results-dataset" class="section level2 unnumbered" number="">
+<h2>Results Dataset</h2>
+<p>Zenodo DOI to be provided.</p>
 </div>
 <div id="repo-results-structure" class="section level2 unnumbered" number="">
 <h2>Repo results structure</h2>

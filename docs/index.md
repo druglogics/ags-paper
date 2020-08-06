@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 05 August, 2020"
+date: "Last updated: 06 August, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -18,7 +18,7 @@ This report is the **supplementary material** for the AGS I Paper and has all th
 
 ## Methodology/Input Overview {-}
 
-A list of things that change between the simulations and the presented graphs are:
+A list of things that change between the simulations and the presented figures are:
 
 - The number of `Gitsbe` simulations: more simulations, more models generated.
 - The type of mutation that `Gitsbe` models have:
@@ -1353,6 +1353,70 @@ grid(lwd = 0.5)
 - Individual predictor **ensemble-wise** results show that *random* and *calibrated* models have poor performance.
 - The PR curves show that the **performance of all individual predictors is poor** compared to the baseline.
 :::
+
+### Bootstrap Random Model AUC {-}
+
+:::{.blue-box}
+In the previous ROC and PR curves we found a **very low ensemble-wise random (proliferative) model performance**, indicated by the low numbers of ROC and PR AUC.
+We want to assess the **statistical significance of this result**, by bootstraping many model samples from a pool of random models and evaluating the performance of these ensembles.
+:::
+
+For that purpose, we run the `gitsbe` module via the `druglogics-synergy` (version `1.2.0`), using the script [run_gitsbe_random.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_random.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
+This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
+
+To actually run the bootstrap, we execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory changing appropriately the `models_dir` parameter to point to the previously created models directory.
+The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
+The following code is used to load the results from the `drabme` simulations (we have already saved the result for convenience):
+
+
+```r
+data_dir = "/home/john/tmp/ags_paper_res/link-only/bliss/bootstrap"
+data_list = list()
+index = 1
+for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
+  if (stringr::str_detect(string = res_dir, pattern = "cascade_2.0_rand_prolif_bliss_batch")) {
+    ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
+    rand_scores = emba::get_synergy_scores(ew_synergies_file)
+    observed = sapply(rand_scores$perturbation %in% observed_synergies, as.integer)
+
+    res_roc = PRROC::roc.curve(scores.class0 = rand_scores$score %>% (function(x) {-x}),
+      weights.class0 = observed)
+    res_pr = PRROC::pr.curve(scores.class0 = rand_scores$score %>% (function(x) {-x}),
+      weights.class0 = observed)
+
+    # bind all to one (OneForAll)
+    df = dplyr::bind_cols(roc_auc = res_roc$auc, pr_auc = res_pr$auc.davis.goadrich)
+    data_list[[index]] = df
+    index = index + 1
+  }
+}
+
+rand_res = bind_rows(data_list)
+saveRDS(rand_res, file = "results/bootstrap_rand_res.rds")
+```
+
+As we can see below, the random model performance if indeed very close to the median of the bootstrapped AUCs:
+
+```r
+rand_res = readRDS(file = "results/bootstrap_rand_res.rds")
+
+ggboxplot(data = rand_res, y = "roc_auc", title = "Bootstrap Random Models (ROC)",
+  xlab = "", ylab = "ROC AUC", fill = "gray") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  rremove("x.text") + 
+  rremove("x.ticks")
+
+ggboxplot(data = rand_res, y = "pr_auc", title = "Bootstrap Random Models (Precision-Recall)", 
+  xlab = "", ylab = "PR AUC", fill = "gray") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  rremove("x.text") + 
+  rremove("x.ticks")
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/random-bootstrap-auc-1.png" alt="Random Model Bootstrap: ROC and PR AUCs (CASCADE 2.0, Bliss synergy method)" width="50%" /><img src="index_files/figure-html/random-bootstrap-auc-2.png" alt="Random Model Bootstrap: ROC and PR AUCs (CASCADE 2.0, Bliss synergy method)" width="50%" />
+<p class="caption">(\#fig:random-bootstrap-auc)Random Model Bootstrap: ROC and PR AUCs (CASCADE 2.0, Bliss synergy method)</p>
+</div>
 
 ### AUC sensitivity {-}
 
@@ -2756,15 +2820,27 @@ Note that the difference in terms of ROC AUC is not significant compared to the 
 
 ## Get output files {-}
 
-- Use the `druglogics-synergy` module, version `1.2.0`: `git checkout v1.2.0`
+- Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
 - Run the script `run_druglogics_synergy.sh` in the above repo.
 
 You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run, for a complete list of configuration options, see [here](https://druglogics.github.io/druglogics-doc/gitsbe-config.html)).
 To get the results for the topology mutations for CASCADE 2.0 you need to change the `ags_cascade_2.0/config` file option `topology_mutations: 10` (it is $0$ by default - no topology mutations, only link-operator/balance mutations).
 If you wish to get the results from both mutations, set both `balance_mutations` and `topology_mutations` options to a non-zero value ($3$ and $10$ were used in the simulations).
 
-Each `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
+So, for example to get the simulation output directories for the [Cascade 1.0 Analysis] I just run the `run_druglogics_synergy.sh` script with the following options defined in the loops inside (no need to change any further configuration):
+- `cascade_version`: `1.0`
+- `train`: `ss prolif`
+- `sim_num`: `50 150`
+- `attr_tool`: `fixpoints`
+- `synergy_method`: `hsa bliss`
+
+Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
+For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models, as well as the [training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate) file.
+
+## Results Dataset {-}
+
+Zenodo DOI to be provided.
 
 ## Repo results structure {-}
 
