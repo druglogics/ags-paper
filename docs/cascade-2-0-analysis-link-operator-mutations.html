@@ -1939,7 +1939,12 @@ Thus, we are going to use a non-parametric correlation metric, namely the <stron
 <span id="cb50-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb50-5"></a>  <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;lightgray&quot;</span>),</span>
 <span id="cb50-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb50-6"></a>  <span class="dt">cor.coef =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coeff.args =</span> <span class="kw">list</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>, <span class="dt">label.y.npc =</span> <span class="st">&quot;bottom&quot;</span>, <span class="dt">size =</span> <span class="dv">6</span>)) <span class="op">+</span></span>
 <span id="cb50-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb50-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
-<p><img src="index_files/figure-html/fit-vs-perf-roc-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center"><span id="fig:fit-vs-perf-roc"></span>
+<img src="index_files/figure-html/fit-vs-perf-roc-1.png" alt="Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">
+Figure 29: Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)
+</p>
+</div>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb51-1"></a><span class="kw">ggscatter</span>(<span class="dt">data =</span> res, <span class="dt">x =</span> <span class="st">&quot;avg_fit&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc&quot;</span>,</span>
 <span id="cb51-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb51-2"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Average Fitness per Model Ensemble&quot;</span>,</span>
 <span id="cb51-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb51-3"></a>  <span class="dt">title =</span> <span class="st">&quot;Fitness to AGS Steady State vs Performance (Precision-Recall)&quot;</span>,</span>
@@ -1947,7 +1952,12 @@ Thus, we are going to use a non-parametric correlation metric, namely the <stron
 <span id="cb51-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb51-5"></a>  <span class="dt">ylab =</span> <span class="st">&quot;PR AUC&quot;</span>, <span class="dt">add =</span> <span class="st">&quot;reg.line&quot;</span>, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>,</span>
 <span id="cb51-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb51-6"></a>  <span class="dt">cor.coef =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coeff.args =</span> <span class="kw">list</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>, <span class="dt">size =</span> <span class="dv">6</span>)) <span class="op">+</span></span>
 <span id="cb51-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb51-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
-<p><img src="index_files/figure-html/fit-vs-perf-pr-1.png" width="2100" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center"><span id="fig:fit-vs-perf-pr"></span>
+<img src="index_files/figure-html/fit-vs-perf-pr-1.png" alt="Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">
+Figure 30: Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)
+</p>
+</div>
 <div class="green-box">
 <ul>
 <li>We observe that there exists <strong>some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data</strong>.</li>
@@ -2025,7 +2035,7 @@ Thus, we are going to use a non-parametric correlation metric, namely the <stron
 <div class="figure" style="text-align: center"><span id="fig:ss-heatmap"></span>
 <img src="index_files/figure-html/ss-heatmap-1.png" alt="Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)" width="2100" />
 <p class="caption">
-Figure 29: Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)
+Figure 31: Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)
 </p>
 </div>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb54-1"></a><span class="co"># color steady state nodes in the heatmap</span></span>
@@ -2053,7 +2063,7 @@ Figure 29: Stable States Heatmap (150 simulations, 450 models, link operator mut
 <div class="figure" style="text-align: center"><span id="fig:link-op-heatmap"></span>
 <img src="index_files/figure-html/link-op-heatmap-1.png" alt="Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)" width="2100" />
 <p class="caption">
-Figure 30: Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)
+Figure 32: Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)
 </p>
 </div>
 </div>

@@ -1780,7 +1780,10 @@ ggscatter(data = res, x = "avg_fit", y = "roc_auc",
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-<img src="index_files/figure-html/fit-vs-perf-roc-1.png" width="2100" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/fit-vs-perf-roc-1.png" alt="Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">(\#fig:fit-vs-perf-roc)Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)</p>
+</div>
 
 
 ```r
@@ -1793,7 +1796,10 @@ ggscatter(data = res, x = "avg_fit", y = "pr_auc",
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-<img src="index_files/figure-html/fit-vs-perf-pr-1.png" width="2100" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/fit-vs-perf-pr-1.png" alt="Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">(\#fig:fit-vs-perf-pr)Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)</p>
+</div>
 
 :::{.green-box}
 - We observe that there exists **some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data**.
@@ -3067,7 +3073,7 @@ Package version:
   lazyeval_0.2.2          lifecycle_0.2.0         lme4_1.1.23            
   magrittr_1.5            MAMSE_0.2-1             maptools_1.0.1         
   markdown_1.1            MASS_7.3.51.6           Matrix_1.2-18          
-  MatrixModels_0.4.1      methods_3.6.3           mgcv_1.8.31            
+  MatrixModels_0.4.1      methods_3.6.3           mgcv_1.8-31            
   mime_0.9                minqa_1.2.4             munsell_0.5.0          
   nlme_3.1-148            nloptr_1.2.2.1          nnet_7.3.14            
   openxlsx_4.1.5          parallel_3.6.3          pbkrtest_0.4.8.6       
