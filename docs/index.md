@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 06 August, 2020"
+date: "Last updated: 07 August, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -1364,7 +1364,7 @@ We want to assess the **statistical significance of this result**, by bootstrapi
 For that purpose, we run the `gitsbe` module via the `druglogics-synergy` (version `1.2.0`), using the script [run_gitsbe_random.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_random.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
 This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
 
-To actually run the bootstrap, we execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory changing appropriately the `models_dir` parameter to point to the previously created models directory.
+To actually run the bootstrap, we execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory changing appropriately the `models_dir` parameter to point to the previously created models directory and the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
 The following code is used to load the results from the `drabme` simulations (we have already saved the result for convenience):
 
@@ -1655,6 +1655,150 @@ ggline(data = avg_fit_long_link, x = "name", y = "value", color = my_palette[2],
 <img src="index_files/figure-html/fit-evolution-3-1.png" alt="Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)" width="2100" />
 <p class="caption">(\#fig:fit-evolution-3)Fitness Evolution (200 simulations, link operator mutations, CASCADE 2.0)</p>
 </div>
+
+
+## Fitness vs Ensemble Performance {-}
+
+:::{.blue-box}
+We check for correlation between the **calibrated models fitness to the AGS steady state** and their **ensemble performance** subject to normalization to the random model predictions.
+
+The **main idea** here is that we generate different training data samples, in which the boolean steady state nodes have their values flipped (so they are only partially correct) and we fit models to these ($20$ simulations => $60$ models per training data, $205$ training data samples in total).
+These calibrated model ensembles can then be tested for their prediction performance.
+Then we use the ensemble-wise *random proliferative* model predictions ($150$ simulations) to normalize ($\beta=-1$) against the calibrated model predictions and compute the **AUC ROC and AUC PR for each model ensemble**.
+:::
+
+Check how to generate the appropriate data and run the simulations in the section [Fitness vs Performance Data].
+
+The code to load the simulation result data is the following (we have already saved the result for convenience):
+
+```r
+# get flipped training data results
+data_dir = "/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss"
+
+# define `beta` value for normalization
+beta = -1
+
+data_list = list()
+index = 1
+for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
+  ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
+  ew_ss_scores = emba::get_synergy_scores(ew_synergies_file)
+  
+  # get the models stable states
+  models_dir = paste0(res_dir, "/models")
+  # you get messages for models with {#stable states} != 1
+  # a few models have 2 stable states and they are not included 
+  # in the returned data frame
+  models_stable_states = emba::get_stable_state_from_models_dir(models_dir)
+  
+  # calculate models fitness to AGS steady state
+  models_fit = apply(models_stable_states[, names(steady_state)], 1, 
+   usefun::get_percentage_of_matches, steady_state)
+  
+  # calculate normalized model performance (ROC-AUC and PR-AUC)
+  pred = dplyr::bind_cols(
+    random = pred_ew_bliss %>% select(prolif_score_150sim) %>% rename(random_score = prolif_score_150sim), 
+    ss = ew_ss_scores %>% select(score) %>% rename(ss_score = score), 
+    as_tibble_col(observed, column_name = "observed"))
+  
+  # get the normalized synergy scores
+  pred = pred %>% mutate(combined_score = ss_score + beta * random_score)
+  
+  res_roc = PRROC::roc.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred %>% pull(observed))
+  res_pr = PRROC::pr.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+    weights.class0 = pred %>% pull(observed))
+  
+  # bind all to one (OneForAll)
+  df = dplyr::bind_cols(
+    roc_auc = res_roc$auc, 
+    pr_auc = res_pr$auc.davis.goadrich,
+    avg_fit = mean(models_fit))
+  
+  data_list[[index]] = df
+  index = index + 1
+}
+
+res = bind_rows(data_list)
+saveRDS(res, file = "results/res_fit_aucs.rds")
+```
+
+Load the already-stored result:
+
+```r
+res = readRDS(file = "results/res_fit_aucs.rds")
+```
+
+We check if our data is normally distributed using the *Shapiro-Wilk* normality test:
+
+```r
+shapiro.test(x = res$roc_auc)
+```
+
+```
+
+	Shapiro-Wilk normality test
+
+data:  res$roc_auc
+W = 0.92436, p-value = 8.883e-09
+```
+
+```r
+shapiro.test(x = res$pr_auc)
+```
+
+```
+
+	Shapiro-Wilk normality test
+
+data:  res$pr_auc
+W = 0.94464, p-value = 4.475e-07
+```
+
+```r
+shapiro.test(x = res$avg_fit)
+```
+
+```
+
+	Shapiro-Wilk normality test
+
+data:  res$avg_fit
+W = 0.89506, p-value = 8.472e-11
+```
+
+We observe from the low *p-values* that the **data is not normally distributed**.
+Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** correlation test, to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
+
+```r
+ggscatter(data = res, x = "avg_fit", y = "roc_auc",
+  xlab = "Average Fitness per Model Ensemble",
+  title = "Fitness to AGS Steady State vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "bottom", size = 6)) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<img src="index_files/figure-html/fit-vs-perf-roc-1.png" width="2100" style="display: block; margin: auto;" />
+
+
+```r
+ggscatter(data = res, x = "avg_fit", y = "pr_auc",
+  xlab = "Average Fitness per Model Ensemble",
+  title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
+  add.params = list(color = "blue", fill = "lightgray"),
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6)) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<img src="index_files/figure-html/fit-vs-perf-pr-1.png" width="2100" style="display: block; margin: auto;" />
+
+:::{.green-box}
+- We observe that there exists **some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data**.
+- The performance as measured by the ROC AUC is less sensitive to changes in the training data but there is better correlation with regards to the PR AUC, which is a more informative measure for our imbalanced dataset [@Saito2015].
+:::
 
 ## Heatmaps: Stable State and Parameterization {-}
 
@@ -2748,7 +2892,7 @@ In this section we will compare the best combined predictors ($calibrated + \bet
 We use the normalization parameter $\beta=-1$ for all combined predictors, as it was observed throughout the report that it maximizes the performance of all Bliss-assessed, ensemble-wise combined synergy predictors.
 
 :::{#beta-as-norm .note}
-Why call $\beta$ a *normalization* parameter?
+**Why call $\beta$ a *normalization* parameter?**
 
 What matters for the calculation of the ROC and PR points is the *ranking* of the synergy scores.
 Thus if we bring the predictor's synergy scores to the exponential space, a value of $-1$ for $\beta$ translates to a simple *fold-change normalization* technique:
@@ -2818,7 +2962,7 @@ Note that the difference in terms of ROC AUC is not significant compared to the 
 
 # Reproduce simulation results {-}
 
-## Get output files {-}
+## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-}
 
 - Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
 - Run the script `run_druglogics_synergy.sh` in the above repo.
@@ -2834,17 +2978,30 @@ So, for example to get the simulation output directories for the [Cascade 1.0 An
 - `attr_tool`: `fixpoints`
 - `synergy_method`: `hsa bliss`
 
-Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
+Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
 For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models, as well as the [training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate) file.
 
-## Results Dataset {-}
+## Fitness vs Performance Data {-}
+
+### Generate the flipped training data {-}
+
+A total of $205$ model ensembles were simulated, each one consisting of $60$ models, fitting to a *partial correct* training node set.
+As such, the fitness range of the model ensembles compared to the AGS training data varies between $[0,1]$.
+
+### Run model ensembles simulations {-}
+
+
+
+## Simulations Dataset {-}
+
+We have stored all the simulations results in an open-access repository provided by Zenodo: **TO-ADD link!!!!!**
 
 Zenodo DOI to be provided.
 
 ## Repo results structure {-}
 
-We have gathered all the necessary output files from the above simulations to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report. 
+We have gathered all the necessary output files from the above simulations (relating to ROC, PR curves and AUC sensitivity figures) to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report.
 The `results` directory has 3 sub-directories: 
 
 1. [`link-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only): results from the link-operator mutated models only (used in the sections [Cascade 1.0 Analysis] and [CASCADE 2.0 Analysis (Link Operator Mutations)])
@@ -2854,6 +3011,13 @@ The `results` directory has 3 sub-directories:
 :::{.note}
 Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
 :::
+
+Lastly, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory also has the following files:
+
+- `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
+- `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
+- `steadystate`: the AGS training data for the calibrated models
+- `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 
 # R session info {-}
 

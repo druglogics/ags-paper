@@ -911,6 +911,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-vs-ensemble-performance"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#heatmaps-stable-state-and-parameterization"><i class="fa fa-check"></i>Heatmaps: Stable State and Parameterization</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
@@ -948,8 +949,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-performance-comparison.html"><a href="parameterization-performance-comparison.html"><i class="fa fa-check"></i>Parameterization Performance Comparison</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#get-output-files"><i class="fa fa-check"></i>Get output files</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#results-dataset"><i class="fa fa-check"></i>Results Dataset</a></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#fitness-vs-performance-data"><i class="fa fa-check"></i>Fitness vs Performance Data</a>
+<ul>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#generate-the-flipped-training-data"><i class="fa fa-check"></i>Generate the flipped training data</a></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#simulations-dataset"><i class="fa fa-check"></i>Simulations Dataset</a></li>
 <li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
@@ -976,8 +982,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="reproduce-simulation-results" class="section level1 unnumbered" number="">
 <h1>Reproduce simulation results</h1>
-<div id="get-output-files" class="section level2 unnumbered" number="">
-<h2>Get output files</h2>
+<div id="roc-and-pr-curves-fitness-evolution" class="section level2 unnumbered" number="">
+<h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
 <ul>
 <li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
 <li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo.</li>
@@ -991,17 +997,29 @@ If you wish to get the results from both mutations, set both <code>balance_mutat
 - <code>sim_num</code>: <code>50 150</code>
 - <code>attr_tool</code>: <code>fixpoints</code>
 - <code>synergy_method</code>: <code>hsa bliss</code></p>
-<p>Each subsequent <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report among other figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
+<p>Each subsequent <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
 For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.
 For the stable state and parameterization heatmaps we used the directory output with all the <code>gitsbe</code> generated models, as well as the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate">training steady state</a> file.</p>
 </div>
-<div id="results-dataset" class="section level2 unnumbered" number="">
-<h2>Results Dataset</h2>
+<div id="fitness-vs-performance-data" class="section level2 unnumbered" number="">
+<h2>Fitness vs Performance Data</h2>
+<div id="generate-the-flipped-training-data" class="section level3 unnumbered" number="">
+<h3>Generate the flipped training data</h3>
+<p>A total of <span class="math inline">\(205\)</span> model ensembles were simulated, each one consisting of <span class="math inline">\(60\)</span> models, fitting to a <em>partial correct</em> training node set.
+As such, the fitness range of the model ensembles compared to the AGS training data varies between <span class="math inline">\([0,1]\)</span>.</p>
+</div>
+<div id="run-model-ensembles-simulations" class="section level3 unnumbered" number="">
+<h3>Run model ensembles simulations</h3>
+</div>
+</div>
+<div id="simulations-dataset" class="section level2 unnumbered" number="">
+<h2>Simulations Dataset</h2>
+<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <strong>TO-ADD link!!!!!</strong></p>
 <p>Zenodo DOI to be provided.</p>
 </div>
 <div id="repo-results-structure" class="section level2 unnumbered" number="">
 <h2>Repo results structure</h2>
-<p>We have gathered all the necessary output files from the above simulations to the directory <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> for ease of use in our report.
+<p>We have gathered all the necessary output files from the above simulations (relating to ROC, PR curves and AUC sensitivity figures) to the directory <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> for ease of use in our report.
 The <code>results</code> directory has 3 sub-directories:</p>
 <ol style="list-style-type: decimal">
 <li><a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only"><code>link-only</code></a>: results from the link-operator mutated models only (used in the sections <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> and <a href="cascade-2-0-analysis-link-operator-mutations.html#cascade-2.0-analysis-link-operator-mutations">CASCADE 2.0 Analysis (Link Operator Mutations)</a>)</li>
@@ -1011,7 +1029,20 @@ The <code>results</code> directory has 3 sub-directories:</p>
 <div class="note">
 <p>Because the simulation results using <strong>only link operator mutations</strong> were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only">link-only-mutations results</a> to 2 directories (<code>hsa</code> and <code>bliss</code>) having the results from the different synergy assessment methods (check Drabme’s <code>synergy_method</code> <a href="#https://druglogics.github.io/druglogics-doc/drabme-config.html">configuration option</a>).</p>
 </div>
+<p>Lastly, the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> directory also has the following files:</p>
+<ul>
+<li><code>observed_synergies_cascade_1.0</code>: the gold-standard synergies for the CASCADE 1.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2015" role="doc-biblioref">2015</a>)</span></li>
+<li><code>observed_synergies_cascade_2.0</code>: the gold-standard synergies for the CASCADE 2.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2019" role="doc-biblioref">2019</a>)</span></li>
+<li><code>steadystate</code>: the AGS training data for the calibrated models</li>
+<li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
+</ul>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="2">
+<li id="fn2"><p>The AUC sensitivity plots across the report are also included<a href="reproduce-simulation-results.html#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
