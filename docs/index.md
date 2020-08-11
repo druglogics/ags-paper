@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 07 August, 2020"
+date: "Last updated: 11 August, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -1667,7 +1667,9 @@ These calibrated model ensembles can then be tested for their prediction perform
 Then we use the ensemble-wise *random proliferative* model predictions ($150$ simulations) to normalize ($\beta=-1$) against the calibrated model predictions and compute the **AUC ROC and AUC PR for each model ensemble**.
 :::
 
-Check how to generate the appropriate data and run the simulations in the section [Fitness vs Performance Data].
+:::{.note}
+Check how to generate the appropriate data and run the simulations in the section [Fitness vs Performance Methods].
+:::
 
 The code to load the simulation result data is the following (we have already saved the result for convenience):
 
@@ -2966,7 +2968,7 @@ Overall, this suggests that parameterizing our boolean models using **topology m
 Note that the difference in terms of ROC AUC is not significant compared to the difference of PR AUC scores and since the dataset we test our models on is fairly imbalanced, we base our conclusion on the information from the PR plots [@Saito2015].
 :::
 
-# Reproduce simulation results {-}
+# Reproduce Data & Simulation Results {-}
 
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-}
 
@@ -2978,6 +2980,7 @@ To get the results for the topology mutations for CASCADE 2.0 you need to change
 If you wish to get the results from both mutations, set both `balance_mutations` and `topology_mutations` options to a non-zero value ($3$ and $10$ were used in the simulations).
 
 So, for example to get the simulation output directories for the [Cascade 1.0 Analysis] I just run the `run_druglogics_synergy.sh` script with the following options defined in the loops inside (no need to change any further configuration):
+
 - `cascade_version`: `1.0`
 - `train`: `ss prolif`
 - `sim_num`: `50 150`
@@ -2988,26 +2991,38 @@ Each subsequent `druglogics-synergy` execution results in an output directory an
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
 For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models, as well as the [training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate) file.
 
-## Fitness vs Performance Data {-}
+:::{.note}
+We have stored all the simulations results in an open-access repository provided by Zenodo: **TO-ADD link!!!!!**
+:::
 
-### Generate the flipped training data {-}
+## Fitness vs Performance Methods {-}
 
-A total of $205$ model ensembles were simulated, each one consisting of $60$ models, fitting to a *partial correct* training node set.
-As such, the fitness range of the model ensembles compared to the AGS training data varies between $[0,1]$.
+### Generate the training data samples {-}
+
+Use the [gen_training_data.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_training_data.R) script to **produce the training data samples**.
+In this script we first choose $11$ numbers that represent the number of nodes that are going to be *flipped* in the AGS steady state.
+These numbers range from $1$ (flip just one node) to $24$ (flip all nodes, i.e. create a complete *reversed* steady state).
+Then, for each such number, we generate $20$ new partially correct steady states, each one having the same amount of randomly-chosen *flips* in the steady state (e.g. $20$ steady states where randomly-chosen sets of $3$ nodes have been flipped).
+Thus, in total, $205$ training data sample files are produced ($205 = 9 \times 20 + 1 \times 24 + 1 \times 1$, where from the $11$ number of flips, the one flip happens for every node ($24$ different steady states) and flipping all the nodes generates the unique completely reversed steady state).
+
+The training data files are stored in the Zenodo file `training-data-files.tar.gz`: [ToAddZenodoLink]
 
 ### Run model ensembles simulations {-}
 
+To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://raw.githubusercontent.com/bblodfon/ags-paper-1/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
+With this script, we get the simulation results for each of these training data files.
+Note that in the CASCADE 2.0 configuration file (`config`) we need to change the number of simulations to $20$ for each training data file and the `synergy_method: bliss`. (attractor tool used was `biolqm_stable_states` which is the default option in the `config`) 
 
+The results of these simulations are stored in the Zenodo file `fit-vs-performance-results-bliss.tar.gz`: [ToAddZenodoLink]
 
-## Simulations Dataset {-}
-
-We have stored all the simulations results in an open-access repository provided by Zenodo: **TO-ADD link!!!!!**
+Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script config: `{2.0, rand, 150, biolqm_stable_states, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
+The result of this simulation is also part of the results described above (see section [above](#roc-and-pr-curves-fitness-evolution)) and it's available at the file `` in [ZenodoLinkAndFile].
 
 Zenodo DOI to be provided.
 
 ## Repo results structure {-}
 
-We have gathered all the necessary output files from the above simulations (relating to ROC, PR curves and AUC sensitivity figures) to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report.
+We have gathered all the necessary output files from the above simulations (mostly relating to ROC, PR curves and AUC sensitivity figures) to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report.
 The `results` directory has 3 sub-directories: 
 
 1. [`link-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only): results from the link-operator mutated models only (used in the sections [Cascade 1.0 Analysis] and [CASCADE 2.0 Analysis (Link Operator Mutations)])
@@ -3024,6 +3039,7 @@ Lastly, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/resu
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
 - `steadystate`: the AGS training data for the calibrated models
 - `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
+- `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance] section.
 
 # R session info {-}
 
@@ -3035,7 +3051,7 @@ xfun::session_info()
 ```
 R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 18.04.4 LTS
+Running under: Ubuntu 18.04.5 LTS
 
 Locale:
   LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -3073,7 +3089,7 @@ Package version:
   lazyeval_0.2.2          lifecycle_0.2.0         lme4_1.1.23            
   magrittr_1.5            MAMSE_0.2-1             maptools_1.0.1         
   markdown_1.1            MASS_7.3.51.6           Matrix_1.2-18          
-  MatrixModels_0.4.1      methods_3.6.3           mgcv_1.8-31            
+  MatrixModels_0.4.1      methods_3.6.3           mgcv_1.8.31            
   mime_0.9                minqa_1.2.4             munsell_0.5.0          
   nlme_3.1-148            nloptr_1.2.2.1          nnet_7.3.14            
   openxlsx_4.1.5          parallel_3.6.3          pbkrtest_0.4.8.6       

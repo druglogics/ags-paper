@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Reproduce simulation results | AGS paper - Supplementary Information (SI)</title>
+  <title>Reproduce Data &amp; Simulation Results | AGS paper - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper - SI" />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Reproduce simulation results | AGS paper - Supplementary Information (SI)" />
+  <meta property="og:title" content="Reproduce Data &amp; Simulation Results | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://username.github.io/reponame/" />
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="username/reponame" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Reproduce simulation results | AGS paper - Supplementary Information (SI)" />
+  <meta name="twitter:title" content="Reproduce Data &amp; Simulation Results | AGS paper - Supplementary Information (SI)" />
   
   <meta name="twitter:description" content="AGS paper - SI" />
   
@@ -947,15 +947,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="parameterization-performance-comparison.html"><a href="parameterization-performance-comparison.html"><i class="fa fa-check"></i>Parameterization Performance Comparison</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#fitness-vs-performance-methods"><i class="fa fa-check"></i>Fitness vs Performance Methods</a>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#fitness-vs-performance-methods"><i class="fa fa-check"></i>Fitness vs Performance Methods</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#generate-the-training-data-samples"><i class="fa fa-check"></i>Generate the training data samples</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#generate-the-training-data-samples"><i class="fa fa-check"></i>Generate the training data samples</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -979,8 +979,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="reproduce-simulation-results" class="section level1 unnumbered" number="">
-<h1>Reproduce simulation results</h1>
+<div id="reproduce-data-simulation-results" class="section level1 unnumbered" number="">
+<h1>Reproduce Data &amp; Simulation Results</h1>
 <div id="roc-and-pr-curves-fitness-evolution" class="section level2 unnumbered" number="">
 <h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
 <ul>
@@ -1023,13 +1023,13 @@ With this script, we get the simulation results for each of these training data 
 Note that in the CASCADE 2.0 configuration file (<code>config</code>) we need to change the number of simulations to <span class="math inline">\(20\)</span> for each training data file and the <code>synergy_method: bliss</code>. (attractor tool used was <code>biolqm_stable_states</code> which is the default option in the <code>config</code>)</p>
 <p>The results of these simulations are stored in the Zenodo file <code>fit-vs-performance-results-bliss.tar.gz</code>: [ToAddZenodoLink]</p>
 <p>Also, we used the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> (script config: <code>{2.0, rand, 150, biolqm_stable_states, bliss}</code>) repo to get the ensemble results of the <strong>random (proliferative) models</strong> that we will use to normalize the calibrated model performance.
-The result of this simulation is also part of the results described above (see section <a href="reproduce-simulation-results.html#roc-and-pr-curves-fitness-evolution">above</a>) and it’s available at the file `` in [ZenodoLinkAndFile].</p>
+The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#roc-and-pr-curves-fitness-evolution">above</a>) and it’s available at the file `` in [ZenodoLinkAndFile].</p>
 <p>Zenodo DOI to be provided.</p>
 </div>
 </div>
 <div id="repo-results-structure" class="section level2 unnumbered" number="">
 <h2>Repo results structure</h2>
-<p>We have gathered all the necessary output files from the above simulations (relating to ROC, PR curves and AUC sensitivity figures) to the directory <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> for ease of use in our report.
+<p>We have gathered all the necessary output files from the above simulations (mostly relating to ROC, PR curves and AUC sensitivity figures) to the directory <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> for ease of use in our report.
 The <code>results</code> directory has 3 sub-directories:</p>
 <ol style="list-style-type: decimal">
 <li><a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only"><code>link-only</code></a>: results from the link-operator mutated models only (used in the sections <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> and <a href="cascade-2-0-analysis-link-operator-mutations.html#cascade-2.0-analysis-link-operator-mutations">CASCADE 2.0 Analysis (Link Operator Mutations)</a>)</li>
@@ -1052,7 +1052,7 @@ The <code>results</code> directory has 3 sub-directories:</p>
 <div class="footnotes">
 <hr />
 <ol start="2">
-<li id="fn2"><p>The AUC sensitivity plots across the report are also included<a href="reproduce-simulation-results.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The AUC sensitivity plots across the report are also included<a href="reproduce-data-simulation-results.html#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

@@ -947,16 +947,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="parameterization-performance-comparison.html"><a href="parameterization-performance-comparison.html"><i class="fa fa-check"></i>Parameterization Performance Comparison</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html"><i class="fa fa-check"></i>Reproduce simulation results</a>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#fitness-vs-performance-data"><i class="fa fa-check"></i>Fitness vs Performance Data</a>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#fitness-vs-performance-methods"><i class="fa fa-check"></i>Fitness vs Performance Methods</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#generate-the-flipped-training-data"><i class="fa fa-check"></i>Generate the flipped training data</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#generate-the-training-data-samples"><i class="fa fa-check"></i>Generate the training data samples</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#simulations-dataset"><i class="fa fa-check"></i>Simulations Dataset</a></li>
-<li class="chapter" data-level="" data-path="reproduce-simulation-results.html"><a href="reproduce-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -1858,7 +1857,9 @@ Figure 28: Fitness Evolution (200 simulations, link operator mutations, CASCADE 
 These calibrated model ensembles can then be tested for their prediction performance.
 Then we use the ensemble-wise <em>random proliferative</em> model predictions (<span class="math inline">\(150\)</span> simulations) to normalize (<span class="math inline">\(\beta=-1\)</span>) against the calibrated model predictions and compute the <strong>AUC ROC and AUC PR for each model ensemble</strong>.</p>
 </div>
-<p>Check how to generate the appropriate data and run the simulations in the section <a href="reproduce-simulation-results.html#fitness-vs-performance-data">Fitness vs Performance Data</a>.</p>
+<div class="note">
+<p>Check how to generate the appropriate data and run the simulations in the section <a href="reproduce-data-simulation-results.html#fitness-vs-performance-methods">Fitness vs Performance Methods</a>.</p>
+</div>
 <p>The code to load the simulation result data is the following (we have already saved the result for convenience):</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb42-1"></a><span class="co"># get flipped training data results</span></span>
 <span id="cb42-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb42-2"></a>data_dir =<span class="st"> &quot;/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss&quot;</span></span>
