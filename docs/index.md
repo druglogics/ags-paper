@@ -2894,10 +2894,13 @@ grid(lwd = 0.5)
 <p class="caption">(\#fig:best-beta-cascade2-topo-and-link)ROC and PR curve for best beta (CASCADE 2.0, Link Operator and Topology Mutations)</p>
 </div>
 
-# Parameterization Performance Comparison {-}
+# Parameterization vs Performance {-}
 
-In this section we will compare the best combined predictors ($calibrated + \beta \times random$) across all 3 model parameterizations/mutations we tested in this report for CASCADE 2.0: **link operator mutations, topology mutations and both**.
-We use the normalization parameter $\beta=-1$ for all combined predictors, as it was observed throughout the report that it maximizes the performance of all Bliss-assessed, ensemble-wise combined synergy predictors.
+## Best ROC and PRC {-}
+
+In this section we will compare the normalized combined predictors ($calibrated + \beta \times random, \beta=-1$) across all 3 model parameterizations/mutations we tested in this report for CASCADE 2.0: **link operator mutations, topology mutations and both**.
+We use the normalization parameter $\beta=-1$ for all combined predictors, as it was observed throughout the report that it approximately maximizes the performance of all **Bliss-assessed, ensemble-wise** combined synergy predictors in terms of ROC and PR AUC.
+The results are from the $150$ simulation runs ($450$ models).
 
 :::{#beta-as-norm .note}
 **Why call $\beta$ a *normalization* parameter?**
@@ -2961,12 +2964,179 @@ grid(lwd = 0.5)
 </div>
 
 :::{.green-box}
-We observe that if we had used the results for the **link operator only** combined predictor with $\beta_{best}=-1.6$ as was demonstrated [here](#best-roc-and-prc), we would have an AUC-ROC of $0.85$ and AUC-PR of $0.27$, which are pretty close to the results we see above for $\beta=-1$, using both link and topology mutations.
+We observe that if we had used the results for the **link operator only** combined predictor with $\beta_{best}=-1.6$ as was demonstrated [here](#auc-sensitivity-3), we would have an AUC-ROC of $0.85$ and AUC-PR of $0.27$, which are pretty close to the results we see above for $\beta=-1$, using both link and topology mutations.
 
-Overall, this suggests that parameterizing our boolean models using **topology mutations** can increase the performance of our proposed synergy prediction approach much more than using either link operator (balance) mutations alone or combined with topology parameterization.
+Overall, this suggests that parameterizing our boolean models using **topology mutations** can **increase the performance of our proposed synergy prediction approach** much more than using either link operator (balance) mutations alone or combined with topology parameterization.
 
 Note that the difference in terms of ROC AUC is not significant compared to the difference of PR AUC scores and since the dataset we test our models on is fairly imbalanced, we base our conclusion on the information from the PR plots [@Saito2015].
 :::
+
+## Bootstrap Simulations {-}
+
+Now we would like to statistically verify the previous conclusion (that **topology parameterization** is superior to the other two and produces better predictive models for our dataset) and so we will run a *bootstrap* analysis.
+Simply put, we generated **3 large pools** of calibrated to steady state models  ($4500$ models each). 
+Each pool corresponds to the **3 parameterization schemes** (i.e. it has models with either topology mutations only, link-operator mutations only, or models with both mutations).
+Then, we take several model samples from each pool ($25$ samples, with $300$ models each) and run the drug response simulations for the calibrated models and get their predictions.
+Normalizing each calibrated simulation to the corresponding **random (proliferative) model predictions** (using a $\beta=-1$ as above) results in different ROC and PR AUCs for each parameterization scheme and chosen bootstrapped sample.
+See more details on reproducing the results on section [Parameterization Bootstrap].
+
+The following code is used to load the results from the simulations (we have already saved the result for convenience):
+
+```r
+# lo = 'link-operator mutations', topo = 'topology mutations', both = 'link-operator and topology mutations'
+data_dir_lo = "/home/john/tmp/ags_paper_res/parameterization-comp/link-only/"
+data_dir_topo = "/home/john/tmp/ags_paper_res/parameterization-comp/topology-only/"
+data_dir_both = "/home/john/tmp/ags_paper_res/parameterization-comp/topo-and-link/"
+
+# define `beta` value for normalization
+beta = -1
+
+# define data list that is going to store all results
+data_list = list()
+index = 1
+
+## Link-operator only Mutations 
+
+# random model predictions
+random_ew_scores_file_lo = paste0(data_dir_lo, "cascade_2.0_rand_150sim_fixpoints_bliss_20200505_063817/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+random_ew_scores_lo = emba::get_synergy_scores(random_ew_scores_file_lo)
+
+# calibrated bootstrap data
+for (res_dir in list.dirs(paste0(data_dir_lo, "boot_res"), recursive = FALSE)) {
+  # check only the simulation (not the `models_batch_*`) directories
+  if (stringr::str_detect(string = res_dir, pattern = "cascade_2.0_ss_bliss_batch")) {
+    ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
+    ss_ew_scores = emba::get_synergy_scores(ew_synergies_file)
+    
+    # calculate normalized model performance (ROC-AUC and PR-AUC)
+    pred = dplyr::bind_cols(
+      random_ew_scores_lo %>% select(score) %>% rename(random_score = score),
+      ss_ew_scores %>% select(score) %>% rename(ss_score = score),
+      as_tibble_col(observed, column_name = "observed"))
+  
+    # get the normalized synergy scores
+    pred = pred %>% mutate(combined_score = ss_score + beta * random_score)
+  
+    res_roc = PRROC::roc.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+      weights.class0 = pred %>% pull(observed))
+    res_pr = PRROC::pr.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+      weights.class0 = pred %>% pull(observed))
+  
+    # bind all to one (OneForAll)
+    df = dplyr::bind_cols(roc_auc = res_roc$auc, pr_auc = res_pr$auc.davis.goadrich, 
+      param = "link-only")
+    
+    data_list[[index]] = df
+    index = index + 1
+  }
+}
+
+## Topology-only mutations 
+
+# random model predictions
+random_ew_scores_file_topo = paste0(data_dir_topo, "cascade_2.0_rand_150sim_fixpoints_bliss_20200429_023822/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+random_ew_scores_topo = emba::get_synergy_scores(random_ew_scores_file_topo)
+
+# calibrated bootstrap data
+for (res_dir in list.dirs(paste0(data_dir_topo, "boot_res"), recursive = FALSE)) {
+  # check only the simulation (not the `models_batch_*`) directories
+  if (stringr::str_detect(string = res_dir, pattern = "cascade_2.0_ss_bliss_batch")) {
+    ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
+    ss_ew_scores = emba::get_synergy_scores(ew_synergies_file)
+    
+    # calculate normalized model performance (ROC-AUC and PR-AUC)
+    pred = dplyr::bind_cols(
+      random_ew_scores_topo %>% select(score) %>% rename(random_score = score),
+      ss_ew_scores %>% select(score) %>% rename(ss_score = score),
+      as_tibble_col(observed, column_name = "observed"))
+  
+    # get the normalized synergy scores
+    pred = pred %>% mutate(combined_score = ss_score + beta * random_score)
+  
+    res_roc = PRROC::roc.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+      weights.class0 = pred %>% pull(observed))
+    res_pr = PRROC::pr.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+      weights.class0 = pred %>% pull(observed))
+  
+    # bind all to one (OneForAll)
+    df = dplyr::bind_cols(roc_auc = res_roc$auc, pr_auc = res_pr$auc.davis.goadrich,
+      param = "topology-only")
+    
+    data_list[[index]] = df
+    index = index + 1
+  }
+}
+
+## Both Link-operator and Topology mutations 
+
+# random model predictions
+random_ew_scores_file_both = paste0(data_dir_both, "cascade_2.0_rand_150sim_fixpoints_bliss_20200430_122450/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+random_ew_scores_both = emba::get_synergy_scores(random_ew_scores_file_both)
+
+# calibrated bootstrap data
+for (res_dir in list.dirs(paste0(data_dir_both, "boot_res"), recursive = FALSE)) {
+  # check only the simulation (not the `models_batch_*`) directories
+  if (stringr::str_detect(string = res_dir, pattern = "cascade_2.0_ss_bliss_batch")) {
+    ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
+    ss_ew_scores = emba::get_synergy_scores(ew_synergies_file)
+    
+    # calculate normalized model performance (ROC-AUC and PR-AUC)
+    pred = dplyr::bind_cols(
+      random_ew_scores_both %>% select(score) %>% rename(random_score = score),
+      ss_ew_scores %>% select(score) %>% rename(ss_score = score),
+      as_tibble_col(observed, column_name = "observed"))
+  
+    # get the normalized synergy scores
+    pred = pred %>% mutate(combined_score = ss_score + beta * random_score)
+  
+    res_roc = PRROC::roc.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+      weights.class0 = pred %>% pull(observed))
+    res_pr = PRROC::pr.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
+      weights.class0 = pred %>% pull(observed))
+  
+    # bind all to one (OneForAll)
+    df = dplyr::bind_cols(roc_auc = res_roc$auc, pr_auc = res_pr$auc.davis.goadrich,
+      param = "topo-and-link")
+    
+    data_list[[index]] = df
+    index = index + 1
+  }
+}
+
+res = bind_rows(data_list)
+saveRDS(res, file = "results/res_param_boot_aucs.rds")
+```
+
+
+```r
+# load the data
+res = readRDS(file = "results/res_param_boot_aucs.rds")
+
+# define group comparisons for statistics
+my_comparisons = list(c("link-only","topology-only"), c("link-only","topo-and-link"), 
+  c("topology-only","topo-and-link"))
+
+# ROC AUCs
+ggboxplot(data = res, x = "param", y = "roc_auc", 
+  fill = "param", add = "jitter", palette = "Set1", 
+  xlab = "Parameterization", ylab = "PR AUC",
+  title = "Parameterization vs Performance (ROC)") +
+  stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+# PR AUCs
+ggboxplot(data = res, x = "param", y = "pr_auc", 
+  fill = "param", add = "jitter", palette = "Set1", 
+  xlab = "Parameterization", ylab = "PR AUC", 
+  title = "Parameterization vs Performance (Precision-Recall)") +
+  stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/param-comp-boot-fig-1.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" /><img src="index_files/figure-html/param-comp-boot-fig-2.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" />
+<p class="caption">(\#fig:param-comp-boot-fig)Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)</p>
+</div>
 
 # Reproduce Data & Simulation Results {-}
 
@@ -3019,6 +3189,10 @@ Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglog
 The result of this simulation is also part of the results described above (see section [above](#roc-and-pr-curves-fitness-evolution)) and it's available at the file `` in [ZenodoLinkAndFile].
 
 Zenodo DOI to be provided.
+
+## Parameterization Bootstrap {-}
+
+
 
 ## Repo results structure {-}
 
