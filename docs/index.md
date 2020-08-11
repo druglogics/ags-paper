@@ -3119,7 +3119,7 @@ my_comparisons = list(c("link-only","topology-only"), c("link-only","topo-and-li
 # ROC AUCs
 ggboxplot(data = res, x = "param", y = "roc_auc", 
   fill = "param", add = "jitter", palette = "Set1", 
-  xlab = "Parameterization", ylab = "PR AUC",
+  xlab = "Parameterization", ylab = "ROC AUC",
   title = "Parameterization vs Performance (ROC)") +
   stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
   theme(plot.title = element_text(hjust = 0.5))
@@ -3137,6 +3137,11 @@ ggboxplot(data = res, x = "param", y = "pr_auc",
 <img src="index_files/figure-html/param-comp-boot-fig-1.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" /><img src="index_files/figure-html/param-comp-boot-fig-2.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" />
 <p class="caption">(\#fig:param-comp-boot-fig)Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)</p>
 </div>
+
+:::{.green-box}
+The topology mutations generate the **best performing models in terms of PR AUC** with statistical significance compared to the other two groups of model ensembles using different parameterization.
+In terms of ROC AUC performance we also note the **larger variance** of the topology mutated models.
+:::
 
 # Reproduce Data & Simulation Results {-}
 

@@ -2781,7 +2781,7 @@ my_comparisons = list(c("link-only","topology-only"), c("link-only","topo-and-li
 # ROC AUCs
 ggboxplot(data = res, x = "param", y = "roc_auc", 
   fill = "param", add = "jitter", palette = "Set1", 
-  xlab = "Parameterization", ylab = "PR AUC",
+  xlab = "Parameterization", ylab = "ROC AUC",
   title = "Parameterization vs Performance (ROC)") +
   stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
   theme(plot.title = element_text(hjust = 0.5))
@@ -2794,6 +2794,11 @@ ggboxplot(data = res, x = "param", y = "pr_auc",
   stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
+:::{.green-box}
+The topology mutations generate the **best performing models in terms of PR AUC** with statistical significance compared to the other two groups of model ensembles using different parameterization.
+In terms of ROC AUC performance we also note the **larger variance** of the topology mutated models.
+:::
 
 # Reproduce Data & Simulation Results {-}
 

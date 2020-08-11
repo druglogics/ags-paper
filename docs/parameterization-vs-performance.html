@@ -1193,7 +1193,7 @@ See more details on reproducing the results on section <a href="reproduce-data-s
 <span id="cb73-8"><a href="parameterization-vs-performance.html#cb73-8"></a><span class="co"># ROC AUCs</span></span>
 <span id="cb73-9"><a href="parameterization-vs-performance.html#cb73-9"></a><span class="kw">ggboxplot</span>(<span class="dt">data =</span> res, <span class="dt">x =</span> <span class="st">&quot;param&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;roc_auc&quot;</span>, </span>
 <span id="cb73-10"><a href="parameterization-vs-performance.html#cb73-10"></a>  <span class="dt">fill =</span> <span class="st">&quot;param&quot;</span>, <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>, </span>
-<span id="cb73-11"><a href="parameterization-vs-performance.html#cb73-11"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Parameterization&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PR AUC&quot;</span>,</span>
+<span id="cb73-11"><a href="parameterization-vs-performance.html#cb73-11"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Parameterization&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;ROC AUC&quot;</span>,</span>
 <span id="cb73-12"><a href="parameterization-vs-performance.html#cb73-12"></a>  <span class="dt">title =</span> <span class="st">&quot;Parameterization vs Performance (ROC)&quot;</span>) <span class="op">+</span></span>
 <span id="cb73-13"><a href="parameterization-vs-performance.html#cb73-13"></a><span class="st">  </span><span class="kw">stat_compare_means</span>(<span class="dt">comparisons =</span> my_comparisons, <span class="dt">method =</span> <span class="st">&quot;wilcox.test&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;p.signif&quot;</span>) <span class="op">+</span></span>
 <span id="cb73-14"><a href="parameterization-vs-performance.html#cb73-14"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
@@ -1210,6 +1210,10 @@ See more details on reproducing the results on section <a href="reproduce-data-s
 <p class="caption">
 Figure 48: Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)
 </p>
+</div>
+<div class="green-box">
+<p>The topology mutations generate the <strong>best performing models in terms of PR AUC</strong> with statistical significance compared to the other two groups of model ensembles using different parameterization.
+In terms of ROC AUC performance we also note the <strong>larger variance</strong> of the topology mutated models.</p>
 </div>
 </div>
 </div>
