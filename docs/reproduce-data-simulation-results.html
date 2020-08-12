@@ -953,12 +953,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repro123"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#fitness-vs-performance-methods"><i class="fa fa-check"></i>Fitness vs Performance Methods</a>
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#generate-the-training-data-samples"><i class="fa fa-check"></i>Generate the training data samples</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#random-model-bootstrap"><i class="fa fa-check"></i>Random Model Bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#parameterization-bootstrap"><i class="fa fa-check"></i>Parameterization Bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
@@ -986,28 +987,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="reproduce-data-simulation-results" class="section level1 unnumbered" number="">
 <h1>Reproduce Data &amp; Simulation Results</h1>
-<div id="roc-and-pr-curves-fitness-evolution" class="section level2 unnumbered" number="">
+<div id="repro123" class="section level2 unnumbered" number="">
 <h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
 <ul>
 <li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
 <li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo.</li>
 </ul>
-<p>You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run, for a complete list of configuration options, see <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html">here</a>).
-To get the results for the topology mutations for CASCADE 2.0 you need to change the <code>ags_cascade_2.0/config</code> file option <code>topology_mutations: 10</code> (it is <span class="math inline">\(0\)</span> by default - no topology mutations, only link-operator/balance mutations).
-If you wish to get the results from both mutations, set both <code>balance_mutations</code> and <code>topology_mutations</code> options to a non-zero value (<span class="math inline">\(3\)</span> and <span class="math inline">\(10\)</span> were used in the simulations).</p>
+<p>You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run - see <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html">here</a> for a complete list of configuration options).
+To get the results for the <strong>topology mutations</strong> for CASCADE 2.0 you need to change the <code>ags_cascade_2.0/config</code> file option <code>topology_mutations: 10</code> (it is <span class="math inline">\(0\)</span> by default - no topology mutations, only link-operator/balance mutations).
+If you wish to get the results using <strong>both kinds of mutation</strong>, set both <code>balance_mutations</code> and <code>topology_mutations</code> options to a non-zero value (<span class="math inline">\(3\)</span> and <span class="math inline">\(10\)</span> were used in the simulations).</p>
 <p>So, for example to get the simulation output directories for the <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> I just run the <code>run_druglogics_synergy.sh</code> script with the following options defined in the loops inside (no need to change any further configuration):</p>
 <ul>
-<li><code>cascade_version</code>: <code>1.0</code></li>
-<li><code>train</code>: <code>ss prolif</code></li>
-<li><code>sim_num</code>: <code>50 150</code></li>
-<li><code>attr_tool</code>: <code>fixpoints</code></li>
-<li><code>synergy_method</code>: <code>hsa bliss</code></li>
+<li><code>cascade_version</code>: <code>1.0</code> (which topology to use)</li>
+<li><code>train</code>: <code>ss prolif</code> (train to the AGS steady state or to a (random) proliferation phenotype))</li>
+<li><code>sim_num</code>: <code>50 150</code> (number of simulations)</li>
+<li><code>attr_tool</code>: <code>fixpoints</code> (attractor tool, common across all report)</li>
+<li><code>synergy_method</code>: <code>hsa bliss</code> (synergy claculation method used by <code>drabme</code>)</li>
 </ul>
 <p>Each subsequent <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
 For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.
 For the stable state and parameterization heatmaps we used the directory output with all the <code>gitsbe</code> generated models, as well as the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate">training steady state</a> file.</p>
 <div class="note">
-<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <strong>TO-ADD link!!!!!</strong></p>
+<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <strong>TO-ADD link!!!!!</strong>.
+Specifically, the results described above are stored in the compressed file <code>sim_res.tar.gz</code>.</p>
 </div>
 </div>
 <div id="fitness-vs-performance-methods" class="section level2 unnumbered" number="">
@@ -1023,17 +1025,54 @@ Thus, in total, <span class="math inline">\(205\)</span> training data sample fi
 </div>
 <div id="run-model-ensembles-simulations" class="section level3 unnumbered" number="">
 <h3>Run model ensembles simulations</h3>
-<p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://raw.githubusercontent.com/bblodfon/ags-paper-1/master/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <code>druglogics-synergy</code> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
+<p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <code>druglogics-synergy</code> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
 With this script, we get the simulation results for each of these training data files.
 Note that in the CASCADE 2.0 configuration file (<code>config</code>) we need to change the number of simulations to <span class="math inline">\(20\)</span> for each training data file and the <code>synergy_method: bliss</code>. (attractor tool used was <code>biolqm_stable_states</code> which is the default option in the <code>config</code>)</p>
 <p>The results of these simulations are stored in the Zenodo file <code>fit-vs-performance-results-bliss.tar.gz</code>: [ToAddZenodoLink]</p>
 <p>Also, we used the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> (script config: <code>{2.0, rand, 150, biolqm_stable_states, bliss}</code>) repo to get the ensemble results of the <strong>random (proliferative) models</strong> that we will use to normalize the calibrated model performance.
-The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#roc-and-pr-curves-fitness-evolution">above</a>) and it’s available at the file `` in [ZenodoLinkAndFile].</p>
-<p>Zenodo DOI to be provided.</p>
+The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#repro123">above</a>) and it’s available at the file <code>sim_res.tar.gz</code> in [ZenodoLinkAndFile].</p>
 </div>
+</div>
+<div id="random-model-bootstrap" class="section level2 unnumbered" number="">
+<h2>Random Model Bootstrap</h2>
+<ul>
+<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>Run the the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_random.sh">run_gitsbe_random.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository.
+This creates a results directory which includes a <code>models</code> directory, with a total of <span class="math inline">\(3000\)</span> <code>gitsbe</code> models which we are going to use for the bootstrapping.</li>
+<li>Place the <code>models</code> directory inside the <code>ags_cascade_2.0</code> directory.</li>
+<li>Execute the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> inside the <code>druglogics-synergy/ags_cascade_2.0</code> directory.
+Changing appropriately the <code>config</code> file to have <code>synergy_method: bliss</code>.
+The bootstrap configuration consists of <span class="math inline">\(20\)</span> batches, each one consisting of a sample of <span class="math inline">\(100\)</span> randomly selected models from the model directory pool.</li>
+</ul>
+<p>The results of the simulations executed via the above scripts are all stored in the <code>random_model_bootstrap.tar.gz</code> file of the Zenodo dataset [TOADDZenodo!]</p>
 </div>
 <div id="parameterization-bootstrap" class="section level2 unnumbered" number="">
 <h2>Parameterization Bootstrap</h2>
+<ul>
+<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>To generate the <span class="math inline">\(3\)</span> pools of calibrated models (fitting to the AGS steady state) subject to different normalization schemes, run the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_param.sh">run_gitsbe_param.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository root.
+This will generate the directories:
+<ul>
+<li><code>gitsbe_link_only_cascade_2.0_ss</code></li>
+<li><code>gitsbe_topology_only_cascade_2.0_ss</code></li>
+<li><code>gitsbe_topo_and_link_cascade_2.0_ss</code>,
+each of which have a <code>models</code> directory (the model pool)</li>
+</ul></li>
+<li>Repeat for each different pool (<code>models</code> directory):
+<ul>
+<li>Place the <code>models</code> directory inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository root.</li>
+<li>Use the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> script, while changing the following configuration: <code>batches=25</code>, <code>batch_size=300</code> and the <code>project</code> variable name (input to <code>eu.druglogics.drabme.Launcher</code>) as one of the three:
+<ul>
+<li><code>--project=link_only_cascade_2.0_ss_bliss_batch_${batch}</code></li>
+<li><code>--project=topology_only_cascade_2.0_ss_bliss_batch_${batch}</code></li>
+<li><code>--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}</code>
+, depending on the parameterization scheme that was used in the previous step to produce the <code>models</code> pool.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>The results of all these simulations are stored in the <code>parameterization-comp.tar.gz</code> file [Zenodo LINK TO ADD].</p>
+<p>When uncompressed, the file has 3 separate directories, one per parameterization scheme.
+Each separate directory is structured so as to contain the <code>gitsbe</code> simulation results with the model pool inside (result of the script <code>run_gitsbe_param.sh</code>), a <code>boot_res</code> directory (includes the results of the <code>bootstrap_models_drabme.sh</code> script) and lastly the results of the <strong>random proliferative model simulations</strong> which can be reproduced following the guidelines <a href="reproduce-data-simulation-results.html#repro123">above</a>.</p>
 </div>
 <div id="repo-results-structure" class="section level2 unnumbered" number="">
 <h2>Repo results structure</h2>
@@ -1047,13 +1086,14 @@ The <code>results</code> directory has 3 sub-directories:</p>
 <div class="note">
 <p>Because the simulation results using <strong>only link operator mutations</strong> were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only">link-only-mutations results</a> to 2 directories (<code>hsa</code> and <code>bliss</code>) having the results from the different synergy assessment methods (check Drabme’s <code>synergy_method</code> <a href="#https://druglogics.github.io/druglogics-doc/drabme-config.html">configuration option</a>).</p>
 </div>
-<p>Lastly, the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> directory also has the following files:</p>
+<p>Lastly, the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> directory also includes the following files:</p>
 <ul>
 <li><code>observed_synergies_cascade_1.0</code>: the gold-standard synergies for the CASCADE 1.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2015" role="doc-biblioref">2015</a>)</span></li>
 <li><code>observed_synergies_cascade_2.0</code>: the gold-standard synergies for the CASCADE 2.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2019" role="doc-biblioref">2019</a>)</span></li>
 <li><code>steadystate</code>: the AGS training data for the calibrated models</li>
 <li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
 <li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-vs-ensemble-performance">Fitness vs Ensemble Performance</a> section.</li>
+<li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#bootstrap-simulations">Bootstrap Simulations</a> section.</li>
 </ul>
 </div>
 </div>

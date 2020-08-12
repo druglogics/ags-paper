@@ -953,12 +953,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
-<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#roc-and-pr-curves-fitness-evolution"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repro123"><i class="fa fa-check"></i>ROC and PR curves, Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#fitness-vs-performance-methods"><i class="fa fa-check"></i>Fitness vs Performance Methods</a>
 <ul>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#generate-the-training-data-samples"><i class="fa fa-check"></i>Generate the training data samples</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#run-model-ensembles-simulations"><i class="fa fa-check"></i>Run model ensembles simulations</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#random-model-bootstrap"><i class="fa fa-check"></i>Random Model Bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#parameterization-bootstrap"><i class="fa fa-check"></i>Parameterization Bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
@@ -1586,12 +1587,11 @@ Figure 21: PR curves (CASCADE 2.0, Bliss synergy method)
 <p>In the previous ROC and PR curves we found a <strong>very low ensemble-wise random (proliferative) model performance</strong>, indicated by the low numbers of ROC and PR AUC.
 We want to assess the <strong>statistical significance of this result</strong>, by bootstraping many model samples from a pool of random models and evaluating the performance of these ensembles.</p>
 </div>
-<p>For that purpose, we run the <code>gitsbe</code> module via the <code>druglogics-synergy</code> (version <code>1.2.0</code>), using the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_random.sh">run_gitsbe_random.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository.
-This creates a results directory which includes a <code>models</code> directory, with a total of <span class="math inline">\(3000\)</span> <code>gitsbe</code> models which we are going to use for the bootstrapping.</p>
-<p>To actually run the bootstrap, we execute the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> inside the <code>druglogics-synergy/ags_cascade_2.0</code> directory changing appropriately the <code>models_dir</code> parameter to point to the previously created models directory and the <code>config</code> file to have <code>synergy_method: bliss</code>.
-The bootstrap configuration consists of <span class="math inline">\(20\)</span> batches, each one consisting of a sample of <span class="math inline">\(100\)</span> randomly selected models from the model directory pool.
-The following code is used to load the results from the <code>drabme</code> simulations (we have already saved the result for convenience):</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb33-1"></a>data_dir =<span class="st"> &quot;/home/john/tmp/ags_paper_res/link-only/bliss/bootstrap&quot;</span></span>
+<div class="note">
+<p>For more details on how to generate the bootstrapped model ensembles, see section <a href="reproduce-data-simulation-results.html#random-model-bootstrap">Random Model Bootstrap</a>.</p>
+</div>
+<p>The following code is used to load the results from the simulations (we have already saved the result for convenience):</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb33-1"></a>data_dir =<span class="st"> &quot;/home/john/tmp/ags_paper_res/link-only/bliss/random_model_bootstrap&quot;</span></span>
 <span id="cb33-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb33-2"></a>data_list =<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb33-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb33-3"></a>index =<span class="st"> </span><span class="dv">1</span></span>
 <span id="cb33-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb33-4"></a><span class="cf">for</span> (res_dir <span class="cf">in</span> <span class="kw">list.dirs</span>(data_dir, <span class="dt">recursive =</span> <span class="ot">FALSE</span>)) {</span>
