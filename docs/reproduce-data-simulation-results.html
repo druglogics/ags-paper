@@ -999,18 +999,21 @@ If you wish to get the results using <strong>both kinds of mutation</strong>, se
 <p>So, for example to get the simulation output directories for the <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> I just run the <code>run_druglogics_synergy.sh</code> script with the following options defined in the loops inside (no need to change any further configuration):</p>
 <ul>
 <li><code>cascade_version</code>: <code>1.0</code> (which topology to use)</li>
-<li><code>train</code>: <code>ss prolif</code> (train to the AGS steady state or to a (random) proliferation phenotype))</li>
-<li><code>sim_num</code>: <code>50 150</code> (number of simulations)</li>
+<li><code>train</code>: <code>ss rand</code> (train to the AGS steady state or to a (random) proliferation phenotype))</li>
+<li><code>sim_num</code>: <code>50</code> (number of simulations)</li>
 <li><code>attr_tool</code>: <code>fixpoints</code> (attractor tool, common across all report)</li>
-<li><code>synergy_method</code>: <code>hsa bliss</code> (synergy claculation method used by <code>drabme</code>)</li>
+<li><code>synergy_method</code>: <code>hsa bliss</code> (synergy calculation method used by <code>drabme</code>)</li>
 </ul>
 <p>Each subsequent <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
 For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.
 For the stable state and parameterization heatmaps we used the directory output with all the <code>gitsbe</code> generated models, as well as the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate">training steady state</a> file.</p>
 <div class="note">
-<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <strong>TO-ADD link!!!!!</strong>.
-Specifically, the results described above are stored in the compressed file <code>sim_res.tar.gz</code>.</p>
+<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <strong>TO-ADD link!!!!!</strong>.</p>
 </div>
+<p>Specifically, the results described above are stored in the compressed file <code>sim_res.tar.gz</code>.
+When uncompressed, the <code>sim_res.tar.gz</code> file outputs 2 separate directories, one per different topology (<em>CASCADE 1.0</em> and <em>CASCADE 2.0</em>).
+The directory with the <em>CASCADE 2.0</em> related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
+Each further directory, <strong>specifies on its name</strong> the <em>training type</em>, <em>simulation number</em>, <em>attractor tool</em> and <em>synergy assessment method</em>.</p>
 </div>
 <div id="fitness-vs-performance-methods" class="section level2 unnumbered" number="">
 <h2>Fitness vs Performance Methods</h2>
@@ -1027,9 +1030,9 @@ Thus, in total, <span class="math inline">\(205\)</span> training data sample fi
 <h3>Run model ensembles simulations</h3>
 <p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <code>druglogics-synergy</code> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
 With this script, we get the simulation results for each of these training data files.
-Note that in the CASCADE 2.0 configuration file (<code>config</code>) we need to change the number of simulations to <span class="math inline">\(20\)</span> for each training data file and the <code>synergy_method: bliss</code>. (attractor tool used was <code>biolqm_stable_states</code> which is the default option in the <code>config</code>)</p>
+Note that in the CASCADE 2.0 configuration file (<code>config</code>) <strong>we need to change the number of simulations</strong> to <span class="math inline">\(20\)</span> for each training data file and the <strong><code>synergy_method: bliss</code></strong> (attractor tool used was <code>biolqm_stable_states</code> which is the default option in the <code>config</code>).</p>
 <p>The results of these simulations are stored in the Zenodo file <code>fit-vs-performance-results-bliss.tar.gz</code>: [ToAddZenodoLink]</p>
-<p>Also, we used the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> (script config: <code>{2.0, rand, 150, biolqm_stable_states, bliss}</code>) repo to get the ensemble results of the <strong>random (proliferative) models</strong> that we will use to normalize the calibrated model performance.
+<p>Also, we used the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> (script config: <code>{2.0, prolif, 150, fixpoints, bliss}</code>) repo to get the ensemble results of the <strong>random (proliferative) models</strong> that we will use to normalize the calibrated model performance.
 The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#repro123">above</a>) and it’s available at the file <code>sim_res.tar.gz</code> in [ZenodoLinkAndFile].</p>
 </div>
 </div>
@@ -1065,13 +1068,13 @@ each of which have a <code>models</code> directory (the model pool)</li>
 <ul>
 <li><code>--project=link_only_cascade_2.0_ss_bliss_batch_${batch}</code></li>
 <li><code>--project=topology_only_cascade_2.0_ss_bliss_batch_${batch}</code></li>
-<li><code>--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}</code>
-, depending on the parameterization scheme that was used in the previous step to produce the <code>models</code> pool.</li>
-</ul></li>
+<li><code>--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}</code></li>
 </ul></li>
 </ul>
+, depending on the parameterization scheme that was used in the previous step to produce the <code>models</code> pool.</li>
+</ul>
 <p>The results of all these simulations are stored in the <code>parameterization-comp.tar.gz</code> file [Zenodo LINK TO ADD].</p>
-<p>When uncompressed, the file has 3 separate directories, one per parameterization scheme.
+<p>When uncompressed, the <code>parameterization-comp.tar.gz</code> file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the <code>gitsbe</code> simulation results with the model pool inside (result of the script <code>run_gitsbe_param.sh</code>), a <code>boot_res</code> directory (includes the results of the <code>bootstrap_models_drabme.sh</code> script) and lastly the results of the <strong>random proliferative model simulations</strong> which can be reproduced following the guidelines <a href="reproduce-data-simulation-results.html#repro123">above</a>.</p>
 </div>
 <div id="repo-results-structure" class="section level2 unnumbered" number="">
@@ -1084,7 +1087,7 @@ The <code>results</code> directory has 3 sub-directories:</p>
 <li><a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link"><code>topo-and-link</code></a>: results where both mutations applied to the generated boolean models (used in section <a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#cascade-2.0-analysis-topology-and-link-operator-mutations">CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>)</li>
 </ol>
 <div class="note">
-<p>Because the simulation results using <strong>only link operator mutations</strong> were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only">link-only-mutations results</a> to 2 directories (<code>hsa</code> and <code>bliss</code>) having the results from the different synergy assessment methods (check Drabme’s <code>synergy_method</code> <a href="#https://druglogics.github.io/druglogics-doc/drabme-config.html">configuration option</a>).</p>
+<p>Because the simulation results using <strong>only link operator mutations</strong> were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we split the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only">link-only-mutations results</a> to 2 directories (<code>hsa</code> and <code>bliss</code>) having the results from the different synergy assessment methods (check Drabme’s <code>synergy_method</code> <a href="#https://druglogics.github.io/druglogics-doc/drabme-config.html">configuration option</a>).</p>
 </div>
 <p>Lastly, the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> directory also includes the following files:</p>
 <ul>

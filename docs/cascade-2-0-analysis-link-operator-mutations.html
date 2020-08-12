@@ -1368,7 +1368,7 @@ Resulting coefficients vary, but tend to be either all too small or <strong>larg
 <div id="mamse-roc-analysis" class="section level3 unnumbered" number="">
 <h3>MAMSE ROC Analysis</h3>
 <p>Using the <code>MAMSE</code> R package <span class="citation">(Plante <a href="references.html#ref-R-MAMSE" role="doc-biblioref">2017</a>)</span> we try another method to combine the predictor values from the calibrated and the random proliferative models.
-The resulting ROC curve gets a little bit distored and AUC is not statistically better from the reference sample population (i.e. the calibrated <code>Gitsbe</code> models with <span class="math inline">\(150\)</span> simulations):</p>
+The resulting ROC curve gets a little bit distorted and AUC is not statistically better from the reference sample population (i.e. the calibrated <code>Gitsbe</code> models with <span class="math inline">\(150\)</span> simulations):</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb29-1"></a><span class="co"># healthy =&gt; non-synergy, diseased =&gt; synergy</span></span>
 <span id="cb29-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb29-2"></a>healthy =<span class="st"> </span><span class="kw">list</span>()</span>
 <span id="cb29-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb29-3"></a>healthy[[<span class="dv">1</span>]] =<span class="st"> </span>pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(observed <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(ss_score_150sim)</span>
@@ -1727,7 +1727,7 @@ For <span class="math inline">\(\beta=-1\)</span> we still see <strong>significa
 <h2>Best ROC and PRC</h2>
 <p>For the <strong>Bliss ensemble-wise results</strong> we demonstrated above that a value of <span class="math inline">\(\beta_{best}=-1.6\)</span> can result in significant performance gain of the combined predictor (<span class="math inline">\(calibrated + \beta \times random\)</span>) using the results from the <span class="math inline">\(150\)</span> simulation runs (the results for <span class="math inline">\(\beta=-1\)</span> were still better than the single predictors).
 Here, we present the ROC and PR curves for the <strong>calibrated (normalized to random model)</strong> predictions compared to the <strong>random proliferative</strong> model results.</p>
-<div id="idsomething" class="note">
+<div class="note">
 <p>Only for the next plot, <strong>Calibrated</strong> stands for the combined predictor results, i.e. <span class="math inline">\(calibrated + \beta \times random, \beta=-1\)</span>.</p>
 </div>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb37-1"></a>best_beta1 =<span class="st"> </span><span class="fl">-1.6</span></span>
@@ -1975,11 +1975,11 @@ Figure 30: Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss
 <h2>Heatmaps: Stable State and Parameterization</h2>
 <div class="note">
 <ul>
-<li>The drawn heatmaps use the <strong>Calibrated</strong> models (fitted to steady state) from the <code>Gitsbe</code> run with <span class="math inline">\(150\)</span> simulations.</li>
+<li>The drawn heatmaps use the <strong>Calibrated</strong> models (fitted to steady state) from the <code>Gitsbe</code> run with <span class="math inline">\(150\)</span> simulations (using the <em>Bliss</em> Drabme synergy assessment).</li>
 <li>The colored column (node) names are part of the <strong>AGS training steady state</strong></li>
 </ul>
 </div>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb52-1"></a>models_dir =<span class="st"> &quot;results/link-only/models_cascade_2.0_ss_150sim/&quot;</span></span>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb52-1"></a>models_dir =<span class="st"> &quot;results/link-only/models_cascade_2.0_ss_150sim_bliss/&quot;</span></span>
 <span id="cb52-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb52-2"></a></span>
 <span id="cb52-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb52-3"></a><span class="co"># Steady States and Link Operators</span></span>
 <span id="cb52-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb52-4"></a>models_stable_states =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_stable_state_from_models_dir</span>(models_dir)</span>

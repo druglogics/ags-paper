@@ -26,7 +26,7 @@ unless otherwise specified, the `Gitsbe` models have only [link operator mutatio
 [Topology mutations](#cascade-2.0-analysis-topology-mutations) were also tested as well as a combination of [topology and link operator mutations](#cascade-2.0-analysis-topology-and-link-operator-mutations).
 - The [training data](https://druglogics.github.io/druglogics-doc/training-data.html) for the `Gitsbe` models: *steady state* (calibrated models) vs *proliferative profile* (random models).
 - The type of mathematical model (HSA or Bliss) used in `Drabme` to evaluate the synergies either from the [@Flobak2015] for the CASCADE 1.0 analysis or from the [@Flobak2019] dataset for the CASCADE 2.0 analysis.
-More info on the calcualtions that Drabme does [see here](https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description).
+More info on the calculations that Drabme does [see here](https://druglogics.github.io/druglogics-doc/drabme-description.html#drabme-description).
 - The type of output used from `Drabme`: ensemble-wise or model-wise [synergy results](https://druglogics.github.io/druglogics-doc/drabme-install.html#drabme-output).
 
 ## Summary {-}
@@ -37,7 +37,7 @@ Observing the results across the whole report, we reach the following conclusion
 - *Ensemble-wise* results do not correlate with *model-wise* results (see correlation results for [CASCADE 1.0](#correlation) and [CASCADE 2.0](#correlation-1)).
 This happens because some drug perturbed models do not have stable states and thus cannot be evaluated for synergy. ^[Using minimal trapspaces, where there is almost always an attractor found and the global output of the model can be [calculated](https://druglogics.github.io/druglogics-doc/modeloutputs.html), we observed higher correlation between *ensemble-wise* and *model-wise* results (as expected)]
 - *Model-wise* ROC results are always better compared to *ensemble-wise* ROC results for the single predictor models (e.g. the *calibrated* non-normalized model results).
-- When using a combined model predictor (see [here](#auc-sensitivity)) to augment/correct the calibrated models results, Drabme's *Bliss* synergy assessement always brings significant performance benefit for the ensemble-wise results.
+- When using a combined model predictor (see [here](#auc-sensitivity)) to augment/correct the calibrated models results, Drabme's *Bliss* synergy assessment always brings significant performance benefit for the ensemble-wise results.
 When using *HSA*, that is not always the case (see [one example](#auc-sensitivity-2) and [another](#auc-sensitivity-5)).
 - The *model-wise* results do not bring any performance benefit when used in a combined predictor.
 - The value of $\beta = -1$ is a good estimation for the value that maximizes the combined predictor's performance ($calibrated + \beta \times random$) across all of the report's relevant investigations.
@@ -1133,7 +1133,7 @@ Resulting coefficients vary, but tend to be either all too small or **larger on 
 ### MAMSE ROC Analysis {-}
 
 Using the `MAMSE` R package [@R-MAMSE] we try another method to combine the predictor values from the calibrated and the random proliferative models.
-The resulting ROC curve gets a little bit distored and AUC is not statistically better from the reference sample population (i.e. the calibrated `Gitsbe` models with $150$ simulations):
+The resulting ROC curve gets a little bit distorted and AUC is not statistically better from the reference sample population (i.e. the calibrated `Gitsbe` models with $150$ simulations):
 
 
 ```r
@@ -1513,7 +1513,7 @@ For $\beta=-1$ we still see **significant performance improvement**.
 For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times random$) using the results from the $150$ simulation runs (the results for $\beta=-1$ were still better than the single predictors).
 Here, we present the ROC and PR curves for the **calibrated (normalized to random model)** predictions compared to the **random proliferative** model results.
 
-:::{.note #idsomething}
+:::{.note}
 Only for the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
@@ -1809,13 +1809,13 @@ ggscatter(data = res, x = "avg_fit", y = "pr_auc",
 ## Heatmaps: Stable State and Parameterization {-}
 
 :::{.note}
-- The drawn heatmaps use the **Calibrated** models (fitted to steady state) from the `Gitsbe` run with $150$ simulations.
+- The drawn heatmaps use the **Calibrated** models (fitted to steady state) from the `Gitsbe` run with $150$ simulations (using the *Bliss* Drabme synergy assessment).
 - The colored column (node) names are part of the **AGS training steady state**
 :::
 
 
 ```r
-models_dir = "results/link-only/models_cascade_2.0_ss_150sim/"
+models_dir = "results/link-only/models_cascade_2.0_ss_150sim_bliss/"
 
 # Steady States and Link Operators
 models_stable_states = emba::get_stable_state_from_models_dir(models_dir)
@@ -2964,7 +2964,7 @@ grid(lwd = 0.5)
 :::{.green-box}
 We observe that if we had used the results for the **link operator only** combined predictor with $\beta_{best}=-1.6$ as was demonstrated [here](#auc-sensitivity-3), we would have an AUC-ROC of $0.85$ and AUC-PR of $0.27$, which are pretty close to the results we see above for $\beta=-1$, using both link and topology mutations.
 
-Overall, this suggests that parameterizing our boolean models using **topology mutations** can **increase the performance of our proposed synergy prediction approach** much more than using either link operator (balance) mutations alone or combined with topology parameterization.
+Overall, this suggests that to parameterize our boolean models using **topology mutations** can **increase the performance of our proposed synergy prediction approach** much more than using either link operator (balance) mutations alone or combined with topology parameterization.
 
 Note that the difference in terms of ROC AUC is not significant compared to the difference of PR AUC scores and since the dataset we test our models on is fairly imbalanced, we base our conclusion on the information from the PR plots [@Saito2015].
 :::
@@ -3157,10 +3157,10 @@ If you wish to get the results using **both kinds of mutation**, set both `balan
 So, for example to get the simulation output directories for the [Cascade 1.0 Analysis] I just run the `run_druglogics_synergy.sh` script with the following options defined in the loops inside (no need to change any further configuration):
 
 - `cascade_version`: `1.0` (which topology to use)
-- `train`: `ss prolif` (train to the AGS steady state or to a (random) proliferation phenotype))
-- `sim_num`: `50 150` (number of simulations)
+- `train`: `ss rand` (train to the AGS steady state or to a (random) proliferation phenotype))
+- `sim_num`: `50` (number of simulations)
 - `attr_tool`: `fixpoints` (attractor tool, common across all report)
-- `synergy_method`: `hsa bliss` (synergy claculation method used by `drabme`)
+- `synergy_method`: `hsa bliss` (synergy calculation method used by `drabme`)
 
 Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
@@ -3168,8 +3168,12 @@ For the stable state and parameterization heatmaps we used the directory output 
 
 :::{.note}
 We have stored all the simulations results in an open-access repository provided by Zenodo: **TO-ADD link!!!!!**.
-Specifically, the results described above are stored in the compressed file `sim_res.tar.gz`.
 :::
+
+Specifically, the results described above are stored in the compressed file `sim_res.tar.gz`.
+When uncompressed, the `sim_res.tar.gz` file outputs 2 separate directories, one per different topology (*CASCADE 1.0* and *CASCADE 2.0*).
+The directory with the *CASCADE 2.0* related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
+Each further directory, **specifies on its name** the *training type*, *simulation number*, *attractor tool* and *synergy assessment method*.
 
 ## Fitness vs Performance Methods {-}
 
@@ -3187,13 +3191,12 @@ The training data files are stored in the Zenodo file `training-data-files.tar.g
 
 To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
 With this script, we get the simulation results for each of these training data files.
-Note that in the CASCADE 2.0 configuration file (`config`) we need to change the number of simulations to $20$ for each training data file and the `synergy_method: bliss`. (attractor tool used was `biolqm_stable_states` which is the default option in the `config`) 
+Note that in the CASCADE 2.0 configuration file (`config`) **we need to change the number of simulations** to $20$ for each training data file and the **`synergy_method: bliss`**  (attractor tool used was `biolqm_stable_states` which is the default option in the `config`).
 
 The results of these simulations are stored in the Zenodo file `fit-vs-performance-results-bliss.tar.gz`: [ToAddZenodoLink]
 
-Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script config: `{2.0, rand, 150, biolqm_stable_states, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
+Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script config: `{2.0, prolif, 150, fixpoints, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
 The result of this simulation is also part of the results described above (see section [above](#repro123)) and it's available at the file `sim_res.tar.gz` in [ZenodoLinkAndFile].
-
 
 ## Random Model Bootstrap {-}
 
@@ -3221,12 +3224,13 @@ This will generate the directories:
   - Use the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) script, while changing the following configuration: `batches=25`, `batch_size=300` and the `project` variable name (input to `eu.druglogics.drabme.Launcher`) as one of the three:
     - `--project=link_only_cascade_2.0_ss_bliss_batch_${batch}`
     - `--project=topology_only_cascade_2.0_ss_bliss_batch_${batch}`
-    - `--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}` 
+    - `--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}`
+  
   , depending on the parameterization scheme that was used in the previous step to produce the `models` pool.
 
 The results of all these simulations are stored in the `parameterization-comp.tar.gz` file [Zenodo LINK TO ADD].
 
-When uncompressed, the file has 3 separate directories, one per parameterization scheme.
+When uncompressed, the `parameterization-comp.tar.gz` file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script `run_gitsbe_param.sh`), a `boot_res` directory (includes the results of the `bootstrap_models_drabme.sh` script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
 
 ## Repo results structure {-}
@@ -3239,7 +3243,7 @@ The `results` directory has 3 sub-directories:
 3. [`topo-and-link`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
 
 :::{.note}
-Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we splitted the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
+Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we split the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
 :::
 
 Lastly, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory also includes the following files:
