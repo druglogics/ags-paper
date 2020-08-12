@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run this script from the `druglogics-synergy` repository root (v1.2.0)
+# The `training-data-files` are produced via the `gen_training_data.R` script
+
 training_files=`ls ags_cascade_2.0/training-data-files` 
 files_num=`ls ags_cascade_2.0/training-data-files | wc -l`
 count=0

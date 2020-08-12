@@ -1,8 +1,10 @@
 library(dplyr)
 library(tibble)
 
+# For this code to run make sure `getwd()` points to the root of this repository
+
 # Read the AGS steady state and reformat it to a data.frame
-steady_state_file = paste0(getwd(), "/steadystate")
+steady_state_file = paste0(getwd(), "/results/steadystate")
 lines = readLines(steady_state_file)
 steady_state = unlist(strsplit(x = lines[8], split = "\t"))
 
@@ -55,6 +57,7 @@ for(flip_num in num_of_flips) {
 
 # Write flipped steady states to files
 train_data_dir = paste0(getwd(), "/training-data-files/")
+dir.create(train_data_dir)
 flipped_state_lines = lines
 
 for (index in 1:length(flipped_states)) {

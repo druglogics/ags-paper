@@ -1,12 +1,17 @@
 #!/bin/bash
 
+# Execute this script inside the `ags_cascade_2.0` directory of the 
+# `druglogics-synergy` repository (v1.2.0)
+
 # Use this script to bootstrap `batch_size` amount of gitsbe models from
 # a specific `models_dir` directory and provide them as input to `drabme`.
 # This process will be repeated `batches` times.
 
 batches=20
-models_dir="/home/ioanniz/repos/druglogics-synergy/ags_cascade_2.0/models"
 batch_size=100
+
+# the `models` directory can for example be created with the `run_gitsbe_random.sh` script
+models_dir="models"
 
 for batch in $( seq 1 $batches )
 do

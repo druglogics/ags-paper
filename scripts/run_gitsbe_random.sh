@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Execute this script inside the `ags_cascade_2.0` directory of the 
+# `druglogics-synergy` repository (v1.2.0)
+
 # change to random training data and 1000 simulations
 cat random_train > training
 sed -i 's/simulations:.*/simulations:\t1000/' config
