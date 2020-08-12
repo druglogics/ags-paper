@@ -2783,16 +2783,18 @@ ggboxplot(data = res, x = "param", y = "roc_auc",
   fill = "param", add = "jitter", palette = "Set1", 
   xlab = "Parameterization", ylab = "ROC AUC",
   title = "Parameterization vs Performance (ROC)") +
-  stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
-  theme(plot.title = element_text(hjust = 0.5))
+  stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.format") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  theme(legend.position = "none")
   
 # PR AUCs
 ggboxplot(data = res, x = "param", y = "pr_auc", 
   fill = "param", add = "jitter", palette = "Set1", 
-  xlab = "Parameterization", ylab = "PR AUC", 
+  xlab = "Parameterization", ylab = "PR AUC",
   title = "Parameterization vs Performance (Precision-Recall)") +
-  stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
-  theme(plot.title = element_text(hjust = 0.5))
+  stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.format") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  theme(legend.position = "none")
 ```
 
 :::{.green-box}
