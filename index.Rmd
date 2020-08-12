@@ -2825,8 +2825,12 @@ For the stable state and parameterization heatmaps we used the directory output 
 
 :::{.note}
 We have stored all the simulations results in an open-access repository provided by Zenodo: **TO-ADD link!!!!!**.
-Specifically, the results described above are stored in the compressed file `sim_res.tar.gz`.
 :::
+
+Specifically, the results described above are stored in the compressed file `sim_res.tar.gz`.
+When uncompressed, the `sim_res.tar.gz` file outputs 2 separate directories, one per different topology (*CASCADE 1.0* and *CASCADE 2.0*).
+The directory with the *CASCADE 2.0* related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
+Each further directory, **specifies on its name** the *training type*, *simulation number*, *attractor tool* and *synergy assessment method*.
 
 ## Fitness vs Performance Methods {-}
 
