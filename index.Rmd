@@ -1632,7 +1632,18 @@ train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta
   labels_gp = gpar(fontface = "bold"))
 legend_list = packLegend(activity_state_legend, fit_legend, train_legend, direction = "vertical")
 
-draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
+heatmap_ss = draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
+
+# code to add rectangular boxes for specific nodes
+# co = column_order(heatmap_ss)
+# nc = ncol(models_stable_states)
+# marked_nodes = c("MYC", "TP53")
+# decorate_heatmap_body(heatmap = "heatmap_ss", code = {
+#   for(node in marked_nodes) {
+#     i = which(colnames(models_stable_states)[co] == node)
+#     grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 1)) 
+#   }
+# })
 ```
 
 ```{r link-op-heatmap, cache=TRUE, dpi=300, fig.align='center', fig.cap='Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)'}
