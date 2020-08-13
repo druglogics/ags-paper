@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 12 August, 2020"
+date: "Last updated: 13 August, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -33,6 +33,7 @@ More info on the calculations that Drabme does [see here](https://druglogics.git
 
 Observing the results across the whole report, we reach the following conclusions:
 
+:::{.green-box}
 - To minimize the expected performance variance, executing $150$ `Gitsbe` simulations is a good choice (no need for more, no matter the other input parameters).
 - *Ensemble-wise* results do not correlate with *model-wise* results (see correlation results for [CASCADE 1.0](#correlation) and [CASCADE 2.0](#correlation-1)).
 This happens because some drug perturbed models do not have stable states and thus cannot be evaluated for synergy. ^[Using minimal trapspaces, where there is almost always an attractor found and the global output of the model can be [calculated](https://druglogics.github.io/druglogics-doc/modeloutputs.html), we observed higher correlation between *ensemble-wise* and *model-wise* results (as expected)]
@@ -42,12 +43,16 @@ When using *HSA*, that is not always the case (see [one example](#auc-sensitivit
 - The *model-wise* results do not bring any performance benefit when used in a combined predictor.
 - The value of $\beta = -1$ is a good estimation for the value that maximizes the combined predictor's performance ($calibrated + \beta \times random$) across all of the report's relevant investigations.
 - Comparing the different parameterization schemes for the CASCADE 2.0 analysis (using the combined predictors with $\beta = -1$), we observe that **topology mutations outperform link operator mutations**.
+:::
 
 # R Libraries {-}
 
-For the ROC curves we used the function `get_roc_stats()` from [@R-usefun] and for the PR curves the `pr.curve()` from [@R-PRROC] (see also [@Grau2015]).
+For the ROC curves we used the function `get_roc_stats()` from the `usefun` R package [@R-usefun] and for the PR curves the `pr.curve()` from the `PRROC` package [@Grau2015].
+Several functions from the `emba` R package [@emba-site] are also used to load the simulation results.
 
 The AUC sensitivity analysis (for a description see [here](#auc-sensitivity)) was inspired by work from [@Pepe2000].
+
+The heatmaps are generated with the `ComplexHeatmap` R package [@Gu2016].
 
 The report template is from the `rtemps` R package [@R-rtemps].
 
@@ -99,10 +104,10 @@ Load results:
 # 'ew' => ensemble-wise, 'mw' => model-wise
 
 ## HSA results
-ss_hsa_ew_file = paste0("results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_mw_file = paste0("results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-prolif_hsa_ew_file = paste0("results/link-only/hsa/cascade_1.0_prolif_50sim_fixpoints_ensemblewise_synergies.tab")
-prolif_hsa_mw_file = paste0("results/link-only/hsa/cascade_1.0_prolif_50sim_fixpoints_modelwise_synergies.tab")
+ss_hsa_ew_file = paste0("results/link-only/cascade_1.0_ss_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+ss_hsa_mw_file = paste0("results/link-only/cascade_1.0_ss_50sim_fixpoints_hsa_modelwise_synergies.tab")
+prolif_hsa_ew_file = paste0("results/link-only/cascade_1.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+prolif_hsa_mw_file = paste0("results/link-only/cascade_1.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab")
 
 ss_hsa_ensemblewise_synergies = emba::get_synergy_scores(ss_hsa_ew_file)
 ss_hsa_modelwise_synergies = emba::get_synergy_scores(ss_hsa_mw_file, file_type = "modelwise")
@@ -325,10 +330,10 @@ Load results:
 # 'ss' => calibrated models, 'prolif' => random models
 
 ## Bliss results
-ss_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
-ss_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-prolif_bliss_ensemblewise_file = paste0("results/link-only/bliss/cascade_1.0_prolif_50sim_fixpoints_ensemblewise_synergies.tab")
-prolif_bliss_modelwise_file = paste0("results/link-only/bliss/cascade_1.0_prolif_50sim_fixpoints_modelwise_synergies.tab")
+ss_bliss_ensemblewise_file = paste0("results/link-only/cascade_1.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+ss_bliss_modelwise_file = paste0("results/link-only/cascade_1.0_ss_50sim_fixpoints_bliss_modelwise_synergies.tab")
+prolif_bliss_ensemblewise_file = paste0("results/link-only/cascade_1.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+prolif_bliss_modelwise_file = paste0("results/link-only/cascade_1.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab")
 
 ss_bliss_ensemblewise_synergies = emba::get_synergy_scores(ss_bliss_ensemblewise_file)
 ss_bliss_modelwise_synergies = emba::get_synergy_scores(ss_bliss_modelwise_file, file_type = "modelwise")
@@ -676,7 +681,7 @@ read_summary_file = function(file_name) {
   return(data_list)
 }
 
-fitness_summary_file = "results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt"
+fitness_summary_file = "results/link-only/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt"
 
 # `fit_res` is a list of tibbles
 # Each tibble has the fitness results of a simulation
@@ -772,16 +777,16 @@ Load results:
 # 'ew' => ensemble-wise, 'mw' => model-wise
 
 ## HSA results
-ss_hsa_ensemblewise_50sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_modelwise_50sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-ss_hsa_ensemblewise_100sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_100sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_modelwise_100sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_100sim_fixpoints_modelwise_synergies.tab")
-ss_hsa_ensemblewise_150sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_150sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_modelwise_150sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_150sim_fixpoints_modelwise_synergies.tab")
-ss_hsa_ensemblewise_200sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_ensemblewise_synergies.tab")
-ss_hsa_modelwise_200sim_file = paste0("results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
-prolif_hsa_ensemblewise_file = paste0("results/link-only/hsa/cascade_2.0_prolif_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
-prolif_hsa_modelwise_file = paste0("results/link-only/hsa/cascade_2.0_prolif_150sim_fixpoints_hsa_modelwise_synergies.tab")
+ss_hsa_ensemblewise_50sim_file = paste0("results/link-only/cascade_2.0_ss_50sim_fixpoints_hsa_ensemblewise_synergies.tab")
+ss_hsa_modelwise_50sim_file = paste0("results/link-only/cascade_2.0_ss_50sim_fixpoints_hsa_modelwise_synergies.tab")
+ss_hsa_ensemblewise_100sim_file = paste0("results/link-only/cascade_2.0_ss_100sim_fixpoints_hsa_ensemblewise_synergies.tab")
+ss_hsa_modelwise_100sim_file = paste0("results/link-only/cascade_2.0_ss_100sim_fixpoints_hsa_modelwise_synergies.tab")
+ss_hsa_ensemblewise_150sim_file = paste0("results/link-only/cascade_2.0_ss_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+ss_hsa_modelwise_150sim_file = paste0("results/link-only/cascade_2.0_ss_150sim_fixpoints_hsa_modelwise_synergies.tab")
+ss_hsa_ensemblewise_200sim_file = paste0("results/link-only/cascade_2.0_ss_200sim_fixpoints_hsa_ensemblewise_synergies.tab")
+ss_hsa_modelwise_200sim_file = paste0("results/link-only/cascade_2.0_ss_200sim_fixpoints_hsa_modelwise_synergies.tab")
+prolif_hsa_ensemblewise_file = paste0("results/link-only/cascade_2.0_rand_150sim_fixpoints_hsa_ensemblewise_synergies.tab")
+prolif_hsa_modelwise_file = paste0("results/link-only/cascade_2.0_rand_150sim_fixpoints_hsa_modelwise_synergies.tab")
 
 ss_hsa_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_hsa_ensemblewise_50sim_file)
 ss_hsa_modelwise_synergies_50sim = emba::get_synergy_scores(ss_hsa_modelwise_50sim_file, file_type = "modelwise")
@@ -1171,16 +1176,16 @@ Load results:
 # 'ss' => calibrated models, 'prolif' => random proliferative models
 
 ## Bliss results
-ss_bliss_ensemblewise_50sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_50sim_fixpoints_ensemblewise_synergies.tab")
-ss_bliss_modelwise_50sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_50sim_fixpoints_modelwise_synergies.tab")
-ss_bliss_ensemblewise_100sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_100sim_fixpoints_ensemblewise_synergies.tab")
-ss_bliss_modelwise_100sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_100sim_fixpoints_modelwise_synergies.tab")
-ss_bliss_ensemblewise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_150sim_fixpoints_ensemblewise_synergies.tab")
-ss_bliss_modelwise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_150sim_fixpoints_modelwise_synergies.tab")
-ss_bliss_ensemblewise_200sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_200sim_fixpoints_ensemblewise_synergies.tab")
-ss_bliss_modelwise_200sim_file = paste0("results/link-only/bliss/cascade_2.0_ss_200sim_fixpoints_modelwise_synergies.tab")
-prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_prolif_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
-prolif_bliss_modelwise_150sim_file = paste0("results/link-only/bliss/cascade_2.0_prolif_150sim_fixpoints_bliss_modelwise_synergies.tab")
+ss_bliss_ensemblewise_50sim_file = paste0("results/link-only/cascade_2.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab")
+ss_bliss_modelwise_50sim_file = paste0("results/link-only/cascade_2.0_ss_50sim_fixpoints_bliss_modelwise_synergies.tab")
+ss_bliss_ensemblewise_100sim_file = paste0("results/link-only/cascade_2.0_ss_100sim_fixpoints_bliss_ensemblewise_synergies.tab")
+ss_bliss_modelwise_100sim_file = paste0("results/link-only/cascade_2.0_ss_100sim_fixpoints_bliss_modelwise_synergies.tab")
+ss_bliss_ensemblewise_150sim_file = paste0("results/link-only/cascade_2.0_ss_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+ss_bliss_modelwise_150sim_file = paste0("results/link-only/cascade_2.0_ss_150sim_fixpoints_bliss_modelwise_synergies.tab")
+ss_bliss_ensemblewise_200sim_file = paste0("results/link-only/cascade_2.0_ss_200sim_fixpoints_bliss_ensemblewise_synergies.tab")
+ss_bliss_modelwise_200sim_file = paste0("results/link-only/cascade_2.0_ss_200sim_fixpoints_bliss_modelwise_synergies.tab")
+prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+prolif_bliss_modelwise_150sim_file = paste0("results/link-only/cascade_2.0_rand_150sim_fixpoints_bliss_modelwise_synergies.tab")
 
 ss_bliss_ensemblewise_synergies_50sim = emba::get_synergy_scores(ss_bliss_ensemblewise_50sim_file)
 ss_bliss_modelwise_synergies_50sim = emba::get_synergy_scores(ss_bliss_modelwise_50sim_file, file_type = "modelwise")
@@ -1632,7 +1637,7 @@ Results are from the run with $200$ Gitsbe simulations, fitting to steady state 
 
 
 ```r
-fitness_summary_file = "results/link-only/hsa/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt"
+fitness_summary_file = "results/link-only/cascade_2.0_ss_200sim_fixpoints_hsa_summary.txt"
 fit_res = read_summary_file(file_name = fitness_summary_file)
 
 # rows = simulations, columns = generations
@@ -1877,13 +1882,26 @@ train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta
   labels_gp = gpar(fontface = "bold"))
 legend_list = packLegend(activity_state_legend, fit_legend, train_legend, direction = "vertical")
 
-draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
+heatmap_ss = draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
 ```
 
 <div class="figure" style="text-align: center">
 <img src="index_files/figure-html/ss-heatmap-1.png" alt="Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)" width="2100" />
 <p class="caption">(\#fig:ss-heatmap)Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)</p>
 </div>
+
+```r
+# code to add rectangular boxes for specific nodes
+# co = column_order(heatmap_ss)
+# nc = ncol(models_stable_states)
+# marked_nodes = c("MYC", "TP53")
+# decorate_heatmap_body(heatmap = "heatmap_ss", code = {
+#   for(node in marked_nodes) {
+#     i = which(colnames(models_stable_states)[co] == node)
+#     grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 1)) 
+#   }
+# })
+```
 
 
 ```r
@@ -3164,13 +3182,13 @@ So, for example to get the simulation output directories for the [Cascade 1.0 An
 
 Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
-For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models, as well as the [training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate) file.
+For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models ($150$ simulations, `bliss` synergy method, *calibrated* models, using the CASCADE 2.0 topology), as well as the [AGS training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate) file.
 
 :::{.note}
-We have stored all the simulations results in an open-access repository provided by Zenodo: **TO-ADD link!!!!!**.
+We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061)
 :::
 
-Specifically, the results described above are stored in the compressed file `sim_res.tar.gz`.
+Specifically, the results described above are stored in the compressed file **`sim_res.tar.gz`**.
 When uncompressed, the `sim_res.tar.gz` file outputs 2 separate directories, one per different topology (*CASCADE 1.0* and *CASCADE 2.0*).
 The directory with the *CASCADE 2.0* related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
 Each further directory, **specifies on its name** the *training type*, *simulation number*, *attractor tool* and *synergy assessment method*.
@@ -3185,7 +3203,8 @@ These numbers range from $1$ (flip just one node) to $24$ (flip all nodes, i.e. 
 Then, for each such number, we generate $20$ new partially correct steady states, each one having the same amount of randomly-chosen *flips* in the steady state (e.g. $20$ steady states where randomly-chosen sets of $3$ nodes have been flipped).
 Thus, in total, $205$ training data sample files are produced ($205 = 9 \times 20 + 1 \times 24 + 1 \times 1$, where from the $11$ number of flips, the one flip happens for every node ($24$ different steady states) and flipping all the nodes generates the unique completely reversed steady state).
 
-The training data files are stored in the Zenodo file `training-data-files.tar.gz`: [ToAddZenodoLink]
+The training data files are stored in the Zenodo file **`training-data-files.tar.gz`** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061)
+
 
 ### Run model ensembles simulations {-}
 
@@ -3193,10 +3212,10 @@ To generate the calibrated model ensembles and perform the drug response analysi
 With this script, we get the simulation results for each of these training data files.
 Note that in the CASCADE 2.0 configuration file (`config`) **we need to change the number of simulations** to $20$ for each training data file and the **`synergy_method: bliss`**  (attractor tool used was `biolqm_stable_states` which is the default option in the `config`).
 
-The results of these simulations are stored in the Zenodo file `fit-vs-performance-results-bliss.tar.gz`: [ToAddZenodoLink]
+The results of these simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061)
 
 Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script config: `{2.0, prolif, 150, fixpoints, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
-The result of this simulation is also part of the results described above (see section [above](#repro123)) and it's available at the file `sim_res.tar.gz` in [ZenodoLinkAndFile].
+The result of this simulation is also part of the results described above (see section [above](#repro123)) and it's available at the file **`sim_res.tar.gz`** in the Zenodo dataset [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061).
 
 ## Random Model Bootstrap {-}
 
@@ -3208,7 +3227,7 @@ This creates a results directory which includes a `models` directory, with a tot
 Changing appropriately the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
 
-The results of the simulations executed via the above scripts are all stored in the `random_model_bootstrap.tar.gz` file of the Zenodo dataset [TOADDZenodo!]
+The results of the simulations executed via the above scripts are all stored in the **`random_model_bootstrap.tar.gz`** file of the Zenodo dataset [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061).
 
 ## Parameterization Bootstrap {-}
 
@@ -3228,7 +3247,7 @@ This will generate the directories:
   
   , depending on the parameterization scheme that was used in the previous step to produce the `models` pool.
 
-The results of all these simulations are stored in the `parameterization-comp.tar.gz` file [Zenodo LINK TO ADD].
+The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** file [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061).
 
 When uncompressed, the `parameterization-comp.tar.gz` file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script `run_gitsbe_param.sh`), a `boot_res` directory (includes the results of the `bootstrap_models_drabme.sh` script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
@@ -3242,11 +3261,7 @@ The `results` directory has 3 sub-directories:
 2. [`topology-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topology-only): results from the topology-mutated models only (used in the section [CASCADE 2.0 Analysis (Topology Mutations)])
 3. [`topo-and-link`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
 
-:::{.note}
-Because the simulation results using **only link operator mutations** were substantially more (both CASCADE 1.0 and CASCADE 2.0 networks were tested and for various number of simulations) than the others using topology or both kind of mutations, we split the [link-only-mutations results](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only) to 2 directories (`hsa` and `bliss`) having the results from the different synergy assessment methods (check Drabme's `synergy_method` [configuration option](#https://druglogics.github.io/druglogics-doc/drabme-config.html)).
-:::
-
-Lastly, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory also includes the following files:
+Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files:
 
 - `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]

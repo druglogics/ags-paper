@@ -1006,10 +1006,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-2"><a href="cascade-1-0-analysis.html#cb2-2"></a><span class="co"># &#39;ew&#39; =&gt; ensemble-wise, &#39;mw&#39; =&gt; model-wise</span></span>
 <span id="cb2-3"><a href="cascade-1-0-analysis.html#cb2-3"></a></span>
 <span id="cb2-4"><a href="cascade-1-0-analysis.html#cb2-4"></a><span class="co">## HSA results</span></span>
-<span id="cb2-5"><a href="cascade-1-0-analysis.html#cb2-5"></a>ss_hsa_ew_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
-<span id="cb2-6"><a href="cascade-1-0-analysis.html#cb2-6"></a>ss_hsa_mw_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/hsa/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
-<span id="cb2-7"><a href="cascade-1-0-analysis.html#cb2-7"></a>prolif_hsa_ew_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/hsa/cascade_1.0_prolif_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
-<span id="cb2-8"><a href="cascade-1-0-analysis.html#cb2-8"></a>prolif_hsa_mw_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/hsa/cascade_1.0_prolif_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb2-5"><a href="cascade-1-0-analysis.html#cb2-5"></a>ss_hsa_ew_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_ss_50sim_fixpoints_hsa_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb2-6"><a href="cascade-1-0-analysis.html#cb2-6"></a>ss_hsa_mw_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_ss_50sim_fixpoints_hsa_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb2-7"><a href="cascade-1-0-analysis.html#cb2-7"></a>prolif_hsa_ew_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_rand_50sim_fixpoints_hsa_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb2-8"><a href="cascade-1-0-analysis.html#cb2-8"></a>prolif_hsa_mw_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_rand_50sim_fixpoints_hsa_modelwise_synergies.tab&quot;</span>)</span>
 <span id="cb2-9"><a href="cascade-1-0-analysis.html#cb2-9"></a></span>
 <span id="cb2-10"><a href="cascade-1-0-analysis.html#cb2-10"></a>ss_hsa_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_hsa_ew_file)</span>
 <span id="cb2-11"><a href="cascade-1-0-analysis.html#cb2-11"></a>ss_hsa_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_hsa_mw_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
@@ -1226,10 +1226,10 @@ Figure 4: AUC sensitivity (CASCADE 1.0, HSA synergy method, Model-wise results)
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="cascade-1-0-analysis.html#cb7-1"></a><span class="co"># &#39;ss&#39; =&gt; calibrated models, &#39;prolif&#39; =&gt; random models</span></span>
 <span id="cb7-2"><a href="cascade-1-0-analysis.html#cb7-2"></a></span>
 <span id="cb7-3"><a href="cascade-1-0-analysis.html#cb7-3"></a><span class="co">## Bliss results</span></span>
-<span id="cb7-4"><a href="cascade-1-0-analysis.html#cb7-4"></a>ss_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/bliss/cascade_1.0_ss_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
-<span id="cb7-5"><a href="cascade-1-0-analysis.html#cb7-5"></a>ss_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/bliss/cascade_1.0_ss_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
-<span id="cb7-6"><a href="cascade-1-0-analysis.html#cb7-6"></a>prolif_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/bliss/cascade_1.0_prolif_50sim_fixpoints_ensemblewise_synergies.tab&quot;</span>)</span>
-<span id="cb7-7"><a href="cascade-1-0-analysis.html#cb7-7"></a>prolif_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/bliss/cascade_1.0_prolif_50sim_fixpoints_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb7-4"><a href="cascade-1-0-analysis.html#cb7-4"></a>ss_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_ss_50sim_fixpoints_bliss_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb7-5"><a href="cascade-1-0-analysis.html#cb7-5"></a>ss_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_ss_50sim_fixpoints_bliss_modelwise_synergies.tab&quot;</span>)</span>
+<span id="cb7-6"><a href="cascade-1-0-analysis.html#cb7-6"></a>prolif_bliss_ensemblewise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_rand_50sim_fixpoints_bliss_ensemblewise_synergies.tab&quot;</span>)</span>
+<span id="cb7-7"><a href="cascade-1-0-analysis.html#cb7-7"></a>prolif_bliss_modelwise_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/link-only/cascade_1.0_rand_50sim_fixpoints_bliss_modelwise_synergies.tab&quot;</span>)</span>
 <span id="cb7-8"><a href="cascade-1-0-analysis.html#cb7-8"></a></span>
 <span id="cb7-9"><a href="cascade-1-0-analysis.html#cb7-9"></a>ss_bliss_ensemblewise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_bliss_ensemblewise_file)</span>
 <span id="cb7-10"><a href="cascade-1-0-analysis.html#cb7-10"></a>ss_bliss_modelwise_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ss_bliss_modelwise_file, <span class="dt">file_type =</span> <span class="st">&quot;modelwise&quot;</span>)</span>
@@ -1545,7 +1545,7 @@ Note that some simulations end because the target fitness is reached by some of 
 <span id="cb18-26"><a href="cascade-1-0-analysis.html#cb18-26"></a>  <span class="kw">return</span>(data_list)</span>
 <span id="cb18-27"><a href="cascade-1-0-analysis.html#cb18-27"></a>}</span>
 <span id="cb18-28"><a href="cascade-1-0-analysis.html#cb18-28"></a></span>
-<span id="cb18-29"><a href="cascade-1-0-analysis.html#cb18-29"></a>fitness_summary_file =<span class="st"> &quot;results/link-only/hsa/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt&quot;</span></span>
+<span id="cb18-29"><a href="cascade-1-0-analysis.html#cb18-29"></a>fitness_summary_file =<span class="st"> &quot;results/link-only/cascade_1.0_ss_1000sim_fixpoints_hsa_summary.txt&quot;</span></span>
 <span id="cb18-30"><a href="cascade-1-0-analysis.html#cb18-30"></a></span>
 <span id="cb18-31"><a href="cascade-1-0-analysis.html#cb18-31"></a><span class="co"># `fit_res` is a list of tibbles</span></span>
 <span id="cb18-32"><a href="cascade-1-0-analysis.html#cb18-32"></a><span class="co"># Each tibble has the fitness results of a simulation</span></span>
