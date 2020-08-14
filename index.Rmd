@@ -2824,8 +2824,8 @@ In terms of ROC AUC performance we also note the **larger variance** of the topo
 - Run the script `run_druglogics_synergy.sh` in the above repo.
 
 You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run - see [here](https://druglogics.github.io/druglogics-doc/gitsbe-config.html) for a complete list of configuration options).
-To get the results for the **topology mutations** for CASCADE 2.0 you need to change the `ags_cascade_2.0/config` file option `topology_mutations: 10` (it is $0$ by default - no topology mutations, only link-operator/balance mutations).
-If you wish to get the results using **both kinds of mutation**, set both `balance_mutations` and `topology_mutations` options to a non-zero value ($3$ and $10$ were used in the simulations).
+To get the results for the **topology mutations** for CASCADE 2.0 you need to change the `ags_cascade_2.0/config` file option `topology_mutations: 10` and `balance_mutations: 0` (the default options are $0$ topology mutations and $3$ link-operator/balance mutations).
+If you wish to get the results using **both kinds of mutation**, set both `topology_mutations` and `balance_mutations` options to a non-zero value ($10$ and $3$ were used in the simulations).
 
 So, for example to get the simulation output directories for the [Cascade 1.0 Analysis] I just run the `run_druglogics_synergy.sh` script with the following options defined in the loops inside (no need to change any further configuration):
 
@@ -2864,7 +2864,7 @@ The training data files are stored in the Zenodo file **`training-data-files.tar
 ### Run model ensembles simulations {-}
 
 To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
-With this script, we get the simulation results for each of these training data files.
+Note that the `training-data-files` directory must be placed inside the `druglogics-synergy/ags_cascade_2.0` directory before executing the script and as a result we get the simulation results for each of these training data files.
 Note that in the CASCADE 2.0 configuration file (`config`) **we need to change the number of simulations** to $20$ for each training data file and the **`synergy_method: bliss`**  (attractor tool used was `biolqm_stable_states` which is the default option in the `config`).
 
 The results of these simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg)](https://doi.org/10.5281/zenodo.3983061)
