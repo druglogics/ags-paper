@@ -2236,7 +2236,7 @@ ggscatter(data = res, x = "avg_fit", y = "pr_auc",
 :::{.green-box}
 - We observe that there exists **some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data**.
 - Correlation results are *better* than when applying link-operator mutations to the models.
-The topology optimization offers a larger variation in performance given the limited set of calibrated steady state nodes (24 out of 144 in total for the AGS cell line).
+The topology mutations offer a larger variation in performance in terms of both ROC and PR AUC, given the limited set of provided steady state nodes for calibration of the models (24 out of 144 in total for the AGS cell line).
 - The performance as measured by the ROC AUC is less sensitive to changes in the training data but there is better correlation with regards to the PR AUC, which is a more informative measure for our imbalanced dataset [@Saito2015].
 :::
 

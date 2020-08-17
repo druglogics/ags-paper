@@ -929,6 +929,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#fitness-vs-ensemble-performance-1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
 <ul>
@@ -1452,6 +1453,125 @@ So, the best ROC and PR curves we can get with our simulations when using models
 <p class="caption">
 Figure 39: ROC and PR curve for best beta (CASCADE 2.0, Topology Mutations)
 </p>
+</div>
+</div>
+<div id="fitness-vs-ensemble-performance-1" class="section level2 unnumbered" number="">
+<h2>Fitness vs Ensemble Performance</h2>
+<div class="blue-box">
+<p>We check for correlation between the <strong>calibrated models fitness to the AGS steady state</strong> and their <strong>ensemble performance</strong> subject to normalization to the random model predictions.</p>
+<p>The <strong>main idea</strong> here is that we generate different training data samples, in which the boolean steady state nodes have their values flipped (so they are only partially correct) and we fit models to these (<span class="math inline">\(50\)</span> simulations =&gt; <span class="math inline">\(150\)</span> topology-mutated models per training data, <span class="math inline">\(205\)</span> training data samples in total).
+These calibrated model ensembles can then be tested for their prediction performance.
+Then we use the ensemble-wise <em>random proliferative</em> model predictions (<span class="math inline">\(50\)</span> simulations) to normalize (<span class="math inline">\(\beta=-1\)</span>) against the calibrated model predictions and compute the <strong>AUC ROC and AUC PR for each model ensemble</strong>.</p>
+</div>
+<div class="note">
+<p>Check how to generate the appropriate data and run the simulations in the section <a href="reproduce-data-simulation-results.html#fitness-vs-performance-methods">Fitness vs Performance Methods</a>.</p>
+</div>
+<p>The code to load the simulation result data is the following (we have already saved the result for convenience):</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-1"></a><span class="co"># get flipped training data results</span></span>
+<span id="cb64-2"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-2"></a>data_dir =<span class="st"> &quot;/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss-topo/&quot;</span></span>
+<span id="cb64-3"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-3"></a></span>
+<span id="cb64-4"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-4"></a><span class="co"># define `beta` value for normalization</span></span>
+<span id="cb64-5"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-5"></a>beta =<span class="st"> </span><span class="dv">-1</span></span>
+<span id="cb64-6"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-6"></a></span>
+<span id="cb64-7"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-7"></a>data_list =<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb64-8"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-8"></a>index =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb64-9"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-9"></a><span class="cf">for</span> (res_dir <span class="cf">in</span> <span class="kw">list.dirs</span>(data_dir, <span class="dt">recursive =</span> <span class="ot">FALSE</span>)) {</span>
+<span id="cb64-10"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-10"></a>  ew_synergies_file =<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> res_dir, <span class="dt">pattern =</span> <span class="st">&quot;ensemblewise_synergies&quot;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb64-11"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-11"></a>  ew_ss_scores =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_synergy_scores</span>(ew_synergies_file)</span>
+<span id="cb64-12"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-12"></a>  </span>
+<span id="cb64-13"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-13"></a>  <span class="co"># get the models stable states</span></span>
+<span id="cb64-14"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-14"></a>  models_dir =<span class="st"> </span><span class="kw">paste0</span>(res_dir, <span class="st">&quot;/models&quot;</span>)</span>
+<span id="cb64-15"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-15"></a>  <span class="co"># you get messages for models with {#stable states} != 1</span></span>
+<span id="cb64-16"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-16"></a>  <span class="co"># a few models have 2 stable states and they are not included </span></span>
+<span id="cb64-17"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-17"></a>  <span class="co"># in the returned data frame</span></span>
+<span id="cb64-18"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-18"></a>  models_stable_states =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_stable_state_from_models_dir</span>(models_dir)</span>
+<span id="cb64-19"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-19"></a>  </span>
+<span id="cb64-20"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-20"></a>  <span class="co"># calculate models fitness to AGS steady state</span></span>
+<span id="cb64-21"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-21"></a>  models_fit =<span class="st"> </span><span class="kw">apply</span>(models_stable_states[, <span class="kw">names</span>(steady_state)], <span class="dv">1</span>, </span>
+<span id="cb64-22"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-22"></a>   usefun<span class="op">::</span>get_percentage_of_matches, steady_state)</span>
+<span id="cb64-23"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-23"></a>  </span>
+<span id="cb64-24"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-24"></a>  <span class="co"># calculate normalized model performance (ROC-AUC and PR-AUC)</span></span>
+<span id="cb64-25"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-25"></a>  pred =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_cols</span>(</span>
+<span id="cb64-26"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-26"></a>    pred_topo_ew_bliss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(prolif_score_50sim) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">random_score =</span> prolif_score_50sim), </span>
+<span id="cb64-27"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-27"></a>    ew_ss_scores <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(score) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">ss_score =</span> score), </span>
+<span id="cb64-28"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-28"></a>    <span class="kw">as_tibble_col</span>(observed, <span class="dt">column_name =</span> <span class="st">&quot;observed&quot;</span>))</span>
+<span id="cb64-29"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-29"></a>  </span>
+<span id="cb64-30"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-30"></a>  <span class="co"># get the normalized synergy scores</span></span>
+<span id="cb64-31"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-31"></a>  pred =<span class="st"> </span>pred <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">combined_score =</span> ss_score <span class="op">+</span><span class="st"> </span>beta <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb64-32"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-32"></a>  </span>
+<span id="cb64-33"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-33"></a>  res_roc =<span class="st"> </span>PRROC<span class="op">::</span><span class="kw">roc.curve</span>(<span class="dt">scores.class0 =</span> pred <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(combined_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb64-34"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-34"></a>    <span class="dt">weights.class0 =</span> pred <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
+<span id="cb64-35"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-35"></a>  res_pr =<span class="st"> </span>PRROC<span class="op">::</span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(combined_score) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
+<span id="cb64-36"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-36"></a>    <span class="dt">weights.class0 =</span> pred <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
+<span id="cb64-37"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-37"></a>  </span>
+<span id="cb64-38"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-38"></a>  <span class="co"># bind all to one (OneForAll)</span></span>
+<span id="cb64-39"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-39"></a>  df =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_cols</span>(</span>
+<span id="cb64-40"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-40"></a>    <span class="dt">roc_auc =</span> res_roc<span class="op">$</span>auc, </span>
+<span id="cb64-41"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-41"></a>    <span class="dt">pr_auc =</span> res_pr<span class="op">$</span>auc.davis.goadrich,</span>
+<span id="cb64-42"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-42"></a>    <span class="dt">avg_fit =</span> <span class="kw">mean</span>(models_fit))</span>
+<span id="cb64-43"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-43"></a>  </span>
+<span id="cb64-44"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-44"></a>  data_list[[index]] =<span class="st"> </span>df</span>
+<span id="cb64-45"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-45"></a>  index =<span class="st"> </span>index <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb64-46"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-46"></a>}</span>
+<span id="cb64-47"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-47"></a></span>
+<span id="cb64-48"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-48"></a>res =<span class="st"> </span><span class="kw">bind_rows</span>(data_list)</span>
+<span id="cb64-49"><a href="cascade-2-0-analysis-topology-mutations.html#cb64-49"></a><span class="kw">saveRDS</span>(res, <span class="dt">file =</span> <span class="st">&quot;results/res_fit_aucs_topo.rds&quot;</span>)</span></code></pre></div>
+<p>Load the already-stored result:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb65-1"></a>res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&quot;results/res_fit_aucs_topo.rds&quot;</span>)</span></code></pre></div>
+<p>We check if our data is normally distributed using the <em>Shapiro-Wilk</em> normality test:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb66-1"></a><span class="kw">shapiro.test</span>(<span class="dt">x =</span> res<span class="op">$</span>roc_auc)</span></code></pre></div>
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res$roc_auc
+W = 0.98463, p-value = 0.02488</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb68-1"></a><span class="kw">shapiro.test</span>(<span class="dt">x =</span> res<span class="op">$</span>pr_auc)</span></code></pre></div>
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res$pr_auc
+W = 0.92214, p-value = 6.025e-09</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb70-1"></a><span class="kw">shapiro.test</span>(<span class="dt">x =</span> res<span class="op">$</span>avg_fit)</span></code></pre></div>
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res$avg_fit
+W = 0.88305, p-value = 1.609e-11</code></pre>
+<p>We observe from the low <em>p-values</em> that the <strong>data is not normally distributed</strong>.
+Thus, we are going to use a non-parametric correlation metric, namely the <strong>Kendall rank-based</strong> correlation test, to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-1"></a><span class="kw">ggscatter</span>(<span class="dt">data =</span> res, <span class="dt">x =</span> <span class="st">&quot;avg_fit&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;roc_auc&quot;</span>,</span>
+<span id="cb72-2"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-2"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Average Fitness per Model Ensemble&quot;</span>,</span>
+<span id="cb72-3"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-3"></a>  <span class="dt">title =</span> <span class="st">&quot;Fitness to AGS Steady State vs Performance (ROC)&quot;</span>,</span>
+<span id="cb72-4"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-4"></a>  <span class="dt">ylab =</span> <span class="st">&quot;ROC AUC&quot;</span>, <span class="dt">add =</span> <span class="st">&quot;reg.line&quot;</span>, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb72-5"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-5"></a>  <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;lightgray&quot;</span>),</span>
+<span id="cb72-6"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-6"></a>  <span class="dt">cor.coef =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coeff.args =</span> <span class="kw">list</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>, <span class="dt">size =</span> <span class="dv">6</span>)) <span class="op">+</span></span>
+<span id="cb72-7"><a href="cascade-2-0-analysis-topology-mutations.html#cb72-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:fit-vs-perf-roc-topo"></span>
+<img src="index_files/figure-html/fit-vs-perf-roc-topo-1.png" alt="Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Topology mutations, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">
+Figure 40: Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Topology mutations, Bliss synergy method, Ensemble-wise normalized results)
+</p>
+</div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-1"></a><span class="kw">ggscatter</span>(<span class="dt">data =</span> res, <span class="dt">x =</span> <span class="st">&quot;avg_fit&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc&quot;</span>,</span>
+<span id="cb73-2"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-2"></a>  <span class="dt">xlab =</span> <span class="st">&quot;Average Fitness per Model Ensemble&quot;</span>,</span>
+<span id="cb73-3"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-3"></a>  <span class="dt">title =</span> <span class="st">&quot;Fitness to AGS Steady State vs Performance (Precision-Recall)&quot;</span>,</span>
+<span id="cb73-4"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-4"></a>  <span class="dt">add.params =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;lightgray&quot;</span>),</span>
+<span id="cb73-5"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-5"></a>  <span class="dt">ylab =</span> <span class="st">&quot;PR AUC&quot;</span>, <span class="dt">add =</span> <span class="st">&quot;reg.line&quot;</span>, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb73-6"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-6"></a>  <span class="dt">cor.coef =</span> <span class="ot">TRUE</span>, <span class="dt">cor.coeff.args =</span> <span class="kw">list</span>(<span class="dt">method =</span> <span class="st">&quot;kendall&quot;</span>, <span class="dt">size =</span> <span class="dv">6</span>)) <span class="op">+</span></span>
+<span id="cb73-7"><a href="cascade-2-0-analysis-topology-mutations.html#cb73-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:fit-vs-perf-pr-topo"></span>
+<img src="index_files/figure-html/fit-vs-perf-pr-topo-1.png" alt="Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Topology Mutations, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">
+Figure 41: Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Topology Mutations, Bliss synergy method, Ensemble-wise normalized results)
+</p>
+</div>
+<div class="green-box">
+<ul>
+<li>We observe that there exists <strong>some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data</strong>.</li>
+<li>Correlation results are <em>better</em> than when applying link-operator mutations to the models.
+The topology mutations offer a larger variation in performance in terms of both ROC and PR AUC, given the limited set of provided steady state nodes for calibration of the models (24 out of 144 in total for the AGS cell line).</li>
+<li>The performance as measured by the ROC AUC is less sensitive to changes in the training data but there is better correlation with regards to the PR AUC, which is a more informative measure for our imbalanced dataset <span class="citation">(Saito and Rehmsmeier <a href="references.html#ref-Saito2015" role="doc-biblioref">2015</a>)</span>.</li>
+</ul>
 </div>
 </div>
 </div>

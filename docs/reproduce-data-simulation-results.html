@@ -929,6 +929,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#fitness-vs-ensemble-performance-1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
 <ul>
@@ -1008,7 +1009,7 @@ If you wish to get the results using <strong>both kinds of mutation</strong>, se
 For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.
 For the stable state and parameterization heatmaps we used the directory output with all the <code>gitsbe</code> generated models (<span class="math inline">\(150\)</span> simulations, <code>bliss</code> synergy method, <em>calibrated</em> models, using the CASCADE 2.0 topology), as well as the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate">AGS training steady state</a> file.</p>
 <div class="note">
-<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.3983061"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg" alt="DOI" /></a></p>
+<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a></p>
 </div>
 <p>Specifically, the results described above are stored in the compressed file <strong><code>sim_res.tar.gz</code></strong>.
 When uncompressed, the <code>sim_res.tar.gz</code> file outputs 2 separate directories, one per different topology (<em>CASCADE 1.0</em> and <em>CASCADE 2.0</em>).
@@ -1024,16 +1025,22 @@ In this script we first choose <span class="math inline">\(11\)</span> numbers t
 These numbers range from <span class="math inline">\(1\)</span> (flip just one node) to <span class="math inline">\(24\)</span> (flip all nodes, i.e. create a complete <em>reversed</em> steady state).
 Then, for each such number, we generate <span class="math inline">\(20\)</span> new partially correct steady states, each one having the same amount of randomly-chosen <em>flips</em> in the steady state (e.g. <span class="math inline">\(20\)</span> steady states where randomly-chosen sets of <span class="math inline">\(3\)</span> nodes have been flipped).
 Thus, in total, <span class="math inline">\(205\)</span> training data sample files are produced (<span class="math inline">\(205 = 9 \times 20 + 1 \times 24 + 1 \times 1\)</span>, where from the <span class="math inline">\(11\)</span> number of flips, the one flip happens for every node (<span class="math inline">\(24\)</span> different steady states) and flipping all the nodes generates the unique completely reversed steady state).</p>
-<p>The training data files are stored in the Zenodo file <strong><code>training-data-files.tar.gz</code></strong> <a href="https://doi.org/10.5281/zenodo.3983061"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg" alt="DOI" /></a></p>
+<p>The training data files are stored in the Zenodo file <strong><code>training-data-files.tar.gz</code></strong> <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a></p>
 </div>
 <div id="run-model-ensembles-simulations" class="section level3 unnumbered" number="">
 <h3>Run model ensembles simulations</h3>
 <p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <code>druglogics-synergy</code> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
-Note that the <code>training-data-files</code> directory must be placed inside the <code>druglogics-synergy/ags_cascade_2.0</code> directory before executing the script and as a result we get the simulation results for each of these training data files.
-Note that in the CASCADE 2.0 configuration file (<code>config</code>) <strong>we need to change the number of simulations</strong> to <span class="math inline">\(20\)</span> for each training data file and the <strong><code>synergy_method: bliss</code></strong> (attractor tool used was <code>biolqm_stable_states</code> which is the default option in the <code>config</code>).</p>
-<p>The results of these simulations are stored in the Zenodo file <strong><code>fit-vs-performance-results-bliss.tar.gz</code></strong> <a href="https://doi.org/10.5281/zenodo.3983061"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg" alt="DOI" /></a></p>
+Note that the <code>training-data-files</code> directory must be placed inside the <code>druglogics-synergy/ags_cascade_2.0</code> directory before executing the aforementioned script.
+The end result we get is the simulation results for each of the training data files.</p>
+<p>The following changes need to be applied to the CASCADE 2.0 configuration file (<code>druglogics-synergy/ags_cascade_2.0/config</code>) before executing the script:</p>
+<ul>
+<li>If <strong>topology mutations are used</strong>, disable the balance mutations (<code>balance_mutations: 0</code>) and use <code>topology_mutations: 10</code>.</li>
+<li>Change <strong>the number of simulations</strong> to <span class="math inline">\(20\)</span> (balance mutations) or to <span class="math inline">\(50\)</span> for the topology mutated models.</li>
+<li>Change <strong><code>synergy_method: bliss</code></strong> no matter the mutations used.</li>
+</ul>
+<p>The results of these simulations (when applying link-operator mutations) are stored in the Zenodo file <strong><code>fit-vs-performance-results-bliss.tar.gz</code></strong>, whereas when topology mutations are used, in the <strong><code>fit-vs-performance-results-bliss-topo.tar.gz</code></strong> file <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a></p>
 <p>Also, we used the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> (script config: <code>{2.0, prolif, 150, fixpoints, bliss}</code>) repo to get the ensemble results of the <strong>random (proliferative) models</strong> that we will use to normalize the calibrated model performance.
-The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#repro123">above</a>) and it’s available at the file <strong><code>sim_res.tar.gz</code></strong> in the Zenodo dataset <a href="https://doi.org/10.5281/zenodo.3983061"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg" alt="DOI" /></a>.</p>
+The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#repro123">above</a>, also considering the necessary changes applied for the topology mutations-based simulations) and it’s available at the file <strong><code>sim_res.tar.gz</code></strong> in the Zenodo dataset <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a>.</p>
 </div>
 </div>
 <div id="random-model-bootstrap" class="section level2 unnumbered" number="">
@@ -1047,7 +1054,7 @@ This creates a results directory which includes a <code>models</code> directory,
 Changing appropriately the <code>config</code> file to have <code>synergy_method: bliss</code>.
 The bootstrap configuration consists of <span class="math inline">\(20\)</span> batches, each one consisting of a sample of <span class="math inline">\(100\)</span> randomly selected models from the model directory pool.</li>
 </ul>
-<p>The results of the simulations executed via the above scripts are all stored in the <strong><code>random_model_bootstrap.tar.gz</code></strong> file of the Zenodo dataset <a href="https://doi.org/10.5281/zenodo.3983061"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg" alt="DOI" /></a>.</p>
+<p>The results of the simulations executed via the above scripts are all stored in the <strong><code>random_model_bootstrap.tar.gz</code></strong> file of the Zenodo dataset <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a>.</p>
 </div>
 <div id="parameterization-bootstrap" class="section level2 unnumbered" number="">
 <h2>Parameterization Bootstrap</h2>
@@ -1073,7 +1080,7 @@ each of which have a <code>models</code> directory (the model pool)</li>
 </ul>
 , depending on the parameterization scheme that was used in the previous step to produce the <code>models</code> pool.</li>
 </ul>
-<p>The results of all these simulations are stored in the <strong><code>parameterization-comp.tar.gz</code></strong> file <a href="https://doi.org/10.5281/zenodo.3983061"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3983061.svg" alt="DOI" /></a>.</p>
+<p>The results of all these simulations are stored in the <strong><code>parameterization-comp.tar.gz</code></strong> file <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a>.</p>
 <p>When uncompressed, the <code>parameterization-comp.tar.gz</code> file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the <code>gitsbe</code> simulation results with the model pool inside (result of the script <code>run_gitsbe_param.sh</code>), a <code>boot_res</code> directory (includes the results of the <code>bootstrap_models_drabme.sh</code> script) and lastly the results of the <strong>random proliferative model simulations</strong> which can be reproduced following the guidelines <a href="reproduce-data-simulation-results.html#repro123">above</a>.</p>
 </div>
@@ -1092,7 +1099,8 @@ The <code>results</code> directory has 3 sub-directories:</p>
 <li><code>observed_synergies_cascade_2.0</code>: the gold-standard synergies for the CASCADE 2.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2019" role="doc-biblioref">2019</a>)</span></li>
 <li><code>steadystate</code>: the AGS training data for the calibrated models</li>
 <li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
-<li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-vs-ensemble-performance">Fitness vs Ensemble Performance</a> section.</li>
+<li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-topology-mutations.html#fitness-vs-ensemble-performance-1">Fitness vs Ensemble Performance</a> section (link operator mutations).</li>
+<li><code>res_fit_aucs_topo.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-topology-mutations.html#fitness-vs-ensemble-performance-1">Fitness vs Ensemble Performance</a> section (topology mutations).</li>
 <li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#bootstrap-simulations">Bootstrap Simulations</a> section.</li>
 </ul>
 </div>
