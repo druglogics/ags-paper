@@ -1,0 +1,35 @@
+% colored boxes (need to change rgb values for that to work)
+\usepackage{color}
+\usepackage{framed}
+\setlength{\fboxsep}{.8em}
+\usepackage[utf8]{inputenc}
+
+\newenvironment{green-box}{
+  \definecolor{shadecolor}{rgb}{217, 255, 233}
+  \color{white}
+  \begin{shaded}}
+ {\end{shaded}}
+
+\newenvironment{blue-box}{
+  \definecolor{shadecolor}{rgb}{230, 240, 255}
+  \color{white}
+  \begin{shaded}}
+ {\end{shaded}}
+
+\newenvironment{orange-box}{
+  \definecolor{shadecolor}{rgb}{230, 240, 255}
+  \color{white}
+  \begin{shaded}}
+ {\end{shaded}}
+
+ \newenvironment{note}{
+  \definecolor{shadecolor}{rgb}{223, 221, 221}
+  \color{white}
+  \begin{shaded}}
+ {\end{shaded}}
+
+% does not understand greek beta :)
+\usepackage{newunicodechar}
+\newunicodechar{β}{$\mathbb{beta}$}
+
+% Remove Zenodo links to solve => Unknown graphics extension: .3988424.svg
