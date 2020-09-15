@@ -1311,7 +1311,7 @@ The intercept was again excluded as it resulted in worse AUC performance.</p>
 <span id="cb28-9"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-9"></a>    <span class="kw">set.seed</span>(<span class="dv">42</span>) <span class="co"># for reproducibility</span></span>
 <span id="cb28-10"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-10"></a>    cvfit =<span class="st"> </span><span class="kw">cv.glmnet</span>(x, y, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>, <span class="dt">type.measure =</span> measure, <span class="dt">intercept =</span> <span class="ot">FALSE</span>, <span class="dt">alpha =</span> a)</span>
 <span id="cb28-11"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-11"></a>    coef_mat =<span class="st"> </span><span class="kw">coef</span>(cvfit, <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span>)</span>
-<span id="cb28-12"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-12"></a>    pred_ew_hsa =<span class="st"> </span>pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">glm_reg =</span> coef_mat[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_mat[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ss_score_150sim <span class="op">+</span><span class="st"> </span>coef_mat[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>random_score)</span>
+<span id="cb28-12"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-12"></a>    pred_ew_hsa =<span class="st"> </span>pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">glm_reg =</span> coef_mat[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_mat[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ss_score_150sim <span class="op">+</span><span class="st"> </span>coef_mat[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>prolif_score_150sim)</span>
 <span id="cb28-13"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-13"></a>    res_roc =<span class="st"> </span><span class="kw">get_roc_stats</span>(<span class="dt">df =</span> pred_ew_hsa, <span class="dt">pred_col =</span> <span class="st">&quot;glm_reg&quot;</span>, <span class="dt">label_col =</span> <span class="st">&quot;observed&quot;</span>)</span>
 <span id="cb28-14"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-14"></a>    pr_roc =<span class="st"> </span><span class="kw">pr.curve</span>(<span class="dt">scores.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(glm_reg) <span class="op">%&gt;%</span><span class="st"> </span>(<span class="cf">function</span>(x) {<span class="op">-</span>x}), </span>
 <span id="cb28-15"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb28-15"></a>      <span class="dt">weights.class0 =</span> pred_ew_hsa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(observed))</span>
@@ -1337,26 +1337,26 @@ The intercept was again excluded as it resulted in worse AUC performance.</p>
 <tr class="odd">
 <td align="right">0.0</td>
 <td align="left">auc</td>
-<td align="right">0.6916100</td>
-<td align="right">0.0643565</td>
+<td align="right">0.6802721</td>
+<td align="right">0.0623343</td>
 </tr>
 <tr class="even">
 <td align="right">0.0</td>
 <td align="left">class</td>
-<td align="right">0.6916100</td>
-<td align="right">0.0643565</td>
+<td align="right">0.6802721</td>
+<td align="right">0.0623343</td>
 </tr>
 <tr class="odd">
-<td align="right">0.3</td>
+<td align="right">0.1</td>
 <td align="left">auc</td>
-<td align="right">0.6768707</td>
-<td align="right">0.0655809</td>
+<td align="right">0.5770975</td>
+<td align="right">0.0527103</td>
 </tr>
 <tr class="even">
-<td align="right">0.5</td>
+<td align="right">0.2</td>
 <td align="left">auc</td>
-<td align="right">0.6746032</td>
-<td align="right">0.0645385</td>
+<td align="right">0.5770975</td>
+<td align="right">0.0527103</td>
 </tr>
 </tbody>
 </table>

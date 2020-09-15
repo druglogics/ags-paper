@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 17 August, 2020"
+date: "Last updated: 15 September, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -1106,7 +1106,7 @@ for (i in 0:10) { # from Ridge to LASSO
     set.seed(42) # for reproducibility
     cvfit = cv.glmnet(x, y, family = "binomial", type.measure = measure, intercept = FALSE, alpha = a)
     coef_mat = coef(cvfit, s = "lambda.min")
-    pred_ew_hsa = pred_ew_hsa %>% mutate(glm_reg = coef_mat[1] + coef_mat[2] * ss_score_150sim + coef_mat[3] * random_score)
+    pred_ew_hsa = pred_ew_hsa %>% mutate(glm_reg = coef_mat[1] + coef_mat[2] * ss_score_150sim + coef_mat[3] * prolif_score_150sim)
     res_roc = get_roc_stats(df = pred_ew_hsa, pred_col = "glm_reg", label_col = "observed")
     pr_roc = pr.curve(scores.class0 = pred_ew_hsa %>% pull(glm_reg) %>% (function(x) {-x}), 
       weights.class0 = pred_ew_hsa %>% pull(observed))
@@ -1123,12 +1123,12 @@ data %>% arrange(desc(ROC_AUC)) %>% slice(1:4) %>% kable()
 
 
 
- alpha  measure      ROC_AUC      PR_AUC
-------  --------  ----------  ----------
-   0.0  auc        0.6916100   0.0643565
-   0.0  class      0.6916100   0.0643565
-   0.3  auc        0.6768707   0.0655809
-   0.5  auc        0.6746032   0.0645385
+| alpha|measure |   ROC_AUC|    PR_AUC|
+|-----:|:-------|---------:|---------:|
+|   0.0|auc     | 0.6802721| 0.0623343|
+|   0.0|class   | 0.6802721| 0.0623343|
+|   0.1|auc     | 0.5770975| 0.0527103|
+|   0.2|auc     | 0.5770975| 0.0527103|
 
 :::{.orange-box}
 The best ROC AUC produced with a regularized logistic regression model is also lower than the one using calibrated models alone (with $150$ Gitsbe simulations).
@@ -3465,7 +3465,7 @@ Package version:
   cowplot_1.0.0           crayon_1.3.4            crosstalk_1.1.0.1      
   curl_4.3                data.table_1.12.8       desc_1.2.0             
   digest_0.6.25           dplyr_1.0.0             DT_0.14                
-  ellipsis_0.3.1          emba_0.1.5              equatiomatic_0.0.0.9000
+  ellipsis_0.3.1          emba_0.1.7              equatiomatic_0.0.0.9000
   evaluate_0.14           fansi_0.4.1             farver_2.0.3           
   forcats_0.5.0           foreach_1.5.0           foreign_0.8-75         
   gbRd_0.4-11             generics_0.0.2          GetoptLong_1.0.0       
@@ -3501,9 +3501,9 @@ Package version:
   stats_3.6.3             stringi_1.4.6           stringr_1.4.0          
   survival_3.2-3          testthat_2.3.2          tibble_3.0.1           
   tidyr_1.1.0             tidyselect_1.1.0        tinytex_0.24           
-  tools_3.6.3             usefun_0.4.7            utf8_1.1.4             
+  tools_3.6.3             usefun_0.4.8            utf8_1.1.4             
   utils_3.6.3             vctrs_0.3.1             viridisLite_0.3.0      
-  visNetwork_2.0.9        withr_2.2.0             xfun_0.15              
+  visNetwork_2.0.9        withr_2.2.0             xfun_0.16.2            
   yaml_2.2.1              zip_2.0.4              
 ```
 
