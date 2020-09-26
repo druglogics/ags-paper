@@ -53,7 +53,7 @@
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.14/datatables.js"></script>
+<script src="libs/datatables-binding-0.15/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
@@ -1288,7 +1288,7 @@ For <span class="math inline">\(\beta=-1\)</span> we do not observe performance 
 <p>The model with the coefficients is as follows (note that adding an intercept makes ROC AUC result considerably worse):</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb27-1"></a><span class="kw">extract_eq</span>(model, <span class="dt">use_coefs =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><span class="math display">\[
-\log\left[ \frac { P( \text{observed} = \text{1} ) }{ 1 - P( \text{observed} = \text{1} ) } \right] = -10.63(\text{ss\_score\_150sim}) + 42.92(\text{prolif\_score\_150sim}) + \epsilon
+\log\left[ \frac { P( \operatorname{observed} = \operatorname{1} ) }{ 1 - P( \operatorname{observed} = \operatorname{1} ) } \right] = -10.63(\operatorname{ss\_score\_150sim}) + 42.92(\operatorname{prolif\_score\_150sim}) + \epsilon
 \]</span></p>
 <div class="orange-box">
 <p>The ROC AUC produced with a logistic regression model is lower than the calibrated models (with <span class="math inline">\(150\)</span> Gitsbe simulations): <strong>0.5782313</strong> (PR-AUC is also lower: <strong>0.0527052</strong>).</p>
