@@ -53,7 +53,7 @@ This is observed for the link operator mutated models [here](#fitness-vs-ensembl
 # R Libraries {-}
 
 For the ROC curves we used the function `get_roc_stats()` from the `usefun` R package [@R-usefun] and for the PR curves the `pr.curve()` from the `PRROC` package [@Grau2015].
-Several functions from the `emba` R package [@emba-site] are also used to load the simulation results.
+Several functions from the `emba` R package [@Zobolas2020] are also used to load the simulation results.
 
 The AUC sensitivity analysis (for a description see [here](#auc-sensitivity)) was inspired by work from [@Pepe2000].
 
