@@ -1544,14 +1544,14 @@ shapiro.test(x = res$avg_fit)
 ```
 
 We observe from the low *p-values* that the **data is not normally distributed**.
-Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** correlation test, to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
+Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** test (and it's respective coefficient, $\tau$), to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
 ```{r fit-vs-perf-roc, message=FALSE, cache=TRUE, dpi=300, fig.align='center', fig.cap='Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Bliss synergy method, Ensemble-wise normalized results)'}
 ggscatter(data = res, x = "avg_fit", y = "roc_auc",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
   ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
   add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "bottom", size = 6)) +
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "bottom", size = 6, cor.coef.name = "tau")) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -1561,7 +1561,7 @@ ggscatter(data = res, x = "avg_fit", y = "pr_auc",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
   add.params = list(color = "blue", fill = "lightgray"),
   ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6)) +
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -2212,14 +2212,14 @@ shapiro.test(x = res$avg_fit)
 ```
 
 We observe from the low *p-values* that the **data is not normally distributed**.
-Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** correlation test, to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
+Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** test (and it's respective coefficient, $\tau$), to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
 ```{r fit-vs-perf-roc-topo, message=FALSE, cache=TRUE, dpi=300, fig.align='center', fig.cap='Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 2.0, Topology mutations, Bliss synergy method, Ensemble-wise normalized results)'}
 ggscatter(data = res, x = "avg_fit", y = "roc_auc",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
   ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
   add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6)) +
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -2229,7 +2229,7 @@ ggscatter(data = res, x = "avg_fit", y = "pr_auc",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
   add.params = list(color = "blue", fill = "lightgray"),
   ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6)) +
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
