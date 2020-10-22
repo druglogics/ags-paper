@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Parameterization vs Performance | AGS paper - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper - SI" />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Parameterization vs Performance | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
@@ -32,7 +32,7 @@
   
 <link rel="prev" href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"/>
 <link rel="next" href="reproduce-data-simulation-results.html"/>
-<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/header-attrs-2.4/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,9 +51,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.15/datatables.js"></script>
+<script src="libs/datatables-binding-0.16/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
@@ -950,7 +950,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#best-roc-and-prc-4"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#bootstrap-simulations"><i class="fa fa-check"></i>Bootstrap Simulations</a></li>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#bootstrap-simulations"><i class="fa fa-check"></i>Bootstrap Simulations</a>
+<ul>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
@@ -1064,9 +1068,9 @@ Normalizing each calibrated simulation prediction output to the corresponding <s
 See more details on reproducing the results on section <a href="reproduce-data-simulation-results.html#parameterization-bootstrap">Parameterization Bootstrap</a>.</p>
 <p>The following code is used to load the results from the simulations (we have already saved the result for convenience):</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="parameterization-vs-performance.html#cb83-1"></a><span class="co"># lo = &#39;link-operator mutations&#39;, topo = &#39;topology mutations&#39;, both = &#39;link-operator and topology mutations&#39;</span></span>
-<span id="cb83-2"><a href="parameterization-vs-performance.html#cb83-2"></a>data_dir_lo =<span class="st"> &quot;/home/john/tmp/ags_paper_res/parameterization-comp/link-only/&quot;</span></span>
-<span id="cb83-3"><a href="parameterization-vs-performance.html#cb83-3"></a>data_dir_topo =<span class="st"> &quot;/home/john/tmp/ags_paper_res/parameterization-comp/topology-only/&quot;</span></span>
-<span id="cb83-4"><a href="parameterization-vs-performance.html#cb83-4"></a>data_dir_both =<span class="st"> &quot;/home/john/tmp/ags_paper_res/parameterization-comp/topo-and-link/&quot;</span></span>
+<span id="cb83-2"><a href="parameterization-vs-performance.html#cb83-2"></a>data_dir_lo =<span class="st"> &quot;/home/john/tmp/ags-paper/parameterization-comp/link-only/&quot;</span></span>
+<span id="cb83-3"><a href="parameterization-vs-performance.html#cb83-3"></a>data_dir_topo =<span class="st"> &quot;/home/john/tmp/ags-paper/parameterization-comp/topology-only/&quot;</span></span>
+<span id="cb83-4"><a href="parameterization-vs-performance.html#cb83-4"></a>data_dir_both =<span class="st"> &quot;/home/john/tmp/ags-paper/parameterization-comp/topo-and-link/&quot;</span></span>
 <span id="cb83-5"><a href="parameterization-vs-performance.html#cb83-5"></a></span>
 <span id="cb83-6"><a href="parameterization-vs-performance.html#cb83-6"></a><span class="co"># define `beta` value for normalization</span></span>
 <span id="cb83-7"><a href="parameterization-vs-performance.html#cb83-7"></a>beta =<span class="st"> </span><span class="dv">-1</span></span>
@@ -1185,6 +1189,8 @@ See more details on reproducing the results on section <a href="reproduce-data-s
 <span id="cb83-120"><a href="parameterization-vs-performance.html#cb83-120"></a></span>
 <span id="cb83-121"><a href="parameterization-vs-performance.html#cb83-121"></a>res =<span class="st"> </span><span class="kw">bind_rows</span>(data_list)</span>
 <span id="cb83-122"><a href="parameterization-vs-performance.html#cb83-122"></a><span class="kw">saveRDS</span>(res, <span class="dt">file =</span> <span class="st">&quot;results/res_param_boot_aucs.rds&quot;</span>)</span></code></pre></div>
+<div id="compare-all-3-schemes" class="section level3 unnumbered" number="">
+<h3>Compare all 3 schemes</h3>
 <div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="parameterization-vs-performance.html#cb84-1"></a><span class="co"># load the data</span></span>
 <span id="cb84-2"><a href="parameterization-vs-performance.html#cb84-2"></a>res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&quot;results/res_param_boot_aucs.rds&quot;</span>)</span>
 <span id="cb84-3"><a href="parameterization-vs-performance.html#cb84-3"></a></span>
@@ -1218,6 +1224,60 @@ Figure 50: Comparing ROC and PR AUCs from bootstrapped calibrated model ensemble
 <div class="green-box">
 <p>The topology mutations generate the <strong>best performing models in terms of PR AUC</strong> with statistical significance compared to the other two groups of model ensembles using different parameterization.
 In terms of ROC AUC performance we also note the <strong>larger variance</strong> of the topology mutated models.</p>
+</div>
+</div>
+<div id="compare-topology-vs-link-operator-parameterization" class="section level3 unnumbered" number="">
+<h3>Compare Topology vs Link-operator Parameterization</h3>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="parameterization-vs-performance.html#cb85-1"></a><span class="co"># load the data</span></span>
+<span id="cb85-2"><a href="parameterization-vs-performance.html#cb85-2"></a>res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&quot;results/res_param_boot_aucs.rds&quot;</span>)</span>
+<span id="cb85-3"><a href="parameterization-vs-performance.html#cb85-3"></a></span>
+<span id="cb85-4"><a href="parameterization-vs-performance.html#cb85-4"></a><span class="co"># filter data</span></span>
+<span id="cb85-5"><a href="parameterization-vs-performance.html#cb85-5"></a>res =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-6"><a href="parameterization-vs-performance.html#cb85-6"></a><span class="st">  </span><span class="kw">filter</span>(param <span class="op">!=</span><span class="st"> &quot;topo-and-link&quot;</span>)</span>
+<span id="cb85-7"><a href="parameterization-vs-performance.html#cb85-7"></a></span>
+<span id="cb85-8"><a href="parameterization-vs-performance.html#cb85-8"></a>param_comp =<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;link-only&quot;</span>,<span class="st">&quot;topology-only&quot;</span>))</span>
+<span id="cb85-9"><a href="parameterization-vs-performance.html#cb85-9"></a></span>
+<span id="cb85-10"><a href="parameterization-vs-performance.html#cb85-10"></a>stat_test_roc =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-11"><a href="parameterization-vs-performance.html#cb85-11"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> roc_auc <span class="op">~</span><span class="st"> </span>param, <span class="dt">comparisons =</span> param_comp) <span class="op">%&gt;%</span></span>
+<span id="cb85-12"><a href="parameterization-vs-performance.html#cb85-12"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_significance</span>(<span class="st">&quot;p&quot;</span>)</span>
+<span id="cb85-13"><a href="parameterization-vs-performance.html#cb85-13"></a></span>
+<span id="cb85-14"><a href="parameterization-vs-performance.html#cb85-14"></a><span class="co"># ROC AUCs</span></span>
+<span id="cb85-15"><a href="parameterization-vs-performance.html#cb85-15"></a><span class="kw">ggboxplot</span>(res, <span class="dt">x =</span> <span class="st">&quot;param&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;roc_auc&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;param&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>,</span>
+<span id="cb85-16"><a href="parameterization-vs-performance.html#cb85-16"></a>  <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;ROC AUC&quot;</span>,</span>
+<span id="cb85-17"><a href="parameterization-vs-performance.html#cb85-17"></a>  <span class="dt">title =</span> <span class="st">&quot;Parameterization vs Performance (ROC)&quot;</span>) <span class="op">+</span></span>
+<span id="cb85-18"><a href="parameterization-vs-performance.html#cb85-18"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="st">&quot;link-only&quot;</span>,<span class="st">&quot;topology-only&quot;</span>), </span>
+<span id="cb85-19"><a href="parameterization-vs-performance.html#cb85-19"></a>    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Link-Operator Mutations&quot;</span>, <span class="st">&quot;Edge Mutations&quot;</span>)) <span class="op">+</span></span>
+<span id="cb85-20"><a href="parameterization-vs-performance.html#cb85-20"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(stat_test_roc, <span class="dt">label =</span> <span class="st">&quot;p = {p} ({p.signif})&quot;</span>, <span class="dt">y.position =</span> <span class="kw">c</span>(<span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb85-21"><a href="parameterization-vs-performance.html#cb85-21"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="fl">0.2</span>,<span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb85-22"><a href="parameterization-vs-performance.html#cb85-22"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb85-23"><a href="parameterization-vs-performance.html#cb85-23"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb85-24"><a href="parameterization-vs-performance.html#cb85-24"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="fl">0.5</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb85-25"><a href="parameterization-vs-performance.html#cb85-25"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">2.1</span>, <span class="dt">y =</span> <span class="fl">0.45</span>, <span class="dt">label=</span><span class="st">&quot;Random Predictions (AUC = 0.5)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb85-26"><a href="parameterization-vs-performance.html#cb85-26"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb85-27"><a href="parameterization-vs-performance.html#cb85-27"></a></span>
+<span id="cb85-28"><a href="parameterization-vs-performance.html#cb85-28"></a>stat_test_pr =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-29"><a href="parameterization-vs-performance.html#cb85-29"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> pr_auc <span class="op">~</span><span class="st"> </span>param, <span class="dt">comparisons =</span> param_comp) <span class="op">%&gt;%</span></span>
+<span id="cb85-30"><a href="parameterization-vs-performance.html#cb85-30"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_significance</span>(<span class="st">&quot;p&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb85-31"><a href="parameterization-vs-performance.html#cb85-31"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_y_position</span>()</span>
+<span id="cb85-32"><a href="parameterization-vs-performance.html#cb85-32"></a></span>
+<span id="cb85-33"><a href="parameterization-vs-performance.html#cb85-33"></a><span class="co"># PR AUCs</span></span>
+<span id="cb85-34"><a href="parameterization-vs-performance.html#cb85-34"></a><span class="kw">ggboxplot</span>(res, <span class="dt">x =</span> <span class="st">&quot;param&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;param&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>,</span>
+<span id="cb85-35"><a href="parameterization-vs-performance.html#cb85-35"></a>  <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PR AUC&quot;</span>,</span>
+<span id="cb85-36"><a href="parameterization-vs-performance.html#cb85-36"></a>  <span class="dt">title =</span> <span class="st">&quot;Parameterization vs Performance (Precision-Recall)&quot;</span>) <span class="op">+</span></span>
+<span id="cb85-37"><a href="parameterization-vs-performance.html#cb85-37"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="st">&quot;link-only&quot;</span>,<span class="st">&quot;topology-only&quot;</span>), </span>
+<span id="cb85-38"><a href="parameterization-vs-performance.html#cb85-38"></a>    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Link-Operator Mutations&quot;</span>, <span class="st">&quot;Edge Mutations&quot;</span>)) <span class="op">+</span></span>
+<span id="cb85-39"><a href="parameterization-vs-performance.html#cb85-39"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(stat_test_pr, <span class="dt">label =</span> <span class="st">&quot;p = {p} ({p.signif})&quot;</span>) <span class="op">+</span></span>
+<span id="cb85-40"><a href="parameterization-vs-performance.html#cb85-40"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb85-41"><a href="parameterization-vs-performance.html#cb85-41"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb85-42"><a href="parameterization-vs-performance.html#cb85-42"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">6</span><span class="op">/</span><span class="dv">153</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb85-43"><a href="parameterization-vs-performance.html#cb85-43"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">2.15</span>, <span class="dt">y =</span> <span class="fl">0.08</span>, <span class="dt">label=</span><span class="st">&quot;Random Predictions (AUC = 0.04)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb85-44"><a href="parameterization-vs-performance.html#cb85-44"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:param-comp-boot-fig-2"></span>
+<img src="index_files/figure-html/param-comp-boot-fig-2-1.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" /><img src="index_files/figure-html/param-comp-boot-fig-2-2.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" />
+<p class="caption">
+Figure 51: Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)
+</p>
+</div>
 </div>
 </div>
 </div>
