@@ -83,6 +83,7 @@ library(knitr)
 library(MAMSE)
 library(circlize)
 library(ComplexHeatmap)
+library(rstatix)
 ```
 
 # CASCADE 1.0 Analysis {-}
@@ -2895,6 +2896,8 @@ res = bind_rows(data_list)
 saveRDS(res, file = "results/res_param_boot_aucs.rds")
 ```
 
+### Compare all 3 schemes {-}
+
 ```{r param-comp-boot-fig, fig.align='center', warning=FALSE, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions across 3 parameterization schemes (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)'}
 # load the data
 res = readRDS(file = "results/res_param_boot_aucs.rds")
@@ -2926,6 +2929,55 @@ ggboxplot(data = res, x = "param", y = "pr_auc",
 The topology mutations generate the **best performing models in terms of PR AUC** with statistical significance compared to the other two groups of model ensembles using different parameterization.
 In terms of ROC AUC performance we also note the **larger variance** of the topology mutated models.
 :::
+
+### Compare Topology vs Link-operator Parameterization {-}
+
+```{r param-comp-boot-fig-2, fig.align='center', warning=FALSE, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)'}
+# load the data
+res = readRDS(file = "results/res_param_boot_aucs.rds")
+
+# filter data
+res = res %>% 
+  filter(param != "topo-and-link")
+
+param_comp = list(c("link-only","topology-only"))
+
+stat_test_roc = res %>% 
+  rstatix::wilcox_test(formula = roc_auc ~ param, comparisons = param_comp) %>%
+  rstatix::add_significance("p")
+
+# ROC AUCs
+ggboxplot(res, x = "param", y = "roc_auc", fill = "param", palette = "Set1",
+  add = "jitter", xlab = "", ylab = "ROC AUC",
+  title = "Parameterization vs Performance (ROC)") +
+  scale_x_discrete(breaks = c("link-only","topology-only"), 
+    labels = c("Link-Operator Mutations", "Edge Mutations")) +
+  ggpubr::stat_pvalue_manual(stat_test_roc, label = "p = {p} ({p.signif})", y.position = c(1)) +
+  ylim(c(0.2,1)) +
+  theme_classic(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 2.1, y = 0.45, label="Random Predictions (AUC = 0.5)")) + 
+  theme(legend.position = "none")
+
+stat_test_pr = res %>% 
+  rstatix::wilcox_test(formula = pr_auc ~ param, comparisons = param_comp) %>%
+  rstatix::add_significance("p") %>%
+  rstatix::add_y_position()
+
+# PR AUCs
+ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
+  add = "jitter", xlab = "", ylab = "PR AUC",
+  title = "Parameterization vs Performance (Precision-Recall)") +
+  scale_x_discrete(breaks = c("link-only","topology-only"), 
+    labels = c("Link-Operator Mutations", "Edge Mutations")) +
+  ggpubr::stat_pvalue_manual(stat_test_pr, label = "p = {p} ({p.signif})") +
+  theme_classic(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 2.15, y = 0.08, label="Random Predictions (AUC = 0.04)")) + 
+  theme(legend.position = "none")
+```
 
 # Reproduce Data & Simulation Results {-}
 
