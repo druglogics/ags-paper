@@ -73,3 +73,6 @@ for (exp_sim in exp_sims) {
     count = count + 1
   }
 }
+
+# in `results/scrambled_topologies` directory of the repo we have archived the
+# .sif files in the single `scrambled_topologies.tar.gz` file
