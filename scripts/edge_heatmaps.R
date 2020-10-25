@@ -10,7 +10,7 @@ if (!file.exists('results/edge_mat.rds')) {
   edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
   # read gitsbe topology mutated models
-  # see Zenodo dataset file `parameterization-comp.tar.gz`
+  # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
   data_dir = '/home/john/tmp/ags-paper/parameterization-comp/topology-only/gitsbe_topology_only_cascade_2.0_ss_20200806_085342/models'
 
   patterns = edge_tbl %>%
