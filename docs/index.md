@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 22 October, 2020"
+date: "Last updated: 26 October, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -755,6 +755,218 @@ ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
 - The average fitness stabilizes after $\approx 10-15$ generations but also the standard deviation: new models are still being created through the crossover genetic algorithm phase to explore various model parameterization while keeping the fitness score relatively high.
 - The *S*-shaped (sigmoid) curve is in agreement with Holland's schema theorem [@holland1992adaptation].
 :::
+
+## Scrambled Topologies Investigation {-}
+
+:::{.note}
+We create several *scrambled* topologies from the CASCADE 1.0 one, in order to assess the tolerance of the curated network topology to random edge changes with regards to model ensemble performance.
+
+We introduce $4$ **types of topology scrambling** that are performed in a **varying number of edges**.
+The **more edges are changed**, the **more scrambled/randomized** is the resulting topology.
+These $4$ types are consisted of:
+
+- Randomly permutating the source nodes of the edges (**source**)
+- Randomly permutating the target nodes of the edges (**target**)
+- Changing the effect from inhibition to activation and vice-versa (**effect**)
+- Combining all the above (**all**)
+
+For each type of scrambling we make $10$ random topologies for each expected similarity score between the randomized and the curated topology, ranging from $0$ similarity to $0.98$ with a total of $22$ *steps*, thus $10\times22=220$ random topologies per different type of scrambling.
+See more details on how to generate these topologies in the script [gen_scrambled_topologies.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies.R).
+
+To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`) - see more info on the [run_druglogics_synergy_on_scrambled_topologies.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_on_scrambled_topologies.sh) script.
+
+We calculate the normalized predictor performance ($calibrated -random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo.R).
+:::
+
+We load the data results and add the ROC and PR AUC results of the combined predictor (termed **Calibrated**) for the curated CASCADE 1.0 topology (see [above](#best-roc-and-prc)):
+
+```r
+scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res.rds')
+
+# the un-scrambled topology results have a similarity score equal to 1, 'none'
+# scrambling whatsoever as `scramble_type`, and the ROC and PR AUC values have been previously
+# calculated and shown in the figures above but we re-do them here anyway :)
+res_comb_roc = PRROC::roc.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed))
+res_comb_pr  = PRROC::pr.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed))
+scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res, 
+  tibble::tibble(sim = 1, scramble_type = 'none', roc_auc = res_comb_roc$auc, 
+    pr_auc = res_comb_pr$auc.davis.goadrich))
+```
+
+The scrambled type is set to **none** for the curated CASCADE 1.0 topology.
+
+Interestingly, there were some topologies which didn't produce not even $1$ boolean model with a stable state when using the genetic algorithm of `Gitsbe` (so no predictions could be made for these topologies):
+
+```r
+ordered_types = c('none', 'source', 'target', 'effect', 'all')
+
+scrambled_topo_res %>% 
+  group_by(scramble_type) %>% 
+  summarise(percent = sum(is.na(roc_auc))/n(), .groups = 'drop') %>%
+  mutate(scramble_type = factor(scramble_type, levels = ordered_types)) %>%
+  ggplot(aes(x = scramble_type, y = percent, fill = scramble_type)) +
+    geom_col() +
+    geom_text(aes(label = scales::percent(percent, accuracy = 1)), vjust = -0.5, size = 8) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+    scale_fill_brewer(palette = "Set1") +
+    guides(fill = guide_legend(title = latex2exp::TeX("Scramble Type"))) +
+    labs(x = "", title = "Topologies with zero-stable-state boolean models", y = "") +
+    theme_classic(base_size = 14) +
+    theme(axis.text.x = element_text(size = 18))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/zero-ss-topologies-fig-1.png" alt="Percentage of topologies that did not have any boolean model with a stable state for every possible topology scrambling type" width="2100" />
+<p class="caption">(\#fig:zero-ss-topologies-fig)Percentage of topologies that did not have any boolean model with a stable state for every possible topology scrambling type</p>
+</div>
+:::{.green-box}
+So tweaking the **source nodes** of each edge in the curated topology, resulted in $11\%$ of the produced topologies to have a network configuration that wouldn't allow the existence of attractor stability in the explored link-operator parameterization space of the `Gitsbe` algorithm.
+Tweaking the **target nodes** results in less topologies having this property ($5\%$).
+
+Lastly, tweaking the **effect** (activation vs inhibition), you always get some boolean models with a stable state attractor.
+:::
+
+### Source Scrambling {-}
+
+
+```r
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'source' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'source' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/src-scrambling-figs-1.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/src-scrambling-figs-2.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:src-scrambling-figs)Source node scrambling vs Performance (ROC and PR AUC)</p>
+</div>
+
+### Target Scrambling {-}
+
+
+```r
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'target' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Target node Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'target' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Target node Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/trg-scrambling-figs-1.png" alt="Target node scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/trg-scrambling-figs-2.png" alt="Target node scrambling vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:trg-scrambling-figs)Target node scrambling vs Performance (ROC and PR AUC)</p>
+</div>
+
+### Effect Scrambling {-}
+
+
+```r
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.98, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/eff-scrambling-figs-1.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/eff-scrambling-figs-2.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:eff-scrambling-figs)Source node scrambling vs Performance (ROC and PR AUC)</p>
+</div>
+
+### Source, target and effect Scrambling {-}
+
+
+```r
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'all' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score", 
+  title = "Source, Target and Effect Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC") +
+  ylim(c(0,1)) +
+  geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 0.85, y = 0.45, label="Random Predictions (AUC = 0.5)"), color = '#377EB8') + 
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'all' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score",
+  title = "Source, Target and Effect Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC") +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 0.83, y = 0.08, label = "Random Predictions (AUC = 0.04)"), color = '#377EB8') + 
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/all-scrambling-figs-1.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:all-scrambling-figs)Source node scrambling vs Performance (ROC and PR AUC)</p>
+</div>
+
+Another way to visualize is with boxplots: I will split the scrambled results to $4$ groups ($0-25, 25-50, 50-75, 75-100\%$ similarity)
+
+
 
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
 
@@ -3470,18 +3682,18 @@ This will generate the directories:
 The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** file [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424).
 
 When uncompressed, the `parameterization-comp.tar.gz` file outputs 3 separate directories, one per parameterization scheme.
-Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script `run_gitsbe_param.sh`), a `boot_res` directory (includes the results of the `bootstrap_models_drabme.sh` script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
+Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script [run_gitsbe_param.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_param.sh)), a `boot_res` directory (includes the results of the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
 
 ## Repo results structure {-}
 
 We have gathered all the necessary output files from the above simulations (mostly relating to ROC, PR curves and AUC sensitivity figures) to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report.
-The `results` directory has 3 sub-directories: 
+The `results` directory has 3 main sub-directories: 
 
 1. [`link-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only): results from the link-operator mutated models only (used in the sections [Cascade 1.0 Analysis] and [CASCADE 2.0 Analysis (Link Operator Mutations)])
 2. [`topology-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topology-only): results from the topology-mutated models only (used in the section [CASCADE 2.0 Analysis (Topology Mutations)])
 3. [`topo-and-link`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
 
-Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files:
+Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files/directories:
 
 - `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
@@ -3490,6 +3702,7 @@ Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/result
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance] section (link operator mutations).
 - `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fitness-vs-ensemble-performance-1) section (topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
+- `scrambled_topologies`: a directory with a compressed file (`scrambled_topologies.tar.gz`), which includes all the topology .sif files generated by the script [gen_scrambled_topologies.R](https://github.com/bblodfon/ags-paper-1/blob/master/script/gen_scrambled_topologies.R)
 
 # R session info {-}
 
@@ -3512,84 +3725,58 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  abind_1.4-5               assertthat_0.2.1         
-  backports_1.1.10          base64enc_0.1.3          
-  BH_1.72.0.3               bookdown_0.21            
-  boot_1.3.25               broom_0.7.1              
-  callr_3.5.1               car_3.0-10               
-  carData_3.0-4             cellranger_1.1.0         
-  circlize_0.4.10           Ckmeans.1d.dp_4.3.3      
-  cli_2.1.0                 clipr_0.7.1              
-  clue_0.3-57               cluster_2.1.0            
-  codetools_0.2-16          colorspace_1.4-1         
-  compiler_3.6.3            ComplexHeatmap_2.2.0     
-  conquer_1.0.2             corrplot_0.84            
-  cowplot_1.1.0             cpp11_0.2.3              
-  crayon_1.3.4              crosstalk_1.1.0.1        
-  curl_4.3                  data.table_1.13.0        
-  desc_1.2.0                digest_0.6.25            
-  dplyr_1.0.2               DT_0.16                  
-  ellipsis_0.3.1            emba_0.1.8               
-  equatiomatic_0.1.0        evaluate_0.14            
-  fansi_0.4.1               farver_2.0.3             
-  forcats_0.5.0             foreach_1.5.1            
-  foreign_0.8-75            gbRd_0.4-11              
-  generics_0.0.2            GetoptLong_1.0.3         
-  ggplot2_3.3.2             ggpubr_0.4.0             
-  ggrepel_0.8.2             ggsci_2.9                
-  ggsignif_0.6.0            glmnet_4.0-2             
-  GlobalOptions_0.1.2       glue_1.4.2               
-  graphics_3.6.3            grDevices_3.6.3          
-  grid_3.6.3                gridExtra_2.3            
-  gtable_0.3.0              haven_2.3.1              
-  highr_0.8                 hms_0.5.3                
-  htmltools_0.5.0           htmlwidgets_1.5.2        
-  igraph_1.2.6              isoband_0.2.2            
-  iterators_1.0.13          jsonlite_1.7.1           
-  knitr_1.30                labeling_0.3             
-  later_1.1.0.1             latex2exp_0.4.0          
-  lattice_0.20-41           lazyeval_0.2.2           
-  lifecycle_0.2.0           lme4_1.1.23              
-  magrittr_1.5              MAMSE_0.2-1              
-  maptools_1.0.2            markdown_1.1             
-  MASS_7.3.53               Matrix_1.2-18            
-  MatrixModels_0.4.1        matrixStats_0.57.0       
-  methods_3.6.3             mgcv_1.8.33              
-  mime_0.9                  minqa_1.2.4              
-  munsell_0.5.0             nlme_3.1.149             
-  nloptr_1.2.2.2            nnet_7.3.14              
-  openxlsx_4.2.2            parallel_3.6.3           
-  pbkrtest_0.4.8.6          pillar_1.4.6             
-  pkgbuild_1.1.0            pkgconfig_2.0.3          
-  pkgload_1.1.0             png_0.1-7                
-  polynom_1.4.0             praise_1.0.0             
-  prettyunits_1.1.1         processx_3.4.4           
-  progress_1.2.2            promises_1.1.1           
-  PRROC_1.3.1               ps_1.4.0                 
-  purrr_0.3.4               quantreg_5.73            
-  R6_2.4.1                  rbibutils_1.3            
-  RColorBrewer_1.1-2        Rcpp_1.0.5               
-  RcppArmadillo_0.9.900.3.0 RcppEigen_0.3.3.7.0      
-  Rdpack_2.0                readr_1.4.0              
-  readxl_1.3.1              rematch_1.0.1            
-  rio_0.5.16                rje_1.10.16              
-  rjson_0.2.20              rlang_0.4.8              
-  rmarkdown_2.4             rprojroot_1.3.2          
-  rstatix_0.6.0             rstudioapi_0.11          
-  scales_1.1.1              shape_1.4.5              
-  sp_1.4.4                  SparseM_1.78             
-  splines_3.6.3             statmod_1.4.34           
-  stats_3.6.3               stringi_1.5.3            
-  stringr_1.4.0             survival_3.2-7           
-  testthat_2.3.2            tibble_3.0.4             
-  tidyr_1.1.2               tidyselect_1.1.0         
-  tinytex_0.26              tools_3.6.3              
-  usefun_0.4.8              utf8_1.1.4               
-  utils_3.6.3               vctrs_0.3.4              
-  viridisLite_0.3.0         visNetwork_2.0.9         
-  withr_2.3.0               xfun_0.18                
-  xml2_1.3.2                yaml_2.2.1               
-  zip_2.1.1                
+  abind_1.4-5              assertthat_0.2.1         backports_1.1.10        
+  base64enc_0.1.3          BH_1.72.0.3              bookdown_0.21           
+  boot_1.3.25              broom_0.7.2              callr_3.5.1             
+  car_3.0-10               carData_3.0-4            cellranger_1.1.0        
+  circlize_0.4.10          Ckmeans.1d.dp_4.3.3      cli_2.1.0               
+  clipr_0.7.1              clue_0.3-57              cluster_2.1.0           
+  codetools_0.2-16         colorspace_1.4-1         compiler_3.6.3          
+  ComplexHeatmap_2.2.0     conquer_1.0.2            corrplot_0.84           
+  cowplot_1.1.0            cpp11_0.2.3              crayon_1.3.4            
+  crosstalk_1.1.0.1        curl_4.3                 data.table_1.13.2       
+  desc_1.2.0               digest_0.6.26            dplyr_1.0.2             
+  DT_0.16                  ellipsis_0.3.1           emba_0.1.8              
+  equatiomatic_0.1.0       evaluate_0.14            fansi_0.4.1             
+  farver_2.0.3             forcats_0.5.0            foreach_1.5.1           
+  foreign_0.8-75           gbRd_0.4-11              generics_0.0.2          
+  GetoptLong_1.0.4         ggplot2_3.3.2            ggpubr_0.4.0            
+  ggrepel_0.8.2            ggsci_2.9                ggsignif_0.6.0          
+  glmnet_4.0-2             GlobalOptions_0.1.2      glue_1.4.2              
+  graphics_3.6.3           grDevices_3.6.3          grid_3.6.3              
+  gridExtra_2.3            gtable_0.3.0             haven_2.3.1             
+  highr_0.8                hms_0.5.3                htmltools_0.5.0         
+  htmlwidgets_1.5.2        igraph_1.2.6             isoband_0.2.2           
+  iterators_1.0.13         jsonlite_1.7.1           knitr_1.30              
+  labeling_0.4.2           later_1.1.0.1            latex2exp_0.4.0         
+  lattice_0.20-41          lazyeval_0.2.2           lifecycle_0.2.0         
+  lme4_1.1.25              magrittr_1.5             MAMSE_0.2-1             
+  maptools_1.0.2           markdown_1.1             MASS_7.3.53             
+  Matrix_1.2-18            MatrixModels_0.4.1       matrixStats_0.57.0      
+  methods_3.6.3            mgcv_1.8-33              mime_0.9                
+  minqa_1.2.4              munsell_0.5.0            nlme_3.1-149            
+  nloptr_1.2.2.2           nnet_7.3.14              openxlsx_4.2.2          
+  parallel_3.6.3           pbkrtest_0.4.8.6         pillar_1.4.6            
+  pkgbuild_1.1.0           pkgconfig_2.0.3          pkgload_1.1.0           
+  png_0.1-7                polynom_1.4.0            praise_1.0.0            
+  prettyunits_1.1.1        processx_3.4.4           progress_1.2.2          
+  promises_1.1.1           PRROC_1.3.1              ps_1.4.0                
+  purrr_0.3.4              quantreg_5.74            R6_2.4.1                
+  rbibutils_1.3            RColorBrewer_1.1-2       Rcpp_1.0.5              
+  RcppArmadillo_0.10.1.0.0 RcppEigen_0.3.3.7.0      Rdpack_2.0              
+  readr_1.4.0              readxl_1.3.1             rematch_1.0.1           
+  rio_0.5.16               rje_1.10.16              rjson_0.2.20            
+  rlang_0.4.8              rmarkdown_2.5            rprojroot_1.3.2         
+  rstatix_0.6.0            rstudioapi_0.11          scales_1.1.1            
+  shape_1.4.5              sp_1.4.4                 SparseM_1.78            
+  splines_3.6.3            statmod_1.4.35           stats_3.6.3             
+  stringi_1.5.3            stringr_1.4.0            survival_3.2-7          
+  testthat_2.3.2           tibble_3.0.4             tidyr_1.1.2             
+  tidyselect_1.1.0         tinytex_0.26             tools_3.6.3             
+  usefun_0.4.8             utf8_1.1.4               utils_3.6.3             
+  vctrs_0.3.4              viridisLite_0.3.0        visNetwork_2.0.9        
+  withr_2.3.0              xfun_0.18                xml2_1.3.2              
+  yaml_2.2.1               zip_2.1.1               
 ```
 
 # References {-}

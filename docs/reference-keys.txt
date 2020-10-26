@@ -12,6 +12,11 @@ fig:best-roc-pr-cascade1
 fig:cor-plot-cascade1
 fig:fit-evolution
 fig:fit-evolution-2
+fig:zero-ss-topologies-fig
+fig:src-scrambling-figs
+fig:trg-scrambling-figs
+fig:eff-scrambling-figs
+fig:all-scrambling-figs
 fig:roc-hsa-cascade2
 fig:pr-hsa-cascade2
 fig:auc-sen-ew-hsa-cascade2
