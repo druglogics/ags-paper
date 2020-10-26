@@ -1818,7 +1818,7 @@ Figure 19: Source, Target node and effect scrambling vs Performance (ROC and PR 
 <h3>Bootstrap calibrated Models + Boxplots</h3>
 <div class="blue-box">
 <p>Since almost <strong>all scrambled results</strong> (no matter the type of scrambling) <strong>are worse than the results we got when using the curated/unscrambled CASCADE 1.0 topology</strong>, we proceed to further generate bootstrap model predictions derived from the curated topology to assess if the result we had found weren’t artifacts and/or outliers.</p>
-<p>We generate a large pool of <code>gitsbe</code> models (<span class="math inline">\(1000\)</span>) and draw randomly batches of <span class="math inline">\(50\)</span> models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see <a href="cascade-1-0-analysis.html#best-roc-and-prc">above</a>).
+<p>We generate a large pool of <code>gitsbe</code> models (<span class="math inline">\(1000\)</span> simulations =&gt; <span class="math inline">\(3000\)</span> models) and draw randomly batches of <span class="math inline">\(50\)</span> models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see <a href="cascade-1-0-analysis.html#best-roc-and-prc">above</a>).
 All these bootstrapped models will be part of one category called <strong>Curated</strong>.
 The rest of the scrambled topology data (that we presented in scatter plots) will be split to <span class="math inline">\(4\)</span> groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.</p>
 </div>

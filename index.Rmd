@@ -845,7 +845,7 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
 :::{.blue-box}
 Since almost **all scrambled results** (no matter the type of scrambling) **are worse than the results we got when using the curated/unscrambled CASCADE 1.0 topology**, we proceed to further generate bootstrap model predictions derived from the curated topology to assess if the result we had found weren't artifacts and/or outliers.
 
-We generate a large pool of `gitsbe` models ($1000$) and draw randomly batches of $50$ models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see [above](#best-roc-and-prc)).
+We generate a large pool of `gitsbe` models ($1000$ simulations => $3000$ models) and draw randomly batches of $50$ models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see [above](#best-roc-and-prc)).
 All these bootstrapped models will be part of one category called **Curated**.
 The rest of the scrambled topology data (that we presented in scatter plots) will be split to $4$ groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.
 :::
