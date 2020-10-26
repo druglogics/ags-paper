@@ -86,7 +86,7 @@ for (topo_file in list.files(path = topologies_dir, full.names = TRUE)) {
   # calculate normalized synergy scores
   pred = pred %>% mutate(combined_score = ss_score - random_score)
 
-  # combined_score = ss_score + beta * random_score
+  # get ROC and PR AUC results
   res_roc = PRROC::roc.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}),
     weights.class0 = pred %>% pull(observed))
   res_pr = PRROC::pr.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}),

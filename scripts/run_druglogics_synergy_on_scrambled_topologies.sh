@@ -9,7 +9,7 @@ files_num=`ls scrambled_topologies | wc -l`
 count=0
 
 # change drabme config option (use bliss synergy assessement)
-# all other option to default values in v1.2.0
+# all other options to default values in v1.2.0
 sed -i 's/synergy_method:.*/synergy_method:\tbliss/' ags_cascade_1.0/config
 
 for file in ${training_files}; do
