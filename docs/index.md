@@ -763,7 +763,7 @@ We create several *scrambled* topologies from the CASCADE 1.0 one, in order to a
 
 We introduce $4$ **types of topology scrambling** that are performed in a **varying number of edges**.
 The **more edges are changed**, the **more scrambled/randomized** is the resulting topology.
-These $4$ types are consisted of:
+The $4$ types of scrambling are:
 
 - Randomly permutating the source nodes of the edges (**source**)
 - Randomly permutating the target nodes of the edges (**target**)
@@ -778,7 +778,8 @@ To get the drug combination predictions for each scrambled topology, we executed
 We calculate the normalized predictor performance ($calibrated -random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo.R).
 :::
 
-We load the data results and add the ROC and PR AUC results of the combined predictor (termed **Calibrated**) for the curated CASCADE 1.0 topology (see [above](#best-roc-and-prc)):
+Next, we load the data results and add the ROC and PR AUC results of the combined predictor (termed **Calibrated**) for the curated CASCADE 1.0 topology (see [above](#best-roc-and-prc)).
+Note that the topology scrambling type is set to **none** for the results that used the original/curated CASCADE 1.0 topology.
 
 ```r
 scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res.rds')
@@ -795,9 +796,7 @@ scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res,
     pr_auc = res_comb_pr$auc.davis.goadrich))
 ```
 
-The scrambled type is set to **none** for the curated CASCADE 1.0 topology.
-
-Interestingly, there were some topologies which didn't produce not even $1$ boolean model with a stable state when using the genetic algorithm of `Gitsbe` (so no predictions could be made for these topologies):
+Interestingly, there were some scrambled topologies which didn't produce not even $1$ boolean model with a stable state when using the genetic algorithm of `Gitsbe` (so no predictions could be made for these topologies):
 
 ```r
 ordered_types = c('none', 'source', 'target', 'effect', 'all')
@@ -818,8 +817,8 @@ scrambled_topo_res %>%
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/zero-ss-topologies-fig-1.png" alt="Percentage of topologies that did not have any boolean model with a stable state for every possible topology scrambling type" width="2100" />
-<p class="caption">(\#fig:zero-ss-topologies-fig)Percentage of topologies that did not have any boolean model with a stable state for every possible topology scrambling type</p>
+<img src="index_files/figure-html/zero-ss-topologies-fig-1.png" alt="Percentage of topologies that did not have any boolean model with a stable state after simulation with Gitsbe ended. Every possible topology scrambling type is represented." width="2100" />
+<p class="caption">(\#fig:zero-ss-topologies-fig)Percentage of topologies that did not have any boolean model with a stable state after simulation with Gitsbe ended. Every possible topology scrambling type is represented.</p>
 </div>
 :::{.green-box}
 So tweaking the **source nodes** of each edge in the curated topology, resulted in $11\%$ of the produced topologies to have a network configuration that wouldn't allow the existence of attractor stability in the explored link-operator parameterization space of the `Gitsbe` algorithm.
@@ -926,8 +925,8 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/eff-scrambling-figs-1.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/eff-scrambling-figs-2.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:eff-scrambling-figs)Source node scrambling vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/eff-scrambling-figs-1.png" alt="Effect scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/eff-scrambling-figs-2.png" alt="Effect scrambling vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:eff-scrambling-figs)Effect scrambling vs Performance (ROC and PR AUC)</p>
 </div>
 
 ### Source, target and effect Scrambling {-}
@@ -943,7 +942,7 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
   ylim(c(0,1)) +
   geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 0.85, y = 0.45, label="Random Predictions (AUC = 0.5)"), color = '#377EB8') + 
+  geom_text(aes(x = 0.85, y = 0.45, label = "Random Predictions (AUC = 0.5)"), color = '#377EB8') + 
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
 
 ggpubr::ggscatter(data = scrambled_topo_res %>% 
@@ -954,18 +953,203 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
   ylab = "PR AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
-  geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 0.83, y = 0.08, label = "Random Predictions (AUC = 0.04)"), color = '#377EB8') + 
+  geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 0.83, y = 0.08, label = "Random Predictions (AUC = 0.2)"), color = '#377EB8') + 
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/all-scrambling-figs-1.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2.png" alt="Source node scrambling vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:all-scrambling-figs)Source node scrambling vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/all-scrambling-figs-1.png" alt="Source, Target node and effect scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2.png" alt="Source, Target node and effect scrambling vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:all-scrambling-figs)Source, Target node and effect scrambling vs Performance (ROC and PR AUC)</p>
 </div>
 
-Another way to visualize is with boxplots: I will split the scrambled results to $4$ groups ($0-25, 25-50, 50-75, 75-100\%$ similarity)
+### Bootstrap calibrated Models + Boxplots {-}
 
+:::{.blue-box}
+Since almost **all scrambled results** (no matter the type of scrambling) **are worse than the results we got when using the curated/unscrambled CASCADE 1.0 topology**, we proceed to further generate bootstrap model predictions derived from the curated topology to assess if the result we had found weren't artifacts and/or outliers.
+
+We generate a large pool of `gitsbe` models ($1000$) and draw randomly batches of $50$ models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see [above](#best-roc-and-prc)).
+All these bootstrapped models will be part of one category called **Curated**.
+The rest of the scrambled topology data (that we presented in scatter plots) will be split to $4$ groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.
+:::
+
+TOADD => How to reproduce, scripts, etc.
+
+Load the bootstrap results and tidy up the data:
+
+```r
+# add the bootstrapped results of the curated topology to the scrambled results
+scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res.rds')
+boot_cascade1_res = readRDS(file = 'results/boot_cascade1_res.rds')
+
+scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res, boot_cascade1_res)
+
+# group by similarity score
+scrambled_topo_res = 
+  scrambled_topo_res %>% mutate(grp = factor(x = 
+    case_when(sim >= 0 & sim < 0.25 ~ '0 - 0.25', 
+      sim >= 0.25 & sim < 0.5 ~ '0.25 - 0.5', 
+      sim >= 0.5 & sim < 0.75 ~ '0.5 - 0.75', 
+      sim >= 0.75 & sim < 1 ~ '0.75 - 1',
+      sim == 1 ~ 'Curated'), 
+  levels = c('0 - 0.25', '0.25 - 0.5', '0.5 - 0.75', '0.75 - 1', 'Curated')))
+```
+
+
+```r
+# ROC results
+scrambled_topo_res %>%
+  filter(scramble_type == 'source' | scramble_type == 'none', !is.na(roc_auc)) %>%
+  ggplot(aes(x = grp, y = roc_auc, fill = grp)) +
+  geom_boxplot(show.legend = FALSE) +
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
+    title = "Source Scrambling vs Performance (ROC)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+# PR results
+scrambled_topo_res %>% 
+  filter(scramble_type == 'source' | scramble_type == 'none', !is.na(pr_auc)) %>%
+  ggplot(aes(x = grp, y = pr_auc, fill = grp)) + 
+  geom_boxplot(show.legend = FALSE) + 
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
+    title = "Source Scrambling vs Performance (Precision-Recall)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/src-scrambling-figs-2-1.png" alt="Source scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/src-scrambling-figs-2-2.png" alt="Source scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:src-scrambling-figs-2)Source scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+</div>
+
+
+```r
+# ROC results
+scrambled_topo_res %>%
+  filter(scramble_type == 'target' | scramble_type == 'none', !is.na(roc_auc)) %>%
+  ggplot(aes(x = grp, y = roc_auc, fill = grp)) +
+  geom_boxplot(show.legend = FALSE) +
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
+    title = "Target Scrambling vs Performance (ROC)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+# PR results
+scrambled_topo_res %>% 
+  filter(scramble_type == 'target' | scramble_type == 'none', !is.na(pr_auc)) %>%
+  ggplot(aes(x = grp, y = pr_auc, fill = grp)) + 
+  geom_boxplot(show.legend = FALSE) + 
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
+    title = "Target Scrambling vs Performance (Precision-Recall)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/trg-scrambling-figs-2-1.png" alt="Target node scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/trg-scrambling-figs-2-2.png" alt="Target node scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:trg-scrambling-figs-2)Target node scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+</div>
+
+
+```r
+# ROC results
+scrambled_topo_res %>%
+  filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(roc_auc)) %>%
+  ggplot(aes(x = grp, y = roc_auc, fill = grp)) +
+  geom_boxplot(show.legend = FALSE) +
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
+    title = "Effect Scrambling vs Performance (ROC)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+# PR results
+scrambled_topo_res %>% 
+  filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(pr_auc)) %>%
+  ggplot(aes(x = grp, y = pr_auc, fill = grp)) + 
+  geom_boxplot(show.legend = FALSE) + 
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
+    title = "Effect Scrambling vs Performance (Precision-Recall)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/eff-scrambling-figs-2-1.png" alt="Effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/eff-scrambling-figs-2-2.png" alt="Effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:eff-scrambling-figs-2)Effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+</div>
+
+
+```r
+# ROC results
+scrambled_topo_res %>%
+  filter(scramble_type == 'all' | scramble_type == 'none', !is.na(roc_auc)) %>%
+  ggplot(aes(x = grp, y = roc_auc, fill = grp)) +
+  geom_boxplot(show.legend = FALSE) +
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
+    title = "Target Scrambling vs Performance (ROC)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+# PR results
+scrambled_topo_res %>% 
+  filter(scramble_type == 'all' | scramble_type == 'none', !is.na(pr_auc)) %>%
+  ggplot(aes(x = grp, y = pr_auc, fill = grp)) + 
+  geom_boxplot(show.legend = FALSE) + 
+  scale_fill_brewer(palette = 'Set1') +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+  ylim(c(0,1)) +
+  labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
+    title = "Target Scrambling vs Performance (Precision-Recall)") +
+  theme_classic(base_size = 14) +
+  geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/all-scrambling-figs-2-1.png" alt="Source, Target node and effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2-2.png" alt="Source, Target node and effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:all-scrambling-figs-2)Source, Target node and effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+</div>
+
+Pretty much, scrambled results == random, curated always better!
+
+Try to put the all together???
 
 
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
@@ -3642,7 +3826,7 @@ The following changes need to be applied to the CASCADE 2.0 configuration file (
 
 - If **topology mutations are used**, disable the balance mutations (`balance_mutations: 0`) and use `topology_mutations: 10`.
 - Change **the number of simulations** to $20$ (balance mutations) or to $50$ for the topology mutated models.
-- Change **`synergy_method: bliss`** no matter the mutations used.
+- Change to *Bliss* synergy method (`synergy_method: bliss`) no matter the mutations used.
 
 The results of these simulations (when applying link-operator mutations) are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`**, whereas when topology mutations are used, in the **`fit-vs-performance-results-bliss-topo.tar.gz`** file [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424)
 
@@ -3753,8 +3937,8 @@ Package version:
   lme4_1.1.25              magrittr_1.5             MAMSE_0.2-1             
   maptools_1.0.2           markdown_1.1             MASS_7.3.53             
   Matrix_1.2-18            MatrixModels_0.4.1       matrixStats_0.57.0      
-  methods_3.6.3            mgcv_1.8-33              mime_0.9                
-  minqa_1.2.4              munsell_0.5.0            nlme_3.1-149            
+  methods_3.6.3            mgcv_1.8.33              mime_0.9                
+  minqa_1.2.4              munsell_0.5.0            nlme_3.1.149            
   nloptr_1.2.2.2           nnet_7.3.14              openxlsx_4.2.2          
   parallel_3.6.3           pbkrtest_0.4.8.6         pillar_1.4.6            
   pkgbuild_1.1.0           pkgconfig_2.0.3          pkgload_1.1.0           

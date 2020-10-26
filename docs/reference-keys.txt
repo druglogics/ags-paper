@@ -17,6 +17,10 @@ fig:src-scrambling-figs
 fig:trg-scrambling-figs
 fig:eff-scrambling-figs
 fig:all-scrambling-figs
+fig:src-scrambling-figs-2
+fig:trg-scrambling-figs-2
+fig:eff-scrambling-figs-2
+fig:all-scrambling-figs-2
 fig:roc-hsa-cascade2
 fig:pr-hsa-cascade2
 fig:auc-sen-ew-hsa-cascade2

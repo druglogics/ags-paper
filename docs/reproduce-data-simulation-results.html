@@ -897,6 +897,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#effect-scrambling"><i class="fa fa-check"></i>Effect Scrambling</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-target-and-effect-scrambling"><i class="fa fa-check"></i>Source, target and effect Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#bootstrap-calibrated-models-boxplots"><i class="fa fa-check"></i>Bootstrap calibrated Models + Boxplots</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
@@ -1049,7 +1050,7 @@ The end result we get is the simulation results for each of the training data fi
 <ul>
 <li>If <strong>topology mutations are used</strong>, disable the balance mutations (<code>balance_mutations: 0</code>) and use <code>topology_mutations: 10</code>.</li>
 <li>Change <strong>the number of simulations</strong> to <span class="math inline">\(20\)</span> (balance mutations) or to <span class="math inline">\(50\)</span> for the topology mutated models.</li>
-<li>Change <strong><code>synergy_method: bliss</code></strong> no matter the mutations used.</li>
+<li>Change to <em>Bliss</em> synergy method (<code>synergy_method: bliss</code>) no matter the mutations used.</li>
 </ul>
 <p>The results of these simulations (when applying link-operator mutations) are stored in the Zenodo file <strong><code>fit-vs-performance-results-bliss.tar.gz</code></strong>, whereas when topology mutations are used, in the <strong><code>fit-vs-performance-results-bliss-topo.tar.gz</code></strong> file <a href="https://doi.org/10.5281/zenodo.3988424"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg" alt="DOI" /></a></p>
 <p>Also, we used the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> (script config: <code>{2.0, prolif, 150, fixpoints, bliss}</code>) repo to get the ensemble results of the <strong>random (proliferative) models</strong> that we will use to normalize the calibrated model performance.
