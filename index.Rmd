@@ -664,6 +664,211 @@ ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
 - The *S*-shaped (sigmoid) curve is in agreement with Holland's schema theorem [@holland1992adaptation].
 :::
 
+## Scrambled Topologies Investigation {-}
+
+:::{.note}
+We create several *scrambled* topologies from the CASCADE 1.0 one, in order to assess the tolerance of the curated network topology to random edge changes with regards to model ensemble performance.
+
+We introduce $4$ **types of topology scrambling** that are performed in a **varying number of edges**.
+The **more edges are changed**, the **more scrambled/randomized** is the resulting topology.
+These $4$ types are consisted of:
+
+- Randomly permutating the source nodes of the edges (**source**)
+- Randomly permutating the target nodes of the edges (**target**)
+- Changing the effect from inhibition to activation and vice-versa (**effect**)
+- Combining all the above (**all**)
+
+For each type of scrambling we make $10$ random topologies for each expected similarity score between the randomized and the curated topology, ranging from $0$ similarity to $0.98$ with a total of $22$ *steps*, thus $10\times22=220$ random topologies per different type of scrambling.
+See more details on how to generate these topologies in the script [gen_scrambled_topologies.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies.R).
+
+To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`) - see more info on the [run_druglogics_synergy_on_scrambled_topologies.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_on_scrambled_topologies.sh) script.
+
+We calculate the normalized predictor performance ($calibrated -random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo.R).
+:::
+
+We load the data results and add the ROC and PR AUC results of the combined predictor (termed **Calibrated**) for the curated CASCADE 1.0 topology (see [above](#best-roc-and-prc)):
+```{r add-unscrambled-norm-perf-results}
+scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res.rds')
+
+# the un-scrambled topology results have a similarity score equal to 1, 'none'
+# scrambling whatsoever as `scramble_type`, and the ROC and PR AUC values have been previously
+# calculated and shown in the figures above but we re-do them here anyway :)
+res_comb_roc = PRROC::roc.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed))
+res_comb_pr  = PRROC::pr.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed))
+scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res, 
+  tibble::tibble(sim = 1, scramble_type = 'none', roc_auc = res_comb_roc$auc, 
+    pr_auc = res_comb_pr$auc.davis.goadrich))
+```
+
+The scrambled type is set to **none** for the curated CASCADE 1.0 topology.
+
+Interestingly, there were some topologies which didn't produce not even $1$ boolean model with a stable state when using the genetic algorithm of `Gitsbe` (so no predictions could be made for these topologies):
+```{r zero-ss-topologies-fig, fig.width=7, fig.height=5, dpi=300, cache=TRUE, fig.cap='Percentage of topologies that did not have any boolean model with a stable state for every possible topology scrambling type', fig.align='center'}
+ordered_types = c('none', 'source', 'target', 'effect', 'all')
+
+scrambled_topo_res %>% 
+  group_by(scramble_type) %>% 
+  summarise(percent = sum(is.na(roc_auc))/n(), .groups = 'drop') %>%
+  mutate(scramble_type = factor(scramble_type, levels = ordered_types)) %>%
+  ggplot(aes(x = scramble_type, y = percent, fill = scramble_type)) +
+    geom_col() +
+    geom_text(aes(label = scales::percent(percent, accuracy = 1)), vjust = -0.5, size = 8) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+    scale_fill_brewer(palette = "Set1") +
+    guides(fill = guide_legend(title = latex2exp::TeX("Scramble Type"))) +
+    labs(x = "", title = "Topologies with zero-stable-state boolean models", y = "") +
+    theme_classic(base_size = 14) +
+    theme(axis.text.x = element_text(size = 18))
+```
+:::{.green-box}
+So tweaking the **source nodes** of each edge in the curated topology, resulted in $11\%$ of the produced topologies to have a network configuration that wouldn't allow the existence of attractor stability in the explored link-operator parameterization space of the `Gitsbe` algorithm.
+Tweaking the **target nodes** results in less topologies having this property ($5\%$).
+
+Lastly, tweaking the **effect** (activation vs inhibition), you always get some boolean models with a stable state attractor.
+:::
+
+### Source Scrambling {-}
+
+```{r src-scrambling-figs, message=FALSE, fig.width=7, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Source node scrambling vs Performance (ROC and PR AUC)', fig.align='center'}
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'source' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'source' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+### Target Scrambling {-}
+
+```{r trg-scrambling-figs, message=FALSE, fig.width=7, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Target node scrambling vs Performance (ROC and PR AUC)', fig.align='center'}
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'target' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Target node Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'target' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('red', 'black'),
+  xlab = "Similarity Score",
+  title = "Target node Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+### Effect Scrambling {-}
+
+```{r eff-scrambling-figs, message=FALSE, fig.width=7, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Source node scrambling vs Performance (ROC and PR AUC)', fig.align='center'}
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.98, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score",
+  title = "Source node Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+### Source, target and effect Scrambling {-}
+
+```{r all-scrambling-figs, message=FALSE, fig.width=7, fig.height=5, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Source node scrambling vs Performance (ROC and PR AUC)', fig.align='center'}
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'all' | scramble_type == 'none', !is.na(roc_auc)), 
+  x = "sim", y = "roc_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score", 
+  title = "Source, Target and Effect Scrambling vs Performance (ROC)",
+  ylab = "ROC AUC") +
+  ylim(c(0,1)) +
+  geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 0.85, y = 0.45, label="Random Predictions (AUC = 0.5)"), color = '#377EB8') + 
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+
+ggpubr::ggscatter(data = scrambled_topo_res %>% 
+    filter(scramble_type == 'all' | scramble_type == 'none', !is.na(pr_auc)), 
+  x = "sim", y = "pr_auc", color = "scramble_type", palette = c('black', 'red'),
+  xlab = "Similarity Score",
+  title = "Source, Target and Effect Scrambling vs Performance (Precision-Recall)",
+  ylab = "PR AUC") +
+  ylim(c(0,1)) +
+  geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
+  geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 0.83, y = 0.08, label = "Random Predictions (AUC = 0.04)"), color = '#377EB8') + 
+  theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
+```
+
+Another way to visualize is with boxplots: I will split the scrambled results to $4$ groups ($0-25, 25-50, 50-75, 75-100\%$ similarity)
+```{r}
+scrambled_topo_res %>% 
+  filter(scramble_type == 'source' | scramble_type == 'none', !is.na(roc_auc)) %>%
+  mutate(grp = factor(x = case_when(
+    sim >= 0 & sim < 0.25 ~ '0 - 0.25', 
+    sim >= 0.25 & sim < 0.5 ~ '0.25 - 0.5', 
+    sim >= 0.5 & sim < 0.75 ~ '0.5 - 0.75', 
+    sim >= 0.75 & sim <= 1 ~ '0.75 - 1'), 
+    levels = c('0 - 0.25', '0.25 - 0.5', '0.5 - 0.75', '0.75 - 1'))) %>%
+  ggplot(aes(x = grp, y = roc_auc, fill = grp)) +
+  geom_boxplot() +
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
+
+scrambled_topo_res %>% 
+  filter(scramble_type == 'source' | scramble_type == 'none', !is.na(pr_auc)) %>%
+  mutate(grp = factor(x = case_when(
+    sim >= 0 & sim < 0.25 ~ '0 - 0.25', 
+    sim >= 0.25 & sim < 0.5 ~ '0.25 - 0.5', 
+    sim >= 0.5 & sim < 0.75 ~ '0.5 - 0.75', 
+    sim >= 0.75 & sim <= 1 ~ '0.75 - 1'), 
+    levels = c('0 - 0.25', '0.25 - 0.5', '0.5 - 0.75', '0.75 - 1'))) %>%
+  ggplot(aes(x = grp, y = pr_auc, fill = grp)) + 
+  geom_boxplot() + 
+  geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE)
+```
+
+
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
 
 :::{.blue-box}
