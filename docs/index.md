@@ -1120,7 +1120,7 @@ scrambled_topo_res %>%
   geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
   ylim(c(0,1)) +
   labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
-    title = "Target Scrambling vs Performance (ROC)") +
+    title = "All types of Scrambling vs Performance (ROC)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
   geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
@@ -1135,7 +1135,7 @@ scrambled_topo_res %>%
   geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
   ylim(c(0,1)) +
   labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
-    title = "Target Scrambling vs Performance (Precision-Recall)") +
+    title = "All types of Scrambling vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
   geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
