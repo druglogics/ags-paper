@@ -26,7 +26,7 @@ for (exp_sim in exp_sims) {
     # sources
     permut_sources = usefun::partial_permut(x = sources, exp_sim)
     # edge_annot_src_permut = paste(permut_sources, effects, targets)
-    # src_sim = sum(edge_annot_src_permut == edge_annot)/length(edge_annot)
+    # src_sim = sum(edge_annot_src_permut %in% edge_annot)/length(edge_annot)
 
     # effects
     permut_effects = effects
@@ -37,16 +37,16 @@ for (exp_sim in exp_sims) {
       permut_effects[index] = ifelse(effects[index] == '->', '-|', '->')
     }
     # edge_annot_eff_permut = paste(sources, permut_effects, targets)
-    # eff_sim = sum(edge_annot_eff_permut == edge_annot)/length(edge_annot)
+    # eff_sim = sum(edge_annot_eff_permut %in% edge_annot)/length(edge_annot)
 
     # targets
     permut_targets = usefun::partial_permut(x = targets, exp_sim)
     # edge_annot_trg_permut = paste(sources, effects, permut_targets)
-    # trg_sim = sum(edge_annot_trg_permut == edge_annot)/length(edge_annot)
+    # trg_sim = sum(edge_annot_trg_permut %in% edge_annot)/length(edge_annot)
 
     # permute all (sources, effects and targets!)
-    edge_annot_all_permut = paste(permut_sources, permut_effects, permut_targets)
-    all_sim = sum(edge_annot_all_permut == edge_annot)/length(edge_annot)
+    # edge_annot_all_permut = paste(permut_sources, permut_effects, permut_targets)
+    # all_sim = sum(edge_annot_all_permut %in% edge_annot)/length(edge_annot)
 
     # Print similarity scores
     # print(paste0(exp_sim, " : ", src_sim, ",", trg_sim, ",", eff_sim))
