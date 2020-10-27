@@ -714,7 +714,7 @@ scrambled_topo_res %>%
   ggplot(aes(x = scramble_type, y = percent, fill = scramble_type)) +
     geom_col() +
     geom_text(aes(label = scales::percent(percent, accuracy = 1)), vjust = -0.5, size = 8) +
-    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,0.5)) +
     scale_fill_brewer(palette = "Set1") +
     guides(fill = guide_legend(title = latex2exp::TeX("Scramble Type"))) +
     labs(x = "", title = "Topologies with zero-stable-state boolean models", y = "") +
