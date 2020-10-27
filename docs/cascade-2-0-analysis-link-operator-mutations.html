@@ -891,13 +891,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#scrambled-topologies-investigation"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
 <li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#effect-scrambling"><i class="fa fa-check"></i>Effect Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-target-and-effect-scrambling"><i class="fa fa-check"></i>Source, target and effect Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#bootstrap-calibrated-models-boxplots"><i class="fa fa-check"></i>Bootstrap calibrated Models + Boxplots</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
@@ -976,6 +976,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#random-model-bootstrap"><i class="fa fa-check"></i>Random Model Bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#parameterization-bootstrap"><i class="fa fa-check"></i>Parameterization Bootstrap</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#boot-ss-cascade1-curated-reproduce"><i class="fa fa-check"></i>CASCADE 1.0 Calibrated Models bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-session-info.html"><a href="r-session-info.html"><i class="fa fa-check"></i>R session info</a></li>
@@ -1055,8 +1056,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-36"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-36"></a>prolif_hsa_modelwise_synergies_150sim =<span class="st"> </span>prolif_hsa_modelwise_synergies_150sim <span class="op">%&gt;%</span></span>
 <span id="cb32-37"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-37"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_prolif =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
 <span id="cb32-38"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-38"></a></span>
-<span id="cb32-39"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-39"></a>observed_synergies_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;results/observed_synergies_cascade_2.0&quot;</span>)</span>
-<span id="cb32-40"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-40"></a>observed_synergies =<span class="st"> </span><span class="kw">get_observed_synergies</span>(observed_synergies_file)</span>
+<span id="cb32-39"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-39"></a>observed_synergies_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;data/observed_synergies_cascade_2.0&quot;</span>)</span>
+<span id="cb32-40"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-40"></a>observed_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_observed_synergies</span>(observed_synergies_file)</span>
 <span id="cb32-41"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-41"></a><span class="co"># 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations</span></span>
 <span id="cb32-42"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-42"></a>observed =<span class="st"> </span><span class="kw">sapply</span>(prolif_hsa_modelwise_synergies_150sim<span class="op">$</span>perturbation <span class="op">%in%</span><span class="st"> </span>observed_synergies, as.integer)</span>
 <span id="cb32-43"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb32-43"></a></span>
@@ -2001,7 +2002,7 @@ Figure 39: Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss
 <span id="cb63-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-5"></a>models_link_operators =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_link_operators_from_models_dir</span>(models_dir)</span>
 <span id="cb63-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-6"></a></span>
 <span id="cb63-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-7"></a><span class="co"># get the AGS steady state</span></span>
-<span id="cb63-8"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-8"></a>steady_state_file =<span class="st"> &quot;results/steadystate&quot;</span></span>
+<span id="cb63-8"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-8"></a>steady_state_file =<span class="st"> &quot;data/steadystate&quot;</span></span>
 <span id="cb63-9"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-9"></a>lines =<span class="st"> </span><span class="kw">readLines</span>(steady_state_file)</span>
 <span id="cb63-10"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-10"></a>ss_data =<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">strsplit</span>(<span class="dt">x =</span> lines[<span class="dv">8</span>], <span class="dt">split =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>))</span>
 <span id="cb63-11"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-11"></a>ss_mat =<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_split</span>(<span class="dt">string =</span> ss_data, <span class="dt">pattern =</span> <span class="st">&quot;:&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>

@@ -15,11 +15,11 @@ fig:fit-evolution-2
 fig:zero-ss-topologies-fig
 fig:src-scrambling-figs
 fig:trg-scrambling-figs
-fig:eff-scrambling-figs
+fig:sign-inv-figs
 fig:all-scrambling-figs
 fig:src-scrambling-figs-2
 fig:trg-scrambling-figs-2
-fig:eff-scrambling-figs-2
+fig:sign-inv-scrambling-figs-2
 fig:all-scrambling-figs-2
 fig:roc-hsa-cascade2
 fig:pr-hsa-cascade2

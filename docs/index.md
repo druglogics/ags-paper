@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 26 October, 2020"
+date: "Last updated: 27 October, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -123,8 +123,8 @@ ss_hsa_modelwise_synergies = ss_hsa_modelwise_synergies %>%
 prolif_hsa_modelwise_synergies = prolif_hsa_modelwise_synergies %>%
   mutate(synergy_prob_prolif = synergies/(synergies + `non-synergies`))
 
-observed_synergies_file = paste0("results/observed_synergies_cascade_1.0")
-observed_synergies = get_observed_synergies(observed_synergies_file)
+observed_synergies_file = paste0("data/observed_synergies_cascade_1.0")
+observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 # 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
 observed = sapply(prolif_hsa_modelwise_synergies$perturbation %in% observed_synergies, as.integer)
 
@@ -558,11 +558,11 @@ The **ROC ensemble-wise statistics data** for the combined predictor $calibrated
 ```r
 beta = -1
 pred_ew_bliss = pred_ew_bliss %>% mutate(combined_score = ss_score + beta * prolif_score)
-res_comb_pred = get_roc_stats(df = pred_ew_bliss, pred_col = "combined_score", label_col = "observed")
+res_comb_pred = usefun::get_roc_stats(df = pred_ew_bliss, pred_col = "combined_score", label_col = "observed")
 
 DT::datatable(data = res_comb_pred$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>% 
-  formatRound(c(1,6,7,8,9), digits = 3)
+  DT::formatRound(c(1,6,7,8,9), digits = 3)
 ```
 
 <div class="figure" style="text-align: center">
@@ -756,7 +756,7 @@ ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
 - The *S*-shaped (sigmoid) curve is in agreement with Holland's schema theorem [@holland1992adaptation].
 :::
 
-## Scrambled Topologies Investigation {-}
+## Scrambled Topologies Investigation {-#scrambled-topo-inv-cascade1}
 
 :::{.note}
 We create several *scrambled* topologies from the CASCADE 1.0 one, in order to assess the tolerance of the curated network topology to random edge changes with regards to model ensemble performance.
@@ -767,22 +767,24 @@ The $4$ types of scrambling are:
 
 - Randomly permutating the source nodes of the edges (**source**)
 - Randomly permutating the target nodes of the edges (**target**)
-- Changing the effect from inhibition to activation and vice-versa (**effect**)
+- Randomly changing the interaction effect from inhibition to activation and vice-versa (**Sign Inversion**)
 - Combining all the above (**all**)
 
-For each type of scrambling we make $10$ random topologies for each expected similarity score between the randomized and the curated topology, ranging from $0$ similarity to $0.98$ with a total of $22$ *steps*, thus $10\times22=220$ random topologies per different type of scrambling.
-See more details on how to generate these topologies in the script [gen_scrambled_topologies.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies.R).
+Note that each type of scrambling produces a topology with the same input and output degree distribution as the original one and as such, the scale-free property of the CASCADE 1.0 topology remains unchanged in the scrambled topologies.
 
-To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`) - see more info on the [run_druglogics_synergy_on_scrambled_topologies.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_on_scrambled_topologies.sh) script.
+For each different type of scrambling, we make $10$ random topologies for each expected similarity score between the randomized and the curated topology, ranging from $0$ similarity to $0.98$ with a total of $22$ *steps*, thus $10\times22=220$ random topologies per different type of scrambling.
+See more details on how to generate these topologies in the script [gen_scrambled_topologies_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies_cascade1.R).
 
-We calculate the normalized predictor performance ($calibrated -random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo.R).
+To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`) - see more info on the [run_druglogics_synergy_scrambled_topo_cascade1.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_scrambled_topo_cascade1.sh) script.
+
+We calculate the normalized predictor performance ($calibrated -random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R).
 :::
 
 Next, we load the data results and add the ROC and PR AUC results of the combined predictor (termed **Calibrated**) for the curated CASCADE 1.0 topology (see [above](#best-roc-and-prc)).
 Note that the topology scrambling type is set to **none** for the results that used the original/curated CASCADE 1.0 topology.
 
 ```r
-scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res.rds')
+scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res_cascade1.rds')
 
 # the un-scrambled topology results have a similarity score equal to 1, 'none'
 # scrambling whatsoever as `scramble_type`, and the ROC and PR AUC values have been previously
@@ -799,16 +801,18 @@ scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res,
 Interestingly, there were some scrambled topologies which didn't produce not even $1$ boolean model with a stable state when using the genetic algorithm of `Gitsbe` (so no predictions could be made for these topologies):
 
 ```r
-ordered_types = c('none', 'source', 'target', 'effect', 'all')
+ordered_types = c('none', 'source', 'target', 'sign', 'all')
 
 scrambled_topo_res %>% 
+  mutate(scramble_type = 
+      replace(x = scramble_type, list = scramble_type == 'effect', values = 'sign')) %>%
   group_by(scramble_type) %>% 
   summarise(percent = sum(is.na(roc_auc))/n(), .groups = 'drop') %>%
   mutate(scramble_type = factor(scramble_type, levels = ordered_types)) %>%
   ggplot(aes(x = scramble_type, y = percent, fill = scramble_type)) +
     geom_col() +
     geom_text(aes(label = scales::percent(percent, accuracy = 1)), vjust = -0.5, size = 8) +
-    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,0.3)) +
     scale_fill_brewer(palette = "Set1") +
     guides(fill = guide_legend(title = latex2exp::TeX("Scramble Type"))) +
     labs(x = "", title = "Topologies with zero-stable-state boolean models", y = "") +
@@ -817,9 +821,10 @@ scrambled_topo_res %>%
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/zero-ss-topologies-fig-1.png" alt="Percentage of topologies that did not have any boolean model with a stable state after simulation with Gitsbe ended. Every possible topology scrambling type is represented." width="2100" />
-<p class="caption">(\#fig:zero-ss-topologies-fig)Percentage of topologies that did not have any boolean model with a stable state after simulation with Gitsbe ended. Every possible topology scrambling type is represented.</p>
+<img src="index_files/figure-html/zero-ss-topologies-fig-1.png" alt="Percentage of topologies that did not have any boolean model with a stable state after simulations with Gitsbe ended. Every possible topology scrambling type is represented." width="2100" />
+<p class="caption">(\#fig:zero-ss-topologies-fig)Percentage of topologies that did not have any boolean model with a stable state after simulations with Gitsbe ended. Every possible topology scrambling type is represented.</p>
 </div>
+
 :::{.green-box}
 So tweaking the **source nodes** of each edge in the curated topology, resulted in $11\%$ of the produced topologies to have a network configuration that wouldn't allow the existence of attractor stability in the explored link-operator parameterization space of the `Gitsbe` algorithm.
 Tweaking the **target nodes** results in less topologies having this property ($5\%$).
@@ -829,6 +834,8 @@ Lastly, tweaking the **effect** (activation vs inhibition), you always get some 
 
 ### Source Scrambling {-}
 
+In the next figures, the red dot/point is the result from using the original/unscrambled/curated CASCADE 1.0 topology:
+
 
 ```r
 ggpubr::ggscatter(data = scrambled_topo_res %>% 
@@ -836,9 +843,10 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
   x = "sim", y = "roc_auc", color = "scramble_type", palette = c('red', 'black'),
   xlab = "Similarity Score",
   title = "Source node Scrambling vs Performance (ROC)",
-  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
-  add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylab = "ROC AUC") +
+  #, add = "reg.line", conf.int = TRUE,
+  #add.params = list(color = "blue", fill = "lightgray"),
+  #cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau") +
   ylim(c(0,1)) +
   geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
@@ -848,9 +856,10 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
   x = "sim", y = "pr_auc", color = "scramble_type", palette = c('red', 'black'),
   xlab = "Similarity Score",
   title = "Source node Scrambling vs Performance (Precision-Recall)",
-  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
-  add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylab = "PR AUC") +
+  #add = "reg.line", conf.int = TRUE,
+  #add.params = list(color = "blue", fill = "lightgray"),
+  #cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
   ylim(c(0,1)) +
   geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
@@ -870,9 +879,7 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
   x = "sim", y = "roc_auc", color = "scramble_type", palette = c('red', 'black'),
   xlab = "Similarity Score",
   title = "Target node Scrambling vs Performance (ROC)",
-  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
-  add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylab = "ROC AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
@@ -882,9 +889,7 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
   x = "sim", y = "pr_auc", color = "scramble_type", palette = c('red', 'black'),
   xlab = "Similarity Score",
   title = "Target node Scrambling vs Performance (Precision-Recall)",
-  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
-  add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  ylab = "PR AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
@@ -895,7 +900,7 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
 <p class="caption">(\#fig:trg-scrambling-figs)Target node scrambling vs Performance (ROC and PR AUC)</p>
 </div>
 
-### Effect Scrambling {-}
+### Sign Inversion {-}
 
 
 ```r
@@ -903,10 +908,8 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
     filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(roc_auc)), 
   x = "sim", y = "roc_auc", color = "scramble_type", palette = c('black', 'red'),
   xlab = "Similarity Score",
-  title = "Source node Scrambling vs Performance (ROC)",
-  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
-  add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  title = "Sign Inversion vs Performance (ROC)",
+  ylab = "ROC AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.9, y = 0.98, label = "CASCADE 1.0") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
@@ -915,21 +918,19 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
     filter(scramble_type == 'effect' | scramble_type == 'none', !is.na(pr_auc)), 
   x = "sim", y = "pr_auc", color = "scramble_type", palette = c('black', 'red'),
   xlab = "Similarity Score",
-  title = "Source node Scrambling vs Performance (Precision-Recall)",
-  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
-  add.params = list(color = "blue", fill = "lightgray"),
-  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  title = "Sign Inversion vs Performance (Precision-Recall)",
+  ylab = "PR AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/eff-scrambling-figs-1.png" alt="Effect scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/eff-scrambling-figs-2.png" alt="Effect scrambling vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:eff-scrambling-figs)Effect scrambling vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/sign-inv-figs-1.png" alt="Sign Inversion vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/sign-inv-figs-2.png" alt="Sign Inversion vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:sign-inv-figs)Sign Inversion vs Performance (ROC and PR AUC)</p>
 </div>
 
-### Source, target and effect Scrambling {-}
+### Source, Target Scrambling and Sign Inversion {-}
 
 
 ```r
@@ -937,49 +938,51 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
     filter(scramble_type == 'all' | scramble_type == 'none', !is.na(roc_auc)), 
   x = "sim", y = "roc_auc", color = "scramble_type", palette = c('black', 'red'),
   xlab = "Similarity Score", 
-  title = "Source, Target and Effect Scrambling vs Performance (ROC)",
+  title = "All types of Scrambling vs Performance (ROC)",
   ylab = "ROC AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.95, y = 1, label = "CASCADE 1.0") +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 0.85, y = 0.45, label = "Random Predictions (AUC = 0.5)"), color = '#377EB8') + 
+  geom_text(aes(x = 0.92, y = 0.45, label = "Random (AUC = 0.5)"), color = '#377EB8') + 
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
 
 ggpubr::ggscatter(data = scrambled_topo_res %>% 
     filter(scramble_type == 'all' | scramble_type == 'none', !is.na(pr_auc)), 
   x = "sim", y = "pr_auc", color = "scramble_type", palette = c('black', 'red'),
   xlab = "Similarity Score",
-  title = "Source, Target and Effect Scrambling vs Performance (Precision-Recall)",
+  title = "All types of Scrambling vs Performance (Precision-Recall)",
   ylab = "PR AUC") +
   ylim(c(0,1)) +
   geom_text(x = 0.9, y = 0.91, label = "CASCADE 1.0") +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 0.83, y = 0.08, label = "Random Predictions (AUC = 0.2)"), color = '#377EB8') + 
+  geom_text(aes(x = 0.83, y = 0.08, label = "Random (AUC = 0.2)"), color = '#377EB8') + 
   theme(plot.title = element_text(hjust = 0.5), legend.position = 'none')
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/all-scrambling-figs-1.png" alt="Source, Target node and effect scrambling vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2.png" alt="Source, Target node and effect scrambling vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:all-scrambling-figs)Source, Target node and effect scrambling vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/all-scrambling-figs-1.png" alt="Source, Target node scrambling and Sign Inversion vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2.png" alt="Source, Target node scrambling and Sign Inversion vs Performance (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:all-scrambling-figs)Source, Target node scrambling and Sign Inversion vs Performance (ROC and PR AUC)</p>
 </div>
 
-### Bootstrap calibrated Models + Boxplots {-}
+### Bootstrap Calibrated Models + Boxplots {-#boot-ss-cascade1-curated}
 
 :::{.blue-box}
-Since almost **all scrambled results** (no matter the type of scrambling) **are worse than the results we got when using the curated/unscrambled CASCADE 1.0 topology**, we proceed to further generate bootstrap model predictions derived from the curated topology to assess if the result we had found weren't artifacts and/or outliers.
+Since almost **all scrambled results** (no matter the type of scrambling) **are worse than the results we got when using the curated/unscrambled CASCADE 1.0 topology**, we proceed to further generate bootstrap model predictions derived from the curated topology to assess if the results we had found weren't artifacts and/or outliers.
 
 We generate a large pool of `gitsbe` models ($1000$ simulations => $3000$ models) and draw randomly batches of $50$ models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see [above](#best-roc-and-prc)).
 All these bootstrapped models will be part of one category called **Curated**.
-The rest of the scrambled topology data (that we presented in scatter plots) will be split to $4$ groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.
+The rest of the scrambled topology data (that we presented in scatter plots) will be split to multiple groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.
+
+See more details on how to reproduce these simulation results [here](boot-ss-cascade1-curated-reproduce).
 :::
 
-TOADD => How to reproduce, scripts, etc.
+
 
 Load the bootstrap results and tidy up the data:
 
 ```r
 # add the bootstrapped results of the curated topology to the scrambled results
-scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res.rds')
+scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res_cascade1.rds')
 boot_cascade1_res = readRDS(file = 'results/boot_cascade1_res.rds')
 
 scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res, boot_cascade1_res)
@@ -990,9 +993,12 @@ scrambled_topo_res =
     case_when(sim >= 0 & sim < 0.25 ~ '0 - 0.25', 
       sim >= 0.25 & sim < 0.5 ~ '0.25 - 0.5', 
       sim >= 0.5 & sim < 0.75 ~ '0.5 - 0.75', 
-      sim >= 0.75 & sim < 1 ~ '0.75 - 1',
+      sim >= 0.75 & sim < 0.85 ~ '0.75 - 0.85',
+      sim >= 0.85 & sim < 0.95 ~ '0.85 - 0.95',
+      sim >= 0.95 & sim < 1 ~ '0.95 - 1',
       sim == 1 ~ 'Curated'), 
-  levels = c('0 - 0.25', '0.25 - 0.5', '0.5 - 0.75', '0.75 - 1', 'Curated')))
+  levels = c('0 - 0.25', '0.25 - 0.5', '0.5 - 0.75', 
+    '0.75 - 0.85', '0.85 - 0.95','0.95 - 1', 'Curated')))
 ```
 
 
@@ -1009,7 +1015,7 @@ scrambled_topo_res %>%
     title = "Source Scrambling vs Performance (ROC)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  geom_text(aes(x = 6.7, y = 0.45, label = "Random (AUC = 0.5)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 
 # PR results
@@ -1024,13 +1030,13 @@ scrambled_topo_res %>%
     title = "Source Scrambling vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  geom_text(aes(x = 6.7, y = 0.15, label = "Random (AUC = 0.2)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/src-scrambling-figs-2-1.png" alt="Source scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/src-scrambling-figs-2-2.png" alt="Source scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:src-scrambling-figs-2)Source scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/src-scrambling-figs-2-1.png" alt="Source node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/src-scrambling-figs-2-2.png" alt="Source node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:src-scrambling-figs-2)Source node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)</p>
 </div>
 
 
@@ -1047,7 +1053,7 @@ scrambled_topo_res %>%
     title = "Target Scrambling vs Performance (ROC)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  geom_text(aes(x = 6.7, y = 0.45, label = "Random (AUC = 0.5)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 
 # PR results
@@ -1062,13 +1068,13 @@ scrambled_topo_res %>%
     title = "Target Scrambling vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  geom_text(aes(x = 6.7, y = 0.13, label = "Random (AUC = 0.2)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/trg-scrambling-figs-2-1.png" alt="Target node scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/trg-scrambling-figs-2-2.png" alt="Target node scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:trg-scrambling-figs-2)Target node scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/trg-scrambling-figs-2-1.png" alt="Target node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/trg-scrambling-figs-2-2.png" alt="Target node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:trg-scrambling-figs-2)Target node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)</p>
 </div>
 
 
@@ -1082,10 +1088,10 @@ scrambled_topo_res %>%
   geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
   ylim(c(0,1)) +
   labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
-    title = "Effect Scrambling vs Performance (ROC)") +
+    title = "Sign Inversion vs Performance (ROC)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  geom_text(aes(x = 6.7, y = 0.45, label = "Random (AUC = 0.5)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 
 # PR results
@@ -1097,16 +1103,16 @@ scrambled_topo_res %>%
   geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
   ylim(c(0,1)) +
   labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
-    title = "Effect Scrambling vs Performance (Precision-Recall)") +
+    title = "Sign Inversion vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  geom_text(aes(x = 6.9, y = 0.15, label = "Random (AUC = 0.2)"), size = 3) + 
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/eff-scrambling-figs-2-1.png" alt="Effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/eff-scrambling-figs-2-2.png" alt="Effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:eff-scrambling-figs-2)Effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/sign-inv-scrambling-figs-2-1.png" alt="Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/sign-inv-scrambling-figs-2-2.png" alt="Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:sign-inv-scrambling-figs-2)Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)</p>
 </div>
 
 
@@ -1123,7 +1129,7 @@ scrambled_topo_res %>%
     title = "All types of Scrambling vs Performance (ROC)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  geom_text(aes(x = 5.8, y = 0.45, label = "Random (AUC = 0.5)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 
 # PR results
@@ -1138,19 +1144,18 @@ scrambled_topo_res %>%
     title = "All types of Scrambling vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5, y = 0.15, label = "Random (AUC = 0.2)")) + 
+  geom_text(aes(x = 5.8, y = 0.15, label = "Random (AUC = 0.2)")) + 
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/all-scrambling-figs-2-1.png" alt="Source, Target node and effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2-2.png" alt="Source, Target node and effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)" width="50%" />
-<p class="caption">(\#fig:all-scrambling-figs-2)Source, Target node and effect scrambling + bootstrap CASCADE 1.0 model results vs Performance (ROC and PR AUC)</p>
+<img src="index_files/figure-html/all-scrambling-figs-2-1.png" alt="Source, Target node scrambling and sign inverted topologies + bootstrap CASCADE 1.0 topology results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2-2.png" alt="Source, Target node scrambling and sign inverted topologies + bootstrap CASCADE 1.0 topology results (ROC and PR AUC)" width="50%" />
+<p class="caption">(\#fig:all-scrambling-figs-2)Source, Target node scrambling and sign inverted topologies + bootstrap CASCADE 1.0 topology results (ROC and PR AUC)</p>
 </div>
 
-Pretty much, scrambled results == random, curated always better!
-
-Try to put the all together???
-
+:::{.green-box}
+We observe that even **a small perturbation/violation/scrambling** of the curated topology (of any type) produces results close to random prediction that are significantly lower than the prediction results when using the curated CASCADE 1.0 topology.
+:::
 
 # CASCADE 2.0 Analysis (Link Operator Mutations) {-}
 
@@ -1210,8 +1215,8 @@ ss_hsa_modelwise_synergies_200sim = ss_hsa_modelwise_synergies_200sim %>%
 prolif_hsa_modelwise_synergies_150sim = prolif_hsa_modelwise_synergies_150sim %>%
   mutate(synergy_prob_prolif = synergies/(synergies + `non-synergies`))
 
-observed_synergies_file = paste0("results/observed_synergies_cascade_2.0")
-observed_synergies = get_observed_synergies(observed_synergies_file)
+observed_synergies_file = paste0("data/observed_synergies_cascade_2.0")
+observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 # 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
 observed = sapply(prolif_hsa_modelwise_synergies_150sim$perturbation %in% observed_synergies, as.integer)
 
@@ -2226,7 +2231,7 @@ models_stable_states = emba::get_stable_state_from_models_dir(models_dir)
 models_link_operators = emba::get_link_operators_from_models_dir(models_dir)
 
 # get the AGS steady state
-steady_state_file = "results/steadystate"
+steady_state_file = "data/steadystate"
 lines = readLines(steady_state_file)
 ss_data = unlist(strsplit(x = lines[8], split = "\t"))
 ss_mat = stringr::str_split(string = ss_data, pattern = ":", simplify = TRUE)
@@ -3773,6 +3778,10 @@ ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
 
 # Reproduce Data & Simulation Results {-}
 
+:::{.note}
+We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4140419.svg)](https://doi.org/10.5281/zenodo.4140419)
+:::
+
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-#repro123}
 
 - Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
@@ -3792,13 +3801,9 @@ So, for example to get the simulation output directories for the [Cascade 1.0 An
 
 Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
-For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models ($150$ simulations, `bliss` synergy method, *calibrated* models, using the CASCADE 2.0 topology), as well as the [AGS training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/results/steadystate) file.
+For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models ($150$ simulations, `bliss` synergy method, *calibrated* models, using the CASCADE 2.0 topology), as well as the [AGS training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/data/steadystate) file.
 
-:::{.note}
-We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424)
-:::
-
-Specifically, the results described above are stored in the compressed file **`sim_res.tar.gz`**.
+Specifically, the results described above are stored in the compressed Zenodo file **`sim_res.tar.gz`**.
 When uncompressed, the `sim_res.tar.gz` file outputs 2 separate directories, one per different topology (*CASCADE 1.0* and *CASCADE 2.0*).
 The directory with the *CASCADE 2.0* related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
 Each further directory, **specifies on its name** the *training type*, *simulation number*, *attractor tool* and *synergy assessment method*.
@@ -3813,8 +3818,7 @@ These numbers range from $1$ (flip just one node) to $24$ (flip all nodes, i.e. 
 Then, for each such number, we generate $20$ new partially correct steady states, each one having the same amount of randomly-chosen *flips* in the steady state (e.g. $20$ steady states where randomly-chosen sets of $3$ nodes have been flipped).
 Thus, in total, $205$ training data sample files are produced ($205 = 9 \times 20 + 1 \times 24 + 1 \times 1$, where from the $11$ number of flips, the one flip happens for every node ($24$ different steady states) and flipping all the nodes generates the unique completely reversed steady state).
 
-The training data files are stored in the Zenodo file **`training-data-files.tar.gz`** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424)
-
+The training data files are stored in the Zenodo file **`training-data-files.tar.gz`**.
 
 ### Run model ensembles simulations {-}
 
@@ -3828,10 +3832,10 @@ The following changes need to be applied to the CASCADE 2.0 configuration file (
 - Change **the number of simulations** to $20$ (balance mutations) or to $50$ for the topology mutated models.
 - Change to *Bliss* synergy method (`synergy_method: bliss`) no matter the mutations used.
 
-The results of these simulations (when applying link-operator mutations) are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`**, whereas when topology mutations are used, in the **`fit-vs-performance-results-bliss-topo.tar.gz`** file [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424)
+The results of these simulations (when applying link-operator mutations) are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`**, whereas when topology mutations are used, in the **`fit-vs-performance-results-bliss-topo.tar.gz`** file.
 
 Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script config: `{2.0, prolif, 150, fixpoints, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
-The result of this simulation is also part of the results described above (see section [above](#repro123), also considering the necessary changes applied for the topology mutations-based simulations) and it's available at the file **`sim_res.tar.gz`** in the Zenodo dataset [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424).
+The result of this simulation is also part of the results described above (see section [above](#repro123), also considering the necessary changes applied for the topology mutations-based simulations) and it's available inside the file **`sim_res.tar.gz`** of the Zenodo dataset.
 
 ## Random Model Bootstrap {-}
 
@@ -3843,7 +3847,7 @@ This creates a results directory which includes a `models` directory, with a tot
 Changing appropriately the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
 
-The results of the simulations executed via the above scripts are all stored in the **`random_model_bootstrap.tar.gz`** file of the Zenodo dataset [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424).
+The results of the simulations executed via the above scripts are all stored in the **`random_model_bootstrap.tar.gz`** file of the Zenodo dataset.
 
 ## Parameterization Bootstrap {-}
 
@@ -3863,10 +3867,19 @@ This will generate the directories:
   
   , depending on the parameterization scheme that was used in the previous step to produce the `models` pool.
 
-The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** file [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3988424.svg)](https://doi.org/10.5281/zenodo.3988424).
+The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** Zenodo file.
 
 When uncompressed, the `parameterization-comp.tar.gz` file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script [run_gitsbe_param.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_param.sh)), a `boot_res` directory (includes the results of the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
+
+## CASCADE 1.0 Calibrated Models bootstrap {-#boot-ss-cascade1-curated-reproduce}
+
+- Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
+- Generate one large pool of calibrated models (fitting to the AGS steady state) by using the instructions [above](#repro123) => use the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` repo with script config: `{1.0, ss, 1000, fixpoints, bliss}`
+- Use the [bootstrap_models_drabme_cascade1.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme_cascade1.sh) script to run the bootstrapped model simulations.
+- Use the [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R) script to tidy up the bootstrap simulation data.
+
+The results from the bootstrap simulations are stored in the **`ss_cascade1_model_bootstrap.tar.gz`** file of the Zenodo dataset.
 
 ## Repo results structure {-}
 
@@ -3879,14 +3892,18 @@ The `results` directory has 3 main sub-directories:
 
 Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files/directories:
 
-- `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
-- `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
-- `steadystate`: the AGS training data for the calibrated models
 - `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance] section (link operator mutations).
 - `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fitness-vs-ensemble-performance-1) section (topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
-- `scrambled_topologies`: a directory with a compressed file (`scrambled_topologies.tar.gz`), which includes all the topology .sif files generated by the script [gen_scrambled_topologies.R](https://github.com/bblodfon/ags-paper-1/blob/master/script/gen_scrambled_topologies.R)
+- `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
+- `boot_cascade1_res`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
+
+Lastly, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/data) directory that includes the following:
+
+- `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
+- `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
+- `steadystate`: the AGS training data for the calibrated models
 
 # R session info {-}
 
