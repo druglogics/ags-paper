@@ -5,13 +5,13 @@ library(stringr)
 library(emba)
 library(PRROC)
 
-# directory with the scrambled CASCADE 1.0 topology files that reside in the
-# 'results/scrambled_topologies/scrambled_topologies.tar.gz' compressed file
-topologies_dir = '/home/john/tmp/ags-paper/scrambled_topologies'
+# directory with the scrambled CASCADE 1.0 topology files
+# see Zenodo dataset [TOADD], file `scrambled_topologies_cascade_1.0.tar.gz`
+topologies_dir = '/home/john/tmp/ags-paper/scrambled_topologies_cascade1'
 
 # directory with the results of the script 'run_druglogics_synergy_training.sh'
-# See Zenodo dataset [TOADD], file 'synergy-res-scrambled-topo.tar.gz'
-syn_res_dir = '/home/john/tmp/ags-paper/synergy-res-scrambled-topo'
+# See Zenodo dataset [TOADD], file `synergy-res-scrambled-topo-cascade1.tar.gz`
+syn_res_dir = '/home/john/tmp/ags-paper/synergy-res-scrambled-topo-cascade1'
 
 # CASCADE 1.0 topology
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_1.0.sif', delim = "\t", col_names = c('source', 'effect', 'target'), col_types = "ccc")
@@ -100,5 +100,5 @@ for (topo_file in list.files(path = topologies_dir, full.names = TRUE)) {
   index = index + 1
 }
 
-scrambled_topo_res = dplyr::bind_rows(data_list)
-saveRDS(object = scrambled_topo_res, file = 'results/scrambled_topo_res.rds')
+scrambled_topo_res_cascade1 = dplyr::bind_rows(data_list)
+saveRDS(object = scrambled_topo_res_cascade1, file = 'results/scrambled_topo_res_cascade1.rds')

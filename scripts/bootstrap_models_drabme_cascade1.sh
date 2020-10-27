@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Execute this script inside the `ags_cascade_1.0` directory of the 
+# Execute this script inside the `ags_cascade_1.0` directory of the
 # `druglogics-synergy` repository (v1.2.0)
 
 # Use this script to bootstrap `batch_size` amount of gitsbe models from
@@ -10,9 +10,10 @@
 batches=50
 batch_size=50
 
-# copy the `cascade_1.0/cascade_1.0_ss_1000sim_fixpoints_bliss_20201026_163405/models` 
-# directory from the Zenodo dataset (TOADD), file `sim_res.tar.gz`, into the
-# `ags_cascade_1.0` directory of the `druglogics-synergy` repository
+# from the Zenodo dataset (TOADD), file `ss_cascade1_model_bootstrap.tar.gz`,
+# copy the `models` directory inside the
+# `ss_cascade1_model_bootstrap/cascade_1.0_ss_1000sim_fixpoints_bliss_20201026_163542`
+# directory, into the `ags_cascade_1.0` directory of the `druglogics-synergy` repository
 models_dir="models"
 
 # change drabme config option (use bliss synergy assessement)
