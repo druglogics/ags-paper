@@ -4,6 +4,12 @@ library(readr)
 library(ggplot2)
 library(usefun)
 
+# the generated topology files are in the Zenodo dataset [TOADD],
+# file `scrambled_topologies_cascade_1.0.tar.gz`
+
+# specify the output directory
+output_dir = '/home/john/tmp/ags-paper/scrambled_topologies'
+
 # CASCADE 1.0
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_1.0.sif', delim = "\t", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
@@ -55,24 +61,21 @@ for (exp_sim in exp_sims) {
     # save .sif files
     # sources scrambled
     readr::write_tsv(x = edge_tbl %>% mutate(source = permut_sources),
-      file = paste0("results/scrambled_topologies/cascade1_src_permut_", count, ".sif"),
+      file = paste0(output_dir, "/cascade1_src_permut_", count, ".sif"),
       col_names = FALSE)
     # targets scrambled
     readr::write_tsv(x = edge_tbl %>% mutate(target = permut_targets),
-      file = paste0("results/scrambled_topologies/cascade1_trg_permut_", count, ".sif"),
+      file = paste0(output_dir, "/cascade1_trg_permut_", count, ".sif"),
       col_names = FALSE)
     # effects scrambled
     readr::write_tsv(x = edge_tbl %>% mutate(effect = permut_effects),
-      file = paste0("results/scrambled_topologies/cascade1_eff_permut_", count, ".sif"),
+      file = paste0(output_dir, "/cascade1_eff_permut_", count, ".sif"),
       col_names = FALSE)
     # all 3 columns scrambled!
     readr::write_tsv(x = edge_tbl %>% mutate(source = permut_sources,
       effect = permut_effects, target = permut_targets),
-      file = paste0("results/scrambled_topologies/cascade1_all_permut_", count, ".sif"),
+      file = paste0(output_dir, "/cascade1_all_permut_", count, ".sif"),
       col_names = FALSE)
     count = count + 1
   }
 }
-
-# in `results/scrambled_topologies` directory of the repo we have archived the
-# .sif files in the single `scrambled_topologies.tar.gz` file
