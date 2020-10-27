@@ -17,7 +17,7 @@ syn_res_dir = '/home/john/tmp/ags-paper/synergy-res-scrambled-topo'
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_1.0.sif', delim = "\t", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
 # observed synergies from (Flobak et al. 2015)
-obs_syn_file = paste0("results/observed_synergies_cascade_1.0")
+obs_syn_file = paste0("data/observed_synergies_cascade_1.0")
 obs_syn = emba::get_observed_synergies(obs_syn_file)
 
 # to measure similarity (reverse of scrambled-ness), compare edge full annotation

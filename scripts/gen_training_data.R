@@ -4,7 +4,7 @@ library(tibble)
 # For this code to run make sure `getwd()` points to the root of this repository
 
 # Read the AGS steady state and reformat it to a data.frame
-steady_state_file = paste0(getwd(), "/results/steadystate")
+steady_state_file = 'data/steadystate'
 lines = readLines(steady_state_file)
 steady_state = unlist(strsplit(x = lines[8], split = "\t"))
 

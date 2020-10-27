@@ -16,7 +16,7 @@ ew_random_file = list.files(path = random_dir, pattern = "ensemblewise_synergies
 random_scores = emba::get_synergy_scores(file_name = ew_random_file)
 
 # observed synergies from (Flobak et al. 2015)
-obs_syn_file = paste0("results/observed_synergies_cascade_1.0")
+obs_syn_file = paste0("data/observed_synergies_cascade_1.0")
 obs_syn = emba::get_observed_synergies(obs_syn_file)
 observed = sapply(random_scores$perturbation %in% obs_syn, as.integer)
 
