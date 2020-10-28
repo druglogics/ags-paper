@@ -7,6 +7,7 @@ suppressPackageStartupMessages(library(circlize))
 library(ggplot2)
 library(forcats)
 library(scales)
+library(tidyr)
 
 if (!file.exists('data/edge_mat.rds')) {
   # get CASCADE 2.0
@@ -68,6 +69,32 @@ legend_list = packLegend(edge_legend)
 # read node-pathway annotation for CASCADE 2.0
 node_path_tbl = readRDS(file = 'data/node_path_tbl.rds')
 
+# Map pathway names to distinct colors
+pathway_colors = c('Cross-talk' = 'black', 'MAPK' = 'red',
+  'TGF-b' = '#4FC601', 'Wnt' = 'blue', 'Rho' = '#A1C299',
+  'Cell Cycle' = '#7A4900', 'JAK-STAT' = '#1CE6FF', 'NF-kB' = '#FF4A46',
+  'Apoptosis' = '#B903AA', 'RTK' = '#B79762', 'PI3K-AKT' = '#3B5DFF',
+  'mTOR' = '#00C2A0')
+
+#################################
+# Node Distribution in Pathways #
+#################################
+node_path_tbl %>%
+  group_by(path_abbrev) %>%
+  summarize(node_prop = n()/nrow(.), .groups = 'drop') %>%
+  rename(pathway = path_abbrev) %>%
+  tidyr::drop_na() %>%
+  mutate(pathway = forcats::fct_reorder(pathway, desc(node_prop))) %>%
+  ggplot(aes(x = pathway, y = node_prop, fill = pathway)) +
+    geom_col(show.legend = FALSE) +
+    scale_fill_manual(values = pathway_colors) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,0.3)) +
+    labs(x = 'Pathway', y = 'Proportion of total nodes in Pathway',
+      title = 'Node Distribution across Pathways in CASCADE 2.0') +
+    theme_classic(base_size = 14) +
+    theme(axis.text.x = element_text(angle = 20, hjust = 1))
+ggsave(filename = 'img/node_path_dist.png', dpi = "print", width = 7, height = 5)
+
 # convert to edge-pathway annotation for CASCADE 2.0
 edge_path_annot = sapply(colnames(edge_mat), function(edge) {
   split_res = stringr::str_split(edge, pattern = ' ', simplify = TRUE)
@@ -95,14 +122,9 @@ edge_path_annot = sapply(colnames(edge_mat), function(edge) {
 # sanity data check
 stopifnot(all(names(edge_path_annot) == colnames(edge_mat)))
 
-# Map pathway names to distinct colors
-pathway_colors = c('Cross-talk' = 'black', 'MAPK' = 'red',
-  'TGF-b' = '#4FC601', 'Wnt' = 'blue', 'Rho' = '#A1C299',
-  'Cell Cycle' = '#7A4900', 'JAK-STAT' = '#1CE6FF', 'NF-kB' = '#FF4A46',
-  'Apoptosis' = '#B903AA', 'RTK' = '#B79762', 'PI3K-AKT' = '#3B5DFF',
-  'mTOR' = '#00C2A0')
-
-# Edge Distribution in Pathways
+#################################
+# Edge Distribution in Pathways #
+#################################
 dplyr::bind_cols(edge = names(edge_path_annot), pathway = edge_path_annot) %>%
   group_by(pathway) %>%
   summarize(edge_prop = n()/nrow(.), .groups = 'drop') %>%
@@ -111,7 +133,7 @@ dplyr::bind_cols(edge = names(edge_path_annot), pathway = edge_path_annot) %>%
     geom_col(show.legend = FALSE) +
     scale_fill_manual(values = pathway_colors) +
     scale_y_continuous(labels = scales::percent, limits = c(0,0.6)) +
-    labs(x = 'Pathway', y = 'Pecentage of total edges',
+    labs(x = 'Pathway', y = 'Proportion of total edges in Pathway',
       title = 'Edge Distribution across Pathways in CASCADE 2.0') +
     theme_classic(base_size = 14) +
     theme(axis.text.x = element_text(angle = 20, hjust = 1))
