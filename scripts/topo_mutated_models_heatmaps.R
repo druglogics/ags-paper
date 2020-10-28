@@ -1,3 +1,7 @@
+#############################################
+# Heatmaps for topology/edge mutated models #
+#############################################
+
 library(dplyr)
 library(tibble)
 library(readr)
@@ -9,20 +13,20 @@ library(forcats)
 library(scales)
 library(tidyr)
 
+# read the parameterization data from the gitsbe topology mutated models
 if (!file.exists('data/edge_mat.rds')) {
   # get CASCADE 2.0
   edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
-  # read gitsbe topology/edge mutated models
   # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
-  data_dir = '/home/john/tmp/ags-paper/parameterization-comp/topology-only/gitsbe_topology_only_cascade_2.0_ss_20200806_085342/models'
+  models_dir = '/home/john/tmp/ags-paper/parameterization-comp/topology-only/gitsbe_topology_only_cascade_2.0_ss_20200806_085342/models'
 
   patterns = edge_tbl %>%
     mutate(pattern_str = paste0(target, ".*", source)) %>%
     pull(pattern_str)
 
   count = 1
-  for (f in list.files(path = data_dir, full.names = TRUE)) {
+  for (f in list.files(path = models_dir, full.names = TRUE)) {
     model_name = stringr::str_remove(string = basename(f), pattern = ".gitsbe")
     print(paste0(model_name, " - ", count))
     count = count + 1
@@ -54,6 +58,24 @@ if (!file.exists('data/edge_mat.rds')) {
 } else {
   edge_mat = readRDS(file = "data/edge_mat.rds")
 }
+
+# read the stable state data from the gitsbe topology mutated models
+if (!file.exists('data/topo_ss_df.rds')) {
+  # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
+  models_dir = '/home/john/tmp/ags-paper/parameterization-comp/topology-only/gitsbe_topology_only_cascade_2.0_ss_20200806_085342/models'
+
+  # 70 models has 2 stable states (check with `all.ss = TRUE` parameter)
+  topo_ss_df = emba::get_stable_state_from_models_dir(models_dir)
+
+  # save data.frame
+  saveRDS(object = topo_ss_df, file = "data/topo_ss_df.rds")
+} else {
+  topo_ss_df = readRDS(file = "data/topo_ss_df.rds")
+}
+
+# remove model names and covert to matrix for the heatmap
+rownames(topo_ss_df) = NULL
+topo_ss_mat = as.matrix(topo_ss_df)
 
 # heatmap prerequisites
 
@@ -166,9 +188,9 @@ draw(edge_heat, annotation_legend_list = legend_list,
   annotation_legend_side = "right")
 dev.off()
 
-###############################################
-# Subset Edge Heatmap with K-means clustering #
-###############################################
+#######################
+# Subset Edge Heatmap #
+#######################
 # Extra:
 # - Subset columns to the 'stable' edges (those that do not change so much across the models)
 # - Column K-means clustering (2)
