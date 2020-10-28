@@ -3344,7 +3344,7 @@ We present the **node and edge distribution** across the pathways in CASCADE 2.0
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the egde is labeled as *Cross-talk*.
 
 
-```{r node-edge-dist-path, fig.show='hold', out.width='50%', fig.cap='Noe and Edge Distribution across pathways in CASCADE 2.0'}
+```{r node-edge-dist-path, fig.show='hold', out.width='50%', fig.cap='Node and Edge Distribution across pathways in CASCADE 2.0'}
 knitr::include_graphics(path = 'img/node_path_dist.png')
 knitr::include_graphics(path = 'img/edge_path_dist.png')
 ```
@@ -3352,6 +3352,14 @@ knitr::include_graphics(path = 'img/edge_path_dist.png')
 ### Link-Operator mutated models {-}
 
 ### Topology-mutated models {-}
+
+```{r edge-heat-1, fig.cap='Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included.'}
+knitr::include_graphics(path = 'img/edge_heat.png')
+```
+
+```{r edge-heat-2, fig.cap='Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included.'}
+knitr::include_graphics(path = 'img/edge_heat_stable.png')
+```
 
 # Reproduce Data & Simulation Results {-}
 
