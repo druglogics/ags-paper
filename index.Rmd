@@ -3300,7 +3300,6 @@ So, for example to get the simulation output directories for the [Cascade 1.0 An
 
 Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
-For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models ($150$ simulations, `bliss` synergy method, *calibrated* models, using the CASCADE 2.0 topology), as well as the [AGS training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/data/steadystate) file.
 
 Specifically, the results described above are stored in the compressed Zenodo file **`sim_res.tar.gz`**.
 When uncompressed, the `sim_res.tar.gz` file outputs 2 separate directories, one per different topology (*CASCADE 1.0* and *CASCADE 2.0*).
