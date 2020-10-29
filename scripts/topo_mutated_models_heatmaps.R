@@ -306,7 +306,7 @@ indexes = sample(1:nrow(topo_ss_mat), size = 500)
 
 set.seed(42)
 heatmap_ss = ComplexHeatmap::Heatmap(matrix = topo_ss_mat,
-  #topo_ss_mat = stable_edge_mat[indexes, ] # take a subset for testing
+  #matrix = topo_ss_mat[indexes, ], # take a subset for testing
   name = "heatmap_ss", column_km = 3, column_km_repeats = 5,
   bottom_annotation = ha_ss,
   column_title = "Models Stable States", column_title_gp = gpar(fontsize = 20),
