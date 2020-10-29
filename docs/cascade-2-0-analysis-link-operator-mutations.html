@@ -922,7 +922,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-vs-ensemble-performance"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#heatmaps-stable-state-and-parameterization"><i class="fa fa-check"></i>Heatmaps: Stable State and Parameterization</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -964,6 +963,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#annotated-heatmaps"><i class="fa fa-check"></i>Annotated Heatmaps</a>
+<ul>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#annotations"><i class="fa fa-check"></i>Annotations</a></li>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#link-operator-mutated-models"><i class="fa fa-check"></i>Link-Operator mutated models</a></li>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#topology-mutated-models"><i class="fa fa-check"></i>Topology-mutated models</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
@@ -1985,118 +1990,6 @@ Figure 39: Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 2.0, Bliss
 <li>We observe that there exists <strong>some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data</strong>.</li>
 <li>The performance as measured by the ROC AUC is less sensitive to changes in the training data but there is better correlation with regards to the PR AUC, which is a more informative measure for our imbalanced dataset <span class="citation">(Saito and Rehmsmeier <a href="references.html#ref-Saito2015" role="doc-biblioref">2015</a>)</span>.</li>
 </ul>
-</div>
-</div>
-<div id="heatmaps-stable-state-and-parameterization" class="section level2 unnumbered" number="">
-<h2>Heatmaps: Stable State and Parameterization</h2>
-<div class="note">
-<ul>
-<li>The drawn heatmaps use the <strong>Calibrated</strong> models (fitted to steady state) from the <code>Gitsbe</code> run with <span class="math inline">\(150\)</span> simulations (using the <em>Bliss</em> Drabme synergy assessment).</li>
-<li>The colored column (node) names are part of the <strong>AGS training steady state</strong></li>
-</ul>
-</div>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-1"></a>models_dir =<span class="st"> &quot;results/link-only/models_cascade_2.0_ss_150sim_bliss/&quot;</span></span>
-<span id="cb63-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-2"></a></span>
-<span id="cb63-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-3"></a><span class="co"># Steady States and Link Operators</span></span>
-<span id="cb63-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-4"></a>models_stable_states =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_stable_state_from_models_dir</span>(models_dir)</span>
-<span id="cb63-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-5"></a>models_link_operators =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_link_operators_from_models_dir</span>(models_dir)</span>
-<span id="cb63-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-6"></a></span>
-<span id="cb63-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-7"></a><span class="co"># get the AGS steady state</span></span>
-<span id="cb63-8"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-8"></a>steady_state_file =<span class="st"> &quot;data/steadystate&quot;</span></span>
-<span id="cb63-9"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-9"></a>lines =<span class="st"> </span><span class="kw">readLines</span>(steady_state_file)</span>
-<span id="cb63-10"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-10"></a>ss_data =<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">strsplit</span>(<span class="dt">x =</span> lines[<span class="dv">8</span>], <span class="dt">split =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>))</span>
-<span id="cb63-11"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-11"></a>ss_mat =<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_split</span>(<span class="dt">string =</span> ss_data, <span class="dt">pattern =</span> <span class="st">&quot;:&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb63-12"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-12"></a><span class="kw">colnames</span>(ss_mat) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;nodes&quot;</span>, <span class="st">&quot;states&quot;</span>)</span>
-<span id="cb63-13"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-13"></a>ss_tbl =<span class="st"> </span>ss_mat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(states), as.integer)</span>
-<span id="cb63-14"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-14"></a></span>
-<span id="cb63-15"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-15"></a>steady_state =<span class="st"> </span>ss_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(states)</span>
-<span id="cb63-16"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-16"></a><span class="kw">names</span>(steady_state) =<span class="st"> </span>ss_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(nodes)</span>
-<span id="cb63-17"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-17"></a></span>
-<span id="cb63-18"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-18"></a><span class="co"># calculate models fitness to AGS steady state</span></span>
-<span id="cb63-19"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-19"></a>models_fit =<span class="st"> </span><span class="kw">apply</span>(models_stable_states[, <span class="kw">names</span>(steady_state)], <span class="dv">1</span>, </span>
-<span id="cb63-20"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-20"></a>  usefun<span class="op">::</span>get_percentage_of_matches, steady_state)</span>
-<span id="cb63-21"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-21"></a></span>
-<span id="cb63-22"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-22"></a><span class="co"># make sure model name order is ok</span></span>
-<span id="cb63-23"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-23"></a><span class="kw">all</span>(<span class="kw">names</span>(models_fit) <span class="op">==</span><span class="st"> </span><span class="kw">rownames</span>(models_stable_states))</span>
-<span id="cb63-24"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb63-24"></a><span class="kw">all</span>(<span class="kw">names</span>(models_fit) <span class="op">==</span><span class="st"> </span><span class="kw">rownames</span>(models_link_operators))</span></code></pre></div>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-1"></a><span class="co"># coloring</span></span>
-<span id="cb64-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-2"></a>state_colors =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;lightyellow&quot;</span>)</span>
-<span id="cb64-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-3"></a>state_col_fun =<span class="st"> </span>circlize<span class="op">::</span><span class="kw">colorRamp2</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">colors =</span> state_colors)</span>
-<span id="cb64-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-4"></a></span>
-<span id="cb64-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-5"></a>fit_col_fun =<span class="st"> </span>circlize<span class="op">::</span><span class="kw">colorRamp2</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="kw">min</span>(models_fit), <span class="kw">max</span>(models_fit)), </span>
-<span id="cb64-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-6"></a>  <span class="dt">colors =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;green&quot;</span>))</span>
-<span id="cb64-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-7"></a></span>
-<span id="cb64-8"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-8"></a><span class="co"># define fitness color bar</span></span>
-<span id="cb64-9"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-9"></a>fit_annot =<span class="st"> </span><span class="kw">rowAnnotation</span>(<span class="dt">fitness =</span> <span class="kw">anno_simple</span>(<span class="dt">x =</span> models_fit, <span class="dt">col =</span> fit_col_fun), </span>
-<span id="cb64-10"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-10"></a>  <span class="dt">show_annotation_name =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb64-11"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-11"></a></span>
-<span id="cb64-12"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-12"></a><span class="co"># color steady state nodes in the heatmap</span></span>
-<span id="cb64-13"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-13"></a>ss_nodes_colors =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="kw">length</span>(<span class="kw">colnames</span>(models_stable_states)))</span>
-<span id="cb64-14"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-14"></a><span class="kw">names</span>(ss_nodes_colors) =<span class="st"> </span><span class="kw">colnames</span>(models_stable_states)</span>
-<span id="cb64-15"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-15"></a>ss_nodes_colors[<span class="kw">names</span>(ss_nodes_colors) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(steady_state)] =<span class="st"> &quot;magenta&quot;</span></span>
-<span id="cb64-16"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-16"></a></span>
-<span id="cb64-17"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-17"></a>heatmap_ss =<span class="st"> </span>ComplexHeatmap<span class="op">::</span><span class="kw">Heatmap</span>(<span class="dt">matrix =</span> <span class="kw">as.matrix</span>(models_stable_states),</span>
-<span id="cb64-18"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-18"></a>  <span class="dt">name =</span> <span class="st">&quot;heatmap_ss&quot;</span>,</span>
-<span id="cb64-19"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-19"></a>  <span class="dt">column_title =</span> <span class="st">&quot;Models Stable States&quot;</span>, <span class="dt">column_title_gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">20</span>),</span>
-<span id="cb64-20"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-20"></a>  <span class="dt">column_names_gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">3</span>, <span class="dt">col =</span> ss_nodes_colors),</span>
-<span id="cb64-21"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-21"></a>  <span class="dt">row_dend_width =</span> <span class="kw">unit</span>(<span class="fl">0.7</span>, <span class="st">&quot;inches&quot;</span>), <span class="dt">column_dend_height =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">&quot;inches&quot;</span>),</span>
-<span id="cb64-22"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-22"></a>  <span class="dt">col =</span> state_col_fun, <span class="dt">show_row_names =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb64-23"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-23"></a>  <span class="dt">left_annotation =</span> fit_annot, </span>
-<span id="cb64-24"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-24"></a>  <span class="dt">show_heatmap_legend =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb64-25"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-25"></a>  <span class="co">#use_raster = TRUE, raster_device = &quot;png&quot;, raster_quality = 20)</span></span>
-<span id="cb64-26"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-26"></a></span>
-<span id="cb64-27"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-27"></a><span class="co"># define the 2 legends</span></span>
-<span id="cb64-28"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-28"></a>activity_state_legend =<span class="st"> </span><span class="kw">Legend</span>(<span class="dt">title =</span> <span class="st">&quot;Activity State&quot;</span>, </span>
-<span id="cb64-29"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-29"></a>  <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Inhibited&quot;</span>, <span class="st">&quot;Active&quot;</span>), <span class="dt">legend_gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> state_colors))</span>
-<span id="cb64-30"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-30"></a>fit_legend =<span class="st"> </span><span class="kw">Legend</span>(<span class="dt">title =</span> <span class="st">&quot;Fitness&quot;</span>, <span class="dt">col =</span> fit_col_fun)</span>
-<span id="cb64-31"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-31"></a>train_legend =<span class="st"> </span><span class="kw">Legend</span>(<span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Training&quot;</span>), <span class="dt">legend_gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="kw">c</span>(<span class="st">&quot;magenta&quot;</span>)),</span>
-<span id="cb64-32"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-32"></a>  <span class="dt">labels_gp =</span> <span class="kw">gpar</span>(<span class="dt">fontface =</span> <span class="st">&quot;bold&quot;</span>))</span>
-<span id="cb64-33"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-33"></a>legend_list =<span class="st"> </span><span class="kw">packLegend</span>(activity_state_legend, fit_legend, train_legend, <span class="dt">direction =</span> <span class="st">&quot;vertical&quot;</span>)</span>
-<span id="cb64-34"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-34"></a></span>
-<span id="cb64-35"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb64-35"></a>heatmap_ss =<span class="st"> </span><span class="kw">draw</span>(heatmap_ss, <span class="dt">annotation_legend_list =</span> legend_list, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;right&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:ss-heatmap"></span>
-<img src="index_files/figure-html/ss-heatmap-1.png" alt="Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)" width="2100" />
-<p class="caption">
-Figure 40: Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)
-</p>
-</div>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-1"></a><span class="co"># code to add rectangular boxes for specific nodes</span></span>
-<span id="cb65-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-2"></a><span class="co"># co = column_order(heatmap_ss)</span></span>
-<span id="cb65-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-3"></a><span class="co"># nc = ncol(models_stable_states)</span></span>
-<span id="cb65-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-4"></a><span class="co"># marked_nodes = c(&quot;MYC&quot;, &quot;TP53&quot;)</span></span>
-<span id="cb65-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-5"></a><span class="co"># decorate_heatmap_body(heatmap = &quot;heatmap_ss&quot;, code = {</span></span>
-<span id="cb65-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-6"></a><span class="co">#   for(node in marked_nodes) {</span></span>
-<span id="cb65-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-7"></a><span class="co">#     i = which(colnames(models_stable_states)[co] == node)</span></span>
-<span id="cb65-8"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-8"></a><span class="co">#     grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col=&quot;black&quot;, fill = NA, lwd = 1)) </span></span>
-<span id="cb65-9"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-9"></a><span class="co">#   }</span></span>
-<span id="cb65-10"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb65-10"></a><span class="co"># })</span></span></code></pre></div>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-1"></a><span class="co"># color steady state nodes in the heatmap</span></span>
-<span id="cb66-2"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-2"></a>lo_nodes_colors =<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="kw">length</span>(<span class="kw">colnames</span>(models_link_operators)))</span>
-<span id="cb66-3"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-3"></a><span class="kw">names</span>(lo_nodes_colors) =<span class="st"> </span><span class="kw">colnames</span>(models_link_operators)</span>
-<span id="cb66-4"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-4"></a>lo_nodes_colors[<span class="kw">names</span>(lo_nodes_colors) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(steady_state)] =<span class="st"> &quot;magenta&quot;</span> <span class="co"># 10 of 24</span></span>
-<span id="cb66-5"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-5"></a></span>
-<span id="cb66-6"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-6"></a>heatmap_param =<span class="st"> </span>ComplexHeatmap<span class="op">::</span><span class="kw">Heatmap</span>(<span class="dt">matrix =</span> <span class="kw">as.matrix</span>(models_link_operators),</span>
-<span id="cb66-7"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-7"></a>  <span class="dt">name =</span> <span class="st">&quot;heatmap_param&quot;</span>,</span>
-<span id="cb66-8"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-8"></a>  <span class="dt">column_title =</span> <span class="st">&quot;Model Parameterization&quot;</span>, <span class="dt">column_title_gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">20</span>),</span>
-<span id="cb66-9"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-9"></a>  <span class="dt">column_names_gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">8</span>, <span class="dt">col =</span> lo_nodes_colors),</span>
-<span id="cb66-10"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-10"></a>  <span class="dt">col =</span> state_col_fun, <span class="dt">show_row_names =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb66-11"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-11"></a>  <span class="dt">left_annotation =</span> fit_annot, </span>
-<span id="cb66-12"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-12"></a>  <span class="dt">show_heatmap_legend =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb66-13"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-13"></a>  <span class="co">#use_raster = TRUE, raster_device = &quot;png&quot;, raster_quality = 20)</span></span>
-<span id="cb66-14"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-14"></a></span>
-<span id="cb66-15"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-15"></a><span class="co"># define the 2 legends (`fit_legend` is same as in previous heatmap)</span></span>
-<span id="cb66-16"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-16"></a>link_operators_legend =<span class="st"> </span><span class="kw">Legend</span>(<span class="dt">title =</span> <span class="st">&quot;Link Operator&quot;</span>, </span>
-<span id="cb66-17"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-17"></a>  <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;AND NOT&quot;</span>, <span class="st">&quot;OR NOT&quot;</span>), <span class="dt">legend_gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> state_colors))</span>
-<span id="cb66-18"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-18"></a>train_legend =<span class="st"> </span><span class="kw">Legend</span>(<span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Training&quot;</span>), <span class="dt">legend_gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="kw">c</span>(<span class="st">&quot;magenta&quot;</span>)),</span>
-<span id="cb66-19"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-19"></a>  <span class="dt">labels_gp =</span> <span class="kw">gpar</span>(<span class="dt">fontface =</span> <span class="st">&quot;bold&quot;</span>))</span>
-<span id="cb66-20"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-20"></a>legend_list =<span class="st"> </span><span class="kw">packLegend</span>(link_operators_legend, fit_legend, train_legend, <span class="dt">direction =</span> <span class="st">&quot;vertical&quot;</span>)</span>
-<span id="cb66-21"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-21"></a></span>
-<span id="cb66-22"><a href="cascade-2-0-analysis-link-operator-mutations.html#cb66-22"></a><span class="kw">draw</span>(heatmap_param, <span class="dt">annotation_legend_list =</span> legend_list, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;right&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:link-op-heatmap"></span>
-<img src="index_files/figure-html/link-op-heatmap-1.png" alt="Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)" width="2100" />
-<p class="caption">
-Figure 41: Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)
-</p>
 </div>
 </div>
 </div>

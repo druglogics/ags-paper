@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 27 October, 2020"
+date: "Last updated: 28 October, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -2215,131 +2215,6 @@ ggscatter(data = res, x = "avg_fit", y = "pr_auc",
 - The performance as measured by the ROC AUC is less sensitive to changes in the training data but there is better correlation with regards to the PR AUC, which is a more informative measure for our imbalanced dataset [@Saito2015].
 :::
 
-## Heatmaps: Stable State and Parameterization {-}
-
-:::{.note}
-- The drawn heatmaps use the **Calibrated** models (fitted to steady state) from the `Gitsbe` run with $150$ simulations (using the *Bliss* Drabme synergy assessment).
-- The colored column (node) names are part of the **AGS training steady state**
-:::
-
-
-```r
-models_dir = "results/link-only/models_cascade_2.0_ss_150sim_bliss/"
-
-# Steady States and Link Operators
-models_stable_states = emba::get_stable_state_from_models_dir(models_dir)
-models_link_operators = emba::get_link_operators_from_models_dir(models_dir)
-
-# get the AGS steady state
-steady_state_file = "data/steadystate"
-lines = readLines(steady_state_file)
-ss_data = unlist(strsplit(x = lines[8], split = "\t"))
-ss_mat = stringr::str_split(string = ss_data, pattern = ":", simplify = TRUE)
-colnames(ss_mat) = c("nodes", "states")
-ss_tbl = ss_mat %>% as_tibble() %>% mutate_at(vars(states), as.integer)
-
-steady_state = ss_tbl %>% pull(states)
-names(steady_state) = ss_tbl %>% pull(nodes)
-
-# calculate models fitness to AGS steady state
-models_fit = apply(models_stable_states[, names(steady_state)], 1, 
-  usefun::get_percentage_of_matches, steady_state)
-
-# make sure model name order is ok
-all(names(models_fit) == rownames(models_stable_states))
-all(names(models_fit) == rownames(models_link_operators))
-```
-
-
-```r
-# coloring
-state_colors = c("red", "lightyellow")
-state_col_fun = circlize::colorRamp2(breaks = c(0, 1), colors = state_colors)
-
-fit_col_fun = circlize::colorRamp2(breaks = c(min(models_fit), max(models_fit)), 
-  colors = c("red", "green"))
-
-# define fitness color bar
-fit_annot = rowAnnotation(fitness = anno_simple(x = models_fit, col = fit_col_fun), 
-  show_annotation_name = FALSE)
-
-# color steady state nodes in the heatmap
-ss_nodes_colors = rep("black", length(colnames(models_stable_states)))
-names(ss_nodes_colors) = colnames(models_stable_states)
-ss_nodes_colors[names(ss_nodes_colors) %in% names(steady_state)] = "magenta"
-
-heatmap_ss = ComplexHeatmap::Heatmap(matrix = as.matrix(models_stable_states),
-  name = "heatmap_ss",
-  column_title = "Models Stable States", column_title_gp = gpar(fontsize = 20),
-  column_names_gp = gpar(fontsize = 3, col = ss_nodes_colors),
-  row_dend_width = unit(0.7, "inches"), column_dend_height = unit(1, "inches"),
-  col = state_col_fun, show_row_names = FALSE,
-  left_annotation = fit_annot, 
-  show_heatmap_legend = FALSE)
-  #use_raster = TRUE, raster_device = "png", raster_quality = 20)
-
-# define the 2 legends
-activity_state_legend = Legend(title = "Activity State", 
-  labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
-fit_legend = Legend(title = "Fitness", col = fit_col_fun)
-train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta")),
-  labels_gp = gpar(fontface = "bold"))
-legend_list = packLegend(activity_state_legend, fit_legend, train_legend, direction = "vertical")
-
-heatmap_ss = draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
-```
-
-<div class="figure" style="text-align: center">
-<img src="index_files/figure-html/ss-heatmap-1.png" alt="Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)" width="2100" />
-<p class="caption">(\#fig:ss-heatmap)Stable States Heatmap (150 simulations, 450 models, link operator mutations, CASCADE 2.0)</p>
-</div>
-
-```r
-# code to add rectangular boxes for specific nodes
-# co = column_order(heatmap_ss)
-# nc = ncol(models_stable_states)
-# marked_nodes = c("MYC", "TP53")
-# decorate_heatmap_body(heatmap = "heatmap_ss", code = {
-#   for(node in marked_nodes) {
-#     i = which(colnames(models_stable_states)[co] == node)
-#     grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 1)) 
-#   }
-# })
-```
-
-
-```r
-# color steady state nodes in the heatmap
-lo_nodes_colors = rep("black", length(colnames(models_link_operators)))
-names(lo_nodes_colors) = colnames(models_link_operators)
-lo_nodes_colors[names(lo_nodes_colors) %in% names(steady_state)] = "magenta" # 10 of 24
-
-heatmap_param = ComplexHeatmap::Heatmap(matrix = as.matrix(models_link_operators),
-  name = "heatmap_param",
-  column_title = "Model Parameterization", column_title_gp = gpar(fontsize = 20),
-  column_names_gp = gpar(fontsize = 8, col = lo_nodes_colors),
-  col = state_col_fun, show_row_names = FALSE,
-  left_annotation = fit_annot, 
-  show_heatmap_legend = FALSE)
-  #use_raster = TRUE, raster_device = "png", raster_quality = 20)
-
-# define the 2 legends (`fit_legend` is same as in previous heatmap)
-link_operators_legend = Legend(title = "Link Operator", 
-  labels = c("AND NOT", "OR NOT"), legend_gp = gpar(fill = state_colors))
-train_legend = Legend(labels = c("Training"), legend_gp = gpar(fill = c("magenta")),
-  labels_gp = gpar(fontface = "bold"))
-legend_list = packLegend(link_operators_legend, fit_legend, train_legend, direction = "vertical")
-
-draw(heatmap_param, annotation_legend_list = legend_list, annotation_legend_side = "right")
-```
-
-<div class="figure" style="text-align: center">
-<img src="index_files/figure-html/link-op-heatmap-1.png" alt="Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)" width="2100" />
-<p class="caption">(\#fig:link-op-heatmap)Parameterization Heatmap (150 simulations, 450 models, 52 equations with link operators, CASCADE 2.0)</p>
-</div>
-
-
-
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
 
 Load the results:
@@ -3776,6 +3651,61 @@ ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
 <p class="caption">(\#fig:param-comp-boot-fig-2)Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)</p>
 </div>
 
+
+## Annotated Heatmaps {-}
+
+:::{.blue-box}
+In this section we will use the models from the bootstrap analysis [above](#bootstrap-simulations) and produce heatmaps of the models stable states and parameterization.
+Specifically, we will use the $2$ CASCADE 2.0 model pools created, that have either only **link-operator mutated** or only **topology-mutated** models.
+
+For both pools, a stable state heatmap will be produced (columns are *nodes*).
+For the first pool, the parameterization is presented with a **link-operator heatmap** (columns are *nodes*) and for the second pool as an **edge heatmap** (columns are *edges*).
+:::
+
+### Annotations {-}
+
+Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in **Fig. 1A** [@Niederdorfer2020].
+The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv).
+
+We present the **node and edge distribution** across the pathways in CASCADE 2.0.
+For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the egde is labeled as *Cross-talk*.
+
+
+
+```r
+knitr::include_graphics(path = 'img/node_path_dist.png')
+knitr::include_graphics(path = 'img/edge_path_dist.png')
+```
+
+<div class="figure">
+<img src="img/node_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" /><img src="img/edge_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" />
+<p class="caption">(\#fig:node-edge-dist-path)Node and Edge Distribution across pathways in CASCADE 2.0</p>
+</div>
+
+### Link-Operator mutated models {-}
+
+### Topology-mutated models {-}
+
+
+```r
+knitr::include_graphics(path = 'img/edge_heat.png')
+```
+
+<div class="figure">
+<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included." width="2100" />
+<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included.</p>
+</div>
+
+
+```r
+knitr::include_graphics(path = 'img/edge_heat_stable.png')
+```
+
+<div class="figure">
+<img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included." width="2100" />
+<p class="caption">(\#fig:edge-heat-2)Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included.</p>
+</div>
+
 # Reproduce Data & Simulation Results {-}
 
 :::{.note}
@@ -3936,7 +3866,7 @@ Package version:
   ComplexHeatmap_2.2.0     conquer_1.0.2            corrplot_0.84           
   cowplot_1.1.0            cpp11_0.2.3              crayon_1.3.4            
   crosstalk_1.1.0.1        curl_4.3                 data.table_1.13.2       
-  desc_1.2.0               digest_0.6.26            dplyr_1.0.2             
+  desc_1.2.0               digest_0.6.27            dplyr_1.0.2             
   DT_0.16                  ellipsis_0.3.1           emba_0.1.8              
   equatiomatic_0.1.0       evaluate_0.14            fansi_0.4.1             
   farver_2.0.3             forcats_0.5.0            foreach_1.5.1           

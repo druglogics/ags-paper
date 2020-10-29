@@ -37,8 +37,6 @@ fig:cor-plot-cascade2
 fig:fit-evolution-3
 fig:fit-vs-perf-roc
 fig:fit-vs-perf-pr
-fig:ss-heatmap
-fig:link-op-heatmap
 fig:roc-hsa-cascade2-topo
 fig:pr-hsa-cascade2-topo
 fig:auc-sen-ew-hsa-cascade2-topo
@@ -58,3 +56,6 @@ fig:best-beta-cascade2-topo-and-link
 fig:param-comp
 fig:param-comp-boot-fig
 fig:param-comp-boot-fig-2
+fig:node-edge-dist-path
+fig:edge-heat-1
+fig:edge-heat-2
