@@ -77,16 +77,54 @@ if (!file.exists('data/topo_ss_df.rds')) {
 rownames(topo_ss_df) = NULL
 topo_ss_mat = as.matrix(topo_ss_df)
 
-# heatmap prerequisites
+# get the AGS steady state
+if (!file.exists('data/steady_state.rds')) {
+  steady_state_file = 'data/steadystate'
+  lines = readLines(steady_state_file)
+  ss_data = unlist(strsplit(x = lines[8], split = "\t"))
+  ss_mat = stringr::str_split(string = ss_data, pattern = ":", simplify = TRUE)
+  colnames(ss_mat) = c("nodes", "states")
+  ss_tbl = ss_mat %>% as_tibble() %>% mutate_at(vars(states), as.integer)
+
+  steady_state = ss_tbl %>% pull(states)
+  names(steady_state) = ss_tbl %>% pull(nodes)
+
+  saveRDS(object = steady_state, file = 'data/steady_state.rds')
+} else {
+  steady_state = readRDS(file = 'data/steady_state.rds')
+}
+
+#########################
+# heatmap prerequisites #
+#########################
 
 # define coloring for the edges (absence vs presence)
 edge_colors = c("red", "green4")
 edge_col_fun = circlize::colorRamp2(breaks = c(0,1), colors = edge_colors)
 
+# define coloring for the stable states (Active => red, Inhibited => green)
+state_colors = c("red", "green4")
+state_col_fun = circlize::colorRamp2(breaks = c(0,1), colors = state_colors)
+
+# define the training steady state for node annotation
+node_training_state_map = rep(NA, ncol(topo_ss_mat))
+names(node_training_state_map) = colnames(topo_ss_mat)
+
+for (node in names(steady_state)) {
+  if (unname(steady_state[node]) == 1) {
+    node_training_state_map[node] = 'Active'
+  } else { # 0
+    node_training_state_map[node] = 'Inhibited'
+  }
+}
+
+training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
+
 # define the legend
 edge_legend = Legend(title = "Edge Mutations",
   labels = c("Absense", "Presence"), legend_gp = gpar(fill = edge_colors))
-legend_list = packLegend(edge_legend)
+activity_state_legend = Legend(title = "Activity State",
+  labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
 
 # read node-pathway annotation for CASCADE 2.0
 node_path_tbl = readRDS(file = 'data/node_path_tbl.rds')
@@ -97,6 +135,10 @@ pathway_colors = c('Cross-talk' = 'black', 'MAPK' = 'red',
   'Cell Cycle' = '#7A4900', 'JAK-STAT' = '#1CE6FF', 'NF-kB' = '#FF4A46',
   'Apoptosis' = '#B903AA', 'RTK' = '#B79762', 'PI3K-AKT' = '#3B5DFF',
   'mTOR' = '#00C2A0')
+
+# make a vector of node-pathway annotations
+node_path_map = node_path_tbl %>% pull(path_abbrev)
+names(node_path_map) = node_path_tbl %>% pull(node)
 
 #################################
 # Node Distribution in Pathways #
@@ -118,7 +160,7 @@ node_path_tbl %>%
 ggsave(filename = 'img/node_path_dist.png', dpi = "print", width = 7, height = 5)
 
 # convert to edge-pathway annotation for CASCADE 2.0
-edge_path_annot = sapply(colnames(edge_mat), function(edge) {
+edge_path_map = sapply(colnames(edge_mat), function(edge) {
   split_res = stringr::str_split(edge, pattern = ' ', simplify = TRUE)
   source = split_res[1]
   target = split_res[3]
@@ -142,12 +184,12 @@ edge_path_annot = sapply(colnames(edge_mat), function(edge) {
 })
 
 # sanity data check
-stopifnot(all(names(edge_path_annot) == colnames(edge_mat)))
+stopifnot(all(names(edge_path_map) == colnames(edge_mat)))
 
 #################################
 # Edge Distribution in Pathways #
 #################################
-dplyr::bind_cols(edge = names(edge_path_annot), pathway = edge_path_annot) %>%
+dplyr::bind_cols(edge = names(edge_path_map), pathway = edge_path_map) %>%
   group_by(pathway) %>%
   summarize(edge_prop = n()/nrow(.), .groups = 'drop') %>%
   mutate(pathway = forcats::fct_reorder(pathway, desc(edge_prop))) %>%
@@ -162,7 +204,7 @@ dplyr::bind_cols(edge = names(edge_path_annot), pathway = edge_path_annot) %>%
 ggsave(filename = 'img/edge_path_dist.png', dpi = "print", width = 7, height = 5)
 
 # define pathway annotation
-pathway_annot = HeatmapAnnotation(Pathway = edge_path_annot,
+pathway_annot = HeatmapAnnotation(Pathway = edge_path_map,
   name = 'pathway_annot', col = list(Pathway = pathway_colors))
 
 ################
@@ -172,7 +214,7 @@ pathway_annot = HeatmapAnnotation(Pathway = edge_path_annot,
 # - Column K-means clustering (4)
 # - Pathway Annotation
 
-indx = sample(1:nrow(edge_mat), size = 500)
+indexes = sample(1:nrow(edge_mat), size = 500)
 
 set.seed(42)
 edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
@@ -182,6 +224,8 @@ edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
   col = edge_col_fun, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = FALSE, use_raster = TRUE,
   raster_device = "png", raster_quality = 20)
+
+legend_list = packLegend(edge_legend)
 
 png(filename = "img/edge_heat.png", width = 7, height = 5, units = "in", res = 600)
 draw(edge_heat, annotation_legend_list = legend_list,
@@ -202,28 +246,64 @@ stable_edges = names(edge_avg[edge_avg < 0.4 | edge_avg > 0.95]) # user-defined 
 stable_edge_mat = edge_mat[,stable_edges]
 
 # Subset the pathway annotation to the 'stable' edges only
-stable_edge_path_annot = edge_path_annot[names(edge_path_annot) %in% colnames(stable_edge_mat)]
+stable_edge_path_map = edge_path_map[names(edge_path_map) %in% colnames(stable_edge_mat)]
 
 # sanity data check
-stopifnot(all(names(stable_edge_path_annot) == colnames(stable_edge_mat)))
+stopifnot(all(names(stable_edge_path_map) == colnames(stable_edge_mat)))
 
-# Define stable edge annotation
-pathway_stable_edges_annot = HeatmapAnnotation(Pathway = stable_edge_path_annot,
-  name = 'pathway_annot_stable',
+# Define annotations
+ha = HeatmapAnnotation(Pathway = stable_edge_path_map,
   col = list(Pathway = pathway_colors[!names(pathway_colors) %in% c('Cell Cycle', 'PI3K-AKT')]))
 # no 'stable' edges in the 'Cell Cycle' and 'PI3K-AKT' pathways!
 
 set.seed(42)
-edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat,
+edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat[indexes,],
   name = "edge_heatmap", cluster_rows = FALSE,
-  bottom_annotation = pathway_stable_edges_annot,
+  bottom_annotation = ha,
   column_title = "Model topology parameterization (stable edges)",
   column_title_gp = gpar(fontsize = 20),
   column_names_gp = gpar(fontsize = 6), column_km = 2,
   col = edge_col_fun, show_row_names = FALSE, show_row_dend = FALSE,
-  show_heatmap_legend = FALSE, use_raster = TRUE, raster_quality = 20)
+  show_heatmap_legend = FALSE)#, use_raster = TRUE, raster_quality = 20)
+
+legend_list = packLegend(edge_legend)
 
 png(filename = "img/edge_heat_stable.png", width = 7, height = 5, units = "in", res = 600)
 draw(edge_heat_stable, annotation_legend_list = legend_list,
   annotation_legend_side = "right")
+dev.off()
+
+#########################
+# Stable States Heatmap #
+#########################
+# - Column K-means clustering (3)
+# - Training data annotation
+# - Pathway annotation
+
+indexes = sample(1:nrow(topo_ss_mat), size = 500)
+
+# define annotations
+node_path_map_ss = node_path_map[colnames(topo_ss_mat)]
+# data/order check
+stopifnot(all(names(node_path_map_ss) == colnames(topo_ss_mat)))
+
+ha = HeatmapAnnotation(Training = node_training_state_map, Pathway = node_path_map_ss,
+  col = list(Training = training_colors, Pathway = pathway_colors),
+  na_col = "white",
+  show_legend = c("Training" = FALSE))
+
+set.seed(42)
+heatmap_ss = ComplexHeatmap::Heatmap(matrix = topo_ss_mat[indexes,],
+  name = "heatmap_ss", column_km = 3, column_km_repeats = 5,
+  bottom_annotation = ha,
+  column_title = "Models Stable States", column_title_gp = gpar(fontsize = 20),
+  column_names_gp = gpar(fontsize = 3),
+  column_dend_height = unit(1, "inches"),
+  col = state_col_fun, show_row_names = FALSE, show_row_dend = FALSE,
+  show_heatmap_legend = FALSE)#, use_raster = TRUE, raster_quality = 20)
+
+legend_list = packLegend(activity_state_legend)
+
+png(filename = "img/topo_ss_heat.png", width = 7, height = 5, units = "in", res = 600)
+draw(heatmap_ss, annotation_legend_list = legend_list, annotation_legend_side = "right")
 dev.off()
