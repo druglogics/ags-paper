@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | AGS paper - Supplementary Information (SI)</title>
+  <title>Annotated Heatmaps | AGS paper - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper - SI" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | AGS paper - Supplementary Information (SI)" />
+  <meta property="og:title" content="Annotated Heatmaps | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://username.github.io/reponame/" />
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="username/reponame" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | AGS paper - Supplementary Information (SI)" />
+  <meta name="twitter:title" content="Annotated Heatmaps | AGS paper - Supplementary Information (SI)" />
   
   <meta name="twitter:description" content="AGS paper - SI" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="r-session-info.html"/>
-
+<link rel="prev" href="parameterization-vs-performance.html"/>
+<link rel="next" href="reproduce-data-simulation-results.html"/>
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -1011,65 +1011,98 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered" number="">
-<h1>References</h1>
-
-<div id="refs" class="references hanging-indent">
-<div id="ref-Flobak2015">
-<p>Flobak, Åsmund, Anaïs Baudot, Elisabeth Remy, Liv Thommesen, Denis Thieffry, Martin Kuiper, and Astrid Lægreid. 2015. “Discovery of Drug Synergies in Gastric Cancer Cells Predicted by Logical Modeling.” Edited by Ioannis Xenarios. <em>PLOS Computational Biology</em> 11 (8): e1004426. <a href="https://doi.org/10.1371/journal.pcbi.1004426">https://doi.org/10.1371/journal.pcbi.1004426</a>.</p>
+<div id="annotated-heatmaps" class="section level1 unnumbered" number="">
+<h1>Annotated Heatmaps</h1>
+<div class="blue-box">
+<p>In this section we will use the models from the bootstrap analysis <a href="parameterization-vs-performance.html#bootstrap-simulations">above</a> and produce heatmaps of the models stable states and parameterization.
+Specifically, we will use the two CASCADE 2.0 model pools created, that have either only <strong>link-operator mutated</strong> or only <strong>topology-mutated</strong> models.</p>
+<p>For both pools, a stable state heatmap will be produced (columns are <em>nodes</em>).
+For the first pool, the parameterization is presented with a <strong>link-operator heatmap</strong> (columns are <em>nodes</em>) and for the second pool as an <strong>edge heatmap</strong> (columns are <em>edges</em>).</p>
 </div>
-<div id="ref-Flobak2019">
-<p>Flobak, Åsmund, Barbara Niederdorfer, Vu To Nakstad, Liv Thommesen, Geir Klinkenberg, and Astrid Lægreid. 2019. “A high-throughput drug combination screen of targeted small molecule inhibitors in cancer cell lines.” <em>Scientific Data</em> 6 (1): 237. <a href="https://doi.org/10.1038/s41597-019-0255-7">https://doi.org/10.1038/s41597-019-0255-7</a>.</p>
+<div id="annotations" class="section level2 unnumbered" number="">
+<h2>Annotations</h2>
+<div id="pathways" class="section level3 unnumbered" number="">
+<h3>Pathways</h3>
+<p>Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in <strong>Fig. 1A</strong> of <span class="citation">(Niederdorfer et al. <a href="references.html#ref-Niederdorfer2020" role="doc-biblioref">2020</a>)</span>.
+The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file <a href="https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv">here</a>.</p>
+<p>We present the <strong>node and edge distribution</strong> across the pathways in CASCADE 2.0.
+For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as <em>Cross-talk</em>:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="annotated-heatmaps.html#cb93-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
+<span id="cb93-2"><a href="annotated-heatmaps.html#cb93-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_path_dist.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:node-edge-dist-path"></span>
+<img src="img/node_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" /><img src="img/edge_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" />
+<p class="caption">
+Figure 59: Node and Edge Distribution across pathways in CASCADE 2.0
+</p>
 </div>
-<div id="ref-R-glmnet">
-<p>Friedman, Jerome, Trevor Hastie, Rob Tibshirani, Balasubramanian Narasimhan, Kenneth Tay, and Noah Simon. 2020. <em>Glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models</em>. <a href="https://CRAN.R-project.org/package=glmnet">https://CRAN.R-project.org/package=glmnet</a>.</p>
-</div>
-<div id="ref-Grau2015">
-<p>Grau, Jan, Ivo Grosse, and Jens Keilwagen. 2015. “PRROC: computing and visualizing precision-recall and receiver operating characteristic curves in R.” <em>Bioinformatics</em> 31 (15): 2595–7. <a href="https://doi.org/10.1093/bioinformatics/btv153">https://doi.org/10.1093/bioinformatics/btv153</a>.</p>
-</div>
-<div id="ref-Gu2016">
-<p>Gu, Zuguang, Roland Eils, and Matthias Schlesner. 2016. “Complex heatmaps reveal patterns and correlations in multidimensional genomic data.” <em>Bioinformatics</em> 32 (18): 2847–9. <a href="https://doi.org/10.1093/bioinformatics/btw313">https://doi.org/10.1093/bioinformatics/btw313</a>.</p>
-</div>
-<div id="ref-holland1992adaptation">
-<p>Holland, John Henry. 1992. <em>Adaptation in Natural and Artificial Systems: An Introductory Analysis with Applications to Biology, Control, and Artificial Intelligence</em>. MIT press.</p>
-</div>
-<div id="ref-Niederdorfer2020">
-<p>Niederdorfer, Barbara, Vasundra Touré, Miguel Vazquez, Liv Thommesen, Martin Kuiper, Astrid Lægreid, and Åsmund Flobak. 2020. “Strategies to Enhance Logic Modeling-Based Cell Line-Specific Drug Synergy Prediction.” <em>Frontiers in Physiology</em> 11 (July): 862. <a href="https://doi.org/10.3389/fphys.2020.00862">https://doi.org/10.3389/fphys.2020.00862</a>.</p>
-</div>
-<div id="ref-Pepe2000">
-<p>Pepe, M. S. 2000. “Combining diagnostic test results to increase accuracy.” <em>Biostatistics</em> 1 (2): 123–40. <a href="https://doi.org/10.1093/biostatistics/1.2.123">https://doi.org/10.1093/biostatistics/1.2.123</a>.</p>
-</div>
-<div id="ref-R-MAMSE">
-<p>Plante, Jean-Francois. 2017. <em>MAMSE: Calculation of Minimum Averaged Mean Squared Error (Mamse) Weights</em>. <a href="https://CRAN.R-project.org/package=MAMSE">https://CRAN.R-project.org/package=MAMSE</a>.</p>
-</div>
-<div id="ref-Saito2015">
-<p>Saito, Takaya, and Marc Rehmsmeier. 2015. “The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets.” Edited by Guy Brock. <em>PLOS ONE</em> 10 (3): e0118432. <a href="https://doi.org/10.1371/journal.pone.0118432">https://doi.org/10.1371/journal.pone.0118432</a>.</p>
-</div>
-<div id="ref-R-rtemps">
-<p>Zobolas, John. 2020a. <em>Rtemps: R Templates for Reproducible Data Analyses</em>. <a href="https://github.com/bblodfon/rtemps">https://github.com/bblodfon/rtemps</a>.</p>
-</div>
-<div id="ref-R-usefun">
-<p>———. 2020b. <em>usefun: A Collection of Useful Functions by John</em>. <a href="https://github.com/bblodfon/usefun">https://github.com/bblodfon/usefun</a>.</p>
-</div>
-<div id="ref-Zobolas2020">
-<p>Zobolas, John, Martin Kuiper, and Åsmund Flobak. 2020. “Emba: R Package for Analysis and Visualization of Biomarkers in Boolean Model Ensembles.” <em>Journal of Open Source Software</em> 5 (53): 2583. <a href="https://doi.org/10.21105/joss.02583">https://doi.org/10.21105/joss.02583</a>.</p>
+<div class="green-box">
+<ul>
+<li><span class="math inline">\(\approx50\%\)</span> of the edges are labeled <em>Cross-talk</em></li>
+<li>Pathways with more nodes have also more edges between these nodes</li>
+</ul>
 </div>
 </div>
+<div id="training-data" class="section level3 unnumbered" number="">
+<h3>Training Data</h3>
+<p>We annotate in the stable state heatmaps the states (<em>activation</em> or <em>inhibition</em>) of the nodes as they were in the AGS training data.</p>
 </div>
-
-
-
-
-
-
-
+<div id="connectivity" class="section level3 unnumbered" number="">
+<h3>Connectivity</h3>
+<p>We annotate each node’s <strong>connectivity</strong> for the node-oriented heatmaps, i.e. the number of its regulators or input-degree.
+For the edge-oriented heatmaps, we add the <strong>target node connectivity</strong>, i.e. the connectivity of each edge’s target.</p>
+</div>
+</div>
+<div id="link-operator-mutated-models" class="section level2 unnumbered" number="">
+<h2>Link-Operator mutated models</h2>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="annotated-heatmaps.html#cb94-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:lo-ss-heat-1"></span>
+<img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">
+Figure 60: Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
+</p>
+</div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="annotated-heatmaps.html#cb95-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:lo-heat-2"></span>
+<img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">
+Figure 61: Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown.
+</p>
+</div>
+</div>
+<div id="topology-mutated-models" class="section level2 unnumbered" number="">
+<h2>Topology-mutated models</h2>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="annotated-heatmaps.html#cb96-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:topo-ss-heat-1"></span>
+<img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">
+Figure 62: Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
+</p>
+</div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="annotated-heatmaps.html#cb97-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:edge-heat-1"></span>
+<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
+<p class="caption">
+Figure 63: Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.
+</p>
+</div>
+<p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent of present</strong> in the models.
+We do not include the edges that are present in all models since there were the ones that had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm since we don’t risk losing connectivity when using topology mutations.</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="annotated-heatmaps.html#cb98-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:edge-heat-2"></span>
+<img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
+<p class="caption">
+Figure 64: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.
+</p>
+</div>
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="r-session-info.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="parameterization-vs-performance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="reproduce-data-simulation-results.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

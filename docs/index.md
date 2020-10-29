@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 28 October, 2020"
+date: "Last updated: 29 October, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -2084,6 +2084,9 @@ The code to load the simulation result data is the following (we have already sa
 # get flipped training data results
 data_dir = "/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss"
 
+# get the AGS steady state
+steady_state = readRDS(file = 'data/steady_state.rds')
+
 # define `beta` value for normalization
 beta = -1
 
@@ -2717,6 +2720,9 @@ The code to load the simulation result data is the following (we have already sa
 ```r
 # get flipped training data results
 data_dir = "/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss-topo/"
+
+# get the AGS steady state
+steady_state = readRDS(file = 'data/steady_state.rds')
 
 # define `beta` value for normalization
 beta = -1
@@ -3652,24 +3658,25 @@ ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
 </div>
 
 
-## Annotated Heatmaps {-}
+# Annotated Heatmaps {-}
 
 :::{.blue-box}
 In this section we will use the models from the bootstrap analysis [above](#bootstrap-simulations) and produce heatmaps of the models stable states and parameterization.
-Specifically, we will use the $2$ CASCADE 2.0 model pools created, that have either only **link-operator mutated** or only **topology-mutated** models.
+Specifically, we will use the two CASCADE 2.0 model pools created, that have either only **link-operator mutated** or only **topology-mutated** models.
 
 For both pools, a stable state heatmap will be produced (columns are *nodes*).
 For the first pool, the parameterization is presented with a **link-operator heatmap** (columns are *nodes*) and for the second pool as an **edge heatmap** (columns are *edges*).
 :::
 
-### Annotations {-}
+## Annotations {-}
 
-Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in **Fig. 1A** [@Niederdorfer2020].
+### Pathways {-}
+
+Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in **Fig. 1A** of [@Niederdorfer2020].
 The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv).
 
 We present the **node and edge distribution** across the pathways in CASCADE 2.0.
-For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the egde is labeled as *Cross-talk*.
-
+For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as *Cross-talk*:
 
 
 ```r
@@ -3682,9 +3689,53 @@ knitr::include_graphics(path = 'img/edge_path_dist.png')
 <p class="caption">(\#fig:node-edge-dist-path)Node and Edge Distribution across pathways in CASCADE 2.0</p>
 </div>
 
-### Link-Operator mutated models {-}
+:::{.green-box}
+- $\approx50\%$ of the edges are labeled *Cross-talk*
+- Pathways with more nodes have also more edges between these nodes
+:::
 
-### Topology-mutated models {-}
+### Training Data {-}
+
+We annotate in the stable state heatmaps the states (*activation* or *inhibition*) of the nodes as they were in the AGS training data.
+
+### Connectivity {-}
+
+We annotate each node's **connectivity** for the node-oriented heatmaps, i.e. the number of its regulators or input-degree.
+For the edge-oriented heatmaps, we add the **target node connectivity**, i.e. the connectivity of each edge's target.
+
+## Link-Operator mutated models {-}
+
+
+```r
+knitr::include_graphics(path = 'img/lo_ss_heat.png')
+```
+
+<div class="figure">
+<img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-ss-heat-1)Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.</p>
+</div>
+
+
+```r
+knitr::include_graphics(path = 'img/lo_heat.png')
+```
+
+<div class="figure">
+<img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-heat-2)Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown.</p>
+</div>
+
+## Topology-mutated models {-}
+
+
+```r
+knitr::include_graphics(path = 'img/topo_ss_heat.png')
+```
+
+<div class="figure">
+<img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:topo-ss-heat-1)Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.</p>
+</div>
 
 
 ```r
@@ -3692,9 +3743,12 @@ knitr::include_graphics(path = 'img/edge_heat.png')
 ```
 
 <div class="figure">
-<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included." width="2100" />
-<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included.</p>
+<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.</p>
 </div>
+
+Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent of present** in the models.
+We do not include the edges that are present in all models since there were the ones that had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm since we don't risk losing connectivity when using topology mutations.
 
 
 ```r
@@ -3702,8 +3756,8 @@ knitr::include_graphics(path = 'img/edge_heat_stable.png')
 ```
 
 <div class="figure">
-<img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included." width="2100" />
-<p class="caption">(\#fig:edge-heat-2)Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included.</p>
+<img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:edge-heat-2)Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.</p>
 </div>
 
 # Reproduce Data & Simulation Results {-}

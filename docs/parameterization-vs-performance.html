@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"/>
-<link rel="next" href="reproduce-data-simulation-results.html"/>
+<link rel="next" href="annotated-heatmaps.html"/>
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -964,12 +964,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#annotated-heatmaps"><i class="fa fa-check"></i>Annotated Heatmaps</a>
-<ul>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#annotations"><i class="fa fa-check"></i>Annotations</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#link-operator-mutated-models"><i class="fa fa-check"></i>Link-Operator mutated models</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#topology-mutated-models"><i class="fa fa-check"></i>Topology-mutated models</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html"><i class="fa fa-check"></i>Annotated Heatmaps</a>
+<ul>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#annotations"><i class="fa fa-check"></i>Annotations</a>
+<ul>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#pathways"><i class="fa fa-check"></i>Pathways</a></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#training-data"><i class="fa fa-check"></i>Training Data</a></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#connectivity"><i class="fa fa-check"></i>Connectivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#link-operator-mutated-models"><i class="fa fa-check"></i>Link-Operator mutated models</a></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#topology-mutated-models"><i class="fa fa-check"></i>Topology-mutated models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
@@ -1296,50 +1301,6 @@ Figure 58: Comparing ROC and PR AUCs from bootstrapped calibrated model ensemble
 </div>
 </div>
 </div>
-<div id="annotated-heatmaps" class="section level2 unnumbered" number="">
-<h2>Annotated Heatmaps</h2>
-<div class="blue-box">
-<p>In this section we will use the models from the bootstrap analysis <a href="parameterization-vs-performance.html#bootstrap-simulations">above</a> and produce heatmaps of the models stable states and parameterization.
-Specifically, we will use the <span class="math inline">\(2\)</span> CASCADE 2.0 model pools created, that have either only <strong>link-operator mutated</strong> or only <strong>topology-mutated</strong> models.</p>
-<p>For both pools, a stable state heatmap will be produced (columns are <em>nodes</em>).
-For the first pool, the parameterization is presented with a <strong>link-operator heatmap</strong> (columns are <em>nodes</em>) and for the second pool as an <strong>edge heatmap</strong> (columns are <em>edges</em>).</p>
-</div>
-<div id="annotations" class="section level3 unnumbered" number="">
-<h3>Annotations</h3>
-<p>Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in <strong>Fig. 1A</strong> <span class="citation">(Niederdorfer et al. <a href="references.html#ref-Niederdorfer2020" role="doc-biblioref">2020</a>)</span>.
-The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file <a href="https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv">here</a>.</p>
-<p>We present the <strong>node and edge distribution</strong> across the pathways in CASCADE 2.0.
-For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the egde is labeled as <em>Cross-talk</em>.</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="parameterization-vs-performance.html#cb93-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
-<span id="cb93-2"><a href="parameterization-vs-performance.html#cb93-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_path_dist.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:node-edge-dist-path"></span>
-<img src="img/node_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" /><img src="img/edge_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" />
-<p class="caption">
-Figure 59: Node and Edge Distribution across pathways in CASCADE 2.0
-</p>
-</div>
-</div>
-<div id="link-operator-mutated-models" class="section level3 unnumbered" number="">
-<h3>Link-Operator mutated models</h3>
-</div>
-<div id="topology-mutated-models" class="section level3 unnumbered" number="">
-<h3>Topology-mutated models</h3>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="parameterization-vs-performance.html#cb94-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:edge-heat-1"></span>
-<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included." width="2100" />
-<p class="caption">
-Figure 60: Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway annotation is included.
-</p>
-</div>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="parameterization-vs-performance.html#cb95-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:edge-heat-2"></span>
-<img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included." width="2100" />
-<p class="caption">
-Figure 61: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges have been grouped to 2 clusters with K-means. Pathway annotation is included.
-</p>
-</div>
-</div>
-</div>
 </div>
             </section>
 
@@ -1347,7 +1308,7 @@ Figure 61: Edge annotated heatmap. A subset of the total edges is included, the 
         </div>
       </div>
 <a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="reproduce-data-simulation-results.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="annotated-heatmaps.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
