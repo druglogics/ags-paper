@@ -278,8 +278,8 @@ edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat,
   column_names_gp = gpar(fontsize = 6), column_km = 2,
   col = edge_colors, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = TRUE,
-  heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')))
-  #, use_raster = TRUE, raster_quality = 20)
+  heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')),
+  use_raster = TRUE, raster_quality = 20)
 
 png(filename = "img/edge_heat_stable.png", width = 7, height = 5, units = "in", res = 600)
 draw(edge_heat_stable, annotation_legend_side = "right", merge_legends = TRUE)
