@@ -222,7 +222,7 @@ ggsave(filename = 'img/edge_path_dist.png', dpi = "print", width = 7, height = 5
 
 # define annotations
 ha_edges = HeatmapAnnotation(Pathway = edge_path_map,
-  Connectivity = anno_barplot(x = edge_conn_map[colnames(edge_mat)]),
+  `Target Connectivity` = anno_barplot(x = edge_conn_map[colnames(edge_mat)]),
   col = list(Pathway = pathway_colors))
 
 indexes = sample(1:nrow(edge_mat), size = 500)
@@ -239,7 +239,7 @@ edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
   #,use_raster = TRUE, raster_quality = 20)
 
 png(filename = "img/edge_heat.png", width = 7, height = 5, units = "in", res = 600)
-draw(edge_heat, annotation_legend_side = "right", merge_legends = TRUE)
+draw(edge_heat, annotation_legend_side = "right", merge_legends = FALSE)
 dev.off()
 
 #######################
@@ -265,7 +265,7 @@ stopifnot(all(names(stable_edge_path_map) == colnames(stable_edge_mat)))
 
 # Define annotations
 ha_edges_stable = HeatmapAnnotation(Pathway = stable_edge_path_map,
-  Connectivity = anno_barplot(x = edge_conn_map[colnames(stable_edge_mat)]),
+  `Target Connectivity` = anno_barplot(x = edge_conn_map[colnames(stable_edge_mat)]),
   col = list(Pathway = pathway_colors))
 
 set.seed(42)
@@ -278,11 +278,11 @@ edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat,
   column_names_gp = gpar(fontsize = 6), column_km = 2,
   col = edge_colors, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = TRUE,
-  heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')),
-  use_raster = TRUE, raster_quality = 20)
+  heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')))
+  #use_raster = TRUE, raster_quality = 20)
 
 png(filename = "img/edge_heat_stable.png", width = 7, height = 5, units = "in", res = 600)
-draw(edge_heat_stable, annotation_legend_side = "right", merge_legends = TRUE)
+draw(edge_heat_stable, annotation_legend_side = "right", merge_legends = FALSE)
 dev.off()
 
 #########################
