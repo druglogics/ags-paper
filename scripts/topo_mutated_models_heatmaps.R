@@ -7,7 +7,6 @@ library(tibble)
 library(readr)
 library(stringr)
 suppressPackageStartupMessages(library(ComplexHeatmap))
-suppressPackageStartupMessages(library(circlize))
 library(ggplot2)
 library(forcats)
 library(scales)
@@ -119,12 +118,6 @@ for (node in names(steady_state)) {
 
 training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
 
-# define the legend
-# edge_legend = Legend(title = "Edge Mutations",
-#   labels = c("Absense", "Presence"), legend_gp = gpar(fill = edge_colors))
-# activity_state_legend = Legend(title = "Activity State",
-#   labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
-
 # read node-pathway annotation for CASCADE 2.0
 node_path_tbl = readRDS(file = 'data/node_path_tbl.rds')
 
@@ -136,6 +129,13 @@ targets = edge_tbl %>% distinct(target) %>% pull()
 node_conn_map = sapply(targets, function(trg){
   # get number of regulators
   edge_tbl %>% filter(target == trg) %>% distinct(source) %>% summarise(n()) %>% pull()
+})
+
+# make a vector of edge-target connectivity annotations
+edge_conn_map = sapply(colnames(edge_mat), function(edge) {
+  split_res = stringr::str_split(edge, pattern = ' ', simplify = TRUE)
+  target = split_res[3]
+  unname(node_conn_map[target])
 })
 
 # Map pathway names to distinct colors
@@ -218,15 +218,18 @@ ggsave(filename = 'img/edge_path_dist.png', dpi = "print", width = 7, height = 5
 # Extra:
 # - Column K-means clustering (4)
 # - Pathway Annotation
+# - Target Node Connectivity
 
-# define pathway annotation
+# define annotations
 ha_edges = HeatmapAnnotation(Pathway = edge_path_map,
+  Connectivity = anno_barplot(x = edge_conn_map[colnames(edge_mat)]),
   col = list(Pathway = pathway_colors))
 
 indexes = sample(1:nrow(edge_mat), size = 500)
 
 set.seed(42)
 edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
+  #matrix = edge_mat[indexes, ], # take a subset for testing
   name = "edge_heatmap", bottom_annotation = ha_edges,
   column_title = "Model topology parameterization", column_title_gp = gpar(fontsize = 20),
   column_names_gp = gpar(fontsize = 1), column_km = 4,
@@ -234,8 +237,6 @@ edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')))
   #,use_raster = TRUE, raster_quality = 20)
-
-#legend_list = packLegend(edge_legend)
 
 png(filename = "img/edge_heat.png", width = 7, height = 5, units = "in", res = 600)
 draw(edge_heat, annotation_legend_side = "right", merge_legends = TRUE)
@@ -248,10 +249,12 @@ dev.off()
 # - Subset columns to the 'stable' edges (those that do not change so much across the models)
 # - Column K-means clustering (2)
 # - Pathway Annotation
+# - Target Node Connectivity
 
 # Subset the matrix data to the 'stable' edges only
 edge_avg = edge_mat %>% colSums()/nrow(edge_mat)
-stable_edges = names(edge_avg[edge_avg < 0.4 | edge_avg > 0.95]) # user-defined thresholds
+# 0.99 => change to 1 if you want to keep all the edges that are always there (low connectivity)
+stable_edges = names(edge_avg[edge_avg < 0.45 | (edge_avg > 0.87 & edge_avg <= 0.99)]) # user-defined thresholds
 stable_edge_mat = edge_mat[,stable_edges]
 
 # Subset the pathway annotation to the 'stable' edges only
@@ -261,14 +264,15 @@ stable_edge_path_map = edge_path_map[names(edge_path_map) %in% colnames(stable_e
 stopifnot(all(names(stable_edge_path_map) == colnames(stable_edge_mat)))
 
 # Define annotations
-ha = HeatmapAnnotation(Pathway = stable_edge_path_map,
-  col = list(Pathway = pathway_colors[!names(pathway_colors) %in% c('Cell Cycle', 'PI3K-AKT')]))
-# no 'stable' edges in the 'Cell Cycle' and 'PI3K-AKT' pathways!
+ha_edges_stable = HeatmapAnnotation(Pathway = stable_edge_path_map,
+  Connectivity = anno_barplot(x = edge_conn_map[colnames(stable_edge_mat)]),
+  col = list(Pathway = pathway_colors))
 
 set.seed(42)
 edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat,
+  #matrix = stable_edge_mat[indexes, ], # take a subset for testing
   name = "edge_heatmap", cluster_rows = FALSE,
-  bottom_annotation = ha,
+  bottom_annotation = ha_edges_stable,
   column_title = "Model topology parameterization (stable edges)",
   column_title_gp = gpar(fontsize = 20),
   column_names_gp = gpar(fontsize = 6), column_km = 2,
@@ -276,8 +280,6 @@ edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')))
   #, use_raster = TRUE, raster_quality = 20)
-
-#legend_list = packLegend(edge_legend)
 
 png(filename = "img/edge_heat_stable.png", width = 7, height = 5, units = "in", res = 600)
 draw(edge_heat_stable, annotation_legend_side = "right", merge_legends = TRUE)
@@ -304,6 +306,7 @@ indexes = sample(1:nrow(topo_ss_mat), size = 500)
 
 set.seed(42)
 heatmap_ss = ComplexHeatmap::Heatmap(matrix = topo_ss_mat,
+  #topo_ss_mat = stable_edge_mat[indexes, ] # take a subset for testing
   name = "heatmap_ss", column_km = 3, column_km_repeats = 5,
   bottom_annotation = ha_ss,
   column_title = "Models Stable States", column_title_gp = gpar(fontsize = 20),
@@ -313,8 +316,6 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = topo_ss_mat,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')))
   #, use_raster = TRUE, raster_quality = 20)
-
-#legend_list = packLegend(activity_state_legend)
 
 png(filename = "img/topo_ss_heat.png", width = 7, height = 5, units = "in", res = 600)
 draw(heatmap_ss, annotation_legend_side = "right", merge_legends = TRUE)
