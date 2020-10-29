@@ -128,6 +128,16 @@ training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
 # read node-pathway annotation for CASCADE 2.0
 node_path_tbl = readRDS(file = 'data/node_path_tbl.rds')
 
+# get CASCADE 2.0
+edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
+
+# find number of regulators (connectivity) per node
+targets = edge_tbl %>% distinct(target) %>% pull()
+node_conn_map = sapply(targets, function(trg){
+  # get number of regulators
+  edge_tbl %>% filter(target == trg) %>% distinct(source) %>% summarise(n()) %>% pull()
+})
+
 # Map pathway names to distinct colors
 pathway_colors = c('Cross-talk' = 'black', 'MAPK' = 'red',
   'TGF-b' = '#4FC601', 'Wnt' = 'blue', 'Rho' = '#A1C299',
@@ -202,10 +212,6 @@ dplyr::bind_cols(edge = names(edge_path_map), pathway = edge_path_map) %>%
     theme(axis.text.x = element_text(angle = 20, hjust = 1))
 ggsave(filename = 'img/edge_path_dist.png', dpi = "print", width = 7, height = 5)
 
-# define pathway annotation
-pathway_annot = HeatmapAnnotation(Pathway = edge_path_map,
-  name = 'pathway_annot', col = list(Pathway = pathway_colors))
-
 ################
 # Edge Heatmap #
 ################
@@ -213,11 +219,15 @@ pathway_annot = HeatmapAnnotation(Pathway = edge_path_map,
 # - Column K-means clustering (4)
 # - Pathway Annotation
 
+# define pathway annotation
+ha_edges = HeatmapAnnotation(Pathway = edge_path_map,
+  col = list(Pathway = pathway_colors))
+
 indexes = sample(1:nrow(edge_mat), size = 500)
 
 set.seed(42)
 edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
-  name = "edge_heatmap", bottom_annotation = pathway_annot,
+  name = "edge_heatmap", bottom_annotation = ha_edges,
   column_title = "Model topology parameterization", column_title_gp = gpar(fontsize = 20),
   column_names_gp = gpar(fontsize = 1), column_km = 4,
   col = edge_colors, show_row_names = FALSE, show_row_dend = FALSE,
@@ -279,13 +289,13 @@ dev.off()
 # - Column K-means clustering (3)
 # - Training data annotation
 # - Pathway annotation
+# - Connectivity annotation
 
 # define annotations
 node_path_map_ss = node_path_map[colnames(topo_ss_mat)]
-# data/order check
-stopifnot(all(names(node_path_map_ss) == colnames(topo_ss_mat)))
 
 ha_ss = HeatmapAnnotation(Training = node_training_state_map, Pathway = node_path_map_ss,
+  Connectivity = anno_barplot(x = node_conn_map[colnames(topo_ss_mat)]),
   col = list(Training = training_colors, Pathway = pathway_colors),
   na_col = "white",
   show_legend = c("Training" = FALSE))
@@ -307,5 +317,5 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = topo_ss_mat,
 #legend_list = packLegend(activity_state_legend)
 
 png(filename = "img/topo_ss_heat.png", width = 7, height = 5, units = "in", res = 600)
-draw(heatmap_ss, annotation_legend_side = "right", merge_legends =TRUE)
+draw(heatmap_ss, annotation_legend_side = "right", merge_legends = TRUE)
 dev.off()
