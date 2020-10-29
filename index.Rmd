@@ -1829,6 +1829,9 @@ The code to load the simulation result data is the following (we have already sa
 # get flipped training data results
 data_dir = "/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss"
 
+# get the AGS steady state
+steady_state = readRDS(file = 'data/steady_state.rds')
+
 # define `beta` value for normalization
 beta = -1
 
@@ -2374,6 +2377,9 @@ The code to load the simulation result data is the following (we have already sa
 ```{r load-data-fit-vs-auc-topo, eval=FALSE}
 # get flipped training data results
 data_dir = "/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss-topo/"
+
+# get the AGS steady state
+steady_state = readRDS(file = 'data/steady_state.rds')
 
 # define `beta` value for normalization
 beta = -1
@@ -3215,17 +3221,23 @@ For the first pool, the parameterization is presented with a **link-operator hea
 
 ### Annotations {-}
 
+#### Pathways {-}
+
 Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in **Fig. 1A** [@Niederdorfer2020].
 The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv).
 
 We present the **node and edge distribution** across the pathways in CASCADE 2.0.
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the egde is labeled as *Cross-talk*.
 
-
 ```{r node-edge-dist-path, fig.show='hold', out.width='50%', fig.cap='Node and Edge Distribution across pathways in CASCADE 2.0'}
 knitr::include_graphics(path = 'img/node_path_dist.png')
 knitr::include_graphics(path = 'img/edge_path_dist.png')
 ```
+
+#### Training Data {-}
+
+We annotate in the stable state heatmaps the steady state of the nodes in the training data.
+
 
 ### Link-Operator mutated models {-}
 
