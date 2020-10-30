@@ -62,7 +62,7 @@ The heatmaps are generated with the `ComplexHeatmap` R package [@Gu2016].
 The report template is from the `rtemps` R package [@R-rtemps].
 
 Loading libraries that are used in this report:
-```{r Load libraries, message = FALSE}
+```{r Load libraries, message = FALSE, class.source = 'fold-show'}
 library(DT)
 library(ggpubr)
 library(RColorBrewer)
