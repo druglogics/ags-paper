@@ -1290,7 +1290,7 @@ For $\beta=-1$ we do not observe performance improvement in this case.
 
 We tried fitting a model using logistic regression as a different approach to combine/augment the results from calibrated simulations with the random proliferative ones (for the HSA-assessed ensemble-wise results where there was a minimal benefit).
 
-```{r logistic regression model, warning=FALSE}
+```{r logistic regression model, warning=FALSE, cache=TRUE}
 model = glm(formula = observed ~ ss_score_150sim + prolif_score_150sim - 1, data = pred_ew_hsa, family = binomial())
 model_tidy = broom::tidy(model)
 coef1 = model_tidy %>% filter(term == "ss_score_150sim") %>% pull(estimate)
