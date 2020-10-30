@@ -113,12 +113,6 @@ for (node in names(steady_state)) {
 
 training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
 
-# define some manual legends
-# link_operators_legend = Legend(title = "Link Operator",
-#   labels = c("AND NOT", "OR NOT"), legend_gp = gpar(fill = lo_colors))
-# activity_state_legend = Legend(title = "Activity State",
-#   labels = c("Inhibited", "Active"), legend_gp = gpar(fill = state_colors))
-
 #########################
 # Link-operator Heatmap #
 #########################
@@ -149,8 +143,6 @@ heatmap_param = ComplexHeatmap::Heatmap(matrix = lo_mat,
   column_dend_height = unit(0.5, "inches"),
   heatmap_legend_param = list(title = 'Link Operator', labels = c('AND-NOT', 'OR-NOT')))
   #, use_raster = TRUE, raster_quality = 20)
-
-#legend_list = packLegend(link_operators_legend)
 
 png(filename = "img/lo_heat.png", width = 7, height = 5, units = "in", res = 600)
 draw(heatmap_param, annotation_legend_side = "right", merge_legends = FALSE)
@@ -185,8 +177,6 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = lo_ss_mat,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')))
   #,use_raster = TRUE, raster_quality = 20)
-
-#legend_list = packLegend(activity_state_legend)
 
 png(filename = "img/lo_ss_heat.png", width = 7, height = 5, units = "in", res = 600)
 draw(heatmap_ss, annotation_legend_side = "right", merge_legends = TRUE)
