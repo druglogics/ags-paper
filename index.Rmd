@@ -2289,66 +2289,9 @@ Then we use the ensemble-wise *random proliferative* model predictions ($50$ sim
 Check how to generate the appropriate data and run the simulations in the section [Fitness vs Performance Methods].
 :::
 
-The code to load the simulation result data is the following (we have already saved the result for convenience):
-
-```{r load-data-fit-vs-auc-topo, eval=FALSE}
-# get flipped training data results
-data_dir = "/home/john/tmp/ags_paper_res/fit-vs-performance-results-bliss-topo/"
-
-# get the AGS steady state
-steady_state = readRDS(file = 'data/steady_state.rds')
-
-# define `beta` value for normalization
-beta = -1
-
-data_list = list()
-index = 1
-for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
-  ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
-  ew_ss_scores = emba::get_synergy_scores(ew_synergies_file)
-  
-  # get the models stable states
-  models_dir = paste0(res_dir, "/models")
-  # you get messages for models with {#stable states} != 1
-  # a few models have 2 stable states and they are not included 
-  # in the returned data frame
-  models_stable_states = emba::get_stable_state_from_models_dir(models_dir)
-  
-  # calculate models fitness to AGS steady state
-  models_fit = apply(models_stable_states[, names(steady_state)], 1, 
-   usefun::get_percentage_of_matches, steady_state)
-  
-  # calculate normalized model performance (ROC-AUC and PR-AUC)
-  pred = dplyr::bind_cols(
-    pred_topo_ew_bliss %>% select(prolif_score_50sim) %>% rename(random_score = prolif_score_50sim), 
-    ew_ss_scores %>% select(score) %>% rename(ss_score = score), 
-    as_tibble_col(observed, column_name = "observed"))
-  
-  # get the normalized synergy scores
-  pred = pred %>% mutate(combined_score = ss_score + beta * random_score)
-  
-  res_roc = PRROC::roc.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
-    weights.class0 = pred %>% pull(observed))
-  res_pr = PRROC::pr.curve(scores.class0 = pred %>% pull(combined_score) %>% (function(x) {-x}), 
-    weights.class0 = pred %>% pull(observed))
-  
-  # bind all to one (OneForAll)
-  df = dplyr::bind_cols(
-    roc_auc = res_roc$auc, 
-    pr_auc = res_pr$auc.davis.goadrich,
-    avg_fit = mean(models_fit))
-  
-  data_list[[index]] = df
-  index = index + 1
-}
-
-res = bind_rows(data_list)
-saveRDS(res, file = "results/res_fit_aucs_topo.rds")
-```
-
 Load the already-stored result:
 ```{r load-data-fit-vs-perf-topo}
-res = readRDS(file = "results/res_fit_aucs_topo.rds")
+res = readRDS(file = "data/res_fit_aucs_topo.rds")
 ```
 
 We check if our data is normally distributed using the *Shapiro-Wilk* normality test:
@@ -3318,7 +3261,6 @@ The `results` directory has 3 main sub-directories:
 
 Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files/directories:
 
-- `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-topo) section (topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
 - `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
 - `boot_cascade1_res`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
@@ -3334,6 +3276,7 @@ Lastly, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/
 - `cosmic_cancer_gene_census_all_29102020.tsv`: Cancer Gene Census COSMIC data downloaded from https://cancer.sanger.ac.uk/census (for academic purposes)
 - `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-lo) section (link operator mutations).
+- `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-topo) section (topology mutations).
 
 # R session info {-}
 
