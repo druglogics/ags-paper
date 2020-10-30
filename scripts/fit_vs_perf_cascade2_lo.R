@@ -5,6 +5,7 @@
 library(dplyr)
 library(stringr)
 library(emba)
+library(tibble)
 library(usefun)
 library(PRROC)
 
@@ -17,6 +18,14 @@ steady_state = readRDS(file = 'data/steady_state.rds')
 
 # define `beta` value for normalization
 beta = -1
+
+# get the prediction of the random proliferative models (150 simulations)
+prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/cascade_2.0_rand_150sim_fixpoints_bliss_ensemblewise_synergies.tab")
+prolif_bliss_ensemblewise_synergies_150sim = emba::get_synergy_scores(prolif_bliss_ensemblewise_150sim_file)
+
+# Observed synergies for CASCADE 2.0
+observed_synergies_file = paste0("data/observed_synergies_cascade_2.0")
+observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 
 data_list = list()
 index = 1
@@ -38,9 +47,9 @@ for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
 
   # calculate normalized model performance (ROC-AUC and PR-AUC)
   pred = dplyr::bind_cols(
-    random = pred_ew_bliss %>% select(prolif_score_150sim) %>% rename(random_score = prolif_score_150sim),
+    random = prolif_bliss_ensemblewise_synergies_150sim %>% select(score) %>% rename(random_score = score),
     ss = ew_ss_scores %>% select(score) %>% rename(ss_score = score),
-    as_tibble_col(observed, column_name = "observed"))
+    tibble::tibble(observed = sapply(ew_ss_scores$perturbation %in% observed_synergies, as.integer)))
 
   # get the normalized synergy scores
   pred = pred %>% mutate(combined_score = ss_score + beta * random_score)
