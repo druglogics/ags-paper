@@ -3409,7 +3409,11 @@ Lastly, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/
 
 - `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
-- `steadystate`: the AGS training data for the calibrated models
+- `steadystate`, `steadystate.rds`: the AGS training data for the calibrated models (file + compressed data) - see [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) script.
+- `edge_mat.rds`, `topo_ss_df.rds`: heatmap data for the topology-mutation models - see [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) script.
+- `lo_df.rds`, `lo_ss_df.rds`: heatmap data for the link-operator models - see [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) script.
+- `node_pathway_annotations_cascade2.csv`, `node_path_tbl.rds`: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the [node_path_annot_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R) script.
+- `cosmic_cancer_gene_census_all_29102020.tsv`: Cancer Gene Census COSMIC data downloaded from https://cancer.sanger.ac.uk/census (for academic purposes)
 
 # R session info {-}
 
