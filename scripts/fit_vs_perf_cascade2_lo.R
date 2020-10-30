@@ -69,5 +69,5 @@ for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
   index = index + 1
 }
 
-res = bind_rows(data_list)
+res = dplyr::bind_rows(data_list)
 saveRDS(res, file = "data/res_fit_aucs.rds")
