@@ -47,7 +47,7 @@ if (!file.exists('data/lo_ss_df.rds')) {
 rownames(lo_ss_df) = NULL
 lo_ss_mat = as.matrix(lo_ss_df)
 
-# get the AGS steady state
+# get the AGS steady state (TIDY UP THE DATA FROM THE STEADY STATE FILE)
 if (!file.exists('data/steady_state.rds')) {
   steady_state_file = 'data/steadystate'
   lines = readLines(steady_state_file)
