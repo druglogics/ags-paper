@@ -3250,6 +3250,10 @@ For the edge-oriented heatmaps, we add the **target node connectivity**, i.e. th
 
 ## Link-Operator mutated models {-}
 
+:::{.blue-box}
+See script [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) for creating the heatmaps.
+:::
+
 ```{r lo-ss-heat-1, fig.cap='Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/lo_ss_heat.png')
 ```
@@ -3259,6 +3263,10 @@ knitr::include_graphics(path = 'img/lo_heat.png')
 ```
 
 ## Topology-mutated models {-}
+
+:::{.blue-box}
+See script [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) for creating the heatmaps.
+:::
 
 ```{r topo-ss-heat-1, fig.cap='Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/topo_ss_heat.png')
