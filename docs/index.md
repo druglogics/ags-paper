@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 29 October, 2020"
+date: "Last updated: 30 October, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -60,7 +60,7 @@ The report template is from the `rtemps` R package [@R-rtemps].
 
 Loading libraries that are used in this report:
 
-```r
+```{.r .fold-show}
 library(DT)
 library(ggpubr)
 library(RColorBrewer)
@@ -1767,45 +1767,17 @@ grid(lwd = 0.5)
 
 :::{.blue-box}
 In the previous ROC and PR curves we found a **very low ensemble-wise random (proliferative) model performance**, indicated by the low numbers of ROC and PR AUC.
-We want to assess the **statistical significance of this result**, by bootstraping many model samples from a pool of random models and evaluating the performance of these ensembles.
+We want to assess the **statistical significance of this result**, by bootstrapping many model samples from a pool of random models and evaluating the performance of these ensembles.
 :::
 
 :::{.note}
-For more details on how to generate the bootstrapped model ensembles, see section [Random Model Bootstrap].
+For more details on how to generate the bootstrapped model ensembles and tidy up the result data, see section [Random Model Bootstrap].
 :::
-
-The following code is used to load the results from the simulations (we have already saved the result for convenience):
-
-```r
-data_dir = "/home/john/tmp/ags_paper_res/link-only/bliss/random_model_bootstrap"
-data_list = list()
-index = 1
-for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
-  if (stringr::str_detect(string = res_dir, pattern = "cascade_2.0_rand_prolif_bliss_batch")) {
-    ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
-    rand_scores = emba::get_synergy_scores(ew_synergies_file)
-    observed = sapply(rand_scores$perturbation %in% observed_synergies, as.integer)
-
-    res_roc = PRROC::roc.curve(scores.class0 = rand_scores$score %>% (function(x) {-x}),
-      weights.class0 = observed)
-    res_pr = PRROC::pr.curve(scores.class0 = rand_scores$score %>% (function(x) {-x}),
-      weights.class0 = observed)
-
-    # bind all to one (OneForAll)
-    df = dplyr::bind_cols(roc_auc = res_roc$auc, pr_auc = res_pr$auc.davis.goadrich)
-    data_list[[index]] = df
-    index = index + 1
-  }
-}
-
-rand_res = bind_rows(data_list)
-saveRDS(rand_res, file = "results/bootstrap_rand_res.rds")
-```
 
 As we can see below, the random model performance if indeed very close to the median of the bootstrapped AUCs:
 
 ```r
-rand_res = readRDS(file = "results/bootstrap_rand_res.rds")
+rand_res = readRDS(file = "data/bootstrap_rand_res.rds")
 
 ggboxplot(data = rand_res, y = "roc_auc", title = "Bootstrap Random Models (ROC)",
   xlab = "", ylab = "ROC AUC", fill = "gray") +
@@ -3705,6 +3677,10 @@ For the edge-oriented heatmaps, we add the **target node connectivity**, i.e. th
 
 ## Link-Operator mutated models {-}
 
+:::{.blue-box}
+See script [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) for creating the heatmaps.
+:::
+
 
 ```r
 knitr::include_graphics(path = 'img/lo_ss_heat.png')
@@ -3726,6 +3702,10 @@ knitr::include_graphics(path = 'img/lo_heat.png')
 </div>
 
 ## Topology-mutated models {-}
+
+:::{.blue-box}
+See script [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) for creating the heatmaps.
+:::
 
 
 ```r
@@ -3785,7 +3765,6 @@ So, for example to get the simulation output directories for the [Cascade 1.0 An
 
 Each subsequent `druglogics-synergy` execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the `modelwise_synergies.tab` and the `ensemble_synergies.tab` respectively.
 For the fitness evolution figures we used the `summary.txt` file of the corresponding simulations.
-For the stable state and parameterization heatmaps we used the directory output with all the `gitsbe` generated models ($150$ simulations, `bliss` synergy method, *calibrated* models, using the CASCADE 2.0 topology), as well as the [AGS training steady state](https://github.com/bblodfon/ags-paper-1/blob/master/data/steadystate) file.
 
 Specifically, the results described above are stored in the compressed Zenodo file **`sim_res.tar.gz`**.
 When uncompressed, the `sim_res.tar.gz` file outputs 2 separate directories, one per different topology (*CASCADE 1.0* and *CASCADE 2.0*).
@@ -3830,8 +3809,9 @@ This creates a results directory which includes a `models` directory, with a tot
 - Execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory.
 Changing appropriately the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
+- Use the script [random_model_boot.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/random_model_boot.R) to tidy the data from the simulations.
 
-The results of the simulations executed via the above scripts are all stored in the **`random_model_bootstrap.tar.gz`** file of the Zenodo dataset.
+The results of the simulations are stored in the **`random_model_bootstrap.tar.gz`** file of the Zenodo dataset.
 
 ## Parameterization Bootstrap {-}
 
@@ -3876,7 +3856,6 @@ The `results` directory has 3 main sub-directories:
 
 Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files/directories:
 
-- `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance] section (link operator mutations).
 - `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fitness-vs-ensemble-performance-1) section (topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
@@ -3887,7 +3866,12 @@ Lastly, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/
 
 - `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
-- `steadystate`: the AGS training data for the calibrated models
+- `steadystate`, `steadystate.rds`: the AGS training data for the calibrated models (file + compressed data) - see [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) script.
+- `edge_mat.rds`, `topo_ss_df.rds`: heatmap data for the topology-mutation models - see [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) script.
+- `lo_df.rds`, `lo_ss_df.rds`: heatmap data for the link-operator models - see [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) script.
+- `node_pathway_annotations_cascade2.csv`, `node_path_tbl.rds`: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the [node_path_annot_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R) script.
+- `cosmic_cancer_gene_census_all_29102020.tsv`: Cancer Gene Census COSMIC data downloaded from https://cancer.sanger.ac.uk/census (for academic purposes)
+- `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 
 # R session info {-}
 

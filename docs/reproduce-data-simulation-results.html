@@ -363,6 +363,14 @@ window.initializeCodeFolding = function(show) {
   var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
   rCodeBlocks.each(function() {
 
+    // if code block has been labeled with class `fold-show`, show the code on init!
+    var classList = $(this).attr('class').split(/\s+/);
+    for (var i = 0; i < classList.length; i++) {
+    if (classList[i] === 'fold-show') {
+        show = true;
+      }
+    }
+
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
     if (show)
@@ -389,6 +397,9 @@ window.initializeCodeFolding = function(show) {
     buttonRow.append(buttonCol);
 
     div.before(buttonRow);
+
+    // hack: return show to false, otherwise all next codeBlocks will be shown!
+    show = false;
 
     // update state of button on show/hide
     div.on('hidden.bs.collapse', function () {
@@ -1034,8 +1045,7 @@ If you wish to get the results using <strong>both kinds of mutation</strong>, se
 <li><code>synergy_method</code>: <code>hsa bliss</code> (synergy calculation method used by <code>drabme</code>)</li>
 </ul>
 <p>Each subsequent <code>druglogics-synergy</code> execution results in an output directory and the files of interest (which are used to produce the ROC and PR curves in this report and the AUC sensitivity figures) are the <code>modelwise_synergies.tab</code> and the <code>ensemble_synergies.tab</code> respectively.
-For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.
-For the stable state and parameterization heatmaps we used the directory output with all the <code>gitsbe</code> generated models (<span class="math inline">\(150\)</span> simulations, <code>bliss</code> synergy method, <em>calibrated</em> models, using the CASCADE 2.0 topology), as well as the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/data/steadystate">AGS training steady state</a> file.</p>
+For the fitness evolution figures we used the <code>summary.txt</code> file of the corresponding simulations.</p>
 <p>Specifically, the results described above are stored in the compressed Zenodo file <strong><code>sim_res.tar.gz</code></strong>.
 When uncompressed, the <code>sim_res.tar.gz</code> file outputs 2 separate directories, one per different topology (<em>CASCADE 1.0</em> and <em>CASCADE 2.0</em>).
 The directory with the <em>CASCADE 2.0</em> related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
@@ -1078,8 +1088,9 @@ This creates a results directory which includes a <code>models</code> directory,
 <li>Execute the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> inside the <code>druglogics-synergy/ags_cascade_2.0</code> directory.
 Changing appropriately the <code>config</code> file to have <code>synergy_method: bliss</code>.
 The bootstrap configuration consists of <span class="math inline">\(20\)</span> batches, each one consisting of a sample of <span class="math inline">\(100\)</span> randomly selected models from the model directory pool.</li>
+<li>Use the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/random_model_boot.R">random_model_boot.R</a> to tidy the data from the simulations.</li>
 </ul>
-<p>The results of the simulations executed via the above scripts are all stored in the <strong><code>random_model_bootstrap.tar.gz</code></strong> file of the Zenodo dataset.</p>
+<p>The results of the simulations are stored in the <strong><code>random_model_bootstrap.tar.gz</code></strong> file of the Zenodo dataset.</p>
 </div>
 <div id="parameterization-bootstrap" class="section level2 unnumbered" number="">
 <h2>Parameterization Bootstrap</h2>
@@ -1130,7 +1141,6 @@ The <code>results</code> directory has 3 main sub-directories:</p>
 </ol>
 <p>Also, the <a href="https://github.com/bblodfon/ags-paper-1/tree/master/results"><code>results</code></a> directory includes the following files/directories:</p>
 <ul>
-<li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
 <li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-topology-mutations.html#fitness-vs-ensemble-performance-1">Fitness vs Ensemble Performance</a> section (link operator mutations).</li>
 <li><code>res_fit_aucs_topo.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-topology-mutations.html#fitness-vs-ensemble-performance-1">Fitness vs Ensemble Performance</a> section (topology mutations).</li>
 <li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#bootstrap-simulations">Bootstrap Simulations</a> section.</li>
@@ -1141,7 +1151,12 @@ The <code>results</code> directory has 3 main sub-directories:</p>
 <ul>
 <li><code>observed_synergies_cascade_1.0</code>: the gold-standard synergies for the CASCADE 1.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2015" role="doc-biblioref">2015</a>)</span></li>
 <li><code>observed_synergies_cascade_2.0</code>: the gold-standard synergies for the CASCADE 2.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2019" role="doc-biblioref">2019</a>)</span></li>
-<li><code>steadystate</code>: the AGS training data for the calibrated models</li>
+<li><code>steadystate</code>, <code>steadystate.rds</code>: the AGS training data for the calibrated models (file + compressed data) - see <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> script.</li>
+<li><code>edge_mat.rds</code>, <code>topo_ss_df.rds</code>: heatmap data for the topology-mutation models - see <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> script.</li>
+<li><code>lo_df.rds</code>, <code>lo_ss_df.rds</code>: heatmap data for the link-operator models - see <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> script.</li>
+<li><code>node_pathway_annotations_cascade2.csv</code>, <code>node_path_tbl.rds</code>: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R">node_path_annot_cascade2.R</a> script.</li>
+<li><code>cosmic_cancer_gene_census_all_29102020.tsv</code>: Cancer Gene Census COSMIC data downloaded from <a href="https://cancer.sanger.ac.uk/census" class="uri">https://cancer.sanger.ac.uk/census</a> (for academic purposes)</li>
+<li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
 </ul>
 </div>
 </div>

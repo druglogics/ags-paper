@@ -363,6 +363,14 @@ window.initializeCodeFolding = function(show) {
   var rCodeBlocks = $('pre.sourceCode, pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
   rCodeBlocks.each(function() {
 
+    // if code block has been labeled with class `fold-show`, show the code on init!
+    var classList = $(this).attr('class').split(/\s+/);
+    for (var i = 0; i < classList.length; i++) {
+    if (classList[i] === 'fold-show') {
+        show = true;
+      }
+    }
+
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
     if (show)
@@ -389,6 +397,9 @@ window.initializeCodeFolding = function(show) {
     buttonRow.append(buttonCol);
 
     div.before(buttonRow);
+
+    // hack: return show to false, otherwise all next codeBlocks will be shown!
+    show = false;
 
     // update state of button on show/hide
     div.on('hidden.bs.collapse', function () {
@@ -1019,7 +1030,7 @@ Several functions from the <code>emba</code> R package <span class="citation">(Z
 <p>The heatmaps are generated with the <code>ComplexHeatmap</code> R package <span class="citation">(Gu, Eils, and Schlesner <a href="references.html#ref-Gu2016" role="doc-biblioref">2016</a>)</span>.</p>
 <p>The report template is from the <code>rtemps</code> R package <span class="citation">(Zobolas <a href="references.html#ref-R-rtemps" role="doc-biblioref">2020</a><a href="references.html#ref-R-rtemps" role="doc-biblioref">a</a>)</span>.</p>
 <p>Loading libraries that are used in this report:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="r-libraries.html#cb1-1"></a><span class="kw">library</span>(DT)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb1-1"><a href="r-libraries.html#cb1-1"></a><span class="kw">library</span>(DT)</span>
 <span id="cb1-2"><a href="r-libraries.html#cb1-2"></a><span class="kw">library</span>(ggpubr)</span>
 <span id="cb1-3"><a href="r-libraries.html#cb1-3"></a><span class="kw">library</span>(RColorBrewer)</span>
 <span id="cb1-4"><a href="r-libraries.html#cb1-4"></a><span class="kw">library</span>(xfun)</span>
