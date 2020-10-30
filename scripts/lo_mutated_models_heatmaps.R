@@ -134,12 +134,14 @@ ha_lo = HeatmapAnnotation(Pathway = node_path_map_lo,
   col = list(Pathway = pathway_colors),
   na_col = "black")
 
-indexes = sample(1:nrow(lo_mat), 200)
+indexes = sample(1:nrow(lo_mat), 500)
 
 set.seed(42)
 heatmap_param = ComplexHeatmap::Heatmap(matrix = lo_mat,
+  #matrix = lo_mat[indexes, ], # take a subset for testing
   name = "heatmap_param", column_km = 3, column_km_repeats = 5,
   bottom_annotation = ha_lo,
+  #clustering_distance_rows = 'binary', clustering_distance_columns = 'binary',
   column_title = "Model Link-Operator Parameterization", column_title_gp = gpar(fontsize = 20),
   column_names_gp = gpar(fontsize = 8),
   col = lo_colors, show_row_names = FALSE, show_row_dend = FALSE,
@@ -173,6 +175,7 @@ ha_ss = HeatmapAnnotation(Training = node_training_state_map, Pathway = node_pat
 
 set.seed(42)
 heatmap_ss = ComplexHeatmap::Heatmap(matrix = lo_ss_mat,
+  #matrix = lo_ss_mat[indexes, ], # take a subset for testing
   name = "heatmap_ss", column_km = 3, column_km_repeats = 5,
   bottom_annotation = ha_ss,
   column_title = "Models Stable States", column_title_gp = gpar(fontsize = 20),
@@ -181,7 +184,7 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = lo_ss_mat,
   col = state_colors, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')))
- #,use_raster = TRUE, raster_quality = 20)
+  #,use_raster = TRUE, raster_quality = 20)
 
 #legend_list = packLegend(activity_state_legend)
 
