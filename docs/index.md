@@ -123,7 +123,7 @@ ss_hsa_modelwise_synergies = ss_hsa_modelwise_synergies %>%
 prolif_hsa_modelwise_synergies = prolif_hsa_modelwise_synergies %>%
   mutate(synergy_prob_prolif = synergies/(synergies + `non-synergies`))
 
-observed_synergies_file = paste0("data/observed_synergies_cascade_1.0")
+observed_synergies_file = 'data/observed_synergies_cascade_1.0'
 observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 # 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
 observed = sapply(prolif_hsa_modelwise_synergies$perturbation %in% observed_synergies, as.integer)
@@ -784,7 +784,7 @@ Next, we load the data results and add the ROC and PR AUC results of the combine
 Note that the topology scrambling type is set to **none** for the results that used the original/curated CASCADE 1.0 topology.
 
 ```r
-scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res_cascade1.rds')
+scrambled_topo_res = readRDS(file = 'data/scrambled_topo_res_cascade1.rds')
 
 # the un-scrambled topology results have a similarity score equal to 1, 'none'
 # scrambling whatsoever as `scramble_type`, and the ROC and PR AUC values have been previously
@@ -973,17 +973,15 @@ We generate a large pool of `gitsbe` models ($1000$ simulations => $3000$ models
 All these bootstrapped models will be part of one category called **Curated**.
 The rest of the scrambled topology data (that we presented in scatter plots) will be split to multiple groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.
 
-See more details on how to reproduce these simulation results [here](boot-ss-cascade1-curated-reproduce).
+See more details on how to reproduce these simulation results [here](#boot-ss-cascade1-curated-reproduce).
 :::
-
-
 
 Load the bootstrap results and tidy up the data:
 
 ```r
 # add the bootstrapped results of the curated topology to the scrambled results
-scrambled_topo_res = readRDS(file = 'results/scrambled_topo_res_cascade1.rds')
-boot_cascade1_res = readRDS(file = 'results/boot_cascade1_res.rds')
+scrambled_topo_res = readRDS(file = 'data/scrambled_topo_res_cascade1.rds')
+boot_cascade1_res = readRDS(file = 'data/boot_cascade1_res.rds')
 
 scrambled_topo_res = dplyr::bind_rows(scrambled_topo_res, boot_cascade1_res)
 
@@ -1215,7 +1213,7 @@ ss_hsa_modelwise_synergies_200sim = ss_hsa_modelwise_synergies_200sim %>%
 prolif_hsa_modelwise_synergies_150sim = prolif_hsa_modelwise_synergies_150sim %>%
   mutate(synergy_prob_prolif = synergies/(synergies + `non-synergies`))
 
-observed_synergies_file = paste0("data/observed_synergies_cascade_2.0")
+observed_synergies_file = 'data/observed_synergies_cascade_2.0'
 observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 # 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
 observed = sapply(prolif_hsa_modelwise_synergies_150sim$perturbation %in% observed_synergies, as.integer)
@@ -3508,7 +3506,7 @@ knitr::include_graphics(path = 'img/edge_heat_stable.png')
 # Reproduce Data & Simulation Results {-}
 
 :::{.note}
-We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4140419.svg)](https://doi.org/10.5281/zenodo.4140419)
+We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4162471.svg)](https://doi.org/10.5281/zenodo.4162471)
 :::
 
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-#repro123}
@@ -3622,12 +3620,7 @@ The `results` directory has 3 main sub-directories:
 2. [`topology-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topology-only): results from the topology-mutated models only (used in the section [CASCADE 2.0 Analysis (Topology Mutations)])
 3. [`topo-and-link`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
 
-Also, the [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) directory includes the following files/directories:
-
-- `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
-- `boot_cascade1_res`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
-
-Lastly, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/data) directory that includes the following:
+In addition, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/data) directory that includes the following:
 
 - `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
@@ -3640,6 +3633,8 @@ Lastly, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-lo) section (link operator mutations).
 - `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-topo) section (topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
+- `boot_cascade1_res.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
+- `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
 
 # R session info {-}
 

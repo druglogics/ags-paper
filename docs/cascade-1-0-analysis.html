@@ -1059,7 +1059,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-18"><a href="cascade-1-0-analysis.html#cb2-18"></a>prolif_hsa_modelwise_synergies =<span class="st"> </span>prolif_hsa_modelwise_synergies <span class="op">%&gt;%</span></span>
 <span id="cb2-19"><a href="cascade-1-0-analysis.html#cb2-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">synergy_prob_prolif =</span> synergies<span class="op">/</span>(synergies <span class="op">+</span><span class="st"> `</span><span class="dt">non-synergies</span><span class="st">`</span>))</span>
 <span id="cb2-20"><a href="cascade-1-0-analysis.html#cb2-20"></a></span>
-<span id="cb2-21"><a href="cascade-1-0-analysis.html#cb2-21"></a>observed_synergies_file =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;data/observed_synergies_cascade_1.0&quot;</span>)</span>
+<span id="cb2-21"><a href="cascade-1-0-analysis.html#cb2-21"></a>observed_synergies_file =<span class="st"> &#39;data/observed_synergies_cascade_1.0&#39;</span></span>
 <span id="cb2-22"><a href="cascade-1-0-analysis.html#cb2-22"></a>observed_synergies =<span class="st"> </span>emba<span class="op">::</span><span class="kw">get_observed_synergies</span>(observed_synergies_file)</span>
 <span id="cb2-23"><a href="cascade-1-0-analysis.html#cb2-23"></a><span class="co"># 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations</span></span>
 <span id="cb2-24"><a href="cascade-1-0-analysis.html#cb2-24"></a>observed =<span class="st"> </span><span class="kw">sapply</span>(prolif_hsa_modelwise_synergies<span class="op">$</span>perturbation <span class="op">%in%</span><span class="st"> </span>observed_synergies, as.integer)</span>
@@ -1670,7 +1670,7 @@ See more details on how to generate these topologies in the script <a href="http
 </div>
 <p>Next, we load the data results and add the ROC and PR AUC results of the combined predictor (termed <strong>Calibrated</strong>) for the curated CASCADE 1.0 topology (see <a href="cascade-1-0-analysis.html#best-roc-and-prc">above</a>).
 Note that the topology scrambling type is set to <strong>none</strong> for the results that used the original/curated CASCADE 1.0 topology.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="cascade-1-0-analysis.html#cb21-1"></a>scrambled_topo_res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;results/scrambled_topo_res_cascade1.rds&#39;</span>)</span>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="cascade-1-0-analysis.html#cb21-1"></a>scrambled_topo_res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;data/scrambled_topo_res_cascade1.rds&#39;</span>)</span>
 <span id="cb21-2"><a href="cascade-1-0-analysis.html#cb21-2"></a></span>
 <span id="cb21-3"><a href="cascade-1-0-analysis.html#cb21-3"></a><span class="co"># the un-scrambled topology results have a similarity score equal to 1, &#39;none&#39;</span></span>
 <span id="cb21-4"><a href="cascade-1-0-analysis.html#cb21-4"></a><span class="co"># scrambling whatsoever as `scramble_type`, and the ROC and PR AUC values have been previously</span></span>
@@ -1841,12 +1841,12 @@ Figure 19: Source, Target node scrambling and Sign Inversion vs Performance (ROC
 <p>We generate a large pool of <code>gitsbe</code> models (<span class="math inline">\(1000\)</span> simulations =&gt; <span class="math inline">\(3000\)</span> models) and draw randomly batches of <span class="math inline">\(50\)</span> models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see <a href="cascade-1-0-analysis.html#best-roc-and-prc">above</a>).
 All these bootstrapped models will be part of one category called <strong>Curated</strong>.
 The rest of the scrambled topology data (that we presented in scatter plots) will be split to multiple groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.</p>
-<p>See more details on how to reproduce these simulation results <a href="boot-ss-cascade1-curated-reproduce">here</a>.</p>
+<p>See more details on how to reproduce these simulation results <a href="reproduce-data-simulation-results.html#boot-ss-cascade1-curated-reproduce">here</a>.</p>
 </div>
 <p>Load the bootstrap results and tidy up the data:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="cascade-1-0-analysis.html#cb27-1"></a><span class="co"># add the bootstrapped results of the curated topology to the scrambled results</span></span>
-<span id="cb27-2"><a href="cascade-1-0-analysis.html#cb27-2"></a>scrambled_topo_res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;results/scrambled_topo_res_cascade1.rds&#39;</span>)</span>
-<span id="cb27-3"><a href="cascade-1-0-analysis.html#cb27-3"></a>boot_cascade1_res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;results/boot_cascade1_res.rds&#39;</span>)</span>
+<span id="cb27-2"><a href="cascade-1-0-analysis.html#cb27-2"></a>scrambled_topo_res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;data/scrambled_topo_res_cascade1.rds&#39;</span>)</span>
+<span id="cb27-3"><a href="cascade-1-0-analysis.html#cb27-3"></a>boot_cascade1_res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;data/boot_cascade1_res.rds&#39;</span>)</span>
 <span id="cb27-4"><a href="cascade-1-0-analysis.html#cb27-4"></a></span>
 <span id="cb27-5"><a href="cascade-1-0-analysis.html#cb27-5"></a>scrambled_topo_res =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>(scrambled_topo_res, boot_cascade1_res)</span>
 <span id="cb27-6"><a href="cascade-1-0-analysis.html#cb27-6"></a></span>
