@@ -1115,12 +1115,15 @@ scrambled_topo_res %>%
 
 
 ```r
+# no data points in the (0.95-1) class
+set1_cols = RColorBrewer::brewer.pal(n = 7, name = 'Set1')[c(1:5,7)]
+
 # ROC results
 scrambled_topo_res %>%
   filter(scramble_type == 'all' | scramble_type == 'none', !is.na(roc_auc)) %>%
   ggplot(aes(x = grp, y = roc_auc, fill = grp)) +
   geom_boxplot(show.legend = FALSE) +
-  scale_fill_brewer(palette = 'Set1') +
+  scale_fill_manual(values = set1_cols) +
   geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
   ylim(c(0,1)) +
   labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'ROC AUC', 
@@ -1135,7 +1138,7 @@ scrambled_topo_res %>%
   filter(scramble_type == 'all' | scramble_type == 'none', !is.na(pr_auc)) %>%
   ggplot(aes(x = grp, y = pr_auc, fill = grp)) + 
   geom_boxplot(show.legend = FALSE) + 
-  scale_fill_brewer(palette = 'Set1') +
+  scale_fill_manual(values = set1_cols) +
   geom_jitter(shape = 20, position = position_jitter(0.2), show.legend = FALSE) +
   ylim(c(0,1)) +
   labs(x = 'Similarity Score to CASCADE 1.0 Topology', y = 'PR AUC', 
