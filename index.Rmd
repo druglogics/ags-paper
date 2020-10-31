@@ -1794,7 +1794,7 @@ Then we use the ensemble-wise *random proliferative* model predictions ($150$ si
 :::
 
 :::{.note}
-Check how to generate the appropriate data, run the simulations and tidy up the data in the section [Fitness vs Performance Methods].
+Check how to generate the appropriate data, run the simulations and tidy up the results in the section [Fitness vs Performance Methods].
 :::
 
 Load the already-stored result:
@@ -2286,7 +2286,7 @@ Then we use the ensemble-wise *random proliferative* model predictions ($50$ sim
 :::
 
 :::{.note}
-Check how to generate the appropriate data and run the simulations in the section [Fitness vs Performance Methods].
+Check how to generate the appropriate data, run the simulations and tidy up the results in the section [Fitness vs Performance Methods].
 :::
 
 Load the already-stored result:
