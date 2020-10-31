@@ -24,7 +24,7 @@ prolif_bliss_ensemblewise_150sim_file = paste0("results/link-only/cascade_2.0_ra
 prolif_bliss_ensemblewise_synergies_150sim = emba::get_synergy_scores(prolif_bliss_ensemblewise_150sim_file)
 
 # Observed synergies for CASCADE 2.0
-observed_synergies_file = paste0("data/observed_synergies_cascade_2.0")
+observed_synergies_file = 'data/observed_synergies_cascade_2.0'
 observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 
 data_list = list()

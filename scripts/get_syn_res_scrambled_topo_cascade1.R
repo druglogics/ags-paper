@@ -17,7 +17,7 @@ syn_res_dir = '/home/john/tmp/ags-paper/synergy-res-scrambled-topo-cascade1'
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_1.0.sif', delim = "\t", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
 # observed synergies from (Flobak et al. 2015)
-obs_syn_file = paste0("data/observed_synergies_cascade_1.0")
+obs_syn_file = 'data/observed_synergies_cascade_1.0'
 obs_syn = emba::get_observed_synergies(obs_syn_file)
 
 # to measure similarity (reverse of scrambled-ness), compare edge full annotation
@@ -101,4 +101,4 @@ for (topo_file in list.files(path = topologies_dir, full.names = TRUE)) {
 }
 
 scrambled_topo_res_cascade1 = dplyr::bind_rows(data_list)
-saveRDS(object = scrambled_topo_res_cascade1, file = 'results/scrambled_topo_res_cascade1.rds')
+saveRDS(object = scrambled_topo_res_cascade1, file = 'data/scrambled_topo_res_cascade1.rds')

@@ -10,7 +10,7 @@ library(PRROC)
 data_dir = "/home/john/tmp/ags-paper/random_model_bootstrap"
 
 # Observed synergies for CASCADE 2.0
-observed_synergies_file = paste0("data/observed_synergies_cascade_2.0")
+observed_synergies_file = 'data/observed_synergies_cascade_2.0'
 observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 
 data_list = list()

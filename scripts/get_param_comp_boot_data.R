@@ -18,7 +18,7 @@ data_dir_both = "/home/john/tmp/ags-paper/parameterization-comp/topo-and-link/"
 beta = -1
 
 # Observed synergies for CASCADE 2.0
-observed_synergies_file = paste0("data/observed_synergies_cascade_2.0")
+observed_synergies_file = 'data/observed_synergies_cascade_2.0'
 observed_synergies = emba::get_observed_synergies(observed_synergies_file)
 
 # define data list that is going to store all results
