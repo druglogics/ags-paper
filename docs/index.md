@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 31 October, 2020"
+date: "Last updated: 01 November, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -3508,7 +3508,7 @@ knitr::include_graphics(path = 'img/edge_heat_stable.png')
 
 # Reproduce Data & Simulation Results {-}
 
-:::{.note}
+:::{.note #zenodo-doi-link}
 We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4162471.svg)](https://doi.org/10.5281/zenodo.4162471)
 :::
 
