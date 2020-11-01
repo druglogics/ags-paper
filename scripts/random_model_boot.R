@@ -6,7 +6,7 @@ library(stringr)
 library(emba)
 library(PRROC)
 
-# see Zenodo dataset [TOADD], file `random_model_bootstrap.tar.gz`
+# see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `random_model_bootstrap.tar.gz`
 data_dir = "/home/john/tmp/ags-paper/random_model_bootstrap"
 
 # Observed synergies for CASCADE 2.0

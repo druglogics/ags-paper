@@ -5,7 +5,7 @@ library(stringr)
 library(emba)
 library(PRROC)
 
-# see Zenodo dataset (TOADD), file `ss_cascade1_model_bootstrap.tar.gz`
+# see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `ss_cascade1_model_bootstrap.tar.gz`
 data_dir = '/home/john/tmp/ags-paper/ss_cascade1_model_bootstrap'
 res_dirs = list.files(path = data_dir, pattern = 'bliss', full.names = TRUE)
 stopifnot(length(res_dirs) == 52)

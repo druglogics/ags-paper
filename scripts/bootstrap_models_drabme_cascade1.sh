@@ -10,7 +10,7 @@
 batches=50
 batch_size=50
 
-# from the Zenodo dataset (TOADD), file `ss_cascade1_model_bootstrap.tar.gz`,
+# from the Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `ss_cascade1_model_bootstrap.tar.gz`,
 # copy the `models` directory inside the
 # `ss_cascade1_model_bootstrap/cascade_1.0_ss_1000sim_fixpoints_bliss_20201026_163542`
 # directory, into the `ags_cascade_1.0` directory of the `druglogics-synergy` repository

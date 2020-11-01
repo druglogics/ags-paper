@@ -6,11 +6,11 @@ library(emba)
 library(PRROC)
 
 # directory with the scrambled CASCADE 1.0 topology files
-# see Zenodo dataset [TOADD], file `scrambled_topologies_cascade_1.0.tar.gz`
+# see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `scrambled_topologies_cascade_1.0.tar.gz`
 topologies_dir = '/home/john/tmp/ags-paper/scrambled_topologies_cascade1'
 
 # directory with the results of the script 'run_druglogics_synergy_training.sh'
-# See Zenodo dataset [TOADD], file `synergy-res-scrambled-topo-cascade1.tar.gz`
+# See Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `synergy-res-scrambled-topo-cascade1.tar.gz`
 syn_res_dir = '/home/john/tmp/ags-paper/synergy-res-scrambled-topo-cascade1'
 
 # CASCADE 1.0 topology

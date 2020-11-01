@@ -9,7 +9,7 @@ library(tibble)
 library(usefun)
 library(PRROC)
 
-# see Zenodo dataset [TOADD], file `fit-vs-performance-results-bliss.tar.gz`
+# see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `fit-vs-performance-results-bliss.tar.gz`
 # get flipped training data results
 data_dir = "/home/john/tmp/ags-paper/fit-vs-performance-results-bliss"
 

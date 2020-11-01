@@ -5,7 +5,7 @@
 library(dplyr)
 library(tibble)
 
-# the generated training data files are in the Zenodo dataset [TOADD],
+# the generated training data files are in the Zenodo dataset http://tiny.cc/ags-paper-zenodo,
 # file `training-data-files.tar.gz`
 
 # specify the output directory (and make sure it exists!)

@@ -5,7 +5,7 @@
 # `gen_scrambled_topologies_cascade1.R` script and should also be placed in
 # the repository root
 
-# The result files/directories are stored in Zenodo [TOADD],
+# The result files/directories are stored in Zenodo (http://tiny.cc/ags-paper-zenodo)
 # file `synergy-res-scrambled-topo-cascade1.tar.gz`
 
 training_files=`ls scrambled_topologies_cascade1`

@@ -17,7 +17,7 @@ if (!file.exists('data/edge_mat.rds')) {
   # get CASCADE 2.0
   edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
-  # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
+  # see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `parameterization-comp.tar.gz`
   models_dir = '/home/john/tmp/ags-paper/parameterization-comp/topology-only/gitsbe_topology_only_cascade_2.0_ss_20200806_085342/models'
 
   patterns = edge_tbl %>%
@@ -60,7 +60,7 @@ if (!file.exists('data/edge_mat.rds')) {
 
 # read the stable state data from the gitsbe topology mutated models
 if (!file.exists('data/topo_ss_df.rds')) {
-  # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
+  # see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `parameterization-comp.tar.gz`
   models_dir = '/home/john/tmp/ags-paper/parameterization-comp/topology-only/gitsbe_topology_only_cascade_2.0_ss_20200806_085342/models'
 
   # 70 models has 2 stable states (check with `all.ss = TRUE` parameter)

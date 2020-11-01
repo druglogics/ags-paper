@@ -15,7 +15,7 @@ library(tidyr)
 
 # read the parameterization data from the gitsbe link-operator mutated models
 if (!file.exists('data/lo_df.rds')) {
-  # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
+  # see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `parameterization-comp.tar.gz`
   models_dir = '/home/john/tmp/ags-paper/parameterization-comp/link-only/gitsbe_link_only_cascade_2.0_ss_20200805_231150/models'
 
   lo_df = emba::get_link_operators_from_models_dir(models_dir)
@@ -32,7 +32,7 @@ lo_mat = as.matrix(lo_df)
 
 # read the stable state data from the gitsbe link-operator mutated models
 if (!file.exists('data/lo_ss_df.rds')) {
-  # see Zenodo dataset [TOADD], file `parameterization-comp.tar.gz`
+  # see Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `parameterization-comp.tar.gz`
   models_dir = '/home/john/tmp/ags-paper/parameterization-comp/link-only/gitsbe_link_only_cascade_2.0_ss_20200805_231150/models'
 
   lo_ss_df = emba::get_stable_state_from_models_dir(models_dir)
