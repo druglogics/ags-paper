@@ -1,7 +1,15 @@
+########################################
+# Generate AGS training data files for #
+# Fitness vs Performance Investigation #
+########################################
 library(dplyr)
 library(tibble)
 
-# For this code to run make sure `getwd()` points to the root of this repository
+# the generated training data files are in the Zenodo dataset [TOADD],
+# file `training-data-files.tar.gz`
+
+# specify the output directory (and make sure it exists!)
+output_dir = '/home/john/tmp/ags-paper/training-data-files'
 
 # Read the AGS steady state and reformat it to a data.frame
 steady_state_file = 'data/steadystate'
@@ -18,7 +26,7 @@ df = as.data.frame(do.call(rbind, res_list), stringsAsFactors = FALSE)
 df = remove_rownames(df)
 colnames(df) = c("nodes", "state")
 df$state = as.integer(df$state)
-df = as_tibble(df)
+df = tibble::as_tibble(df)
 
 # Generate flipped steady states
 
@@ -56,8 +64,6 @@ for(flip_num in num_of_flips) {
 }
 
 # Write flipped steady states to files
-train_data_dir = paste0(getwd(), "/training-data-files/")
-dir.create(train_data_dir)
 flipped_state_lines = lines
 
 for (index in 1:length(flipped_states)) {
@@ -65,7 +71,7 @@ for (index in 1:length(flipped_states)) {
   state_name    = names(flipped_states)[index]
 
   flipped_state_lines[8] = paste0(df$nodes, ":", flipped_state, collapse = "\t")
-  file_name = paste0(train_data_dir, "training_", state_name)
+  file_name = paste0(output_dir, "/training_", state_name)
   writeLines(text = flipped_state_lines, con = file_name)
 }
 
