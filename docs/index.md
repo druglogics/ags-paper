@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 01 November, 2020"
+date: "Last updated: 02 November, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -756,6 +756,103 @@ ggline(data = avg_fit_long, x = "name", y = "value", color = my_palette[2],
 - The *S*-shaped (sigmoid) curve is in agreement with Holland's schema theorem [@holland1992adaptation].
 :::
 
+## Fitness vs Ensemble Performance {-#fit-vs-ens-perf-cascade1}
+
+:::{.blue-box}
+We check for correlation between the **calibrated models fitness to the AGS steady state** and their **ensemble performance** subject to normalization to the random model predictions.
+
+The **main idea** here is that we generate different training data samples, in which the boolean steady state nodes have their values flipped (so they are only partially correct) and we fit models to these ($50$ simulations => $150$ models per training data, $205$ training data samples in total).
+These calibrated model ensembles can then be tested for their prediction performance.
+Then we use the ensemble-wise *random proliferative* model predictions ($50$ simulations) to normalize ($\beta=-1$) against the calibrated model predictions and compute the **AUC ROC and AUC PR for each model ensemble**.
+:::
+
+:::{.note}
+Check how to generate the appropriate data, run the simulations and tidy up the results in the section [Fitness vs Performance Methods].
+:::
+
+Load the already-stored result:
+
+```r
+res = readRDS(file = "data/res_fit_aucs_cascade1.rds")
+```
+
+We check if our data is normally distributed using the *Shapiro-Wilk* normality test:
+
+```r
+shapiro.test(x = res$roc_auc)
+```
+
+```
+
+	Shapiro-Wilk normality test
+
+data:  res$roc_auc
+W = 0.95822, p-value = 9.995e-06
+```
+
+```r
+shapiro.test(x = res$pr_auc)
+```
+
+```
+
+	Shapiro-Wilk normality test
+
+data:  res$pr_auc
+W = 0.86074, p-value = 9.719e-13
+```
+
+```r
+shapiro.test(x = res$avg_fit)
+```
+
+```
+
+	Shapiro-Wilk normality test
+
+data:  res$avg_fit
+W = 0.87328, p-value = 4.518e-12
+```
+
+We observe from the low *p-values* that the **data is not normally distributed**.
+Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** test (and it's respective coefficient, $\tau$), to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
+
+```r
+ggscatter(data = res, x = "avg_fit", y = "roc_auc",
+  xlab = "Average Fitness per Model Ensemble",
+  title = "Fitness to AGS Steady State vs Performance (ROC)",
+  ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
+  add.params = list(color = "blue", fill = "lightgray"),
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/fit-vs-perf-roc-cascade1-1.png" alt="Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 1.0, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">(\#fig:fit-vs-perf-roc-cascade1)Fitness to AGS Steady State vs ROC-AUC Performance (CASCADE 1.0, Bliss synergy method, Ensemble-wise normalized results)</p>
+</div>
+
+
+```r
+ggscatter(data = res, x = "avg_fit", y = "pr_auc",
+  xlab = "Average Fitness per Model Ensemble",
+  title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
+  add.params = list(color = "blue", fill = "lightgray"),
+  ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
+  cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/fit-vs-perf-pr-cascade1-1.png" alt="Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 1.0, Bliss synergy method, Ensemble-wise normalized results)" width="2100" />
+<p class="caption">(\#fig:fit-vs-perf-pr-cascade1)Fitness to AGS Steady State vs PR-AUC Performance (CASCADE 1.0, Bliss synergy method, Ensemble-wise normalized results)</p>
+</div>
+
+:::{.green-box}
+- We observe that there exists **some correlation between the normalized ensemble model performance vs the models fitness to the training steady state data**.
+- The performance as measured by the ROC AUC is less sensitive to changes in the training data but there is better correlation with regards to the PR AUC, which is a more informative measure for our imbalanced dataset [@Saito2015].
+:::
+
 ## Scrambled Topologies Investigation {-#scrambled-topo-inv-cascade1}
 
 :::{.note}
@@ -969,7 +1066,7 @@ ggpubr::ggscatter(data = scrambled_topo_res %>%
 :::{.blue-box}
 Since almost **all scrambled results** (no matter the type of scrambling) **are worse than the results we got when using the curated/unscrambled CASCADE 1.0 topology**, we proceed to further generate bootstrap model predictions derived from the curated topology to assess if the results we had found weren't artifacts and/or outliers.
 
-We generate a large pool of `gitsbe` models ($1000$ simulations => $3000$ models) and draw randomly batches of $50$ models and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see [above](#best-roc-and-prc)).
+We generate a large pool of `gitsbe` models ($1000$ simulations => $3000$ models) and draw randomly a total of $50$ batches of $50$ models each and assess ROC and PR AUC performance for each one of these normalized to the random model predictions (see [above](#best-roc-and-prc)).
 All these bootstrapped models will be part of one category called **Curated**.
 The rest of the scrambled topology data (that we presented in scatter plots) will be split to multiple groups based on their similarity score (percentage of common edges with curated topology) and we will visualize the different groups with boxplots.
 
@@ -3509,7 +3606,7 @@ knitr::include_graphics(path = 'img/edge_heat_stable.png')
 # Reproduce Data & Simulation Results {-}
 
 :::{.note #zenodo-doi-link}
-We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4162471.svg)](https://doi.org/10.5281/zenodo.4162471)
+We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4176156.svg)](https://doi.org/10.5281/zenodo.4176156)
 :::
 
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-#repro123}
@@ -3552,21 +3649,22 @@ The training data files are stored in the Zenodo file **`training-data-files.tar
 ### Run model ensembles simulations {-}
 
 To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
-Note that the `training-data-files` directory must be placed inside the `druglogics-synergy/ags_cascade_2.0` directory before executing the aforementioned script. 
-The end result we get is the simulation results for each of the training data files.
+Note that the `training-data-files` directory must be placed inside the `druglogics-synergy` root directory before executing the aforementioned script.
+The end result we get is the simulation results for each of the training data files (a different directory per training data file).
 
-The following changes need to be applied to the CASCADE 2.0 configuration file (`druglogics-synergy/ags_cascade_2.0/config`) before executing the script: 
+The following changes need to be applied to the CASCADE 1.0 or 2.0 configuration file (depends on the topology you are using, the files are either `druglogics-synergy/ags_cascade_1.0/config` or `druglogics-synergy/ags_cascade_2.0/config`) before executing the script (some are done automatically in the script):
 
-- If **topology mutations are used**, disable the balance mutations (`balance_mutations: 0`) and use `topology_mutations: 10`.
-- Change **the number of simulations** to $20$ (balance mutations) or to $50$ for the topology mutated models.
-- Change to *Bliss* synergy method (`synergy_method: bliss`) no matter the mutations used.
+- If **topology mutations are used**, disable the link-operator mutations (`balance_mutations: 0`) and use `topology_mutations: 10`.
+- Change **the number of simulations** to $20$ (link-operator mutations) or $50$ (topology mutations) for CASCADE 2.0 and to $50$ for CASCADE 1.0 (default value, link-operator mutations).
+- Change to *Bliss* synergy method (`synergy_method: bliss`) no matter the mutations used or topology.
 
-The results of the  link-operator mutated model simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`**, whereas for the topology mutated models, in the **`fit-vs-performance-results-bliss-topo.tar.gz`** file.
+The results of the CASCADE 2.0 link-operator mutated model simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`**, whereas for the CASCADE 2.0 topology mutated models, in the **`fit-vs-performance-results-bliss-topo.tar.gz`** file.
+The results of the CASCADE 2.0 link-operator mutated model simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss-cascade1.tar.gz`**.
 
-To parse and tidy up the data from the simulations, use the scripts [fit_vs_perf_cascade2_lo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade2_lo.R) (for the link-operator-based CASCADE 2.0 simulations) and [fit_vs_perf_cascade2_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade2_topo.R) (for the topology-mutation-based CASCADE 2.0 simulations)
+To parse and tidy up the data from the simulations, use the scripts [fit_vs_perf_cascade2_lo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade2_lo.R) (for the link-operator-based CASCADE 2.0 simulations), [fit_vs_perf_cascade2_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade2_topo.R) (for the topology-mutation-based CASCADE 2.0 simulations) and [fit_vs_perf_cascade1_lo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade1_lo.R) (for the link-operator-based CASCADE 1.0 simulations).
 
-Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script config: `{2.0, prolif, 150, fixpoints, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
-The result of this simulation is also part of the results described above (see section [above](#repro123), also considering the necessary changes applied for the topology mutation-based simulations) and it's available inside the file **`sim_res.tar.gz`** of the Zenodo dataset (also available in the results directory - see [Repo results structure]).
+Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script configuration for CASCADE 2.0: `{2.0, prolif, 150, fixpoints, bliss}` and for CASCADE 1.0: `{1.0, prolif, 50, fixpoints, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
+The result of this simulation is also part of the results described above (see section [above](#repro123), also considering the necessary changes applied for the topology mutation-based simulations for CASCADE 2.0) and it's available inside the file **`sim_res.tar.gz`** of the Zenodo dataset (also available in the results directory - see [Repo results structure]).
 
 ## Random Model Bootstrap {-}
 
@@ -3633,8 +3731,9 @@ In addition, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/ma
 - `node_pathway_annotations_cascade2.csv`, `node_path_tbl.rds`: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the [node_path_annot_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R) script.
 - `cosmic_cancer_gene_census_all_29102020.tsv`: Cancer Gene Census COSMIC data downloaded from https://cancer.sanger.ac.uk/census (for academic purposes)
 - `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
-- `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-lo) section (link operator mutations).
-- `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-topo) section (topology mutations).
+- `res_fit_aucs_cascade1.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-cascade1) section (CASCADE 1.0, link operator mutations).
+- `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-lo) section (CASCADE 2.0, link operator mutations).
+- `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-topo) section (CASCADE 2.0, topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
 - `boot_cascade1_res.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
 - `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.

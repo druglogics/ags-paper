@@ -12,6 +12,8 @@ fig:best-roc-pr-cascade1
 fig:cor-plot-cascade1
 fig:fit-evolution
 fig:fit-evolution-2
+fig:fit-vs-perf-roc-cascade1
+fig:fit-vs-perf-pr-cascade1
 fig:zero-ss-topologies-fig
 fig:src-scrambling-figs
 fig:trg-scrambling-figs
