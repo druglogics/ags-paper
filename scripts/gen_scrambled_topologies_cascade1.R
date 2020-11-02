@@ -1,14 +1,13 @@
 library(dplyr)
 library(tibble)
 library(readr)
-library(ggplot2)
 library(usefun)
 
 # the generated topology files are in the Zenodo dataset http://tiny.cc/ags-paper-zenodo,
 # file `scrambled_topologies_cascade_1.0.tar.gz`
 
-# specify the output directory
-output_dir = '/home/john/tmp/ags-paper/scrambled_topologies_cascade1/'
+# specify the output directory (and make sure it exists!)
+output_dir = '/home/john/tmp/ags-paper/scrambled_topologies_cascade1'
 
 # CASCADE 1.0
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_1.0.sif', delim = "\t", col_names = c('source', 'effect', 'target'), col_types = "ccc")
