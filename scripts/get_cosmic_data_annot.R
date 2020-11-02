@@ -9,6 +9,7 @@ library(httr)
 library(jsonlite)
 library(ggplot2)
 library(forcats)
+library(scales)
 
 # read Cancer Gene Census (CGS) COSMIC data from downloaded file
 cosmic_file = 'data/cosmic_cancer_gene_census_all_29102020.tsv'
@@ -79,7 +80,7 @@ for (cascade2_node in cascade2_nodes) {
 res_df = dplyr::bind_rows(data_list)
 
 # Check: 100 matches on 2/11/2020 (otherwise later filtering and
-# "hacked" role assignment might not as expected)
+# "hacked" role assignment might not work as expected)
 #stopifnot(nrow(res_df) == 100)
 
 # Filter data to only stomach/gastric-related tumor types
@@ -102,11 +103,11 @@ res_df_filt = res_df %>%
   filter(Tier == 1)
 
 # Get CASCADE 2.0 nodes that have more than 1 match with COSMIC
-# data (complexes, families, genes, etc.)
+# data (complexes, families, genes, etc.) - should be 10 of them
 mult_member_nodes = res_df_filt %>%
   group_by(cascade2_node) %>%
-  summarise(count = n(), .groups = 'drop') %>%
-  filter(count > 1) %>% pull(cascade2_node)
+  tally() %>%
+  filter(n > 1) %>% pull(cascade2_node)
 
 # Assign a role to these multi-member nodes (mostly using majority rule)
 mult_member_nodes_roles = sapply(mult_member_nodes, function(node) {
@@ -118,7 +119,7 @@ mult_member_nodes_roles = sapply(mult_member_nodes, function(node) {
     return(names(role_tbl))
   } else {
     if (role_tbl[1] > role_tbl[2]) {
-      return(names(roles_tbl)[1])
+      return(names(role_tbl)[1])
     } else { # since it's sorted decreasing, this case is `roles_tbl[1] == roles_tbl[2]`
       return('oncogene, TSG') # kind-of hacked but it works for this dataset
     }
