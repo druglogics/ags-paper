@@ -260,9 +260,12 @@ heat_ss = Heatmap(matrix = lo_ss_mat[,colnames(lo_mat)],
   heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')),
   use_raster = TRUE, raster_quality = 3)
 
+ro_ss = row_order(heat_ss)
+
 heat_param = Heatmap(matrix = lo_mat,
   #matrix = lo_mat[indexes, ],
   name = 'heat_param', column_km = 3, column_km_repeats = 5,
+  row_order = ro_ss, # keep same order as in stable state heatmap!
   col = lo_colors, row_title_side = "right", row_title = "Parameterization",
   show_row_dend = FALSE, #row_title_rot = 90,
   show_heatmap_legend = TRUE,
@@ -291,4 +294,4 @@ decorate_annotation("Agreement", {
     y = unit(c(0.5, 0.5), units = "npc"),
     gp = gpar(lty = 2, col = 'red'))
 })
- dev.off()
+dev.off()
