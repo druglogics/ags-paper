@@ -3582,8 +3582,8 @@ knitr::include_graphics(path = 'img/lo_ss_heat.png')
 ```
 
 <div class="figure">
-<img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:lo-ss-heat-1)Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.</p>
+<img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-ss-heat-1)Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.</p>
 </div>
 
 
@@ -3592,8 +3592,8 @@ knitr::include_graphics(path = 'img/lo_heat.png')
 ```
 
 <div class="figure">
-<img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:lo-heat-2)Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.</p>
+<img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-heat-2)Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.</p>
 </div>
 
 
@@ -3602,8 +3602,8 @@ knitr::include_graphics(path = 'img/lo_combined_heat.png')
 ```
 
 <div class="figure">
-<img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Columns have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown." width="2100" />
-<p class="caption">(\#fig:lo-heat-3)Combined stable states and parameterization heatmaps. Columns have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.</p>
+<img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-heat-3)Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.</p>
 </div>
 
 ## Topology-mutated models {-}
@@ -3618,8 +3618,8 @@ knitr::include_graphics(path = 'img/topo_ss_heat.png')
 ```
 
 <div class="figure">
-<img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:topo-ss-heat-1)Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.</p>
+<img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:topo-ss-heat-1)Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.</p>
 </div>
 
 
@@ -3628,8 +3628,8 @@ knitr::include_graphics(path = 'img/edge_heat.png')
 ```
 
 <div class="figure">
-<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.</p>
+<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.</p>
 </div>
 
 Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent of present** in the models.
