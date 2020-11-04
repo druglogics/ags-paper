@@ -3563,6 +3563,13 @@ knitr::include_graphics(path = 'img/cosmic_cascade2_dist.png')
 <p class="caption">(\#fig:cosmic-cascade2-dist)CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset</p>
 </div>
 
+### Agreement (Parameterization vs Activity) {-}
+
+For the link-operator CASCADE 2.0 nodes we calculate the **percent agreement** between **link-operator parameterization** (`AND-NOT` => $0$, `OR-NOT` => $1$) and **stable state activity** (Inhibited state => $0$, Active state => $1$).
+The percent agreement is defined here as the number of matches (node has the link-operator `AND-NOT` (resp. `OR-NOT`) and it's stable state activity value is $0$ (resp. $1$)) divided by the total amount of models ($4500$).
+
+Note that the models of the link-operator Gitsbe pool from the previous [bootstrap analysis](#bootstrap-simulations) that we will use for the heatmaps, had precicely $1$ stable state each, making thus the aforementioned comparison/calculation much easier.
+
 ## Link-Operator mutated models {-}
 
 :::{.blue-box}
@@ -3575,8 +3582,8 @@ knitr::include_graphics(path = 'img/lo_ss_heat.png')
 ```
 
 <div class="figure">
-<img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:lo-ss-heat-1)Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.</p>
+<img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-ss-heat-1)Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.</p>
 </div>
 
 
@@ -3585,8 +3592,18 @@ knitr::include_graphics(path = 'img/lo_heat.png')
 ```
 
 <div class="figure">
-<img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:lo-heat-2)Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown.</p>
+<img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-heat-2)Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.</p>
+</div>
+
+
+```r
+knitr::include_graphics(path = 'img/lo_combined_heat.png')
+```
+
+<div class="figure">
+<img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Columns have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown." width="2100" />
+<p class="caption">(\#fig:lo-heat-3)Combined stable states and parameterization heatmaps. Columns have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.</p>
 </div>
 
 ## Topology-mutated models {-}
