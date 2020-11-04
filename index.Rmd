@@ -3061,18 +3061,29 @@ A total of $52$ CASCADE 2.0 nodes were annotated and in the following figure we 
 knitr::include_graphics(path = 'img/cosmic_cascade2_dist.png')
 ```
 
+### Agreement (Parameterization vs Activity) {-}
+
+For the link-operator CASCADE 2.0 nodes we calculate the **percent agreement** between **link-operator parameterization** (`AND-NOT` => $0$, `OR-NOT` => $1$) and **stable state activity** (Inhibited state => $0$, Active state => $1$).
+The percent agreement is defined here as the number of matches (node has the link-operator `AND-NOT` (resp. `OR-NOT`) and it's stable state activity value is $0$ (resp. $1$)) divided by the total amount of models ($4500$).
+
+Note that the models of the link-operator Gitsbe pool from the previous [bootstrap analysis](#bootstrap-simulations) that we will use for the heatmaps, had precicely $1$ stable state each, making thus the aforementioned comparison/calculation much easier.
+
 ## Link-Operator mutated models {-}
 
 :::{.blue-box}
 See script [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) for creating the heatmaps.
 :::
 
-```{r lo-ss-heat-1, fig.cap='Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.'}
+```{r lo-ss-heat-1, fig.cap='Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/lo_ss_heat.png')
 ```
 
-```{r lo-heat-2, fig.cap='Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown.'}
+```{r lo-heat-2, fig.cap='Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/lo_heat.png')
+```
+
+```{r lo-heat-3, fig.cap='Combined stable states and parameterization heatmaps. Columns have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.'}
+knitr::include_graphics(path = 'img/lo_combined_heat.png')
 ```
 
 ## Topology-mutated models {-}
