@@ -210,3 +210,49 @@ dev.off()
 #     grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 1))
 #   }
 # })
+
+##################################################
+# Combined Stable States + Link Operator Heatmap #
+##################################################
+# - Column K-means clustering (3)
+# - Training data annotation
+# - Pathway annotation
+# - Connectivity annotation
+# - COSMIC annotation
+
+set.seed(42)
+heat_ss = Heatmap(matrix = lo_ss_mat[,colnames(lo_mat)],
+  #matrix = lo_ss_mat[indexes, colnames(lo_mat)],
+  column_km = 3, column_km_repeats = 5, col = state_colors,
+  row_title_side = "right", row_title = "Stable states",
+  show_row_dend = FALSE, #row_title_rot = 90,
+  show_heatmap_legend = TRUE, column_title = "Combined Heatmaps",
+  heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')),
+  use_raster = TRUE, raster_quality = 3)
+
+heat_param = Heatmap(matrix = lo_mat,
+  #matrix = lo_mat[indexes, ],
+  name = 'heat_param', column_km = 3, column_km_repeats = 5,
+  col = lo_colors, row_title_side = "right", row_title = "Parameterization",
+  show_row_dend = FALSE, #row_title_rot = 90,
+  show_heatmap_legend = TRUE,
+  heatmap_legend_param = list(title = 'Link Operator', labels = c('AND-NOT', 'OR-NOT')))
+
+ha = HeatmapAnnotation(Training = node_training_state_map[colnames(lo_mat)],
+  COSMIC = node_cosmic_map[colnames(lo_mat)],
+  Pathway = node_path_map[colnames(lo_mat)],
+  Connectivity = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
+  col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
+  na_col = "white",
+  annotation_name_side = 'right', annotation_name_rot = list(Connectivity = 0),
+  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
+  show_legend = c("Training" = FALSE))
+
+column_name_annot = HeatmapAnnotation(node_names = anno_text(colnames(lo_mat), gp = gpar(fontsize = 8)))
+
+# we combine the heatmaps vertically along with the annotations
+heat_list = heat_ss %v% heat_param %v% ha %v% column_name_annot
+
+png(filename = "img/lo_combined_heat.png", width = 7, height = 7, units = "in", res = 600)
+draw(heat_list, heatmap_legend_side = "left")
+dev.off()
