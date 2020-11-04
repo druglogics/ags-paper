@@ -3042,6 +3042,25 @@ We annotate in the stable state heatmaps the states (*activation* or *inhibition
 We annotate each node's **connectivity** for the node-oriented heatmaps, i.e. the number of its regulators or input-degree.
 For the edge-oriented heatmaps, we add the **target node connectivity**, i.e. the connectivity of each edge's target.
 
+### COSMIC Cancer Gene Census (CGC) {-}
+
+We annotate some of the CASCADE 2.0 nodes either as **tumor suppressors (TSG), oncogenes or both**, based on the COSMIC Cancer Gene Census dataset, an expert-curated effort to describe genes driving human cancer [@Sondka2018].
+
+We used the HGNC symbols of the CASCADE 2.0 nodes and via the HGNC REST API [@Braschi2019], we got the respective Ensemble IDs that helped us match the genes in the COSMIC dataset.
+From the COSMIC genes that we got back, we did not restrict them to a particular cancer type, we discarded the *Tier 2* (lower quality) genes, as well the ones that were annotated with only the term *fusion* in their respective cancer role.
+We kept cancer genes that were annotated as both TSGs and fusion or oncogenes and fusion genes and maintained only the TSG or oncogene annotation tag (discarding only the fusion tag).
+Lastly note that for the CASCADE 2.0 nodes that represent families, complexes, etc. and they include a few COSMIC genes in their membership, we use a majority rule to decide which cancer role to assign to these nodes.
+
+:::{.blue-box}
+See the script [get_cosmic_data_annot.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R) for more details.
+:::
+
+A total of $52$ CASCADE 2.0 nodes were annotated and in the following figure we can see that most of them were oncogenes, followed by TSGs and a few annotated as both categories:
+
+```{r cosmic-cascade2-dist, fig.cap = 'CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset'}
+knitr::include_graphics(path = 'img/cosmic_cascade2_dist.png')
+```
+
 ## Link-Operator mutated models {-}
 
 :::{.blue-box}
