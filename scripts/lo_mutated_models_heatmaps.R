@@ -27,8 +27,8 @@ if (!file.exists('data/lo_df.rds')) {
 }
 
 # remove model names and covert to matrix for the heatmap
-rownames(lo_df) = NULL
 lo_mat = as.matrix(lo_df)
+rownames(lo_mat) = NULL
 
 # read the stable state data from the gitsbe link-operator mutated models
 if (!file.exists('data/lo_ss_df.rds')) {
@@ -44,8 +44,8 @@ if (!file.exists('data/lo_ss_df.rds')) {
 }
 
 # remove model names and covert to matrix for the heatmap
-rownames(lo_ss_df) = NULL
 lo_ss_mat = as.matrix(lo_ss_df)
+rownames(lo_ss_mat) = NULL
 
 # get the AGS steady state (TIDY UP THE DATA FROM THE STEADY STATE FILE)
 if (!file.exists('data/steady_state.rds')) {
@@ -126,6 +126,35 @@ training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
 # define coloring for the COSMIC annotation
 set1_col = RColorBrewer::brewer.pal(9, 'Set1')
 cosmic_colors = c('Both' = set1_col[4], 'oncogene' = set1_col[1], 'TSG' = set1_col[7])
+
+# find percent agreement between link-operator parameterization and stable state activity
+
+# check the models are the same (same order in the matrices as well)
+stopifnot(all(rownames(lo_df) == rownames(lo_ss_df)))
+
+lo_ss_aggreement = sapply(colnames(lo_mat), function(node) {
+  lo_data = lo_mat[,node]
+  ss_data = lo_ss_mat[,node]
+
+  add_vec = lo_data + ss_data
+  sub_vec = lo_data - ss_data
+
+  # AND-NOT (0) == Inhibited stable state (0)
+  and_not_0ss_agreement = sum(add_vec == 0)
+  # OR-NOT (1) == Active stable state (1)
+  or_not_1ss_agreement = sum(add_vec == 2)
+  # AND-NOT (0) != Active stable state (1)
+  and_not_1ss_disagreement = sum(sub_vec == -1)
+  # OR-NOT  (1) != Inhibited stable state (0)
+  or_not_0ss_disagreement = sum(sub_vec == 1)
+
+  n = and_not_0ss_agreement + or_not_1ss_agreement + and_not_1ss_disagreement + or_not_0ss_disagreement
+  stopifnot(n == length(ss_data))
+
+  percent_agreement = (and_not_0ss_agreement + or_not_1ss_agreement)/n
+
+  return(percent_agreement)
+})
 
 #########################
 # Link-operator Heatmap #
@@ -219,6 +248,7 @@ dev.off()
 # - Pathway annotation
 # - Connectivity annotation
 # - COSMIC annotation
+# - Percent Agreement between link-operator and stable state activity
 
 set.seed(42)
 heat_ss = Heatmap(matrix = lo_ss_mat[,colnames(lo_mat)],
@@ -242,11 +272,12 @@ ha = HeatmapAnnotation(Training = node_training_state_map[colnames(lo_mat)],
   COSMIC = node_cosmic_map[colnames(lo_mat)],
   Pathway = node_path_map[colnames(lo_mat)],
   Connectivity = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
+  Agreement = anno_barplot(x = lo_ss_aggreement, gp = gpar(fill = 'black')),
   col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
   na_col = "white",
   annotation_name_side = 'right', annotation_name_rot = list(Connectivity = 0),
   annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
-  show_legend = c("Training" = FALSE))
+  show_legend = c("Training" = FALSE), gap = unit(c(1,1,2,5), "points"))
 
 column_name_annot = HeatmapAnnotation(node_names = anno_text(colnames(lo_mat), gp = gpar(fontsize = 8)))
 
@@ -255,4 +286,9 @@ heat_list = heat_ss %v% heat_param %v% ha %v% column_name_annot
 
 png(filename = "img/lo_combined_heat.png", width = 7, height = 7, units = "in", res = 600)
 draw(heat_list, heatmap_legend_side = "left")
-dev.off()
+decorate_annotation("Agreement", {
+  grid.lines(x = unit(c(0.5, 53.5), units = "native"), # 52 link-operator nodes
+    y = unit(c(0.5, 0.5), units = "npc"),
+    gp = gpar(lty = 2, col = 'red'))
+})
+ dev.off()
