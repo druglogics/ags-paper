@@ -984,6 +984,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#pathways"><i class="fa fa-check"></i>Pathways</a></li>
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#training-data"><i class="fa fa-check"></i>Training Data</a></li>
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#connectivity"><i class="fa fa-check"></i>Connectivity</a></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#cosmic-cancer-gene-census-cgc"><i class="fa fa-check"></i>COSMIC Cancer Gene Census (CGC)</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#link-operator-mutated-models"><i class="fa fa-check"></i>Link-Operator mutated models</a></li>
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#topology-mutated-models"><i class="fa fa-check"></i>Topology-mutated models</a></li>
@@ -1063,24 +1064,43 @@ Figure 61: Node and Edge Distribution across pathways in CASCADE 2.0
 <p>We annotate each node’s <strong>connectivity</strong> for the node-oriented heatmaps, i.e. the number of its regulators or input-degree.
 For the edge-oriented heatmaps, we add the <strong>target node connectivity</strong>, i.e. the connectivity of each edge’s target.</p>
 </div>
+<div id="cosmic-cancer-gene-census-cgc" class="section level3 unnumbered" number="">
+<h3>COSMIC Cancer Gene Census (CGC)</h3>
+<p>We annotate some of the CASCADE 2.0 nodes either as <strong>tumor suppressors (TSG), oncogenes or both</strong>, based on the COSMIC Cancer Gene Census dataset, an expert-curated effort to describe genes driving human cancer <span class="citation">(Sondka et al. <a href="references.html#ref-Sondka2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>We used the HGNC symbols of the CASCADE 2.0 nodes and via the HGNC REST API <span class="citation">(Braschi et al. <a href="references.html#ref-Braschi2019" role="doc-biblioref">2019</a>)</span>, we got the respective Ensemble IDs that helped us match the genes in the COSMIC dataset.
+From the COSMIC genes that we got back, we did not restrict them to a particular cancer type, we discarded the <em>Tier 2</em> (lower quality) genes, as well the ones that were annotated with only the term <em>fusion</em> in their respective cancer role.
+We kept cancer genes that were annotated as both TSGs and fusion or oncogenes and fusion genes and maintained only the TSG or oncogene annotation tag (discarding only the fusion tag).
+Lastly note that for the CASCADE 2.0 nodes that represent families, complexes, etc. and they include a few COSMIC genes in their membership, we use a majority rule to decide which cancer role to assign to these nodes.</p>
+<div class="blue-box">
+<p>See the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> for more details.</p>
+</div>
+<p>A total of <span class="math inline">\(52\)</span> CASCADE 2.0 nodes were annotated and in the following figure we can see that most of them were oncogenes, followed by TSGs and a few annotated as both categories:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="annotated-heatmaps.html#cb100-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_cascade2_dist.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:cosmic-cascade2-dist"></span>
+<img src="img/cosmic_cascade2_dist.png" alt="CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset" width="1050" />
+<p class="caption">
+Figure 62: CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset
+</p>
+</div>
+</div>
 </div>
 <div id="link-operator-mutated-models" class="section level2 unnumbered" number="">
 <h2>Link-Operator mutated models</h2>
 <div class="blue-box">
 <p>See script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="annotated-heatmaps.html#cb100-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="annotated-heatmaps.html#cb101-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-ss-heat-1"></span>
 <img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 62: Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
+Figure 63: Stable state annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="annotated-heatmaps.html#cb101-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="annotated-heatmaps.html#cb102-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-2"></span>
 <img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 63: Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown.
+Figure 64: Parameterization annotated heatmap for the link operator-mutated models. Nodes have been grouped to 3 clusters with K-means. Pathway and connectivity annotations are shown.
 </p>
 </div>
 </div>
@@ -1089,27 +1109,27 @@ Figure 63: Parameterization annotated heatmap for the link operator-mutated mode
 <div class="blue-box">
 <p>See script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="annotated-heatmaps.html#cb102-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="annotated-heatmaps.html#cb103-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:topo-ss-heat-1"></span>
 <img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 64: Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
+Figure 65: Stable state annotated heatmap for the topology-mutated models. Nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="annotated-heatmaps.html#cb103-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="annotated-heatmaps.html#cb104-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-1"></span>
 <img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 65: Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.
+Figure 66: Edge annotated heatmap. All edges are included. Edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.
 </p>
 </div>
 <p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent of present</strong> in the models.
 We do not include the edges that are present in all models since there were the ones that had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm since we don’t risk losing connectivity when using topology mutations.</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="annotated-heatmaps.html#cb104-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="annotated-heatmaps.html#cb105-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-2"></span>
 <img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 66: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.
+Figure 67: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.
 </p>
 </div>
 </div>
