@@ -87,6 +87,16 @@ node_conn_map = sapply(targets, function(trg){
   edge_tbl %>% filter(target == trg) %>% distinct(source) %>% summarise(n()) %>% pull()
 })
 
+# COSMIC annotation
+node_cosmic_role = readRDS(file = 'data/cosmic_tbl.rds') # see 'get_cosmic_data_annot.R'
+node_cosmic_map = sapply(targets, function(target) { # all 144 CASCADE 2.0 nodes
+  role = node_cosmic_role %>%
+    filter(cascade2_node == target) %>%
+    pull(role)
+  if (length(role) > 0 && role == 'oncogene, TSG') role = 'Both' # simplify name
+  return(ifelse(length(role) == 0, NA, role))
+})
+
 #########################
 # heatmap prerequisites #
 #########################
@@ -113,20 +123,25 @@ for (node in names(steady_state)) {
 
 training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
 
+# define coloring for the COSMIC annotation
+set1_col = RColorBrewer::brewer.pal(9, 'Set1')
+cosmic_colors = c('Both' = set1_col[4], 'oncogene' = set1_col[1], 'TSG' = set1_col[7])
+
 #########################
 # Link-operator Heatmap #
 #########################
 # - Column K-means clustering (3)
 # - Pathway annotation
 # - Connectivity annotation
+# - COSMIC annotation
 
 # define annotations
-node_path_map_lo = node_path_map[colnames(lo_mat)]
-
-ha_lo = HeatmapAnnotation(Pathway = node_path_map_lo,
+ha_lo = HeatmapAnnotation(COSMIC = node_cosmic_map[colnames(lo_mat)],
+  Pathway = node_path_map[colnames(lo_mat)],
   Connectivity = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
-  col = list(Pathway = pathway_colors),
-  na_col = "black")
+  col = list(Pathway = pathway_colors, COSMIC = cosmic_colors),
+  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
+  na_col = "white")
 
 indexes = sample(1:nrow(lo_mat), 500)
 
@@ -155,14 +170,16 @@ dev.off()
 # - Training data annotation
 # - Pathway annotation
 # - Connectivity annotation
+# - COSMIC annotation
 
 # define annotations
-node_path_map_ss = node_path_map[colnames(lo_ss_mat)]
-
-ha_ss = HeatmapAnnotation(Training = node_training_state_map, Pathway = node_path_map_ss,
+ha_ss = HeatmapAnnotation(Training = node_training_state_map,
+  COSMIC = node_cosmic_map[colnames(lo_ss_mat)],
+  Pathway = node_path_map[colnames(lo_ss_mat)],
   Connectivity = anno_barplot(x = node_conn_map[colnames(lo_ss_mat)]),
-  col = list(Training = training_colors, Pathway = pathway_colors),
+  col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
   na_col = "white",
+  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
   show_legend = c("Training" = FALSE))
 
 set.seed(42)
@@ -179,7 +196,7 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = lo_ss_mat,
   #,use_raster = TRUE, raster_quality = 20)
 
 png(filename = "img/lo_ss_heat.png", width = 7, height = 5, units = "in", res = 600)
-draw(heatmap_ss, annotation_legend_side = "right", merge_legends = TRUE)
+draw(heatmap_ss, annotation_legend_side = "right", merge_legends = FALSE)
 dev.off()
 
 # code to add rectangular boxes for specific nodes
