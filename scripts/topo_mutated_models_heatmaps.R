@@ -73,8 +73,8 @@ if (!file.exists('data/topo_ss_df.rds')) {
 }
 
 # remove model names and covert to matrix for the heatmap
-rownames(topo_ss_df) = NULL
 topo_ss_mat = as.matrix(topo_ss_df)
+rownames(topo_ss_mat) = NULL
 
 # get the AGS steady state
 if (!file.exists('data/steady_state.rds')) {
@@ -146,8 +146,17 @@ pathway_colors = c('Cross-talk' = 'black', 'MAPK' = 'red',
   'mTOR' = '#00C2A0')
 
 # make a vector of node-pathway annotations
-node_path_map = node_path_tbl %>% pull(path_abbrev)
-names(node_path_map) = node_path_tbl %>% pull(node)
+node_path_map = node_path_tbl %>% pull(var = path_abbrev, name = node)
+
+# COSMIC annotation
+node_cosmic_role = readRDS(file = 'data/cosmic_tbl.rds') # see 'get_cosmic_data_annot.R'
+node_cosmic_map = sapply(targets, function(target) { # all 144 CASCADE 2.0 nodes
+  role = node_cosmic_role %>%
+    filter(cascade2_node == target) %>%
+    pull(role)
+  if (length(role) > 0 && role == 'oncogene, TSG') role = 'Both' # simplify name
+  return(ifelse(length(role) == 0, NA, role))
+})
 
 #################################
 # Node Distribution in Pathways #
@@ -190,6 +199,8 @@ edge_path_map = sapply(colnames(edge_mat), function(edge) {
   if (source_path == target_path) {
     return(source_path)
   } else return('Cross-talk')
+  # or return an 'undirected' merged version of the two pathway names
+  # } else return(paste(sort(c(source_path,target_path)), collapse = ","))
 })
 
 # sanity data check
@@ -221,7 +232,7 @@ ggsave(filename = 'img/edge_path_dist.png', dpi = "print", width = 7, height = 5
 # - Target Node Connectivity
 
 # define annotations
-ha_edges = HeatmapAnnotation(Pathway = edge_path_map,
+ha_edges = HeatmapAnnotation(Pathway = edge_path_map[colnames(edge_mat)],
   `Target Connectivity` = anno_barplot(x = edge_conn_map[colnames(edge_mat)]),
   col = list(Pathway = pathway_colors))
 
@@ -292,14 +303,20 @@ dev.off()
 # - Training data annotation
 # - Pathway annotation
 # - Connectivity annotation
+# - COSMIC annotation
+
+# define coloring for the COSMIC annotation
+set1_col = RColorBrewer::brewer.pal(9, 'Set1')
+cosmic_colors = c('Both' = set1_col[4], 'oncogene' = set1_col[1], 'TSG' = set1_col[7])
 
 # define annotations
-node_path_map_ss = node_path_map[colnames(topo_ss_mat)]
-
-ha_ss = HeatmapAnnotation(Training = node_training_state_map, Pathway = node_path_map_ss,
+ha_ss = HeatmapAnnotation(Training = node_training_state_map[colnames(topo_ss_mat)],
+  COSMIC = node_cosmic_map[colnames(topo_ss_mat)],
+  Pathway = node_path_map[colnames(topo_ss_mat)],
   Connectivity = anno_barplot(x = node_conn_map[colnames(topo_ss_mat)]),
-  col = list(Training = training_colors, Pathway = pathway_colors),
+  col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
   na_col = "white",
+  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
   show_legend = c("Training" = FALSE))
 
 indexes = sample(1:nrow(topo_ss_mat), size = 500)
@@ -318,5 +335,5 @@ heatmap_ss = ComplexHeatmap::Heatmap(matrix = topo_ss_mat,
   #, use_raster = TRUE, raster_quality = 20)
 
 png(filename = "img/topo_ss_heat.png", width = 7, height = 5, units = "in", res = 600)
-draw(heatmap_ss, annotation_legend_side = "right", merge_legends = TRUE)
+draw(heatmap_ss, annotation_legend_side = "right", merge_legends = FALSE)
 dev.off()
