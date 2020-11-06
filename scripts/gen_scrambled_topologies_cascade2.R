@@ -9,7 +9,7 @@ library(usefun)
 # specify the output directory (and make sure it exists!)
 output_dir = '/home/john/tmp/ags-paper/scrambled_topologies_cascade2'
 
-# CASCADE 1.0
+# CASCADE 2.0
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
 sources = edge_tbl %>% pull(source)
@@ -21,7 +21,7 @@ edge_annot = edge_tbl %>%
 # for reproducibility
 set.seed(42)
 
-# expected similarity scores between each generated topology and CASCADE 1.0
+# expected similarity scores between each generated topology and CASCADE 2.0
 exp_sims = c(seq(from = 0, to = 0.95, by = 0.05), 0.96, 0.98, 0.99)
 
 # total generated topologies: length(exp_sims) * 10 = 230 (x4)
