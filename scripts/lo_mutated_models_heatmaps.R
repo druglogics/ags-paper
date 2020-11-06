@@ -202,7 +202,7 @@ dev.off()
 # - COSMIC annotation
 
 # define annotations
-ha_ss = HeatmapAnnotation(Training = node_training_state_map,
+ha_ss = HeatmapAnnotation(Training = node_training_state_map, # by default ordered by `colnames(lo_ss_mat)`
   COSMIC = node_cosmic_map[colnames(lo_ss_mat)],
   Pathway = node_path_map[colnames(lo_ss_mat)],
   Connectivity = anno_barplot(x = node_conn_map[colnames(lo_ss_mat)]),
