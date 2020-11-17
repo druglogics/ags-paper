@@ -934,6 +934,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -971,7 +978,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#best-roc-and-prc-4"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#bootstrap-simulations"><i class="fa fa-check"></i>Bootstrap Simulations</a>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#boot-comp-param"><i class="fa fa-check"></i>Bootstrap Simulations</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
@@ -1158,7 +1165,7 @@ The <code>results</code> directory has 3 main sub-directories:</p>
 <li><code>res_fit_aucs_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1">Fitness vs Ensemble Performance</a> section (CASCADE 1.0, link operator mutations).</li>
 <li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, link operator mutations).</li>
 <li><code>res_fit_aucs_topo.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, topology mutations).</li>
-<li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#bootstrap-simulations">Bootstrap Simulations</a> section.</li>
+<li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#boot-comp-param">Bootstrap Simulations</a> section.</li>
 <li><code>boot_cascade1_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated">scrambled topologies investigation</a> in CASCADE 1.0.</li>
 <li><code>scrambled_topo_res_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1">scrambled topologies investigation</a> in CASCADE 1.0.</li>
 </ul>

@@ -934,6 +934,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -971,7 +978,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#best-roc-and-prc-4"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#bootstrap-simulations"><i class="fa fa-check"></i>Bootstrap Simulations</a>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#boot-comp-param"><i class="fa fa-check"></i>Bootstrap Simulations</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
@@ -1736,7 +1743,7 @@ The <span class="math inline">\(4\)</span> types of scrambling are:</p>
 <p>For each different type of scrambling, we make <span class="math inline">\(10\)</span> random topologies for each expected similarity score between the randomized and the curated topology, ranging from <span class="math inline">\(0\)</span> similarity to <span class="math inline">\(0.98\)</span> with a total of <span class="math inline">\(22\)</span> <em>steps</em>, thus <span class="math inline">\(10\times22=220\)</span> random topologies per different type of scrambling.
 See more details on how to generate these topologies in the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies_cascade1.R">gen_scrambled_topologies_cascade1.R</a>.</p>
 <p>To get the drug combination predictions for each scrambled topology, we executed the <code>druglogics-synergy</code> module with the default configuration (<span class="math inline">\(50\)</span> simulations per topology, for both <em>calibrated</em> to steady state and <em>random</em> proliferative models, using the <em>Bliss</em> synergy assessment method in <code>Drabme</code>) - see more info on the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_scrambled_topo_cascade1.sh">run_druglogics_synergy_scrambled_topo_cascade1.sh</a> script.</p>
-<p>We calculate the normalized predictor performance (<span class="math inline">\(calibrated -random\)</span>) for each topology-specific simulation and tidy up the result data in <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>.</p>
+<p>We calculate the normalized predictor performance (<span class="math inline">\(calibrated - random\)</span>) for each topology-specific simulation and tidy up the result data in <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>.</p>
 </div>
 <p>Next, we load the data results and add the ROC and PR AUC results of the combined predictor (termed <strong>Calibrated</strong>) for the curated CASCADE 1.0 topology (see <a href="cascade-1-0-analysis.html#best-roc-and-prc">above</a>).
 Note that the topology scrambling type is set to <strong>none</strong> for the results that used the original/curated CASCADE 1.0 topology.</p>
@@ -1777,9 +1784,9 @@ Figure 17: Percentage of topologies that did not have any boolean model with a s
 </p>
 </div>
 <div class="green-box">
-<p>So tweaking the <strong>source nodes</strong> of each edge in the curated topology, resulted in <span class="math inline">\(11\%\)</span> of the produced topologies to have a network configuration that wouldn’t allow the existence of attractor stability in the explored link-operator parameterization space of the <code>Gitsbe</code> algorithm.
+<p>So potentially tweaking the <strong>source nodes</strong> of each edge in the curated topology, resulted in <span class="math inline">\(11\%\)</span> of the produced topologies to have a network configuration that wouldn’t allow the existence of attractor stability in the explored link-operator parameterization space of the <code>Gitsbe</code> algorithm.
 Tweaking the <strong>target nodes</strong> results in less topologies having this property (<span class="math inline">\(5\%\)</span>).</p>
-<p>Lastly, tweaking the <strong>effect</strong> (activation vs inhibition), you always get some boolean models with a stable state attractor.</p>
+<p>Lastly, tweaking the <strong>effect</strong> (activation vs inhibition), we always get topologies that can be translated to boolean models with a stable state attractor.</p>
 </div>
 <div id="source-scrambling" class="section level3 unnumbered" number="">
 <h3>Source Scrambling</h3>
@@ -1962,9 +1969,9 @@ The rest of the scrambled topology data (that we presented in scatter plots) wil
 <span id="cb37-28"><a href="cascade-1-0-analysis.html#cb37-28"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">6.7</span>, <span class="dt">y =</span> <span class="fl">0.15</span>, <span class="dt">label =</span> <span class="st">&quot;Random (AUC = 0.2)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb37-29"><a href="cascade-1-0-analysis.html#cb37-29"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:src-scrambling-figs-2"></span>
-<img src="index_files/figure-html/src-scrambling-figs-2-1.png" alt="Source node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/src-scrambling-figs-2-2.png" alt="Source node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
+<img src="index_files/figure-html/src-scrambling-figs-2-1.png" alt="Source node scrambling topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/src-scrambling-figs-2-2.png" alt="Source node scrambling topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
 <p class="caption">
-Figure 22: Source node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
+Figure 22: Source node scrambling topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
 </p>
 </div>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="cascade-1-0-analysis.html#cb38-1"></a><span class="co"># ROC results</span></span>
@@ -1997,9 +2004,9 @@ Figure 22: Source node scrambling topologies + bootstrap curated CASCADE 1.0 top
 <span id="cb38-28"><a href="cascade-1-0-analysis.html#cb38-28"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">6.7</span>, <span class="dt">y =</span> <span class="fl">0.13</span>, <span class="dt">label =</span> <span class="st">&quot;Random (AUC = 0.2)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb38-29"><a href="cascade-1-0-analysis.html#cb38-29"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:trg-scrambling-figs-2"></span>
-<img src="index_files/figure-html/trg-scrambling-figs-2-1.png" alt="Target node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/trg-scrambling-figs-2-2.png" alt="Target node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
+<img src="index_files/figure-html/trg-scrambling-figs-2-1.png" alt="Target node scrambling topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/trg-scrambling-figs-2-2.png" alt="Target node scrambling topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
 <p class="caption">
-Figure 23: Target node scrambling topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
+Figure 23: Target node scrambling topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
 </p>
 </div>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="cascade-1-0-analysis.html#cb39-1"></a><span class="co"># ROC results</span></span>
@@ -2032,9 +2039,9 @@ Figure 23: Target node scrambling topologies + bootstrap curated CASCADE 1.0 top
 <span id="cb39-28"><a href="cascade-1-0-analysis.html#cb39-28"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">6.9</span>, <span class="dt">y =</span> <span class="fl">0.15</span>, <span class="dt">label =</span> <span class="st">&quot;Random (AUC = 0.2)&quot;</span>), <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb39-29"><a href="cascade-1-0-analysis.html#cb39-29"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:sign-inv-scrambling-figs-2"></span>
-<img src="index_files/figure-html/sign-inv-scrambling-figs-2-1.png" alt="Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/sign-inv-scrambling-figs-2-2.png" alt="Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
+<img src="index_files/figure-html/sign-inv-scrambling-figs-2-1.png" alt="Sign Inverted topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/sign-inv-scrambling-figs-2-2.png" alt="Sign Inverted topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
 <p class="caption">
-Figure 24: Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
+Figure 24: Sign Inverted topologies + curated CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
 </p>
 </div>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="cascade-1-0-analysis.html#cb40-1"></a><span class="co"># no data points in the (0.95-1) class</span></span>
@@ -2070,9 +2077,9 @@ Figure 24: Sign Inverted topologies + bootstrap curated CASCADE 1.0 topology boo
 <span id="cb40-31"><a href="cascade-1-0-analysis.html#cb40-31"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">5.8</span>, <span class="dt">y =</span> <span class="fl">0.15</span>, <span class="dt">label =</span> <span class="st">&quot;Random (AUC = 0.2)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb40-32"><a href="cascade-1-0-analysis.html#cb40-32"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:all-scrambling-figs-2"></span>
-<img src="index_files/figure-html/all-scrambling-figs-2-1.png" alt="Source, Target node scrambling and sign inverted topologies + bootstrap CASCADE 1.0 topology results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2-2.png" alt="Source, Target node scrambling and sign inverted topologies + bootstrap CASCADE 1.0 topology results (ROC and PR AUC)" width="50%" />
+<img src="index_files/figure-html/all-scrambling-figs-2-1.png" alt="Source, Target node scrambling and sign inverted topologies + CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" /><img src="index_files/figure-html/all-scrambling-figs-2-2.png" alt="Source, Target node scrambling and sign inverted topologies + CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)" width="50%" />
 <p class="caption">
-Figure 25: Source, Target node scrambling and sign inverted topologies + bootstrap CASCADE 1.0 topology results (ROC and PR AUC)
+Figure 25: Source, Target node scrambling and sign inverted topologies + CASCADE 1.0 topology bootstrapped results (ROC and PR AUC)
 </p>
 </div>
 <div class="green-box">

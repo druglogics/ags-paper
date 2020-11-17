@@ -39,6 +39,11 @@ fig:cor-plot-cascade2
 fig:fit-evolution-3
 fig:fit-vs-perf-roc
 fig:fit-vs-perf-pr
+fig:zero-ss-topologies-fig-cascade2
+fig:src-scrambling-figs-2-cascade2
+fig:trg-scrambling-figs-2-cascade2
+fig:sign-inv-scrambling-figs-2-cascade2
+fig:all-scrambling-figs-2-cascade2
 fig:roc-hsa-cascade2-topo
 fig:pr-hsa-cascade2-topo
 fig:auc-sen-ew-hsa-cascade2-topo

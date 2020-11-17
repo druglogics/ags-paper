@@ -934,6 +934,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -971,7 +978,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#best-roc-and-prc-4"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#bootstrap-simulations"><i class="fa fa-check"></i>Bootstrap Simulations</a>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#boot-comp-param"><i class="fa fa-check"></i>Bootstrap Simulations</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
@@ -1028,7 +1035,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">AGS paper - Supplementary Information (SI)</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 06 November, 2020</em></p>
+<p class="date"><em>Last updated: 17 November, 2020</em></p>
 </div>
 <div id="intro" class="section level1 unnumbered" number="">
 <h1>Intro</h1>
@@ -1052,7 +1059,7 @@ More info on the calculations that Drabme does <a href="https://druglogics.githu
 <p>Observing the results across the whole report, we reach the following conclusions:</p>
 <div class="green-box">
 <ul>
-<li>To minimize the expected performance variance, executing <span class="math inline">\(150\)</span> <code>Gitsbe</code> simulations is a good choice (no need for more, no matter the other input parameters).</li>
+<li>To minimize the expected performance variance, executing <span class="math inline">\(150\)</span> <code>Gitsbe</code> simulations (~<span class="math inline">\(500\)</span> best-fitted models) is a good choice (no need for more, no matter the other input parameters).</li>
 <li><em>Ensemble-wise</em> results do not correlate with <em>model-wise</em> results (see correlation results for <a href="cascade-1-0-analysis.html#correlation">CASCADE 1.0</a> and <a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1">CASCADE 2.0</a>).
 This happens because some drug perturbed models do not have stable states and thus cannot be evaluated for synergy.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></li>
 <li><em>Model-wise</em> ROC results are always better compared to <em>ensemble-wise</em> ROC results for the single predictor models (e.g. the <em>calibrated</em> non-normalized model results).</li>
@@ -1062,7 +1069,10 @@ When using <em>HSA</em>, that is not always the case (see <a href="cascade-2-0-a
 <li>The value of <span class="math inline">\(\beta = -1\)</span> is a good estimation for the value that maximizes the combined predictor’s performance (<span class="math inline">\(calibrated + \beta \times random\)</span>) across all of the report’s relevant investigations.</li>
 <li>Comparing the different parameterization schemes for the CASCADE 2.0 analysis (using the combined predictors with <span class="math inline">\(\beta = -1\)</span>), we observe that <strong>topology mutations outperform link operator mutations</strong>.</li>
 <li>There is <strong>correlation</strong> between fitness to the AGS steady state and normalized ensemble prediction performance.
-This is observed for the link operator mutated models <a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo">here</a> and a little bit more for the <a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo">topology mutated ones</a>.</li>
+This is observed for the link operator mutated CASCADE 2.0 models <a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo">here</a> and a little bit more for the <a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo">topology mutated ones</a>.
+Same trend was shown for the CASCADE 1.0 link-operator mutated models <a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1">analysis</a>.</li>
+<li>Any type of scrambling in the curated CASCADE topology reduces ensemble model prediction performance.
+See results for CASCADE 1.0 <a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1">here</a> and CASCADE 2.0 <a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2">here</a>.</li>
 </ul>
 </div>
 </div>

@@ -934,6 +934,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
 <ul>
@@ -971,7 +978,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#best-roc-and-prc-4"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#bootstrap-simulations"><i class="fa fa-check"></i>Bootstrap Simulations</a>
+<li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#boot-comp-param"><i class="fa fa-check"></i>Bootstrap Simulations</a>
 <ul>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-all-3-schemes"><i class="fa fa-check"></i>Compare all 3 schemes</a></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization"><i class="fa fa-check"></i>Compare Topology vs Link-operator Parameterization</a></li>
@@ -1028,7 +1035,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="annotated-heatmaps" class="section level1 unnumbered" number="">
 <h1>Annotated Heatmaps</h1>
 <div class="blue-box">
-<p>In this section we will use the models from the bootstrap analysis <a href="parameterization-vs-performance.html#bootstrap-simulations">above</a> and produce heatmaps of the models stable states and parameterization.
+<p>In this section we will use the models from the bootstrap analysis <a href="#bootstrap-simulations">above</a> and produce heatmaps of the models stable states and parameterization.
 Specifically, we will use the two CASCADE 2.0 model pools created, that have either only <strong>link-operator mutated</strong> or only <strong>topology-mutated</strong> models.</p>
 <p>For both pools, a stable state heatmap will be produced (columns are <em>nodes</em>).
 For the first pool, the parameterization is presented with a <strong>link-operator heatmap</strong> (columns are <em>nodes</em>) and for the second pool as an <strong>edge heatmap</strong> (columns are <em>edges</em>).</p>
@@ -1041,12 +1048,12 @@ For the first pool, the parameterization is presented with a <strong>link-operat
 The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file <a href="https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv">here</a>.</p>
 <p>We present the <strong>node and edge distribution</strong> across the pathways in CASCADE 2.0.
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as <em>Cross-talk</em>:</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="annotated-heatmaps.html#cb99-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
-<span id="cb99-2"><a href="annotated-heatmaps.html#cb99-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_path_dist.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="annotated-heatmaps.html#cb105-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
+<span id="cb105-2"><a href="annotated-heatmaps.html#cb105-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_path_dist.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:node-edge-dist-path"></span>
 <img src="img/node_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" /><img src="img/edge_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" />
 <p class="caption">
-Figure 61: Node and Edge Distribution across pathways in CASCADE 2.0
+Figure 66: Node and Edge Distribution across pathways in CASCADE 2.0
 </p>
 </div>
 <div class="green-box">
@@ -1076,11 +1083,11 @@ Lastly note that for the CASCADE 2.0 nodes that represent families, complexes, e
 <p>See the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> for more details.</p>
 </div>
 <p>A total of <span class="math inline">\(52\)</span> CASCADE 2.0 nodes were annotated and in the following figure we can see that most of them were oncogenes, followed by TSGs and a few annotated as both categories:</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="annotated-heatmaps.html#cb100-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_cascade2_dist.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="annotated-heatmaps.html#cb106-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_cascade2_dist.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:cosmic-cascade2-dist"></span>
 <img src="img/cosmic_cascade2_dist.png" alt="CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset" width="1050" />
 <p class="caption">
-Figure 62: CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset
+Figure 67: CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset
 </p>
 </div>
 </div>
@@ -1088,7 +1095,7 @@ Figure 62: CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC
 <h3>Agreement (Parameterization vs Activity)</h3>
 <p>For the link-operator CASCADE 2.0 nodes we calculate the <strong>percent agreement</strong> between <strong>link-operator parameterization</strong> (<code>AND-NOT</code> =&gt; <span class="math inline">\(0\)</span>, <code>OR-NOT</code> =&gt; <span class="math inline">\(1\)</span>) and <strong>stable state activity</strong> (Inhibited state =&gt; <span class="math inline">\(0\)</span>, Active state =&gt; <span class="math inline">\(1\)</span>).
 The percent agreement is defined here as the number of matches (node has the link-operator <code>AND-NOT</code> (resp. <code>OR-NOT</code>) and it’s stable state activity value is <span class="math inline">\(0\)</span> (resp. <span class="math inline">\(1\)</span>)) divided by the total amount of models (<span class="math inline">\(4500\)</span>).</p>
-<p>Note that the models of the link-operator Gitsbe pool from the previous <a href="parameterization-vs-performance.html#bootstrap-simulations">bootstrap analysis</a> that we will use for the heatmaps, had precicely <span class="math inline">\(1\)</span> stable state each, making thus the aforementioned comparison/calculation much easier.</p>
+<p>Note that the models of the link-operator Gitsbe pool from the previous <a href="#bootstrap-simulations">bootstrap analysis</a> that we will use for the heatmaps, had precicely <span class="math inline">\(1\)</span> stable state each, making thus the aforementioned comparison/calculation much easier.</p>
 </div>
 </div>
 <div id="link-operator-mutated-models" class="section level2 unnumbered" number="">
@@ -1096,25 +1103,25 @@ The percent agreement is defined here as the number of matches (node has the lin
 <div class="blue-box">
 <p>See script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="annotated-heatmaps.html#cb101-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="annotated-heatmaps.html#cb107-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-ss-heat-1"></span>
 <img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 63: Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.
+Figure 68: Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="annotated-heatmaps.html#cb102-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="annotated-heatmaps.html#cb108-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-2"></span>
 <img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 64: Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.
+Figure 69: Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="annotated-heatmaps.html#cb103-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_combined_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="annotated-heatmaps.html#cb109-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_combined_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-3"></span>
 <img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown." width="2100" />
 <p class="caption">
-Figure 65: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.
+Figure 70: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.
 </p>
 </div>
 </div>
@@ -1123,27 +1130,27 @@ Figure 65: Combined stable states and parameterization heatmaps. Only the CASCAD
 <div class="blue-box">
 <p>See script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="annotated-heatmaps.html#cb104-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="annotated-heatmaps.html#cb110-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:topo-ss-heat-1"></span>
 <img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 66: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
+Figure 71: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="annotated-heatmaps.html#cb105-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-1"></span>
 <img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 67: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.
+Figure 72: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.
 </p>
 </div>
 <p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent of present</strong> in the models.
 We do not include the edges that are present in all models since there were the ones that had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm since we don’t risk losing connectivity when using topology mutations.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="annotated-heatmaps.html#cb106-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-2"></span>
 <img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 68: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.
+Figure 73: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.
 </p>
 </div>
 </div>
