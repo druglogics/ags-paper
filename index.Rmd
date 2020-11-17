@@ -3330,6 +3330,10 @@ See script [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-
 knitr::include_graphics(path = 'img/lo_ss_heat.png')
 ```
 
+:::{.green-box}
+Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.
+:::
+
 ```{r lo-heat-2, fig.cap='Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/lo_heat.png')
 ```
@@ -3337,6 +3341,14 @@ knitr::include_graphics(path = 'img/lo_heat.png')
 ```{r lo-heat-3, fig.cap='Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.'}
 knitr::include_graphics(path = 'img/lo_combined_heat.png')
 ```
+
+:::{.green-box}
+**High degree of agreement** between link-operator parameterization and stable state activity.
+
+Nodes of the second cluster (the most heterogeneous one) where the parameterization and stable state activity seem to be assigned randomly (i.e. in $\approx50\%$ of the total models a node is in an inhibited vs an active state, or has the `AND-NOT` vs the `OR-NOT` link-operator) we observe the high percent agreement scores.
+
+In the third cluster, where the models nodes are mostly in an active state (obeying the training data), we observe that the **parameterization does not affect the stable state activity** and that these nodes have mostly low connectivity ($<5$ regulators).
+:::
 
 ## Topology-mutated models {-}
 
@@ -3348,12 +3360,30 @@ See script [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-pape
 knitr::include_graphics(path = 'img/topo_ss_heat.png')
 ```
 
+:::{.green-box}
+Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.
+:::
+
 ```{r edge-heat-1, fig.cap='Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/edge_heat.png')
 ```
 
-Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent of present** in the models.
-We do not include the edges that are present in all models since there were the ones that had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm since we don't risk losing connectivity when using topology mutations.
+:::{.green-box}
+Looking at the above figure from left to right we have $4$ clusters:
+
+1. First cluster with edges that are **likely to stay** in the topology-mutated models. 
+These edges belong to a variety of pathways and can have both low and high target connectivity.
+2. Second cluster with edges that are **mostly present** in the topology-mutated models. 
+The first part of this cluster incorporates the edges that have target connectivity equal to $1$ (edges point to mediator nodes) and are thus uninteresting.
+The rest though have two distinguished characteristics: they are edges with high target connectivity ($\ge 5$ regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong to different pathways (i.e. they are *Cross-talk* edges).
+3. Third cluster with edges that are **mostly absent** in the topology-mutated models.
+Some of them are high target-connectivity nodes and most of them belong to the *TGF-b* pathway.
+4. Fourth cluster with edges that are **likely to be removed** in the topology-mutated models.
+These edges belong to a variety of pathways and mostly have low target connectivity.
+:::
+
+Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent or present** in the models.
+We do not include the edges that are present in all models since there were the ones that had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm (we don't lose connectivity when using topology mutations).
 
 ```{r edge-heat-2, fig.cap='Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown.'}
 knitr::include_graphics(path = 'img/edge_heat_stable.png')
