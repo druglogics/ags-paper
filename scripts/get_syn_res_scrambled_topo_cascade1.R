@@ -42,14 +42,15 @@ for (topo_file in list.files(path = topologies_dir, full.names = TRUE)) {
   topo_pat = stringr::str_c(topo_pat, "_", sep = "")
 
   # get type of scrambling (source node, target node, effect reversal, or all together?)
-  if (stringr::str_detect(string = topo_pat, pattern = "src_permut"))
+  if (stringr::str_detect(string = topo_pat, pattern = "src_permut")) {
     type = "source"
-  else if (stringr::str_detect(string = topo_pat, pattern = "trg_permut"))
+  } else if (stringr::str_detect(string = topo_pat, pattern = "trg_permut")) {
     type = "target"
-  else if (stringr::str_detect(string = topo_pat, pattern = "eff_permut"))
+  } else if (stringr::str_detect(string = topo_pat, pattern = "eff_permut")) {
     type = "effect"
-  else if (stringr::str_detect(string = topo_pat, pattern = "all_permut"))
+  } else if (stringr::str_detect(string = topo_pat, pattern = "all_permut")) {
     type = "all"
+  }
 
   res_dirs = list.files(path = syn_res_dir, pattern = topo_pat, full.names = TRUE)
 
