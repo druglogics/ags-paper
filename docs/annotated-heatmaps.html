@@ -1110,6 +1110,9 @@ The percent agreement is defined here as the number of matches (node has the lin
 Figure 68: Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.
 </p>
 </div>
+<div class="green-box">
+<p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.</p>
+</div>
 <div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="annotated-heatmaps.html#cb108-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-2"></span>
 <img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and connectivity annotations are shown." width="2100" />
@@ -1124,6 +1127,11 @@ Figure 69: Parameterization annotated heatmap for the link operator-mutated mode
 Figure 70: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.
 </p>
 </div>
+<div class="green-box">
+<p><strong>High degree of agreement</strong> between link-operator parameterization and stable state activity.</p>
+<p>Nodes of the second cluster (the most heterogeneous one) where the parameterization and stable state activity seem to be assigned randomly (i.e. in <span class="math inline">\(\approx50\%\)</span> of the total models a node is in an inhibited vs an active state, or has the <code>AND-NOT</code> vs the <code>OR-NOT</code> link-operator) we observe the high percent agreement scores.</p>
+<p>In the third cluster, where the models nodes are mostly in an active state (obeying the training data), we observe that the <strong>parameterization does not affect the stable state activity</strong> and that these nodes have mostly low connectivity (<span class="math inline">\(&lt;5\)</span> regulators).</p>
+</div>
 </div>
 <div id="topology-mutated-models" class="section level2 unnumbered" number="">
 <h2>Topology-mutated models</h2>
@@ -1137,6 +1145,9 @@ Figure 70: Combined stable states and parameterization heatmaps. Only the CASCAD
 Figure 71: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.
 </p>
 </div>
+<div class="green-box">
+<p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.</p>
+</div>
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-1"></span>
 <img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />
@@ -1144,8 +1155,22 @@ Figure 71: Stable state annotated heatmap for the topology-mutated models. A tot
 Figure 72: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.
 </p>
 </div>
-<p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent of present</strong> in the models.
-We do not include the edges that are present in all models since there were the ones that had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm since we don’t risk losing connectivity when using topology mutations.</p>
+<div class="green-box">
+<p>Looking at the above figure from left to right we have <span class="math inline">\(4\)</span> clusters:</p>
+<ol style="list-style-type: decimal">
+<li>First cluster with edges that are <strong>likely to stay</strong> in the topology-mutated models.
+These edges belong to a variety of pathways and can have both low and high target connectivity.</li>
+<li>Second cluster with edges that are <strong>mostly present</strong> in the topology-mutated models.
+The first part of this cluster incorporates the edges that have target connectivity equal to <span class="math inline">\(1\)</span> (edges point to mediator nodes) and are thus uninteresting.
+The rest though have two distinguished characteristics: they are edges with high target connectivity (<span class="math inline">\(\ge 5\)</span> regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong to different pathways (i.e. they are <em>Cross-talk</em> edges).</li>
+<li>Third cluster with edges that are <strong>mostly absent</strong> in the topology-mutated models.
+Some of them are high target-connectivity nodes and most of them belong to the <em>TGF-b</em> pathway.</li>
+<li>Fourth cluster with edges that are <strong>likely to be removed</strong> in the topology-mutated models.
+These edges belong to a variety of pathways and mostly have low target connectivity.</li>
+</ol>
+</div>
+<p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent or present</strong> in the models.
+We do not include the edges that are present in all models since there were the ones that had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm (we don’t lose connectivity when using topology mutations).</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-2"></span>
 <img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway and target connectivity annotations are shown." width="2100" />

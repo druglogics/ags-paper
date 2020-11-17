@@ -2483,6 +2483,8 @@ scrambled_topo_res %>%
 
 :::{.green-box}
 We observe that even **a small perturbation/violation/scrambling** of the curated topology (of any type) produces results close to random prediction that are significantly lower than the prediction results when using the curated CASCADE 2.0 topology.
+
+Note that even with **completely scrambled topologies** we get high ROC and PR AUC values (this is true for all types of scrambling expect the sign inversion), but these topologies (and the boolean ensemble model performance resulted from them) represent statistical outliers (they are more like the exception and not the rule so to speak).
 :::
 
 # CASCADE 2.0 Analysis (Topology Mutations) {-}
@@ -3840,6 +3842,10 @@ knitr::include_graphics(path = 'img/lo_ss_heat.png')
 <p class="caption">(\#fig:lo-ss-heat-1)Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and connectivity annotations are shown.</p>
 </div>
 
+:::{.green-box}
+Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.
+:::
+
 
 ```r
 knitr::include_graphics(path = 'img/lo_heat.png')
@@ -3860,6 +3866,14 @@ knitr::include_graphics(path = 'img/lo_combined_heat.png')
 <p class="caption">(\#fig:lo-heat-3)Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Connectivity and Percent Agreement annotations are shown.</p>
 </div>
 
+:::{.green-box}
+**High degree of agreement** between link-operator parameterization and stable state activity.
+
+Nodes of the second cluster (the most heterogeneous one) where the parameterization and stable state activity seem to be assigned randomly (i.e. in $\approx50\%$ of the total models a node is in an inhibited vs an active state, or has the `AND-NOT` vs the `OR-NOT` link-operator) we observe the high percent agreement scores.
+
+In the third cluster, where the models nodes are mostly in an active state (obeying the training data), we observe that the **parameterization does not affect the stable state activity** and that these nodes have mostly low connectivity ($<5$ regulators).
+:::
+
 ## Topology-mutated models {-}
 
 :::{.blue-box}
@@ -3876,6 +3890,10 @@ knitr::include_graphics(path = 'img/topo_ss_heat.png')
 <p class="caption">(\#fig:topo-ss-heat-1)Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and connectivity annotations are shown.</p>
 </div>
 
+:::{.green-box}
+Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.
+:::
+
 
 ```r
 knitr::include_graphics(path = 'img/edge_heat.png')
@@ -3886,8 +3904,22 @@ knitr::include_graphics(path = 'img/edge_heat.png')
 <p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway and target connectivity annotations are shown.</p>
 </div>
 
-Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent of present** in the models.
-We do not include the edges that are present in all models since there were the ones that had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm since we don't risk losing connectivity when using topology mutations.
+:::{.green-box}
+Looking at the above figure from left to right we have $4$ clusters:
+
+1. First cluster with edges that are **likely to stay** in the topology-mutated models. 
+These edges belong to a variety of pathways and can have both low and high target connectivity.
+2. Second cluster with edges that are **mostly present** in the topology-mutated models. 
+The first part of this cluster incorporates the edges that have target connectivity equal to $1$ (edges point to mediator nodes) and are thus uninteresting.
+The rest though have two distinguished characteristics: they are edges with high target connectivity ($\ge 5$ regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong to different pathways (i.e. they are *Cross-talk* edges).
+3. Third cluster with edges that are **mostly absent** in the topology-mutated models.
+Some of them are high target-connectivity nodes and most of them belong to the *TGF-b* pathway.
+4. Fourth cluster with edges that are **likely to be removed** in the topology-mutated models.
+These edges belong to a variety of pathways and mostly have low target connectivity.
+:::
+
+Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent or present** in the models.
+We do not include the edges that are present in all models since there were the ones that had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm (we don't lose connectivity when using topology mutations).
 
 
 ```r
@@ -3902,7 +3934,7 @@ knitr::include_graphics(path = 'img/edge_heat_stable.png')
 # Reproduce Data & Simulation Results {-}
 
 :::{.note #zenodo-doi-link}
-We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4176156.svg)](https://doi.org/10.5281/zenodo.4176156)
+We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4277706.svg)](https://doi.org/10.5281/zenodo.4277706)
 :::
 
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-#repro123}
@@ -4026,6 +4058,7 @@ In addition, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/ma
 - `lo_df.rds`, `lo_ss_df.rds`: heatmap data for the link-operator models - see [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) script.
 - `node_pathway_annotations_cascade2.csv`, `node_path_tbl.rds`: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the [node_path_annot_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R) script.
 - `cosmic_cancer_gene_census_all_29102020.tsv`: Cancer Gene Census COSMIC data downloaded from https://cancer.sanger.ac.uk/census (for academic purposes)
+- `cosmic_tbl.rds`: a compressed file with a `tibble` object having the CASCADE 2.0 nodes and their respective COSMIC cancer role annotation (see [get_cosmic_data_annot.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R) script).
 - `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 - `res_fit_aucs_cascade1.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-cascade1) section (CASCADE 1.0, link operator mutations).
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-lo) section (CASCADE 2.0, link operator mutations).
@@ -4033,6 +4066,7 @@ In addition, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/ma
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
 - `boot_cascade1_res.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
 - `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
+- `scrambled_topo_res_cascade2.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade2.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade2) in CASCADE 2.0.
 
 # R session info {-}
 

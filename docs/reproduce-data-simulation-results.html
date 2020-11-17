@@ -1035,7 +1035,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="reproduce-data-simulation-results" class="section level1 unnumbered" number="">
 <h1>Reproduce Data &amp; Simulation Results</h1>
 <div id="zenodo-doi-link" class="note">
-<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.4176156"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4176156.svg" alt="DOI" /></a></p>
+<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.4277706"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4277706.svg" alt="DOI" /></a></p>
 </div>
 <div id="repro123" class="section level2 unnumbered" number="">
 <h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
@@ -1161,6 +1161,7 @@ The <code>results</code> directory has 3 main sub-directories:</p>
 <li><code>lo_df.rds</code>, <code>lo_ss_df.rds</code>: heatmap data for the link-operator models - see <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> script.</li>
 <li><code>node_pathway_annotations_cascade2.csv</code>, <code>node_path_tbl.rds</code>: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R">node_path_annot_cascade2.R</a> script.</li>
 <li><code>cosmic_cancer_gene_census_all_29102020.tsv</code>: Cancer Gene Census COSMIC data downloaded from <a href="https://cancer.sanger.ac.uk/census" class="uri">https://cancer.sanger.ac.uk/census</a> (for academic purposes)</li>
+<li><code>cosmic_tbl.rds</code>: a compressed file with a <code>tibble</code> object having the CASCADE 2.0 nodes and their respective COSMIC cancer role annotation (see <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> script).</li>
 <li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
 <li><code>res_fit_aucs_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1">Fitness vs Ensemble Performance</a> section (CASCADE 1.0, link operator mutations).</li>
 <li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, link operator mutations).</li>
@@ -1168,6 +1169,7 @@ The <code>results</code> directory has 3 main sub-directories:</p>
 <li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#boot-comp-param">Bootstrap Simulations</a> section.</li>
 <li><code>boot_cascade1_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated">scrambled topologies investigation</a> in CASCADE 1.0.</li>
 <li><code>scrambled_topo_res_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1">scrambled topologies investigation</a> in CASCADE 1.0.</li>
+<li><code>scrambled_topo_res_cascade2.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade2.R">get_syn_res_scrambled_topo_cascade2.R</a>, related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2">scrambled topologies investigation</a> in CASCADE 2.0.</li>
 </ul>
 </div>
 </div>
