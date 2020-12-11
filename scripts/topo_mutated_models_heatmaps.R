@@ -124,18 +124,31 @@ node_path_tbl = readRDS(file = 'data/node_path_tbl.rds')
 # get CASCADE 2.0
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
-# find number of regulators (connectivity) per node
+# find number of regulators (connectivity, in-degree) per node
 targets = edge_tbl %>% distinct(target) %>% pull()
 node_conn_map = sapply(targets, function(trg){
   # get number of regulators
   edge_tbl %>% filter(target == trg) %>% distinct(source) %>% summarise(n()) %>% pull()
 })
 
-# make a vector of edge-target connectivity annotations
+# find source connectivity (out-degree) per node
+sources = edge_tbl %>% distinct(source) %>% pull()
+node_src_conn_map = sapply(sources, function(src) {
+  edge_tbl %>% filter(source == src) %>% distinct(target) %>% tally() %>% pull()
+})
+
+# make a vector of edge-target in-degree connectivity annotations
 edge_conn_map = sapply(colnames(edge_mat), function(edge) {
   split_res = stringr::str_split(edge, pattern = ' ', simplify = TRUE)
   target = split_res[3]
-  unname(node_conn_map[target])
+  unname(node_conn_map[target]) # in-degree of edge's target
+})
+
+# make a vector of edge-source out-degree connectivity annotations
+edge_src_conn_map = sapply(colnames(edge_mat), function(edge) {
+  split_res = stringr::str_split(edge, pattern = ' ', simplify = TRUE)
+  source = split_res[1]
+  unname(node_src_conn_map[source]) # out-degree or edge's source
 })
 
 # Map pathway names to distinct colors
@@ -147,6 +160,32 @@ pathway_colors = c('Cross-talk' = 'black', 'MAPK' = 'red',
 
 # make a vector of node-pathway annotations
 node_path_map = node_path_tbl %>% pull(var = path_abbrev, name = node)
+
+# drug target edge annotation (drug target can be the source of an edge,
+# the target, both source and target or none of them!)
+node_drug_target_map = node_path_tbl %>% pull(is_target)
+names(node_drug_target_map) = node_path_tbl %>% pull(node)
+
+edge_drug_target_map = sapply(colnames(edge_mat), function(edge) {
+  split_res = stringr::str_split(edge, pattern = ' ', simplify = TRUE)
+  source = split_res[1]
+  target = split_res[3]
+  is_edge_src_drug_target = unname(node_drug_target_map[source])
+  is_edge_trg_drug_target = unname(node_drug_target_map[target])
+  if (is_edge_src_drug_target & is_edge_trg_drug_target)
+    return('both')
+  if (is_edge_src_drug_target & !is_edge_trg_drug_target)
+    return('source')
+  if (!is_edge_src_drug_target & is_edge_trg_drug_target)
+    return('target')
+  if (!is_edge_src_drug_target & !is_edge_trg_drug_target)
+    return('none')
+})
+
+# colors for edge-drug target annotation
+set1_col = RColorBrewer::brewer.pal(9, 'Set1')
+drug_target_colors = c('both' = set1_col[2], 'source' = set1_col[1],
+  'target' = set1_col[3], 'none' = 'black')
 
 # COSMIC annotation
 node_cosmic_role = readRDS(file = 'data/cosmic_tbl.rds') # see 'get_cosmic_data_annot.R'
@@ -229,12 +268,17 @@ ggsave(filename = 'img/edge_path_dist.png', dpi = "print", width = 7, height = 5
 # Extra:
 # - Column K-means clustering (4)
 # - Pathway Annotation
-# - Target Node Connectivity
+# - Drug Target Annotation
+# - Target Node In-degree Connectivity
+# - Source Node Out-degree Connectivity
 
 # define annotations
 ha_edges = HeatmapAnnotation(Pathway = edge_path_map[colnames(edge_mat)],
-  `Target Connectivity` = anno_barplot(x = edge_conn_map[colnames(edge_mat)]),
-  col = list(Pathway = pathway_colors))
+  `Drug Target` = edge_drug_target_map[colnames(edge_mat)],
+  `Target In-degree` = anno_barplot(x = edge_conn_map[colnames(edge_mat)]),
+  `Source Out-degree` = anno_barplot(x = edge_src_conn_map[colnames(edge_mat)]),
+  col = list(Pathway = pathway_colors, `Drug Target` = drug_target_colors),
+  gap = unit(c(1,1,5), "points"))
 
 indexes = sample(1:nrow(edge_mat), size = 500)
 
@@ -246,8 +290,8 @@ edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
   column_names_gp = gpar(fontsize = 1), column_km = 4,
   col = edge_colors, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = TRUE,
-  heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')))
-  #,use_raster = TRUE, raster_quality = 20)
+  heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')),
+  use_raster = TRUE, raster_quality = 4)
 
 png(filename = "img/edge_heat.png", width = 7, height = 5, units = "in", res = 600)
 draw(edge_heat, annotation_legend_side = "right", merge_legends = FALSE)
@@ -261,6 +305,9 @@ dev.off()
 # - Column K-means clustering (2)
 # - Pathway Annotation
 # - Target Node Connectivity
+# - Drug Target Annotation
+# - Target Node In-degree Connectivity
+# - Source Node Out-degree Connectivity
 
 # Subset the matrix data to the 'stable' edges only
 edge_avg = edge_mat %>% colSums()/nrow(edge_mat)
@@ -276,8 +323,12 @@ stopifnot(all(names(stable_edge_path_map) == colnames(stable_edge_mat)))
 
 # Define annotations
 ha_edges_stable = HeatmapAnnotation(Pathway = stable_edge_path_map,
-  `Target Connectivity` = anno_barplot(x = edge_conn_map[colnames(stable_edge_mat)]),
-  col = list(Pathway = pathway_colors))
+  `Drug Target` = edge_drug_target_map[colnames(stable_edge_mat)],
+  `Target In-degree` = anno_barplot(x = edge_conn_map[colnames(stable_edge_mat)]),
+  `Source Out-degree` = anno_barplot(x = edge_src_conn_map[colnames(stable_edge_mat)]),
+  annotation_name_gp = gpar(fontsize = c(12,12,11,12)),
+  col = list(Pathway = pathway_colors, `Drug Target` = drug_target_colors),
+  gap = unit(c(1,2,5), "points"))
 
 set.seed(42)
 edge_heat_stable = ComplexHeatmap::Heatmap(matrix = stable_edge_mat,
@@ -306,7 +357,6 @@ dev.off()
 # - COSMIC annotation
 
 # define coloring for the COSMIC annotation
-set1_col = RColorBrewer::brewer.pal(9, 'Set1')
 cosmic_colors = c('Both' = set1_col[4], 'oncogene' = set1_col[1], 'TSG' = set1_col[7])
 
 # define annotations
