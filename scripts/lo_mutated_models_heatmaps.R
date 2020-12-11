@@ -80,12 +80,22 @@ names(node_path_map) = node_path_tbl %>% pull(node)
 # get CASCADE 2.0
 edge_tbl = readr::read_delim(file = 'https://raw.githubusercontent.com/druglogics/cascade/master/cascade_2.0.sif', delim = " ", col_names = c('source', 'effect', 'target'), col_types = "ccc")
 
-# find number of regulators (connectivity) per node
+# find number of regulators (target connectivity, in-degree) per node
 targets = edge_tbl %>% distinct(target) %>% pull()
-node_conn_map = sapply(targets, function(trg){
+node_conn_map = sapply(targets, function(trg) {
   # get number of regulators
   edge_tbl %>% filter(target == trg) %>% distinct(source) %>% summarise(n()) %>% pull()
 })
+
+# find source connectivity (out-degree)
+sources = edge_tbl %>% distinct(source) %>% pull()
+node_src_conn_map = sapply(sources, function(src) {
+  edge_tbl %>% filter(source == src) %>% distinct(target) %>% tally() %>% pull()
+})
+
+# drug target vector annotation
+node_drug_target_map = node_path_tbl %>% pull(is_target)
+names(node_drug_target_map) = node_path_tbl %>% pull(node)
 
 # COSMIC annotation
 node_cosmic_role = readRDS(file = 'data/cosmic_tbl.rds') # see 'get_cosmic_data_annot.R'
@@ -122,6 +132,9 @@ for (node in names(steady_state)) {
 }
 
 training_colors = c('Inhibited' = 'red', 'Active' = 'green4')
+
+# define coloring for drug target annotation
+drug_target_colors = c('FALSE' = 'white', 'TRUE' = 'purple')
 
 # define coloring for the COSMIC annotation
 set1_col = RColorBrewer::brewer.pal(9, 'Set1')
@@ -246,7 +259,8 @@ dev.off()
 # - Column K-means clustering (3)
 # - Training data annotation
 # - Pathway annotation
-# - Connectivity annotation
+# - Drug Target Annotation
+# - Source and Target Connectivity annotations
 # - COSMIC annotation
 # - Percent Agreement between link-operator and stable state activity
 
@@ -258,7 +272,7 @@ heat_ss = Heatmap(matrix = lo_ss_mat[,colnames(lo_mat)],
   show_row_dend = FALSE, #row_title_rot = 90,
   show_heatmap_legend = TRUE, column_title = "Combined Heatmaps",
   heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')),
-  use_raster = TRUE, raster_quality = 3)
+  use_raster = TRUE, raster_quality = 4)
 
 ro_ss = row_order(heat_ss)
 
@@ -274,15 +288,17 @@ heat_param = Heatmap(matrix = lo_mat,
 ha = HeatmapAnnotation(Training = node_training_state_map[colnames(lo_mat)],
   COSMIC = node_cosmic_map[colnames(lo_mat)],
   Pathway = node_path_map[colnames(lo_mat)],
-  Connectivity = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
+  `Drug Targets` = node_drug_target_map[colnames(lo_mat)],
+  `Target Connectivity` = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
+  `Source Connectivity` = anno_barplot(x = node_src_conn_map[colnames(lo_mat)]),
   Agreement = anno_barplot(x = lo_ss_aggreement, gp = gpar(fill = 'black')),
-  col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
+  col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors, `Drug Targets` = drug_target_colors),
   na_col = "white",
   annotation_name_side = 'right', annotation_name_rot = list(Connectivity = 0),
   annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
-  show_legend = c("Training" = FALSE), gap = unit(c(1,1,2,5), "points"))
+  show_legend = c(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE), gap = unit(c(1,1,1,2,5,5), "points"))
 
-column_name_annot = HeatmapAnnotation(node_names = anno_text(colnames(lo_mat), gp = gpar(fontsize = 8)))
+column_name_annot = HeatmapAnnotation(node_names = anno_text(colnames(lo_mat), gp = gpar(fontsize = 6)))
 
 # we combine the heatmaps vertically along with the annotations
 heat_list = heat_ss %v% heat_param %v% ha %v% column_name_annot
