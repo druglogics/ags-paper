@@ -3270,7 +3270,7 @@ For the first pool, the parameterization is presented with a **link-operator hea
 ### Pathways {-}
 
 Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in **Fig. 1A** of [@Niederdorfer2020].
-The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.tsv).
+The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.csv).
 
 We present the **node and edge distribution** across the pathways in CASCADE 2.0.
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as *Cross-talk*:
