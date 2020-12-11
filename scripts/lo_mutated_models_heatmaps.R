@@ -70,7 +70,7 @@ node_path_tbl = readRDS(file = 'data/node_path_tbl.rds')
 # Map pathway names to distinct colors
 pathway_colors = c('MAPK' = 'red', 'TGF-b' = '#4FC601', 'Wnt' = 'blue',
   'Rho' = '#A1C299', 'Cell Cycle' = '#7A4900', 'JAK-STAT' = '#1CE6FF',
-  'NF-kB' = '#FF4A46', 'Apoptosis' = '#B903AA', 'RTK' = '#B79762',
+  'NF-kB' = '#FFB500', 'Apoptosis' = '#B903AA', 'RTK' = '#B79762',
   'PI3K-AKT' = '#3B5DFF', 'mTOR' = '#00C2A0')
 
 # make a vector of node-pathway annotations
