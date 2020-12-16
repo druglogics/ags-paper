@@ -32,7 +32,7 @@
   
 <link rel="prev" href="parameterization-vs-performance.html"/>
 <link rel="next" href="reproduce-data-simulation-results.html"/>
-<script src="libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,9 +51,7 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.16/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -1158,27 +1156,27 @@ Figure 71: Stable state annotated heatmap for the topology-mutated models. A tot
 </div>
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-1"></span>
-<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
+<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 72: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
+Figure 72: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
 </p>
 </div>
 <div class="green-box">
-<p>Looking at the above figure from left to right we have <span class="math inline">\(4\)</span> clusters:</p>
+<p>Looking at the above figure from left to right we have <span class="math inline">\(5\)</span> clusters:</p>
 <ol style="list-style-type: decimal">
-<li>First cluster with edges that are <strong>likely to stay</strong> in the topology-mutated models.
-These edges belong to a variety of pathways and can have both low and high target in-degree connectivity.</li>
+<li>First cluster has all the edges whose target has a single regulator and these are not removed by the topology mutations in Gitsbe, to preserve the network connectivity.</li>
 <li>Second cluster with edges that are <strong>mostly present</strong> in the topology-mutated models.
-The first part of this cluster incorporates the edges that have target in-degree connectivity equal to <span class="math inline">\(1\)</span> (edges point to mediator nodes) and are thus uninteresting.
-The rest though have two distinguished characteristics: they are edges with high target connectivity (<span class="math inline">\(\ge 5\)</span> regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong to different pathways (i.e. they are <em>Cross-talk</em> edges).</li>
-<li>Third cluster with edges that are <strong>mostly absent</strong> in the topology-mutated models.
-Some of them are high target-connectivity nodes and most of them belong to the <em>TGF-b</em> pathway.</li>
-<li>Fourth cluster with edges that are <strong>likely to be removed</strong> in the topology-mutated models.
+These edges have two distinguished characteristics: they show high target connectivity (<span class="math inline">\(\ge 5\)</span> regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong mostly to different pathways (i.e. they are <em>Cross-talk</em> edges).</li>
+<li>Third cluster with edges that have a <strong>~50% percent chance to stay</strong> in the topology-mutated models.
+These edges belong to a variety of pathways and can have both low and high target in-degree connectivity.</li>
+<li>Fourth cluster with edges that <strong>will most likely be removed</strong> in the topology-mutated models.
 These edges belong to a variety of pathways and mostly have low target in-degree connectivity.</li>
+<li>Fifth cluster with edges that are <strong>mostly absent</strong> in the topology-mutated models.
+Some of them are high target-connectivity nodes and most of them belong to the <em>TGF-b</em> pathway.</li>
 </ol>
 </div>
-<p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent or present</strong> in the models.
-We do not include the edges that are present in all models since there were the ones whose target had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm (we don’t lose connectivity when using topology mutations).</p>
+<p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent or present</strong> in the models (so the second and last cluster).
+We do not include the edges that are present in all models (cluster 1) since there were the ones whose target had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm (we don’t lose connectivity when using topology mutations).</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-2"></span>
 <img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />

@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 12 December, 2020"
+date: "Last updated: 16 December, 2020"
 description: "AGS paper - SI"
 url: 'https\://username.github.io/reponame/'
 github-repo: "username/reponame"
@@ -3907,26 +3907,26 @@ knitr::include_graphics(path = 'img/edge_heat.png')
 ```
 
 <div class="figure">
-<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
-<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 4 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.</p>
+<img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
+<p class="caption">(\#fig:edge-heat-1)Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.</p>
 </div>
 
 :::{.green-box}
-Looking at the above figure from left to right we have $4$ clusters:
+Looking at the above figure from left to right we have $5$ clusters:
 
-1. First cluster with edges that are **likely to stay** in the topology-mutated models. 
-These edges belong to a variety of pathways and can have both low and high target in-degree connectivity.
+1. First cluster has all the edges whose target has a single regulator and these are not removed by the topology mutations in Gitsbe, to preserve the network connectivity.
 2. Second cluster with edges that are **mostly present** in the topology-mutated models. 
-The first part of this cluster incorporates the edges that have target in-degree connectivity equal to $1$ (edges point to mediator nodes) and are thus uninteresting.
-The rest though have two distinguished characteristics: they are edges with high target connectivity ($\ge 5$ regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong to different pathways (i.e. they are *Cross-talk* edges).
-3. Third cluster with edges that are **mostly absent** in the topology-mutated models.
-Some of them are high target-connectivity nodes and most of them belong to the *TGF-b* pathway.
-4. Fourth cluster with edges that are **likely to be removed** in the topology-mutated models.
+These edges have two distinguished characteristics: they show high target connectivity ($\ge 5$ regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong mostly to different pathways (i.e. they are *Cross-talk* edges).
+3. Third cluster with edges that have a **~50% percent chance to stay** in the topology-mutated models. 
+These edges belong to a variety of pathways and can have both low and high target in-degree connectivity.
+4. Fourth cluster with edges that **will most likely be removed** in the topology-mutated models.
 These edges belong to a variety of pathways and mostly have low target in-degree connectivity.
+5. Fifth cluster with edges that are **mostly absent** in the topology-mutated models.
+Some of them are high target-connectivity nodes and most of them belong to the *TGF-b* pathway.
 :::
 
-Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent or present** in the models.
-We do not include the edges that are present in all models since there were the ones whose target had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm (we don't lose connectivity when using topology mutations).
+Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to **include only the edges that are either mostly absent or present** in the models (so the second and last cluster).
+We do not include the edges that are present in all models (cluster 1) since there were the ones whose target had **only $1$ regulator** and as such they couldn't be removed by the Gitsbe algorithm (we don't lose connectivity when using topology mutations).
 
 
 ```r
@@ -4096,57 +4096,58 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  abind_1.4-5              assertthat_0.2.1         backports_1.1.10        
+  abind_1.4-5              assertthat_0.2.1         backports_1.2.1         
   base64enc_0.1.3          BH_1.72.0.3              bookdown_0.21           
-  boot_1.3.25              broom_0.7.2              callr_3.5.1             
-  car_3.0-10               carData_3.0-4            cellranger_1.1.0        
-  circlize_0.4.10          Ckmeans.1d.dp_4.3.3      cli_2.1.0               
-  clipr_0.7.1              clue_0.3-57              cluster_2.1.0           
-  codetools_0.2-16         colorspace_1.4-1         compiler_3.6.3          
-  ComplexHeatmap_2.2.0     conquer_1.0.2            corrplot_0.84           
-  cowplot_1.1.0            cpp11_0.2.3              crayon_1.3.4            
-  crosstalk_1.1.0.1        curl_4.3                 data.table_1.13.2       
-  desc_1.2.0               digest_0.6.27            dplyr_1.0.2             
-  DT_0.16                  ellipsis_0.3.1           emba_0.1.8              
-  equatiomatic_0.1.0       evaluate_0.14            fansi_0.4.1             
-  farver_2.0.3             forcats_0.5.0            foreach_1.5.1           
-  foreign_0.8-75           gbRd_0.4-11              generics_0.0.2          
-  GetoptLong_1.0.4         ggplot2_3.3.2            ggpubr_0.4.0            
-  ggrepel_0.8.2            ggsci_2.9                ggsignif_0.6.0          
-  glmnet_4.0-2             GlobalOptions_0.1.2      glue_1.4.2              
-  graphics_3.6.3           grDevices_3.6.3          grid_3.6.3              
-  gridExtra_2.3            gtable_0.3.0             haven_2.3.1             
-  highr_0.8                hms_0.5.3                htmltools_0.5.0         
-  htmlwidgets_1.5.2        igraph_1.2.6             isoband_0.2.2           
-  iterators_1.0.13         jsonlite_1.7.1           knitr_1.30              
-  labeling_0.4.2           later_1.1.0.1            latex2exp_0.4.0         
-  lattice_0.20-41          lazyeval_0.2.2           lifecycle_0.2.0         
-  lme4_1.1.25              magrittr_1.5             MAMSE_0.2-1             
-  maptools_1.0.2           markdown_1.1             MASS_7.3.53             
-  Matrix_1.2-18            MatrixModels_0.4.1       matrixStats_0.57.0      
-  methods_3.6.3            mgcv_1.8.33              mime_0.9                
-  minqa_1.2.4              munsell_0.5.0            nlme_3.1.149            
-  nloptr_1.2.2.2           nnet_7.3.14              openxlsx_4.2.2          
-  parallel_3.6.3           pbkrtest_0.4.8.6         pillar_1.4.6            
-  pkgbuild_1.1.0           pkgconfig_2.0.3          pkgload_1.1.0           
-  png_0.1-7                polynom_1.4.0            praise_1.0.0            
-  prettyunits_1.1.1        processx_3.4.4           progress_1.2.2          
-  promises_1.1.1           PRROC_1.3.1              ps_1.4.0                
-  purrr_0.3.4              quantreg_5.74            R6_2.4.1                
-  rbibutils_1.3            RColorBrewer_1.1-2       Rcpp_1.0.5              
-  RcppArmadillo_0.10.1.0.0 RcppEigen_0.3.3.7.0      Rdpack_2.0              
-  readr_1.4.0              readxl_1.3.1             rematch_1.0.1           
+  boot_1.3.25              brio_1.1.0               broom_0.7.2             
+  callr_3.5.1              car_3.0-10               carData_3.0-4           
+  cellranger_1.1.0         circlize_0.4.11          Ckmeans.1d.dp_4.3.3     
+  cli_2.2.0                clipr_0.7.1              clue_0.3-58             
+  cluster_2.1.0            codetools_0.2-18         colorspace_2.0-0        
+  compiler_3.6.3           ComplexHeatmap_2.2.0     conquer_1.0.2           
+  corrplot_0.84            cowplot_1.1.0            cpp11_0.2.4             
+  crayon_1.3.4             crosstalk_1.1.0.1        curl_4.3                
+  data.table_1.13.4        desc_1.2.0               diffobj_0.3.2           
+  digest_0.6.27            dplyr_1.0.2              DT_0.16                 
+  ellipsis_0.3.1           emba_0.1.8               equatiomatic_0.1.0      
+  evaluate_0.14            fansi_0.4.1              farver_2.0.3            
+  forcats_0.5.0            foreach_1.5.1            foreign_0.8-75          
+  gbRd_0.4-11              generics_0.1.0           GetoptLong_1.0.5        
+  ggplot2_3.3.2            ggpubr_0.4.0             ggrepel_0.8.2           
+  ggsci_2.9                ggsignif_0.6.0           glmnet_4.0-2            
+  GlobalOptions_0.1.2      glue_1.4.2               graphics_3.6.3          
+  grDevices_3.6.3          grid_3.6.3               gridExtra_2.3           
+  gtable_0.3.0             haven_2.3.1              highr_0.8               
+  hms_0.5.3                htmltools_0.5.0          htmlwidgets_1.5.3       
+  igraph_1.2.6             isoband_0.2.3            iterators_1.0.13        
+  jsonlite_1.7.2           knitr_1.30               labeling_0.4.2          
+  later_1.1.0.1            latex2exp_0.4.0          lattice_0.20-41         
+  lazyeval_0.2.2           lifecycle_0.2.0          lme4_1.1.26             
+  magrittr_2.0.1           MAMSE_0.2-1              maptools_1.0.2          
+  markdown_1.1             MASS_7.3.53              Matrix_1.2-18           
+  MatrixModels_0.4.1       matrixStats_0.57.0       methods_3.6.3           
+  mgcv_1.8.33              mime_0.9                 minqa_1.2.4             
+  munsell_0.5.0            nlme_3.1.151             nloptr_1.2.2.2          
+  nnet_7.3.14              openxlsx_4.2.3           parallel_3.6.3          
+  pbkrtest_0.4.8.6         pillar_1.4.7             pkgbuild_1.1.0          
+  pkgconfig_2.0.3          pkgload_1.1.0            png_0.1-7               
+  polynom_1.4.0            praise_1.0.0             prettyunits_1.1.1       
+  processx_3.4.5           progress_1.2.2           promises_1.1.1          
+  PRROC_1.3.1              ps_1.5.0                 purrr_0.3.4             
+  quantreg_5.75            R6_2.5.0                 rbibutils_2.0           
+  RColorBrewer_1.1-2       Rcpp_1.0.5               RcppArmadillo_0.10.1.2.0
+  RcppEigen_0.3.3.7.0      Rdpack_2.1               readr_1.4.0             
+  readxl_1.3.1             rematch_1.0.1            rematch2_2.1.2          
   rio_0.5.16               rje_1.10.16              rjson_0.2.20            
-  rlang_0.4.8              rmarkdown_2.5            rprojroot_1.3.2         
-  rstatix_0.6.0            rstudioapi_0.11          scales_1.1.1            
+  rlang_0.4.9              rmarkdown_2.6            rprojroot_2.0.2         
+  rstatix_0.6.0            rstudioapi_0.13          scales_1.1.1            
   shape_1.4.5              sp_1.4.4                 SparseM_1.78            
   splines_3.6.3            statmod_1.4.35           stats_3.6.3             
   stringi_1.5.3            stringr_1.4.0            survival_3.2-7          
-  testthat_2.3.2           tibble_3.0.4             tidyr_1.1.2             
-  tidyselect_1.1.0         tinytex_0.26             tools_3.6.3             
+  testthat_3.0.0           tibble_3.0.4             tidyr_1.1.2             
+  tidyselect_1.1.0         tinytex_0.28             tools_3.6.3             
   usefun_0.4.8             utf8_1.1.4               utils_3.6.3             
-  vctrs_0.3.4              viridisLite_0.3.0        visNetwork_2.0.9        
-  withr_2.3.0              xfun_0.18                xml2_1.3.2              
+  vctrs_0.3.5              viridisLite_0.3.0        visNetwork_2.0.9        
+  waldo_0.2.3              withr_2.3.0              xfun_0.19               
   yaml_2.2.1               zip_2.1.1               
 ```
 
