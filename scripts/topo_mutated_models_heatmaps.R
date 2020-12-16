@@ -283,11 +283,20 @@ ha_edges = HeatmapAnnotation(Pathway = edge_path_map[colnames(edge_mat)],
 indexes = sample(1:nrow(edge_mat), size = 500)
 
 set.seed(42)
+cl = kmeans(t(edge_mat), centers = 4)$cluster
+
+# hack: split the 3rd cluster to 2 separate ones, in order to distinguish
+# the edges whose target has in-degree 1 (a single regulator)
+tmp_edge_trg_reg = edge_conn_map[names(cl)[cl == 3]]
+edges_with_single_reg_targets = names(tmp_edge_trg_reg)[tmp_edge_trg_reg == 1]
+cl[edges_with_single_reg_targets] = 5
+
 edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
   #matrix = edge_mat[indexes, ], # take a subset for testing
   name = "edge_heatmap", bottom_annotation = ha_edges,
   column_title = "Model topology parameterization", column_title_gp = gpar(fontsize = 20),
-  column_names_gp = gpar(fontsize = 1), column_km = 4,
+  column_names_gp = gpar(fontsize = 1),
+  column_split = factor(cl, levels = c(5,3,2,1,4)), cluster_column_slices = FALSE,
   col = edge_colors, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')),
