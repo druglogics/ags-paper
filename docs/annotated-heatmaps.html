@@ -10,10 +10,10 @@
 
   <meta property="og:title" content="Annotated Heatmaps | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://username.github.io/reponame/" />
+  <meta property="og:url" content="https://druglogics.github.io/ags-paper/" />
   
   <meta property="og:description" content="AGS paper - SI" />
-  <meta name="github-repo" content="username/reponame" />
+  <meta name="github-repo" content="druglogics/ags-paper" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Annotated Heatmaps | AGS paper - Supplementary Information (SI)" />
@@ -874,7 +874,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./index.html">DrugLogics Paper: An AGS story</a></li>
+<li><a href="./index.html">Sections</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a>
@@ -1044,7 +1044,7 @@ For the first pool, the parameterization is presented with a <strong>link-operat
 <div id="pathways" class="section level3 unnumbered" number="">
 <h3>Pathways</h3>
 <p>Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in <strong>Fig. 1A</strong> of <span class="citation">(Niederdorfer et al. <a href="references.html#ref-Niederdorfer2020" role="doc-biblioref">2020</a>)</span>.
-The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file <a href="https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.csv">here</a>.</p>
+The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file <a href="https://github.com/druglogics/ags-paper/blob/main/data/node_pathway_annotations_cascade2.csv">here</a>.</p>
 <p>We present the <strong>node and edge distribution</strong> across the pathways in CASCADE 2.0.
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as <em>Cross-talk</em>:</p>
 <div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="annotated-heatmaps.html#cb105-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
@@ -1086,7 +1086,7 @@ From the COSMIC genes that we got back, we did not restrict them to a particular
 We kept cancer genes that were annotated as both TSGs and fusion or oncogenes and fusion genes and maintained only the TSG or oncogene annotation tag (discarding only the fusion tag).
 Lastly note that for the CASCADE 2.0 nodes that represent families, complexes, etc. and they include a few COSMIC genes in their membership, we use a majority rule to decide which cancer role to assign to these nodes.</p>
 <div class="blue-box">
-<p>See the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> for more details.</p>
+<p>See the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> for more details.</p>
 </div>
 <p>A total of <span class="math inline">\(52\)</span> CASCADE 2.0 nodes were annotated and in the following figure we can see that most of them were oncogenes, followed by TSGs and a few annotated as both categories:</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="annotated-heatmaps.html#cb106-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_cascade2_dist.png&#39;</span>)</span></code></pre></div>
@@ -1107,7 +1107,7 @@ The percent agreement is defined here as the number of matches (node has the lin
 <div id="link-operator-mutated-models" class="section level2 unnumbered" number="">
 <h2>Link-Operator mutated models</h2>
 <div class="blue-box">
-<p>See script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
+<p>See script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="annotated-heatmaps.html#cb107-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-ss-heat-1"></span>
@@ -1142,7 +1142,7 @@ Figure 70: Combined stable states and parameterization heatmaps. Only the CASCAD
 <div id="topology-mutated-models" class="section level2 unnumbered" number="">
 <h2>Topology-mutated models</h2>
 <div class="blue-box">
-<p>See script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
+<p>See script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
 <div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="annotated-heatmaps.html#cb110-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:topo-ss-heat-1"></span>

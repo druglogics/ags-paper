@@ -10,10 +10,10 @@
 
   <meta property="og:title" content="CASCADE 1.0 Analysis | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://username.github.io/reponame/" />
+  <meta property="og:url" content="https://druglogics.github.io/ags-paper/" />
   
   <meta property="og:description" content="AGS paper - SI" />
-  <meta name="github-repo" content="username/reponame" />
+  <meta name="github-repo" content="druglogics/ags-paper" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="CASCADE 1.0 Analysis | AGS paper - Supplementary Information (SI)" />
@@ -874,7 +874,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./index.html">DrugLogics Paper: An AGS story</a></li>
+<li><a href="./index.html">Sections</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Intro</a>
@@ -1740,9 +1740,9 @@ The <span class="math inline">\(4\)</span> types of scrambling are:</p>
 </ul>
 <p>Note that each type of scrambling produces a topology with the same input and output degree distribution as the original one and as such, the scale-free property of the CASCADE 1.0 topology remains unchanged in the scrambled topologies.</p>
 <p>For each different type of scrambling, we make <span class="math inline">\(10\)</span> random topologies for each expected similarity score between the randomized and the curated topology, ranging from <span class="math inline">\(0\)</span> similarity to <span class="math inline">\(0.98\)</span> with a total of <span class="math inline">\(22\)</span> <em>steps</em>, thus <span class="math inline">\(10\times22=220\)</span> random topologies per different type of scrambling.
-See more details on how to generate these topologies in the script <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies_cascade1.R">gen_scrambled_topologies_cascade1.R</a>.</p>
-<p>To get the drug combination predictions for each scrambled topology, we executed the <code>druglogics-synergy</code> module with the default configuration (<span class="math inline">\(50\)</span> simulations per topology, for both <em>calibrated</em> to steady state and <em>random</em> proliferative models, using the <em>Bliss</em> synergy assessment method in <code>Drabme</code>) - see more info on the <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_scrambled_topo_cascade1.sh">run_druglogics_synergy_scrambled_topo_cascade1.sh</a> script.</p>
-<p>We calculate the normalized predictor performance (<span class="math inline">\(calibrated - random\)</span>) for each topology-specific simulation and tidy up the result data in <a href="https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>.</p>
+See more details on how to generate these topologies in the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/gen_scrambled_topologies_cascade1.R">gen_scrambled_topologies_cascade1.R</a>.</p>
+<p>To get the drug combination predictions for each scrambled topology, we executed the <code>druglogics-synergy</code> module with the default configuration (<span class="math inline">\(50\)</span> simulations per topology, for both <em>calibrated</em> to steady state and <em>random</em> proliferative models, using the <em>Bliss</em> synergy assessment method in <code>Drabme</code>) - see more info on the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_scrambled_topo_cascade1.sh">run_druglogics_synergy_scrambled_topo_cascade1.sh</a> script.</p>
+<p>We calculate the normalized predictor performance (<span class="math inline">\(calibrated - random\)</span>) for each topology-specific simulation and tidy up the result data in <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>.</p>
 </div>
 <p>Next, we load the data results and add the ROC and PR AUC results of the combined predictor (termed <strong>Calibrated</strong>) for the curated CASCADE 1.0 topology (see <a href="cascade-1-0-analysis.html#best-roc-and-prc">above</a>).
 Note that the topology scrambling type is set to <strong>none</strong> for the results that used the original/curated CASCADE 1.0 topology.</p>

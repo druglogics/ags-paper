@@ -1,10 +1,10 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 16 December, 2020"
+date: "Last updated: 19 December, 2020"
 description: "AGS paper - SI"
-url: 'https\://username.github.io/reponame/'
-github-repo: "username/reponame"
+url: 'https\://druglogics.github.io/ags-paper/'
+github-repo: "druglogics/ags-paper"
 bibliography: ["references.bib", "packages.bib"]
 link-citations: true
 site: bookdown::bookdown_site
@@ -873,11 +873,11 @@ The $4$ types of scrambling are:
 Note that each type of scrambling produces a topology with the same input and output degree distribution as the original one and as such, the scale-free property of the CASCADE 1.0 topology remains unchanged in the scrambled topologies.
 
 For each different type of scrambling, we make $10$ random topologies for each expected similarity score between the randomized and the curated topology, ranging from $0$ similarity to $0.98$ with a total of $22$ *steps*, thus $10\times22=220$ random topologies per different type of scrambling.
-See more details on how to generate these topologies in the script [gen_scrambled_topologies_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies_cascade1.R).
+See more details on how to generate these topologies in the script [gen_scrambled_topologies_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/gen_scrambled_topologies_cascade1.R).
 
-To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`) - see more info on the [run_druglogics_synergy_scrambled_topo_cascade1.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_scrambled_topo_cascade1.sh) script.
+To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`) - see more info on the [run_druglogics_synergy_scrambled_topo_cascade1.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_scrambled_topo_cascade1.sh) script.
 
-We calculate the normalized predictor performance ($calibrated - random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R).
+We calculate the normalized predictor performance ($calibrated - random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R).
 :::
 
 Next, we load the data results and add the ROC and PR AUC results of the combined predictor (termed **Calibrated**) for the curated CASCADE 1.0 topology (see [above](#best-roc-and-prc)).
@@ -2241,13 +2241,13 @@ We create several *scrambled* topologies from the CASCADE 2.0 one, in order to a
 For more details see the [same investigation](#scrambled-topo-inv-cascade1) done for CASCADE 1.0.
 
 For each of the $4$ different types of scrambling, we make $10$ random topologies for each expected similarity score between the randomized and the curated topology, ranging from $0$ to $0.99$ similarity with a total of $23$ *steps*, thus $10\times23=230$ random topologies per different type of scrambling.
-See more details on how to generate these topologies in the script [gen_scrambled_topologies_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_scrambled_topologies_cascade2.R).
+See more details on how to generate these topologies in the script [gen_scrambled_topologies_cascade2.R](https://github.com/druglogics/ags-paper/blob/main/scripts/gen_scrambled_topologies_cascade2.R).
 
 To get the drug combination predictions for each scrambled topology, we executed the `druglogics-synergy` module with the default configuration ($50$ simulations per topology, for both *calibrated* to steady state and *random* proliferative models, using the *Bliss* synergy assessment method in `Drabme`).
 Note that because of the CASCADE 2.0 network size and the amount of simulations for this analysis, we had to switch to the **faster BNReduction attractor tool** for the calculation of fixpoints [@Veliz-Cuba2014].
-See discussion [here](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#attractor-tool) for limitations of the use of the `bnet_reduction_reduced` attractor tool option in our configuration file and to execute the simulations with the scrambled topologies use the [run_druglogics_synergy_scrambled_topo_cascade2.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_scrambled_topo_cascade2.sh) script.
+See discussion [here](https://druglogics.github.io/druglogics-doc/gitsbe-config.html#attractor-tool) for limitations of the use of the `bnet_reduction_reduced` attractor tool option in our configuration file and to execute the simulations with the scrambled topologies use the [run_druglogics_synergy_scrambled_topo_cascade2.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_scrambled_topo_cascade2.sh) script.
 
-We calculate the normalized predictor performance ($calibrated - random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade2.R).
+We calculate the normalized predictor performance ($calibrated - random$) for each topology-specific simulation and tidy up the result data in [get_syn_res_scrambled_topo_cascade2.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R).
 :::
 
 Next, we load the scrambled topologies simulation results and also add the ROC and PR AUC results of the link-operator bootstrapped model analysis (see section [below](#boot-comp-param)).
@@ -3764,7 +3764,7 @@ For the first pool, the parameterization is presented with a **link-operator hea
 ### Pathways {-}
 
 Every node in CASCADE 2.0 belongs to a specific pathway, as can be seen in **Fig. 1A** of [@Niederdorfer2020].
-The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/bblodfon/ags-paper-1/blob/master/data/node_pathway_annotations_cascade2.csv).
+The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file [here](https://github.com/druglogics/ags-paper/blob/main/data/node_pathway_annotations_cascade2.csv).
 
 We present the **node and edge distribution** across the pathways in CASCADE 2.0.
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as *Cross-talk*:
@@ -3811,7 +3811,7 @@ We kept cancer genes that were annotated as both TSGs and fusion or oncogenes an
 Lastly note that for the CASCADE 2.0 nodes that represent families, complexes, etc. and they include a few COSMIC genes in their membership, we use a majority rule to decide which cancer role to assign to these nodes.
 
 :::{.blue-box}
-See the script [get_cosmic_data_annot.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R) for more details.
+See the script [get_cosmic_data_annot.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_cosmic_data_annot.R) for more details.
 :::
 
 A total of $52$ CASCADE 2.0 nodes were annotated and in the following figure we can see that most of them were oncogenes, followed by TSGs and a few annotated as both categories:
@@ -3836,7 +3836,7 @@ Note that the models of the link-operator Gitsbe pool from the previous [bootstr
 ## Link-Operator mutated models {-}
 
 :::{.blue-box}
-See script [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) for creating the heatmaps.
+See script [lo_mutated_models_heatmaps.R](https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R) for creating the heatmaps.
 :::
 
 
@@ -3884,7 +3884,7 @@ In the third cluster, where the models nodes are mostly in an active state (obey
 ## Topology-mutated models {-}
 
 :::{.blue-box}
-See script [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) for creating the heatmaps.
+See script [topo_mutated_models_heatmaps.R](https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R) for creating the heatmaps.
 :::
 
 
@@ -3917,7 +3917,7 @@ Looking at the above figure from left to right we have $5$ clusters:
 1. First cluster has all the edges whose target has a single regulator and these are not removed by the topology mutations in Gitsbe, to preserve the network connectivity.
 2. Second cluster with edges that are **mostly present** in the topology-mutated models. 
 These edges have two distinguished characteristics: they show high target connectivity ($\ge 5$ regulators) - meaning that they target mostly hub-nodes - and their source and target nodes belong mostly to different pathways (i.e. they are *Cross-talk* edges).
-3. Third cluster with edges that have a **~50% percent chance to stay** in the topology-mutated models. 
+3. Third cluster with edges that have a **~50% percent chance to stay** in the topology-mutated models.
 These edges belong to a variety of pathways and can have both low and high target in-degree connectivity.
 4. Fourth cluster with edges that **will most likely be removed** in the topology-mutated models.
 These edges belong to a variety of pathways and mostly have low target in-degree connectivity.
@@ -3973,7 +3973,7 @@ Each further directory, **specifies on its name** the *training type*, *simulati
 
 ### Generate the training data samples {-}
 
-Use the [gen_training_data.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/gen_training_data.R) script to **produce the training data samples**.
+Use the [gen_training_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/gen_training_data.R) script to **produce the training data samples**.
 In this script we first choose $11$ numbers that represent the number of nodes that are going to be *flipped* in the AGS steady state.
 These numbers range from $1$ (flip just one node) to $24$ (flip all nodes, i.e. create a complete *reversed* steady state).
 Then, for each such number, we generate $20$ new partially correct steady states, each one having the same amount of randomly-chosen *flips* in the steady state (e.g. $20$ steady states where randomly-chosen sets of $3$ nodes have been flipped).
@@ -3983,7 +3983,7 @@ The training data files are stored in the Zenodo file **`training-data-files.tar
 
 ### Run model ensembles simulations {-}
 
-To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
+To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
 Note that the `training-data-files` directory must be placed inside the `druglogics-synergy` root directory before executing the aforementioned script.
 The end result we get is the simulation results for each of the training data files (a different directory per training data file).
 
@@ -3996,7 +3996,7 @@ The following changes need to be applied to the CASCADE 1.0 or 2.0 configuration
 The results of the CASCADE 2.0 link-operator mutated model simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss.tar.gz`**, whereas for the CASCADE 2.0 topology mutated models, in the **`fit-vs-performance-results-bliss-topo.tar.gz`** file.
 The results of the CASCADE 2.0 link-operator mutated model simulations are stored in the Zenodo file **`fit-vs-performance-results-bliss-cascade1.tar.gz`**.
 
-To parse and tidy up the data from the simulations, use the scripts [fit_vs_perf_cascade2_lo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade2_lo.R) (for the link-operator-based CASCADE 2.0 simulations), [fit_vs_perf_cascade2_topo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade2_topo.R) (for the topology-mutation-based CASCADE 2.0 simulations) and [fit_vs_perf_cascade1_lo.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/fit_vs_perf_cascade1_lo.R) (for the link-operator-based CASCADE 1.0 simulations).
+To parse and tidy up the data from the simulations, use the scripts [fit_vs_perf_cascade2_lo.R](https://github.com/druglogics/ags-paper/blob/main/scripts/fit_vs_perf_cascade2_lo.R) (for the link-operator-based CASCADE 2.0 simulations), [fit_vs_perf_cascade2_topo.R](https://github.com/druglogics/ags-paper/blob/main/scripts/fit_vs_perf_cascade2_topo.R) (for the topology-mutation-based CASCADE 2.0 simulations) and [fit_vs_perf_cascade1_lo.R](https://github.com/druglogics/ags-paper/blob/main/scripts/fit_vs_perf_cascade1_lo.R) (for the link-operator-based CASCADE 1.0 simulations).
 
 Also, we used the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` (script configuration for CASCADE 2.0: `{2.0, prolif, 150, fixpoints, bliss}` and for CASCADE 1.0: `{1.0, prolif, 50, fixpoints, bliss}`) repo to get the ensemble results of the **random (proliferative) models** that we will use to normalize the calibrated model performance.
 The result of this simulation is also part of the results described above (see section [above](#repro123), also considering the necessary changes applied for the topology mutation-based simulations for CASCADE 2.0) and it's available inside the file **`sim_res.tar.gz`** of the Zenodo dataset (also available in the results directory - see [Repo results structure]).
@@ -4004,20 +4004,20 @@ The result of this simulation is also part of the results described above (see s
 ## Random Model Bootstrap {-}
 
 - Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
-- Run the the script [run_gitsbe_random.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_random.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
+- Run the the script [run_gitsbe_random.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_random.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
 This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
 - Place the `models` directory inside the `ags_cascade_2.0` directory.
-- Execute the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory.
+- Execute the [bootstrap_models_drabme.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory.
 Changing appropriately the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
-- Use the script [random_model_boot.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/random_model_boot.R) to tidy the data from the simulations.
+- Use the script [random_model_boot.R](https://github.com/druglogics/ags-paper/blob/main/scripts/random_model_boot.R) to tidy the data from the simulations.
 
 The results of the simulations are stored in the **`random_model_bootstrap.tar.gz`** file of the Zenodo dataset.
 
 ## Parameterization Bootstrap {-}
 
 - Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
-- To generate the $3$ pools of calibrated models (fitting to the AGS steady state) subject to different normalization schemes, run the script [run_gitsbe_param.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_param.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository root.
+- To generate the $3$ pools of calibrated models (fitting to the AGS steady state) subject to different normalization schemes, run the script [run_gitsbe_param.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository root.
 This will generate the directories:
   - `gitsbe_link_only_cascade_2.0_ss`
   - `gitsbe_topology_only_cascade_2.0_ss`
@@ -4025,7 +4025,7 @@ This will generate the directories:
   each of which have a `models` directory (the model pool)
 - Repeat for each different pool (`models` directory):
   - Place the `models` directory inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository root.
-  - Use the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) script, while changing the following configuration: `batches=25`, `batch_size=300` and the `project` variable name (input to `eu.druglogics.drabme.Launcher`) as one of the three:
+  - Use the [bootstrap_models_drabme.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh) script, while changing the following configuration: `batches=25`, `batch_size=300` and the `project` variable name (input to `eu.druglogics.drabme.Launcher`) as one of the three:
     - `--project=link_only_cascade_2.0_ss_bliss_batch_${batch}`
     - `--project=topology_only_cascade_2.0_ss_bliss_batch_${batch}`
     - `--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}`
@@ -4033,47 +4033,47 @@ This will generate the directories:
   , depending on the parameterization scheme that was used in the previous step to produce the `models` pool.
 
 The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** Zenodo file.
-Use the script [get_param_comp_boot_data.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_param_comp_boot_data.R) to tidy up the simulation data to a nice table format.
+Use the script [get_param_comp_boot_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_param_comp_boot_data.R) to tidy up the simulation data to a nice table format.
 
 When uncompressed, the `parameterization-comp.tar.gz` file outputs 3 separate directories, one per parameterization scheme.
-Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script [run_gitsbe_param.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/run_gitsbe_param.sh)), a `boot_res` directory (includes the results of the [bootstrap_models_drabme.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme.sh) script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
+Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script [run_gitsbe_param.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh)), a `boot_res` directory (includes the results of the [bootstrap_models_drabme.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh) script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
 
 ## CASCADE 1.0 Calibrated Models bootstrap {-#boot-ss-cascade1-curated-reproduce}
 
 - Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
 - Generate one large pool of calibrated models (fitting to the AGS steady state) by using the instructions [above](#repro123) => use the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` repo with script config: `{1.0, ss, 1000, fixpoints, bliss}`
-- Use the [bootstrap_models_drabme_cascade1.sh](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/bootstrap_models_drabme_cascade1.sh) script to run the bootstrapped model simulations.
-- Use the [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R) script to tidy up the bootstrap simulation data.
+- Use the [bootstrap_models_drabme_cascade1.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_cascade1.sh) script to run the bootstrapped model simulations.
+- Use the [get_syn_res_boot_ss_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R) script to tidy up the bootstrap simulation data.
 
 The results from the bootstrap simulations are stored in the **`ss_cascade1_model_bootstrap.tar.gz`** file of the Zenodo dataset.
 
 ## Repo results structure {-}
 
-We have gathered all the necessary output files from the above simulations (mostly relating to ROC, PR curves and AUC sensitivity figures) to the directory [`results`](https://github.com/bblodfon/ags-paper-1/tree/master/results) for ease of use in our report.
+We have gathered all the necessary output files from the above simulations (mostly relating to ROC, PR curves and AUC sensitivity figures) to the directory [`results`](https://github.com/druglogics/ags-paper/tree/main/results) for ease of use in our report.
 The `results` directory has 3 main sub-directories: 
 
-1. [`link-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/link-only): results from the link-operator mutated models only (used in the sections [Cascade 1.0 Analysis] and [CASCADE 2.0 Analysis (Link Operator Mutations)])
-2. [`topology-only`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topology-only): results from the topology-mutated models only (used in the section [CASCADE 2.0 Analysis (Topology Mutations)])
-3. [`topo-and-link`](https://github.com/bblodfon/ags-paper-1/tree/master/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
+1. [`link-only`](https://github.com/druglogics/ags-paper/tree/main/results/link-only): results from the link-operator mutated models only (used in the sections [Cascade 1.0 Analysis] and [CASCADE 2.0 Analysis (Link Operator Mutations)])
+2. [`topology-only`](https://github.com/druglogics/ags-paper/tree/main/results/topology-only): results from the topology-mutated models only (used in the section [CASCADE 2.0 Analysis (Topology Mutations)])
+3. [`topo-and-link`](https://github.com/druglogics/ags-paper/tree/main/results/topo-and-link): results where both mutations applied to the generated boolean models (used in section [CASCADE 2.0 Analysis (Topology and Link Operator Mutations)])
 
-In addition, there is a [`data`](https://github.com/bblodfon/ags-paper-1/tree/master/data) directory that includes the following:
+In addition, there is a [`data`](https://github.com/druglogics/ags-paper/tree/main/data) directory that includes the following:
 
 - `observed_synergies_cascade_1.0`: the gold-standard synergies for the CASCADE 1.0 topology [@Flobak2015]
 - `observed_synergies_cascade_2.0`: the gold-standard synergies for the CASCADE 2.0 topology [@Flobak2019]
-- `steadystate`, `steadystate.rds`: the AGS training data for the calibrated models (file + compressed data) - see [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) script.
-- `edge_mat.rds`, `topo_ss_df.rds`: heatmap data for the topology-mutation models - see [lo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/lo_mutated_models_heatmaps.R) script.
-- `lo_df.rds`, `lo_ss_df.rds`: heatmap data for the link-operator models - see [topo_mutated_models_heatmaps.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/topo_mutated_models_heatmaps.R) script.
-- `node_pathway_annotations_cascade2.csv`, `node_path_tbl.rds`: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the [node_path_annot_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/node_path_annot_cascade2.R) script.
+- `steadystate`, `steadystate.rds`: the AGS training data for the calibrated models (file + compressed data) - see [lo_mutated_models_heatmaps.R](https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R) script.
+- `edge_mat.rds`, `topo_ss_df.rds`: heatmap data for the topology-mutation models - see [lo_mutated_models_heatmaps.R](https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R) script.
+- `lo_df.rds`, `lo_ss_df.rds`: heatmap data for the link-operator models - see [topo_mutated_models_heatmaps.R](https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R) script.
+- `node_pathway_annotations_cascade2.csv`, `node_path_tbl.rds`: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the [node_path_annot_cascade2.R](https://github.com/druglogics/ags-paper/blob/main/scripts/node_path_annot_cascade2.R) script.
 - `cosmic_cancer_gene_census_all_29102020.tsv`: Cancer Gene Census COSMIC data downloaded from https://cancer.sanger.ac.uk/census (for academic purposes)
-- `cosmic_tbl.rds`: a compressed file with a `tibble` object having the CASCADE 2.0 nodes and their respective COSMIC cancer role annotation (see [get_cosmic_data_annot.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_cosmic_data_annot.R) script).
+- `cosmic_tbl.rds`: a compressed file with a `tibble` object having the CASCADE 2.0 nodes and their respective COSMIC cancer role annotation (see [get_cosmic_data_annot.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_cosmic_data_annot.R) script).
 - `bootstrap_rand_res.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Random Model AUC] section.
 - `res_fit_aucs_cascade1.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-cascade1) section (CASCADE 1.0, link operator mutations).
 - `res_fit_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-lo) section (CASCADE 2.0, link operator mutations).
 - `res_fit_aucs_topo.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Fitness vs Ensemble Performance](#fit-vs-ens-perf-topo) section (CASCADE 2.0, topology mutations).
 - `res_param_boot_aucs.rds`: a compressed file with a `tibble` object having the result data in a tidy format for the analysis related to the [Bootstrap Simulations] section.
-- `boot_cascade1_res.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
-- `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
-- `scrambled_topo_res_cascade2.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade2.R](https://github.com/bblodfon/ags-paper-1/blob/master/scripts/get_syn_res_scrambled_topo_cascade2.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade2) in CASCADE 2.0.
+- `boot_cascade1_res.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
+- `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
+- `scrambled_topo_res_cascade2.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade2.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade2) in CASCADE 2.0.
 
 # R session info {-}
 
@@ -4098,7 +4098,7 @@ Locale:
 Package version:
   abind_1.4-5              assertthat_0.2.1         backports_1.2.1         
   base64enc_0.1.3          BH_1.72.0.3              bookdown_0.21           
-  boot_1.3.25              brio_1.1.0               broom_0.7.2             
+  boot_1.3.25              brio_1.1.0               broom_0.7.3             
   callr_3.5.1              car_3.0-10               carData_3.0-4           
   cellranger_1.1.0         circlize_0.4.11          Ckmeans.1d.dp_4.3.3     
   cli_2.2.0                clipr_0.7.1              clue_0.3-58             
@@ -4112,7 +4112,7 @@ Package version:
   evaluate_0.14            fansi_0.4.1              farver_2.0.3            
   forcats_0.5.0            foreach_1.5.1            foreign_0.8-75          
   gbRd_0.4-11              generics_0.1.0           GetoptLong_1.0.5        
-  ggplot2_3.3.2            ggpubr_0.4.0             ggrepel_0.8.2           
+  ggplot2_3.3.2            ggpubr_0.4.0             ggrepel_0.9.0           
   ggsci_2.9                ggsignif_0.6.0           glmnet_4.0-2            
   GlobalOptions_0.1.2      glue_1.4.2               graphics_3.6.3          
   grDevices_3.6.3          grid_3.6.3               gridExtra_2.3           
@@ -4128,7 +4128,7 @@ Package version:
   mgcv_1.8.33              mime_0.9                 minqa_1.2.4             
   munsell_0.5.0            nlme_3.1.151             nloptr_1.2.2.2          
   nnet_7.3.14              openxlsx_4.2.3           parallel_3.6.3          
-  pbkrtest_0.4.8.6         pillar_1.4.7             pkgbuild_1.1.0          
+  pbkrtest_0.4.8.6         pillar_1.4.7             pkgbuild_1.2.0          
   pkgconfig_2.0.3          pkgload_1.1.0            png_0.1-7               
   polynom_1.4.0            praise_1.0.0             prettyunits_1.1.1       
   processx_3.4.5           progress_1.2.2           promises_1.1.1          
