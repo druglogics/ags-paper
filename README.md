@@ -1,4 +1,4 @@
-# ags-paper-1
+# ags-paper
 
-[Report](https://bblodfon.github.io/ags-paper-1/index.html)
-
+Supplementary material for the automated pipeline paper (+extra analyses).
+See [report here](https://druglogics.github.io/ags-paper/index.html).
