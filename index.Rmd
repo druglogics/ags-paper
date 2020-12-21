@@ -17,7 +17,7 @@ knitr::write_bib(c(.packages(), 'rtemps', 'glmnet', 'MAMSE'), 'packages.bib')
 
 # Intro {-}
 
-This report is the **supplementary material** for the AGS I Paper and has all the simulation results and investigations related to that paper, as well as instructions for reproducing the results.
+This report is the **supplementary material** for the AGS paper and has all the simulation results and investigations related to that paper, as well as instructions for reproducing the results.
 
 ## Methodology/Input Overview {-}
 
@@ -3404,7 +3404,7 @@ We have stored all the simulations results in an open-access repository provided
 
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-#repro123}
 
-- Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
+- Install the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy) module and use the version `1.2.0`: `git checkout v1.2.0` (or use directly the [released v1.2.0 package](https://github.com/druglogics/druglogics-synergy/packages))
 - Run the script `run_druglogics_synergy.sh` in the above repo.
 
 You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run - see [here](https://druglogics.github.io/druglogics-doc/gitsbe-config.html) for a complete list of configuration options).
@@ -3441,7 +3441,7 @@ The training data files are stored in the Zenodo file **`training-data-files.tar
 
 ### Run model ensembles simulations {-}
 
-To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh) from the `druglogics-synergy` repository root (version `1.2.0`: `git checkout v1.2.0`).
+To generate the calibrated model ensembles and perform the drug response analysis on them we use the script [run_druglogics_synergy_training.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh) from the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy) repository root (version `1.2.0`: `git checkout v1.2.0`).
 Note that the `training-data-files` directory must be placed inside the `druglogics-synergy` root directory before executing the aforementioned script.
 The end result we get is the simulation results for each of the training data files (a different directory per training data file).
 
@@ -3461,7 +3461,7 @@ The result of this simulation is also part of the results described above (see s
 
 ## Random Model Bootstrap {-}
 
-- Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
+- Install the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy/packages) module and use the version `1.2.0`: `git checkout v1.2.0` (or use directly the [released v1.2.0 package](https://github.com/druglogics/druglogics-synergy/packages))
 - Run the the script [run_gitsbe_random.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_random.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
 This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
 - Place the `models` directory inside the `ags_cascade_2.0` directory.
@@ -3474,7 +3474,7 @@ The results of the simulations are stored in the **`random_model_bootstrap.tar.g
 
 ## Parameterization Bootstrap {-}
 
-- Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
+- Install the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy) module and use the version `1.2.0`: `git checkout v1.2.0` (or use directly the [released v1.2.0 package](https://github.com/druglogics/druglogics-synergy/packages))
 - To generate the $3$ pools of calibrated models (fitting to the AGS steady state) subject to different normalization schemes, run the script [run_gitsbe_param.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository root.
 This will generate the directories:
   - `gitsbe_link_only_cascade_2.0_ss`
@@ -3498,7 +3498,7 @@ Each separate directory is structured so as to contain the `gitsbe` simulation r
 
 ## CASCADE 1.0 Calibrated Models bootstrap {-#boot-ss-cascade1-curated-reproduce}
 
-- Install the `druglogics-synergy` module and use the version `1.2.0`: `git checkout v1.2.0`
+- Install the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy) module and use the version `1.2.0`: `git checkout v1.2.0` (or use directly the [released v1.2.0 package](https://github.com/druglogics/druglogics-synergy/packages))
 - Generate one large pool of calibrated models (fitting to the AGS steady state) by using the instructions [above](#repro123) => use the `run_druglogics_synergy.sh` script at the root of the `druglogics-synergy` repo with script config: `{1.0, ss, 1000, fixpoints, bliss}`
 - Use the [bootstrap_models_drabme_cascade1.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_cascade1.sh) script to run the bootstrapped model simulations.
 - Use the [get_syn_res_boot_ss_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R) script to tidy up the bootstrap simulation data.
