@@ -1039,7 +1039,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="repro123" class="section level2 unnumbered" number="">
 <h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
 <ul>
-<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
 <li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo.</li>
 </ul>
 <p>You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run - see <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html">here</a> for a complete list of configuration options).
@@ -1073,7 +1073,7 @@ Thus, in total, <span class="math inline">\(205\)</span> training data sample fi
 </div>
 <div id="run-model-ensembles-simulations" class="section level3 unnumbered" number="">
 <h3>Run model ensembles simulations</h3>
-<p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <code>druglogics-synergy</code> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
+<p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
 Note that the <code>training-data-files</code> directory must be placed inside the <code>druglogics-synergy</code> root directory before executing the aforementioned script.
 The end result we get is the simulation results for each of the training data files (a different directory per training data file).</p>
 <p>The following changes need to be applied to the CASCADE 1.0 or 2.0 configuration file (depends on the topology you are using, the files are either <code>druglogics-synergy/ags_cascade_1.0/config</code> or <code>druglogics-synergy/ags_cascade_2.0/config</code>) before executing the script (some are done automatically in the script):</p>
@@ -1092,7 +1092,7 @@ The result of this simulation is also part of the results described above (see s
 <div id="random-model-bootstrap" class="section level2 unnumbered" number="">
 <h2>Random Model Bootstrap</h2>
 <ul>
-<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy/packages">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
 <li>Run the the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_random.sh">run_gitsbe_random.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository.
 This creates a results directory which includes a <code>models</code> directory, with a total of <span class="math inline">\(3000\)</span> <code>gitsbe</code> models which we are going to use for the bootstrapping.</li>
 <li>Place the <code>models</code> directory inside the <code>ags_cascade_2.0</code> directory.</li>
@@ -1106,7 +1106,7 @@ The bootstrap configuration consists of <span class="math inline">\(20\)</span> 
 <div id="parameterization-bootstrap" class="section level2 unnumbered" number="">
 <h2>Parameterization Bootstrap</h2>
 <ul>
-<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
 <li>To generate the <span class="math inline">\(3\)</span> pools of calibrated models (fitting to the AGS steady state) subject to different normalization schemes, run the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh">run_gitsbe_param.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository root.
 This will generate the directories:
 <ul>
@@ -1135,7 +1135,7 @@ Each separate directory is structured so as to contain the <code>gitsbe</code> s
 <div id="boot-ss-cascade1-curated-reproduce" class="section level2 unnumbered" number="">
 <h2>CASCADE 1.0 Calibrated Models bootstrap</h2>
 <ul>
-<li>Install the <code>druglogics-synergy</code> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code></li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
 <li>Generate one large pool of calibrated models (fitting to the AGS steady state) by using the instructions <a href="reproduce-data-simulation-results.html#repro123">above</a> =&gt; use the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> repo with script config: <code>{1.0, ss, 1000, fixpoints, bliss}</code></li>
 <li>Use the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_cascade1.sh">bootstrap_models_drabme_cascade1.sh</a> script to run the bootstrapped model simulations.</li>
 <li>Use the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a> script to tidy up the bootstrap simulation data.</li>
