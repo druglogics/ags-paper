@@ -1117,20 +1117,32 @@ Figure 68: Stable state annotated heatmap for the link operator-mutated models. 
 </p>
 </div>
 <div class="green-box">
-<p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.</p>
+<p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values</p>
 </div>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="annotated-heatmaps.html#cb108-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="annotated-heatmaps.html#cb108-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_state_cmp.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:cosmic-state-cmp"></span>
+<img src="img/cosmic_state_cmp.png" alt="Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups." width="1050" />
+<p class="caption">
+Figure 69: Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups.
+</p>
+</div>
+<div class="green-box">
+<p>Nodes that are annotated as oncogenes have <strong>statistically higher average activity state</strong> than the ones annotated as TSGs (also evident partially from the stable states heatmap).
+The median values for the two groups in the boxplot are <span class="math inline">\(0.997\)</span> (oncogene) and <span class="math inline">\(0.452\)</span> (TSG) respectively.</p>
+<p>The <code>RTPK_g</code> node is an outlier in our data: it is annotated as an oncogene and in all models it had a stable state of <span class="math inline">\(0\)</span>.</p>
+</div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="annotated-heatmaps.html#cb109-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-2"></span>
 <img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 69: Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown.
+Figure 70: Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="annotated-heatmaps.html#cb109-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_combined_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="annotated-heatmaps.html#cb110-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_combined_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-3"></span>
 <img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown." width="2100" />
 <p class="caption">
-Figure 70: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown.
+Figure 71: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown.
 </p>
 </div>
 <div class="green-box">
@@ -1144,21 +1156,21 @@ Figure 70: Combined stable states and parameterization heatmaps. Only the CASCAD
 <div class="blue-box">
 <p>See script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="annotated-heatmaps.html#cb110-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:topo-ss-heat-1"></span>
 <img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and edge target in-degree connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 71: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and edge target in-degree connectivity annotations are shown.
+Figure 72: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and edge target in-degree connectivity annotations are shown.
 </p>
 </div>
 <div class="green-box">
 <p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.</p>
 </div>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-1"></span>
 <img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 72: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
+Figure 73: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
 </p>
 </div>
 <div class="green-box">
@@ -1177,11 +1189,11 @@ Some of them are high target-connectivity nodes and most of them belong to the <
 </div>
 <p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent or present</strong> in the models (so the second and last cluster).
 We do not include the edges that are present in all models (cluster 1) since there were the ones whose target had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm (we don’t lose connectivity when using topology mutations).</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="annotated-heatmaps.html#cb113-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-2"></span>
 <img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 73: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
+Figure 74: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
 </p>
 </div>
 </div>

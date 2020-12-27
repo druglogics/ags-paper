@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 21 December, 2020"
+date: "Last updated: 27 December, 2020"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -3850,7 +3850,24 @@ knitr::include_graphics(path = 'img/lo_ss_heat.png')
 </div>
 
 :::{.green-box}
-Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.
+Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values
+:::
+
+
+```r
+knitr::include_graphics(path = 'img/cosmic_state_cmp.png')
+```
+
+<div class="figure">
+<img src="img/cosmic_state_cmp.png" alt="Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups." width="1050" />
+<p class="caption">(\#fig:cosmic-state-cmp)Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups.</p>
+</div>
+
+:::{.green-box}
+Nodes that are annotated as oncogenes have **statistically higher average activity state** than the ones annotated as TSGs (also evident partially from the stable states heatmap).
+The median values for the two groups in the boxplot are $0.997$ (oncogene) and $0.452$ (TSG) respectively.
+
+The `RTPK_g` node is an outlier in our data: it is annotated as an oncogene and in all models it had a stable state of $0$.
 :::
 
 
@@ -4008,7 +4025,7 @@ The result of this simulation is also part of the results described above (see s
 This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
 - Place the `models` directory inside the `ags_cascade_2.0` directory.
 - Execute the [bootstrap_models_drabme.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory.
-Changing appropriately the `config` file to have `synergy_method: bliss`.
+Change appropriately the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
 - Use the script [random_model_boot.R](https://github.com/druglogics/ags-paper/blob/main/scripts/random_model_boot.R) to tidy the data from the simulations.
 
@@ -4031,6 +4048,7 @@ This will generate the directories:
     - `--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}`
   
   , depending on the parameterization scheme that was used in the previous step to produce the `models` pool.
+  Also change appropriately the `config` file to have `synergy_method: bliss`.
 
 The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** Zenodo file.
 Use the script [get_param_comp_boot_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_param_comp_boot_data.R) to tidy up the simulation data to a nice table format.

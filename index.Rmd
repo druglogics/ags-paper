@@ -3347,6 +3347,7 @@ knitr::include_graphics(path = 'img/cosmic_state_cmp.png')
 
 :::{.green-box}
 Nodes that are annotated as oncogenes have **statistically higher average activity state** than the ones annotated as TSGs (also evident partially from the stable states heatmap).
+The median values for the two groups in the boxplot are $0.997$ (oncogene) and $0.452$ (TSG) respectively.
 
 The `RTPK_g` node is an outlier in our data: it is annotated as an oncogene and in all models it had a stable state of $0$.
 :::

@@ -1097,7 +1097,7 @@ The result of this simulation is also part of the results described above (see s
 This creates a results directory which includes a <code>models</code> directory, with a total of <span class="math inline">\(3000\)</span> <code>gitsbe</code> models which we are going to use for the bootstrapping.</li>
 <li>Place the <code>models</code> directory inside the <code>ags_cascade_2.0</code> directory.</li>
 <li>Execute the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> inside the <code>druglogics-synergy/ags_cascade_2.0</code> directory.
-Changing appropriately the <code>config</code> file to have <code>synergy_method: bliss</code>.
+Change appropriately the <code>config</code> file to have <code>synergy_method: bliss</code>.
 The bootstrap configuration consists of <span class="math inline">\(20\)</span> batches, each one consisting of a sample of <span class="math inline">\(100\)</span> randomly selected models from the model directory pool.</li>
 <li>Use the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/random_model_boot.R">random_model_boot.R</a> to tidy the data from the simulations.</li>
 </ul>
@@ -1125,7 +1125,8 @@ each of which have a <code>models</code> directory (the model pool)</li>
 <li><code>--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}</code></li>
 </ul></li>
 </ul>
-, depending on the parameterization scheme that was used in the previous step to produce the <code>models</code> pool.</li>
+, depending on the parameterization scheme that was used in the previous step to produce the <code>models</code> pool.
+Also change appropriately the <code>config</code> file to have <code>synergy_method: bliss</code>.</li>
 </ul>
 <p>The results of all these simulations are stored in the <strong><code>parameterization-comp.tar.gz</code></strong> Zenodo file.
 Use the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_param_comp_boot_data.R">get_param_comp_boot_data.R</a> to tidy up the simulation data to a nice table format.</p>

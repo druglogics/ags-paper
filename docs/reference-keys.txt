@@ -66,6 +66,7 @@ fig:param-comp-boot-fig-2
 fig:node-edge-dist-path
 fig:cosmic-cascade2-dist
 fig:lo-ss-heat-1
+fig:cosmic-state-cmp
 fig:lo-heat-2
 fig:lo-heat-3
 fig:topo-ss-heat-1
