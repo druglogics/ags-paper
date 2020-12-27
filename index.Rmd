@@ -3466,7 +3466,7 @@ The result of this simulation is also part of the results described above (see s
 This creates a results directory which includes a `models` directory, with a total of $3000$ `gitsbe` models which we are going to use for the bootstrapping.
 - Place the `models` directory inside the `ags_cascade_2.0` directory.
 - Execute the [bootstrap_models_drabme.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh) inside the `druglogics-synergy/ags_cascade_2.0` directory.
-Changing appropriately the `config` file to have `synergy_method: bliss`.
+Change appropriately the `config` file to have `synergy_method: bliss`.
 The bootstrap configuration consists of $20$ batches, each one consisting of a sample of $100$ randomly selected models from the model directory pool.
 - Use the script [random_model_boot.R](https://github.com/druglogics/ags-paper/blob/main/scripts/random_model_boot.R) to tidy the data from the simulations.
 
@@ -3489,6 +3489,7 @@ This will generate the directories:
     - `--project=topo_and_link_cascade_2.0_ss_bliss_batch_${batch}`
   
   , depending on the parameterization scheme that was used in the previous step to produce the `models` pool.
+  Also change appropriately the `config` file to have `synergy_method: bliss`.
 
 The results of all these simulations are stored in the **`parameterization-comp.tar.gz`** Zenodo file.
 Use the script [get_param_comp_boot_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_param_comp_boot_data.R) to tidy up the simulation data to a nice table format.
