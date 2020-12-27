@@ -3338,7 +3338,17 @@ knitr::include_graphics(path = 'img/lo_ss_heat.png')
 ```
 
 :::{.green-box}
-Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.
+Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values
+:::
+
+```{r cosmic-state-cmp, fig.cap='Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups.'}
+knitr::include_graphics(path = 'img/cosmic_state_cmp.png')
+```
+
+:::{.green-box}
+Nodes that are annotated as oncogenes have **statistically higher average activity state** than the ones annotated as TSGs (also evident partially from the stable states heatmap).
+
+The `RTPK_g` node is an outlier in our data: it is annotated as an oncogene and in all models it had a stable state of $0$.
 :::
 
 ```{r lo-heat-2, fig.cap='Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown.'}
