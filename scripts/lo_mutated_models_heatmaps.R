@@ -138,7 +138,7 @@ drug_target_colors = c('FALSE' = 'white', 'TRUE' = 'purple')
 
 # define coloring for the COSMIC annotation
 set1_col = RColorBrewer::brewer.pal(9, 'Set1')
-cosmic_colors = c('Both' = set1_col[4], 'oncogene' = set1_col[1], 'TSG' = set1_col[7])
+cosmic_colors = c('Both' = set1_col[9], 'oncogene' = set1_col[1], 'TSG' = set1_col[3])
 
 # find percent agreement between link-operator parameterization and stable state activity
 
@@ -182,7 +182,7 @@ ha_lo = HeatmapAnnotation(COSMIC = node_cosmic_map[colnames(lo_mat)],
   Pathway = node_path_map[colnames(lo_mat)],
   Connectivity = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
   col = list(Pathway = pathway_colors, COSMIC = cosmic_colors),
-  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
+  annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
   na_col = "white")
 
 indexes = sample(1:nrow(lo_mat), 500)
@@ -221,7 +221,7 @@ ha_ss = HeatmapAnnotation(Training = node_training_state_map, # by default order
   Connectivity = anno_barplot(x = node_conn_map[colnames(lo_ss_mat)]),
   col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
   na_col = "white",
-  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
+  annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
   show_legend = c("Training" = FALSE))
 
 set.seed(42)
@@ -295,7 +295,7 @@ ha = HeatmapAnnotation(Training = node_training_state_map[colnames(lo_mat)],
   col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors, `Drug Targets` = drug_target_colors),
   na_col = "white",
   annotation_name_side = 'right', annotation_name_rot = list(Connectivity = 0),
-  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
+  annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
   show_legend = c(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE), gap = unit(c(1,1,1,2,5,5), "points"))
 
 column_name_annot = HeatmapAnnotation(node_names = anno_text(colnames(lo_mat), gp = gpar(fontsize = 6)))

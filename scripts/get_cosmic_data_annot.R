@@ -150,7 +150,7 @@ node_cosmic_role %>%
   mutate(role = forcats::fct_reorder(role, desc(n))) %>%
   ggplot(aes(x = role_col, y = prop, fill = role)) +
     geom_col() +
-    scale_fill_manual(values = RColorBrewer::brewer.pal(3, 'Set1'),
+    scale_fill_manual(values = RColorBrewer::brewer.pal(9, 'Set1')[c(1,3,9)],
       name = 'Role in Cancer',
       breaks = c("oncogene", "TSG", "oncogene, TSG"),
       labels = c('Oncogene', 'TSG', 'Both')) +

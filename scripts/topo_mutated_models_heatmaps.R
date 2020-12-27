@@ -366,7 +366,7 @@ dev.off()
 # - COSMIC annotation
 
 # define coloring for the COSMIC annotation
-cosmic_colors = c('Both' = set1_col[4], 'oncogene' = set1_col[1], 'TSG' = set1_col[7])
+cosmic_colors = c('Both' = set1_col[9], 'oncogene' = set1_col[1], 'TSG' = set1_col[3])
 
 # define annotations
 ha_ss = HeatmapAnnotation(Training = node_training_state_map[colnames(topo_ss_mat)],
@@ -375,7 +375,7 @@ ha_ss = HeatmapAnnotation(Training = node_training_state_map[colnames(topo_ss_ma
   Connectivity = anno_barplot(x = node_conn_map[colnames(topo_ss_mat)]),
   col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors),
   na_col = "white",
-  annotation_legend_param = list(COSMIC = list(at = c('TSG', 'oncogene', 'Both'))),
+  annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
   show_legend = c("Training" = FALSE))
 
 indexes = sample(1:nrow(topo_ss_mat), size = 500)
