@@ -12,6 +12,8 @@ library(ggplot2)
 library(forcats)
 library(scales)
 library(tidyr)
+library(rstatix)
+library(ggpubr)
 
 # read the parameterization data from the gitsbe link-operator mutated models
 if (!file.exists('data/lo_df.rds')) {
@@ -168,6 +170,34 @@ lo_ss_aggreement = sapply(colnames(lo_mat), function(node) {
 
   return(percent_agreement)
 })
+
+####################################################################
+# Compare Oncogenes vs TSGs mean activity values from stable state #
+####################################################################
+
+## remove NA's and 'Both' category (oncogenes and TSGs)
+node_cosmic_map2 = node_cosmic_map[!is.na(node_cosmic_map) & node_cosmic_map != 'Both']
+node_names = node_cosmic_map2 %>% names()
+cosmic_annot = node_cosmic_map2 %>% unname()
+
+## Get the average state per node of interest
+mean_states = colMeans(lo_ss_mat)[node_names] %>% unname()
+
+cosmic_state = tibble(node = node_names, cosmic = cosmic_annot, mean_state = mean_states)
+cosmic_state %>% wilcox_test(mean_state ~ cosmic)
+
+## Apply Wilcox test
+stat_test = cosmic_state %>%
+  rstatix::wilcox_test(mean_state ~ cosmic) %>%
+  rstatix::add_significance("p")
+
+## Visualize data and save plot
+ggpubr::ggboxplot(data = cosmic_state %>% rename(COSMIC = cosmic),
+  x = 'COSMIC', y = 'mean_state', fill = 'COSMIC', palette = cosmic_colors[2:3],
+  xlab = '', ylab = 'Average Activity State') +
+  ylim(c(0,1.15)) +
+  ggpubr::stat_pvalue_manual(stat_test, label = "p = {p} ({p.signif})", y.position = 1.1)
+ggsave(filename = 'img/cosmic_state_cmp.png', dpi = "print", width = 7, height = 5)
 
 #########################
 # Link-operator Heatmap #
