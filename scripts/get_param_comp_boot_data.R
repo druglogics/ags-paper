@@ -9,6 +9,7 @@ library(tibble)
 library(usefun)
 library(PRROC)
 
+# from http://tiny.cc/ags-paper-zenodo, file `parameterization-comp.tar.gz`
 # lo = 'link-operator mutations', topo = 'topology mutations', both = 'link-operator and topology mutations'
 data_dir_lo = "/home/john/tmp/ags-paper/parameterization-comp/link-only/"
 data_dir_topo = "/home/john/tmp/ags-paper/parameterization-comp/topology-only/"
