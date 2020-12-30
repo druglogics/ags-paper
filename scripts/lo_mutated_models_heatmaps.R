@@ -194,7 +194,7 @@ stat_test = cosmic_state %>%
 ## Visualize data and save plot
 ggpubr::ggboxplot(data = cosmic_state %>% rename(COSMIC = cosmic),
   x = 'COSMIC', y = 'mean_state', fill = 'COSMIC', palette = cosmic_colors[2:3],
-  xlab = '', ylab = 'Average Activity State') +
+  xlab = '', ylab = 'Average Activity State', add = "jitter") +
   ylim(c(0,1.15)) +
   ggpubr::stat_pvalue_manual(stat_test, label = "p = {p} ({p.signif})", y.position = 1.1)
 ggsave(filename = 'img/cosmic_state_cmp.png', dpi = "print", width = 7, height = 5)
