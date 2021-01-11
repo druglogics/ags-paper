@@ -995,6 +995,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#link-operator-mutated-models"><i class="fa fa-check"></i>Link-Operator mutated models</a></li>
 <li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#topology-mutated-models"><i class="fa fa-check"></i>Topology-mutated models</a></li>
+<li class="chapter" data-level="" data-path="annotated-heatmaps.html"><a href="annotated-heatmaps.html#erk-perf-inv"><i class="fa fa-check"></i>ERK performance investigation</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html"><i class="fa fa-check"></i>Reproduce Data &amp; Simulation Results</a>
 <ul>
@@ -1006,6 +1007,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#random-model-bootstrap"><i class="fa fa-check"></i>Random Model Bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#parameterization-bootstrap"><i class="fa fa-check"></i>Parameterization Bootstrap</a></li>
+<li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#erk-repro"><i class="fa fa-check"></i>ERK investigation</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#boot-ss-cascade1-curated-reproduce"><i class="fa fa-check"></i>CASCADE 1.0 Calibrated Models bootstrap</a></li>
 <li class="chapter" data-level="" data-path="reproduce-data-simulation-results.html"><a href="reproduce-data-simulation-results.html#repo-results-structure"><i class="fa fa-check"></i>Repo results structure</a></li>
 </ul></li>
@@ -1034,7 +1036,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="reproduce-data-simulation-results" class="section level1 unnumbered" number="">
 <h1>Reproduce Data &amp; Simulation Results</h1>
 <div id="zenodo-doi-link" class="note">
-<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.4277706"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4277706.svg" alt="DOI" /></a></p>
+<p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.4430998"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4430998.svg" alt="DOI" /></a></p>
 </div>
 <div id="repro123" class="section level2 unnumbered" number="">
 <h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
@@ -1133,6 +1135,19 @@ Use the script <a href="https://github.com/druglogics/ags-paper/blob/main/script
 <p>When uncompressed, the <code>parameterization-comp.tar.gz</code> file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the <code>gitsbe</code> simulation results with the model pool inside (result of the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh">run_gitsbe_param.sh</a>), a <code>boot_res</code> directory (includes the results of the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> script) and lastly the results of the <strong>random proliferative model simulations</strong> which can be reproduced following the guidelines <a href="reproduce-data-simulation-results.html#repro123">above</a>.</p>
 </div>
+<div id="erk-repro" class="section level2 unnumbered" number="">
+<h2>ERK investigation</h2>
+<p>We split the link operator model pool (<span class="math inline">\(4500\)</span> models, see <a href="reproduce-data-simulation-results.html#parameterization-bootstrap">above</a>) to <span class="math inline">\(2\)</span> pools, one with a total of <span class="math inline">\(2764\)</span> models that have <code>ERK_f</code> active and one with a total of <span class="math inline">\(1736\)</span> models that have it inhibited in the corresponding stable states.
+The two model pools are the two directories named <code>erk_active_pool</code> and <code>erk_inhibited_pool</code> respectively inside the Zenodo file <code>erk_perf_investigation.tar.gz</code>.</p>
+<p>Then:</p>
+<ul>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
+<li>Run the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_erk_pools.sh">bootstrap_models_drabme_erk_pools.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository.
+This will produce the drug combination prediction results for the bootstrapped ensembles of boolean models from each pool.
+From each pool, we bootstrapped <span class="math inline">\(35\)</span> ensembles with <span class="math inline">\(300\)</span> models each and used the <code>bliss</code> drabme synergy method to calculate the prediction results.</li>
+<li>Run the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R">erk_perf_tidy_data.R</a> to calculate the ROC and PR AUC of every bootstrapped ensemble, subject to normalization against the random proliferative model predictions.</li>
+</ul>
+</div>
 <div id="boot-ss-cascade1-curated-reproduce" class="section level2 unnumbered" number="">
 <h2>CASCADE 1.0 Calibrated Models bootstrap</h2>
 <ul>
@@ -1170,6 +1185,7 @@ The <code>results</code> directory has 3 main sub-directories:</p>
 <li><code>boot_cascade1_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated">scrambled topologies investigation</a> in CASCADE 1.0.</li>
 <li><code>scrambled_topo_res_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1">scrambled topologies investigation</a> in CASCADE 1.0.</li>
 <li><code>scrambled_topo_res_cascade2.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R">get_syn_res_scrambled_topo_cascade2.R</a>, related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2">scrambled topologies investigation</a> in CASCADE 2.0.</li>
+<li><code>res_erl.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R">erk_perf_tidy_data.R</a>, related to the <a href="annotated-heatmaps.html#erk-perf-inv">ERK analysis</a> with the link operator mutated models in CASCADE 2.0.</li>
 </ul>
 </div>
 </div>
