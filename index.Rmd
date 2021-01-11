@@ -3472,7 +3472,7 @@ Significantly better performance of the bootstrapped ensembles with `ERK_f` acti
 # Reproduce Data & Simulation Results {-}
 
 :::{.note #zenodo-doi-link}
-We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4277706.svg)](https://doi.org/10.5281/zenodo.4277706)
+We have stored all the simulations results in an open-access repository provided by Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4430998.svg)](https://doi.org/10.5281/zenodo.4430998)
 :::
 
 ## ROC and PR curves, Fitness Evolution ^[The AUC sensitivity plots across the report are also included] {-#repro123}
