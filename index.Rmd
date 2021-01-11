@@ -3407,6 +3407,68 @@ We do not include the edges that are present in all models (cluster 1) since the
 knitr::include_graphics(path = 'img/edge_heat_stable.png')
 ```
 
+## ERK performance investigation {-#erk-perf-inv}
+
+:::{.blue-box}
+We investigate the role of the activity of the `ERK_f` node in the performance of boolean models with link operator mutations.
+:::
+
+In the middle cluster of the stable states heatmap (see Figure \@ref(fig:lo-ss-heat-1)) there were lot of nodes whose stable state activity was different for about half of the models.
+For example, although `ERK_f` is defined in an active state in the training data, we also get models after training that have it inhibited in their corresponding stable state.
+Since these boolean models essentially represent AGS proliferating cancer cells, it's remarkable that the literature curation results are also divided, i.e. around half of the publications support that activation of `ERK_f` and the other its inhibition (see Table S2 from [@Flobak2015]).
+So, **do we have a way to distinguish which of the two scenarios** (`ERK` active vs inhibited) **better matches the observed biological reality**?
+
+[Model-wise analyses](https://druglogics.github.io/gitsbe-model-analysis/cascade/cell-lines-2500/cascade_synergy_biomarkers.html#summary-of-results) provide evidence which suggests that the overexpression of `ERK_f` is a characteristic biomarker of the higher performance AGS models in terms of synergy prediction, i.e. models that have `ERK_f` active in their stable state can predict synergies that have been observed experimentally in the AGS cancer cells.
+
+:::{.blue-box}
+See methodology and how to reproduce the results [here](#erk-repro).
+:::
+
+```{r erk-pool-cpm, fig.align='center', dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Comparing drug prediction performance (ROC and PR AUCs) between bootstrapped calibrated model ensembles from two model pools. Results were normalized to random model predictions. The models had link operator mutations only. In one pool, each model had a single stable state with ERK_f active and on the other pool ERK_f was inhibited at the stable state (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)'}
+res = readRDS(file = "data/res_erk.rds")
+
+set1_col = RColorBrewer::brewer.pal(9, 'Set1')
+
+stat_test_roc = res %>% 
+  rstatix::wilcox_test(formula = roc_auc ~ erk_state) %>%
+  rstatix::add_significance("p")
+
+# ROC AUCs
+ggboxplot(res, x = "erk_state", y = "roc_auc", fill = "erk_state", 
+  palette = c(set1_col[3], set1_col[1]),
+  add = "jitter", xlab = "", ylab = "ROC AUC",
+  title = "ERK_f Pools Performance Comparison (ROC)") +
+  scale_x_discrete(breaks = c("active","inhibited"), labels = c("Active", "Inhibited")) +
+  ggpubr::stat_pvalue_manual(stat_test_roc, label = "p = {p} ({p.signif})", y.position = c(1)) +
+  ylim(c(0,1)) +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 2.1, y = 0.55, label = "Random Predictions (AUC = 0.5)")) + 
+  theme(legend.position = "none")
+
+stat_test_pr = res %>% 
+  rstatix::wilcox_test(formula = pr_auc ~ erk_state) %>%
+  rstatix::add_significance("p") %>%
+  rstatix::add_y_position()
+
+# PR AUCs
+ggboxplot(res, x = "erk_state", y = "pr_auc", fill = "erk_state", 
+  palette = c(set1_col[3], set1_col[1]),
+  add = "jitter", xlab = "", ylab = "PR AUC",
+  title = "ERK_f Pools Performance Comparison (Precision-Recall)") +
+  scale_x_discrete(breaks = c("active","inhibited"), labels = c("Active", "Inhibited")) +
+  ggpubr::stat_pvalue_manual(stat_test_pr, label = "p = {p} ({p.signif})") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  # 6 out 153 drug combos were synergistic
+  geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
+  geom_text(aes(x = 1.05, y = 0.06, label = "Random Predictions (AUC = 0.04)")) + 
+  theme(legend.position = "none")
+```
+
+:::{.green-box}
+Significantly better performance of the bootstrapped ensembles with `ERK_f` active, suggesting that ERK should be considered active in AGS cells from a functional point of view.
+:::
+
 # Reproduce Data & Simulation Results {-}
 
 :::{.note #zenodo-doi-link}
@@ -3508,6 +3570,19 @@ Use the script [get_param_comp_boot_data.R](https://github.com/druglogics/ags-pa
 When uncompressed, the `parameterization-comp.tar.gz` file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the `gitsbe` simulation results with the model pool inside (result of the script [run_gitsbe_param.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh)), a `boot_res` directory (includes the results of the [bootstrap_models_drabme.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh) script) and lastly the results of the **random proliferative model simulations** which can be reproduced following the guidelines [above](#repro123).
 
+## ERK investigation {-#erk-repro}
+
+We split the link operator model pool ($4500$ models, see [above](#parameterization-bootstrap)) to $2$ pools, one with a total of $2764$ models that have `ERK_f` active and one with a total of $1736$ models that have it inhibited in the corresponding stable states.
+The two model pools are the two directories named `erk_active_pool` and `erk_inhibited_pool` respectively inside the Zenodo file `erk_perf_investigation.tar.gz`.
+
+Then:
+
+-  Install the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy) module and use the version `1.2.0`: `git checkout v1.2.0` (or use directly the [released v1.2.0 package](https://github.com/druglogics/druglogics-synergy/packages))
+- Run the script [bootstrap_models_drabme_erk_pools.sh](https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_erk_pools.sh) inside the `ags_cascade_2.0` directory of the `druglogics-synergy` repository.
+This will produce the drug combination prediction results for the bootstrapped ensembles of boolean models from each pool.
+From each pool, we bootstrapped $35$ ensembles with $300$ models each and used the  `bliss` drabme synergy method to calculate the prediction results.
+- Run the script [erk_perf_tidy_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R) to calculate the ROC and PR AUC of every bootstrapped ensemble, subject to normalization against the random proliferative model predictions.
+
 ## CASCADE 1.0 Calibrated Models bootstrap {-#boot-ss-cascade1-curated-reproduce}
 
 - Install the [druglogics-synergy](https://github.com/druglogics/druglogics-synergy) module and use the version `1.2.0`: `git checkout v1.2.0` (or use directly the [released v1.2.0 package](https://github.com/druglogics/druglogics-synergy/packages))
@@ -3544,6 +3619,7 @@ In addition, there is a [`data`](https://github.com/druglogics/ags-paper/tree/ma
 - `boot_cascade1_res.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_boot_ss_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R), related to the [scrambled topologies investigation](#boot-ss-cascade1-curated) in CASCADE 1.0.
 - `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
 - `scrambled_topo_res_cascade2.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade2.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade2) in CASCADE 2.0.
+- `res_erl.rds`: a compressed file with a `tibble` object having the result data from executing the script [erk_perf_tidy_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R), related to the [ERK analysis](#erk-perf-inv) with the link operator mutated models in CASCADE 2.0.
 
 # R session info {-}
 
