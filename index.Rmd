@@ -3208,7 +3208,7 @@ In terms of ROC AUC performance we also note the **larger variance** of the topo
 
 ### Compare Topology vs Link-operator Parameterization {-}
 
-```{r param-comp-boot-fig-2, fig.align='center', warning=FALSE, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)'}
+```{r param-comp-boot-fig-2, fig.align='center', warning=FALSE, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results). We use the terminology "parameterization" to refer to the link operator mutations'}
 # load the data
 res = readRDS(file = "data/res_param_boot_aucs.rds")
 
