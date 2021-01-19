@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 11 January, 2021"
+date: "Last updated: 19 January, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -48,6 +48,7 @@ This is observed for the link operator mutated CASCADE 2.0 models [here](#fit-vs
 Same trend was shown for the CASCADE 1.0 link-operator mutated models [analysis](#fit-vs-ens-perf-cascade1).
 - Any type of scrambling in the curated CASCADE topology reduces ensemble model prediction performance.
 See results for CASCADE 1.0 [here](#scrambled-topo-inv-cascade1) and CASCADE 2.0 [here](#scrambled-topo-inv-cascade2).
+- Expression of `ERK` is a biomarker that distinguishes the higher performance AGS models (see results of the investigation [here](#erk-perf-inv)).
 :::
 
 # R Libraries {-}
@@ -3698,7 +3699,7 @@ In terms of ROC AUC performance we also note the **larger variance** of the topo
 
 ```r
 # load the data
-res = readRDS(file = "results/res_param_boot_aucs.rds")
+res = readRDS(file = "data/res_param_boot_aucs.rds")
 
 # filter data
 res = res %>% 
@@ -3712,16 +3713,15 @@ stat_test_roc = res %>%
 
 # ROC AUCs
 ggboxplot(res, x = "param", y = "roc_auc", fill = "param", palette = "Set1",
-  add = "jitter", xlab = "", ylab = "ROC AUC",
-  title = "Parameterization vs Performance (ROC)") +
+  add = "jitter", xlab = "", ylab = "ROC AUC") +
   scale_x_discrete(breaks = c("link-only","topology-only"), 
-    labels = c("Link-Operator Mutations", "Edge Mutations")) +
+    labels = c("Parameterization Mutations", "Topology Mutations")) +
   ggpubr::stat_pvalue_manual(stat_test_roc, label = "p = {p} ({p.signif})", y.position = c(1)) +
   ylim(c(0.2,1)) +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 16)) + 
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 2.1, y = 0.45, label="Random Predictions (AUC = 0.5)")) + 
+  geom_text(aes(x = 2.1, y = 0.45, label="Random Predictions (AUC = 0.5)", size = 5)) + 
   theme(legend.position = "none")
 
 stat_test_pr = res %>% 
@@ -3731,21 +3731,20 @@ stat_test_pr = res %>%
 
 # PR AUCs
 ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
-  add = "jitter", xlab = "", ylab = "PR AUC",
-  title = "Parameterization vs Performance (Precision-Recall)") +
+  add = "jitter", xlab = "", ylab = "Precision-Recall AUC") +
   scale_x_discrete(breaks = c("link-only","topology-only"), 
-    labels = c("Link-Operator Mutations", "Edge Mutations")) +
+    labels = c("Parameterization Mutations", "Topology Mutations")) +
   ggpubr::stat_pvalue_manual(stat_test_pr, label = "p = {p} ({p.signif})") +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 16)) + 
   geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 2.15, y = 0.08, label="Random Predictions (AUC = 0.04)")) + 
+  geom_text(aes(x = 1.9, y = 0.08, label="Random Predictions (AUC = 0.04)"), size = 5) + 
   theme(legend.position = "none")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/param-comp-boot-fig-2-1.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" /><img src="index_files/figure-html/param-comp-boot-fig-2-2.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" />
-<p class="caption">(\#fig:param-comp-boot-fig-2)Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)</p>
+<img src="index_files/figure-html/param-comp-boot-fig-2-1.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results). We use the terminology &quot;parameterization&quot; to refer to the link operator mutations" width="50%" /><img src="index_files/figure-html/param-comp-boot-fig-2-2.png" alt="Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results). We use the terminology &quot;parameterization&quot; to refer to the link operator mutations" width="50%" />
+<p class="caption">(\#fig:param-comp-boot-fig-2)Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results). We use the terminology "parameterization" to refer to the link operator mutations</p>
 </div>
 
 
