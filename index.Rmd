@@ -51,6 +51,7 @@ This is observed for the link operator mutated CASCADE 2.0 models [here](#fit-vs
 Same trend was shown for the CASCADE 1.0 link-operator mutated models [analysis](#fit-vs-ens-perf-cascade1).
 - Any type of scrambling in the curated CASCADE topology reduces ensemble model prediction performance.
 See results for CASCADE 1.0 [here](#scrambled-topo-inv-cascade1) and CASCADE 2.0 [here](#scrambled-topo-inv-cascade2).
+- Expression of `ERK` is a biomarker that distinguishes the higher performance AGS models (see results of the investigation [here](#erk-perf-inv)).
 :::
 
 # R Libraries {-}
@@ -3209,7 +3210,7 @@ In terms of ROC AUC performance we also note the **larger variance** of the topo
 
 ```{r param-comp-boot-fig-2, fig.align='center', warning=FALSE, dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='Comparing ROC and PR AUCs from bootstrapped calibrated model ensembles normalized to random model predictions - Topology vs Link-operator mutations (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)'}
 # load the data
-res = readRDS(file = "results/res_param_boot_aucs.rds")
+res = readRDS(file = "data/res_param_boot_aucs.rds")
 
 # filter data
 res = res %>% 
