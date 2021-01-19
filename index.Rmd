@@ -3224,16 +3224,15 @@ stat_test_roc = res %>%
 
 # ROC AUCs
 ggboxplot(res, x = "param", y = "roc_auc", fill = "param", palette = "Set1",
-  add = "jitter", xlab = "", ylab = "ROC AUC",
-  title = "Parameterization vs Performance (ROC)") +
+  add = "jitter", xlab = "", ylab = "ROC AUC") +
   scale_x_discrete(breaks = c("link-only","topology-only"), 
-    labels = c("Link-Operator Mutations", "Edge Mutations")) +
+    labels = c("Parameterization Mutations", "Topology Mutations")) +
   ggpubr::stat_pvalue_manual(stat_test_roc, label = "p = {p} ({p.signif})", y.position = c(1)) +
   ylim(c(0.2,1)) +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 16)) + 
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 2.1, y = 0.45, label="Random Predictions (AUC = 0.5)")) + 
+  geom_text(aes(x = 2.1, y = 0.45, label="Random Predictions (AUC = 0.5)", size = 5)) + 
   theme(legend.position = "none")
 
 stat_test_pr = res %>% 
@@ -3243,15 +3242,14 @@ stat_test_pr = res %>%
 
 # PR AUCs
 ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
-  add = "jitter", xlab = "", ylab = "PR AUC",
-  title = "Parameterization vs Performance (Precision-Recall)") +
+  add = "jitter", xlab = "", ylab = "Precision-Recall AUC") +
   scale_x_discrete(breaks = c("link-only","topology-only"), 
-    labels = c("Link-Operator Mutations", "Edge Mutations")) +
+    labels = c("Parameterization Mutations", "Topology Mutations")) +
   ggpubr::stat_pvalue_manual(stat_test_pr, label = "p = {p} ({p.signif})") +
   theme_classic(base_size = 14) +
-  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 14)) + 
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size = 16)) + 
   geom_hline(yintercept = 6/153, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 2.15, y = 0.08, label="Random Predictions (AUC = 0.04)")) + 
+  geom_text(aes(x = 1.9, y = 0.08, label="Random Predictions (AUC = 0.04)"), size = 5) + 
   theme(legend.position = "none")
 ```
 
