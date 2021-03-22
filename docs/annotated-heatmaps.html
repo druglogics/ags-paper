@@ -1049,12 +1049,12 @@ For the first pool, the parameterization is presented with a <strong>link-operat
 The pathway categorization is a result of a computational analysis performed by the author of that paper and provided as file <a href="https://github.com/druglogics/ags-paper/blob/main/data/node_pathway_annotations_cascade2.csv">here</a>.</p>
 <p>We present the <strong>node and edge distribution</strong> across the pathways in CASCADE 2.0.
 For the edge pathway annotation, either both ends/nodes of an edge belong to a specific pathway and we use that label or the nodes belong to different pathways and the edge is labeled as <em>Cross-talk</em>:</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="annotated-heatmaps.html#cb105-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
-<span id="cb105-2"><a href="annotated-heatmaps.html#cb105-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_path_dist.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="annotated-heatmaps.html#cb107-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/node_path_dist.png&#39;</span>)</span>
+<span id="cb107-2"><a href="annotated-heatmaps.html#cb107-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_path_dist.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:node-edge-dist-path"></span>
 <img src="img/node_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" /><img src="img/edge_path_dist.png" alt="Node and Edge Distribution across pathways in CASCADE 2.0" width="50%" />
 <p class="caption">
-Figure 66: Node and Edge Distribution across pathways in CASCADE 2.0
+Figure 68: Node and Edge Distribution across pathways in CASCADE 2.0
 </p>
 </div>
 <div class="green-box">
@@ -1091,11 +1091,11 @@ Lastly note that for the CASCADE 2.0 nodes that represent families, complexes, e
 <p>See the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> for more details.</p>
 </div>
 <p>A total of <span class="math inline">\(52\)</span> CASCADE 2.0 nodes were annotated and in the following figure we can see that most of them were oncogenes, followed by TSGs and a few annotated as both categories:</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="annotated-heatmaps.html#cb106-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_cascade2_dist.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="annotated-heatmaps.html#cb108-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_cascade2_dist.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:cosmic-cascade2-dist"></span>
 <img src="img/cosmic_cascade2_dist.png" alt="CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset" width="1050" />
 <p class="caption">
-Figure 67: CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset
+Figure 69: CASCADE 2.0 Nodes and their role in cancer as annotated by the COSMIC CGC dataset
 </p>
 </div>
 </div>
@@ -1111,21 +1111,21 @@ The percent agreement is defined here as the number of matches (node has the lin
 <div class="blue-box">
 <p>See script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="annotated-heatmaps.html#cb107-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="annotated-heatmaps.html#cb109-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-ss-heat-1"></span>
 <img src="img/lo_ss_heat.png" alt="Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and in-degree connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 68: Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and in-degree connectivity annotations are shown.
+Figure 70: Stable state annotated heatmap for the link operator-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, COSMIC, pathway and in-degree connectivity annotations are shown.
 </p>
 </div>
 <div class="green-box">
 <p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values</p>
 </div>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="annotated-heatmaps.html#cb108-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_state_cmp.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="annotated-heatmaps.html#cb110-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cosmic_state_cmp.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:cosmic-state-cmp"></span>
 <img src="img/cosmic_state_cmp.png" alt="Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups." width="1050" />
 <p class="caption">
-Figure 69: Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups.
+Figure 71: Comparing the average stable activity state between the TSG and the oncogene nodes. The Wilcoxon test is used to derive the p-value for the difference between the two groups.
 </p>
 </div>
 <div class="green-box">
@@ -1133,18 +1133,18 @@ Figure 69: Comparing the average stable activity state between the TSG and the o
 The median values for the two groups in the boxplot are <span class="math inline">\(0.997\)</span> (oncogene) and <span class="math inline">\(0.452\)</span> (TSG) respectively.</p>
 <p>The <code>RTPK_g</code> node is an outlier in our data: it is annotated as an oncogene and in all models it had a stable state of <span class="math inline">\(0\)</span>.</p>
 </div>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="annotated-heatmaps.html#cb109-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-2"></span>
 <img src="img/lo_heat.png" alt="Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 70: Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown.
+Figure 72: Parameterization annotated heatmap for the link operator-mutated models. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means. COSMIC, Pathway and in-degree connectivity annotations are shown.
 </p>
 </div>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="annotated-heatmaps.html#cb110-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_combined_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/lo_combined_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:lo-heat-3"></span>
 <img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown." width="2100" />
 <p class="caption">
-Figure 71: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown.
+Figure 73: Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown.
 </p>
 </div>
 <div class="green-box">
@@ -1158,21 +1158,21 @@ Figure 71: Combined stable states and parameterization heatmaps. Only the CASCAD
 <div class="blue-box">
 <p>See script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> for creating the heatmaps.</p>
 </div>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="annotated-heatmaps.html#cb111-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="annotated-heatmaps.html#cb113-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/topo_ss_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:topo-ss-heat-1"></span>
 <img src="img/topo_ss_heat.png" alt="Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and edge target in-degree connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 72: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and edge target in-degree connectivity annotations are shown.
+Figure 74: Stable state annotated heatmap for the topology-mutated models. A total of 144 CASCADE 2.0 nodes have been grouped to 3 clusters with K-means. Training data, pathway and edge target in-degree connectivity annotations are shown.
 </p>
 </div>
 <div class="green-box">
 <p>Calibrated models obey training data, i.e. stable states for nodes specified in training data, match the training data activity values.</p>
 </div>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="annotated-heatmaps.html#cb112-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="annotated-heatmaps.html#cb114-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-1"></span>
 <img src="img/edge_heat.png" alt="Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 73: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
+Figure 75: Edge annotated heatmap. All edges from the CASCADE 2.0 topology are included. A total of 367 edges have been grouped to 5 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
 </p>
 </div>
 <div class="green-box">
@@ -1191,11 +1191,11 @@ Some of them are high target-connectivity nodes and most of them belong to the <
 </div>
 <p>Now, we present a subset of columns (edges) of the above heatmap, chosen based on some user-defined thresholds to <strong>include only the edges that are either mostly absent or present</strong> in the models (so the second and last cluster).
 We do not include the edges that are present in all models (cluster 1) since there were the ones whose target had <strong>only <span class="math inline">\(1\)</span> regulator</strong> and as such they couldn’t be removed by the Gitsbe algorithm (we don’t lose connectivity when using topology mutations).</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="annotated-heatmaps.html#cb113-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="annotated-heatmaps.html#cb115-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/edge_heat_stable.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:edge-heat-2"></span>
 <img src="img/edge_heat_stable.png" alt="Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown." width="2100" />
 <p class="caption">
-Figure 74: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
+Figure 76: Edge annotated heatmap. A subset of the total edges is included, the least heterogeneous across all the models (rows) based on some user-defined thresholds. Edges that were always present are removed (connectivity = 1). Edges have been grouped to 2 clusters with K-means. Pathway, Drug Target, edge target in-degree and edge source out-degree Connectivity annotations are shown.
 </p>
 </div>
 </div>
@@ -1204,7 +1204,7 @@ Figure 74: Edge annotated heatmap. A subset of the total edges is included, the 
 <div class="blue-box">
 <p>We investigate the role of the activity of the <code>ERK_f</code> node in the performance of boolean models with link operator mutations.</p>
 </div>
-<p>In the middle cluster of the stable states heatmap (see Figure <a href="annotated-heatmaps.html#fig:lo-ss-heat-1">68</a>) there were lot of nodes whose stable state activity was different for about half of the models.
+<p>In the middle cluster of the stable states heatmap (see Figure <a href="annotated-heatmaps.html#fig:lo-ss-heat-1">70</a>) there were lot of nodes whose stable state activity was different for about half of the models.
 For example, although <code>ERK_f</code> is defined in an active state in the training data, we also get models after training that have it inhibited in their corresponding stable state.
 Since these boolean models essentially represent AGS proliferating cancer cells, it’s remarkable that the literature curation results are also divided, i.e. around half of the publications support that activation of <code>ERK_f</code> and the other its inhibition (see Table S2 from <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2015" role="doc-biblioref">2015</a>)</span>).
 So, <strong>do we have a way to distinguish which of the two scenarios</strong> (<code>ERK</code> active vs inhibited) <strong>better matches the observed biological reality</strong>?</p>
@@ -1212,48 +1212,48 @@ So, <strong>do we have a way to distinguish which of the two scenarios</strong> 
 <div class="blue-box">
 <p>See methodology and how to reproduce the results <a href="reproduce-data-simulation-results.html#erk-repro">here</a>.</p>
 </div>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="annotated-heatmaps.html#cb114-1"></a>res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&quot;data/res_erk.rds&quot;</span>)</span>
-<span id="cb114-2"><a href="annotated-heatmaps.html#cb114-2"></a></span>
-<span id="cb114-3"><a href="annotated-heatmaps.html#cb114-3"></a>set1_col =<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&#39;Set1&#39;</span>)</span>
-<span id="cb114-4"><a href="annotated-heatmaps.html#cb114-4"></a></span>
-<span id="cb114-5"><a href="annotated-heatmaps.html#cb114-5"></a>stat_test_roc =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb114-6"><a href="annotated-heatmaps.html#cb114-6"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> roc_auc <span class="op">~</span><span class="st"> </span>erk_state) <span class="op">%&gt;%</span></span>
-<span id="cb114-7"><a href="annotated-heatmaps.html#cb114-7"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_significance</span>(<span class="st">&quot;p&quot;</span>)</span>
-<span id="cb114-8"><a href="annotated-heatmaps.html#cb114-8"></a></span>
-<span id="cb114-9"><a href="annotated-heatmaps.html#cb114-9"></a><span class="co"># ROC AUCs</span></span>
-<span id="cb114-10"><a href="annotated-heatmaps.html#cb114-10"></a><span class="kw">ggboxplot</span>(res, <span class="dt">x =</span> <span class="st">&quot;erk_state&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;roc_auc&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;erk_state&quot;</span>, </span>
-<span id="cb114-11"><a href="annotated-heatmaps.html#cb114-11"></a>  <span class="dt">palette =</span> <span class="kw">c</span>(set1_col[<span class="dv">3</span>], set1_col[<span class="dv">1</span>]),</span>
-<span id="cb114-12"><a href="annotated-heatmaps.html#cb114-12"></a>  <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;ROC AUC&quot;</span>,</span>
-<span id="cb114-13"><a href="annotated-heatmaps.html#cb114-13"></a>  <span class="dt">title =</span> <span class="st">&quot;ERK_f Pools Performance Comparison (ROC)&quot;</span>) <span class="op">+</span></span>
-<span id="cb114-14"><a href="annotated-heatmaps.html#cb114-14"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;inhibited&quot;</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Active&quot;</span>, <span class="st">&quot;Inhibited&quot;</span>)) <span class="op">+</span></span>
-<span id="cb114-15"><a href="annotated-heatmaps.html#cb114-15"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(stat_test_roc, <span class="dt">label =</span> <span class="st">&quot;p = {p} ({p.signif})&quot;</span>, <span class="dt">y.position =</span> <span class="kw">c</span>(<span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb114-16"><a href="annotated-heatmaps.html#cb114-16"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb114-17"><a href="annotated-heatmaps.html#cb114-17"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb114-18"><a href="annotated-heatmaps.html#cb114-18"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="fl">0.5</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb114-19"><a href="annotated-heatmaps.html#cb114-19"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">2.1</span>, <span class="dt">y =</span> <span class="fl">0.55</span>, <span class="dt">label =</span> <span class="st">&quot;Random Predictions (AUC = 0.5)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb114-20"><a href="annotated-heatmaps.html#cb114-20"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
-<span id="cb114-21"><a href="annotated-heatmaps.html#cb114-21"></a></span>
-<span id="cb114-22"><a href="annotated-heatmaps.html#cb114-22"></a>stat_test_pr =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb114-23"><a href="annotated-heatmaps.html#cb114-23"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> pr_auc <span class="op">~</span><span class="st"> </span>erk_state) <span class="op">%&gt;%</span></span>
-<span id="cb114-24"><a href="annotated-heatmaps.html#cb114-24"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_significance</span>(<span class="st">&quot;p&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb114-25"><a href="annotated-heatmaps.html#cb114-25"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_y_position</span>()</span>
-<span id="cb114-26"><a href="annotated-heatmaps.html#cb114-26"></a></span>
-<span id="cb114-27"><a href="annotated-heatmaps.html#cb114-27"></a><span class="co"># PR AUCs</span></span>
-<span id="cb114-28"><a href="annotated-heatmaps.html#cb114-28"></a><span class="kw">ggboxplot</span>(res, <span class="dt">x =</span> <span class="st">&quot;erk_state&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;erk_state&quot;</span>, </span>
-<span id="cb114-29"><a href="annotated-heatmaps.html#cb114-29"></a>  <span class="dt">palette =</span> <span class="kw">c</span>(set1_col[<span class="dv">3</span>], set1_col[<span class="dv">1</span>]),</span>
-<span id="cb114-30"><a href="annotated-heatmaps.html#cb114-30"></a>  <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PR AUC&quot;</span>,</span>
-<span id="cb114-31"><a href="annotated-heatmaps.html#cb114-31"></a>  <span class="dt">title =</span> <span class="st">&quot;ERK_f Pools Performance Comparison (Precision-Recall)&quot;</span>) <span class="op">+</span></span>
-<span id="cb114-32"><a href="annotated-heatmaps.html#cb114-32"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;inhibited&quot;</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Active&quot;</span>, <span class="st">&quot;Inhibited&quot;</span>)) <span class="op">+</span></span>
-<span id="cb114-33"><a href="annotated-heatmaps.html#cb114-33"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(stat_test_pr, <span class="dt">label =</span> <span class="st">&quot;p = {p} ({p.signif})&quot;</span>) <span class="op">+</span></span>
-<span id="cb114-34"><a href="annotated-heatmaps.html#cb114-34"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb114-35"><a href="annotated-heatmaps.html#cb114-35"></a><span class="st">  </span><span class="co"># 6 out 153 drug combos were synergistic</span></span>
-<span id="cb114-36"><a href="annotated-heatmaps.html#cb114-36"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">6</span><span class="op">/</span><span class="dv">153</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb114-37"><a href="annotated-heatmaps.html#cb114-37"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">1.05</span>, <span class="dt">y =</span> <span class="fl">0.06</span>, <span class="dt">label =</span> <span class="st">&quot;Random Predictions (AUC = 0.04)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb114-38"><a href="annotated-heatmaps.html#cb114-38"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="annotated-heatmaps.html#cb116-1"></a>res =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&quot;data/res_erk.rds&quot;</span>)</span>
+<span id="cb116-2"><a href="annotated-heatmaps.html#cb116-2"></a></span>
+<span id="cb116-3"><a href="annotated-heatmaps.html#cb116-3"></a>set1_col =<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&#39;Set1&#39;</span>)</span>
+<span id="cb116-4"><a href="annotated-heatmaps.html#cb116-4"></a></span>
+<span id="cb116-5"><a href="annotated-heatmaps.html#cb116-5"></a>stat_test_roc =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb116-6"><a href="annotated-heatmaps.html#cb116-6"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> roc_auc <span class="op">~</span><span class="st"> </span>erk_state) <span class="op">%&gt;%</span></span>
+<span id="cb116-7"><a href="annotated-heatmaps.html#cb116-7"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_significance</span>(<span class="st">&quot;p&quot;</span>)</span>
+<span id="cb116-8"><a href="annotated-heatmaps.html#cb116-8"></a></span>
+<span id="cb116-9"><a href="annotated-heatmaps.html#cb116-9"></a><span class="co"># ROC AUCs</span></span>
+<span id="cb116-10"><a href="annotated-heatmaps.html#cb116-10"></a><span class="kw">ggboxplot</span>(res, <span class="dt">x =</span> <span class="st">&quot;erk_state&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;roc_auc&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;erk_state&quot;</span>, </span>
+<span id="cb116-11"><a href="annotated-heatmaps.html#cb116-11"></a>  <span class="dt">palette =</span> <span class="kw">c</span>(set1_col[<span class="dv">3</span>], set1_col[<span class="dv">1</span>]),</span>
+<span id="cb116-12"><a href="annotated-heatmaps.html#cb116-12"></a>  <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;ROC AUC&quot;</span>,</span>
+<span id="cb116-13"><a href="annotated-heatmaps.html#cb116-13"></a>  <span class="dt">title =</span> <span class="st">&quot;ERK_f Pools Performance Comparison (ROC)&quot;</span>) <span class="op">+</span></span>
+<span id="cb116-14"><a href="annotated-heatmaps.html#cb116-14"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;inhibited&quot;</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Active&quot;</span>, <span class="st">&quot;Inhibited&quot;</span>)) <span class="op">+</span></span>
+<span id="cb116-15"><a href="annotated-heatmaps.html#cb116-15"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(stat_test_roc, <span class="dt">label =</span> <span class="st">&quot;p = {p} ({p.signif})&quot;</span>, <span class="dt">y.position =</span> <span class="kw">c</span>(<span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb116-16"><a href="annotated-heatmaps.html#cb116-16"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb116-17"><a href="annotated-heatmaps.html#cb116-17"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb116-18"><a href="annotated-heatmaps.html#cb116-18"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="fl">0.5</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb116-19"><a href="annotated-heatmaps.html#cb116-19"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">2.1</span>, <span class="dt">y =</span> <span class="fl">0.55</span>, <span class="dt">label =</span> <span class="st">&quot;Random Predictions (AUC = 0.5)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb116-20"><a href="annotated-heatmaps.html#cb116-20"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb116-21"><a href="annotated-heatmaps.html#cb116-21"></a></span>
+<span id="cb116-22"><a href="annotated-heatmaps.html#cb116-22"></a>stat_test_pr =<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb116-23"><a href="annotated-heatmaps.html#cb116-23"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> pr_auc <span class="op">~</span><span class="st"> </span>erk_state) <span class="op">%&gt;%</span></span>
+<span id="cb116-24"><a href="annotated-heatmaps.html#cb116-24"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_significance</span>(<span class="st">&quot;p&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb116-25"><a href="annotated-heatmaps.html#cb116-25"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_y_position</span>()</span>
+<span id="cb116-26"><a href="annotated-heatmaps.html#cb116-26"></a></span>
+<span id="cb116-27"><a href="annotated-heatmaps.html#cb116-27"></a><span class="co"># PR AUCs</span></span>
+<span id="cb116-28"><a href="annotated-heatmaps.html#cb116-28"></a><span class="kw">ggboxplot</span>(res, <span class="dt">x =</span> <span class="st">&quot;erk_state&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;pr_auc&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;erk_state&quot;</span>, </span>
+<span id="cb116-29"><a href="annotated-heatmaps.html#cb116-29"></a>  <span class="dt">palette =</span> <span class="kw">c</span>(set1_col[<span class="dv">3</span>], set1_col[<span class="dv">1</span>]),</span>
+<span id="cb116-30"><a href="annotated-heatmaps.html#cb116-30"></a>  <span class="dt">add =</span> <span class="st">&quot;jitter&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;PR AUC&quot;</span>,</span>
+<span id="cb116-31"><a href="annotated-heatmaps.html#cb116-31"></a>  <span class="dt">title =</span> <span class="st">&quot;ERK_f Pools Performance Comparison (Precision-Recall)&quot;</span>) <span class="op">+</span></span>
+<span id="cb116-32"><a href="annotated-heatmaps.html#cb116-32"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="st">&quot;active&quot;</span>,<span class="st">&quot;inhibited&quot;</span>), <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Active&quot;</span>, <span class="st">&quot;Inhibited&quot;</span>)) <span class="op">+</span></span>
+<span id="cb116-33"><a href="annotated-heatmaps.html#cb116-33"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(stat_test_pr, <span class="dt">label =</span> <span class="st">&quot;p = {p} ({p.signif})&quot;</span>) <span class="op">+</span></span>
+<span id="cb116-34"><a href="annotated-heatmaps.html#cb116-34"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb116-35"><a href="annotated-heatmaps.html#cb116-35"></a><span class="st">  </span><span class="co"># 6 out 153 drug combos were synergistic</span></span>
+<span id="cb116-36"><a href="annotated-heatmaps.html#cb116-36"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">6</span><span class="op">/</span><span class="dv">153</span>, <span class="dt">linetype =</span> <span class="st">&#39;dashed&#39;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb116-37"><a href="annotated-heatmaps.html#cb116-37"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">1.05</span>, <span class="dt">y =</span> <span class="fl">0.06</span>, <span class="dt">label =</span> <span class="st">&quot;Random Predictions (AUC = 0.04)&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb116-38"><a href="annotated-heatmaps.html#cb116-38"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:erk-pool-cpm"></span>
 <img src="index_files/figure-html/erk-pool-cpm-1.png" alt="Comparing drug prediction performance (ROC and PR AUCs) between bootstrapped calibrated model ensembles from two model pools. Results were normalized to random model predictions. The models had link operator mutations only. In one pool, each model had a single stable state with ERK_f active and on the other pool ERK_f was inhibited at the stable state (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" /><img src="index_files/figure-html/erk-pool-cpm-2.png" alt="Comparing drug prediction performance (ROC and PR AUCs) between bootstrapped calibrated model ensembles from two model pools. Results were normalized to random model predictions. The models had link operator mutations only. In one pool, each model had a single stable state with ERK_f active and on the other pool ERK_f was inhibited at the stable state (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)" width="50%" />
 <p class="caption">
-Figure 75: Comparing drug prediction performance (ROC and PR AUCs) between bootstrapped calibrated model ensembles from two model pools. Results were normalized to random model predictions. The models had link operator mutations only. In one pool, each model had a single stable state with ERK_f active and on the other pool ERK_f was inhibited at the stable state (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)
+Figure 77: Comparing drug prediction performance (ROC and PR AUCs) between bootstrapped calibrated model ensembles from two model pools. Results were normalized to random model predictions. The models had link operator mutations only. In one pool, each model had a single stable state with ERK_f active and on the other pool ERK_f was inhibited at the stable state (CASCADE 2.0, Bliss synergy method, Ensemble-wise results)
 </p>
 </div>
 <div class="green-box">

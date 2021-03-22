@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 19 January, 2021"
+date: "Last updated: 22 March, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -162,8 +162,8 @@ plot(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR,
 lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(res_ss_ew$AUC, digits = 3), "Calibrated"), 
-    paste(round(res_prolif_ew$AUC, digits = 3), "Random")), cex = 1.3)
+  legend = c(paste(round(res_ss_ew$AUC, digits = 2), "Calibrated"), 
+    paste(round(res_prolif_ew$AUC, digits = 2), "Random")), cex = 1.3)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -173,8 +173,8 @@ plot(x = res_ss_mw$roc_stats$FPR, y = res_ss_mw$roc_stats$TPR,
 lines(x = res_prolif_mw$roc_stats$FPR, y = res_prolif_mw$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:3], pch = 19,
-  legend = c(paste(round(res_ss_mw$AUC, digits = 3), "Calibrated"),
-    paste(round(res_prolif_mw$AUC, digits = 3), "Random")), cex = 1.3)
+  legend = c(paste(round(res_ss_mw$AUC, digits = 2), "Calibrated"),
+    paste(round(res_prolif_mw$AUC, digits = 2), "Random")), cex = 1.3)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -202,16 +202,16 @@ plot(pr_ss_ew_hsa, main = 'PR curve, Ensemble-wise synergies (HSA)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_prolif_ew_hsa, add = TRUE, color = my_palette[2])
 legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(pr_ss_ew_hsa$auc.davis.goadrich, digits = 3), "Calibrated"), 
-    paste(round(pr_prolif_ew_hsa$auc.davis.goadrich, digits = 3), "Random")))
+  legend = c(paste(round(pr_ss_ew_hsa$auc.davis.goadrich, digits = 2), "Calibrated"), 
+    paste(round(pr_prolif_ew_hsa$auc.davis.goadrich, digits = 2), "Random")))
 grid(lwd = 0.5)
 
 plot(pr_ss_mw_hsa, main = 'PR curve, Model-wise synergies (HSA)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_prolif_mw_hsa, add = TRUE, color = my_palette[2])
 legend('left', title = 'AUC', col = my_palette[1:3], pch = 19,
-  legend = c(paste(round(pr_ss_mw_hsa$auc.davis.goadrich, digits = 3), "Calibrated"),
-    paste(round(pr_prolif_mw_hsa$auc.davis.goadrich, digits = 3), "Random")))
+  legend = c(paste(round(pr_ss_mw_hsa$auc.davis.goadrich, digits = 2), "Calibrated"),
+    paste(round(pr_prolif_mw_hsa$auc.davis.goadrich, digits = 2), "Random")))
 grid(lwd = 0.5)
 ```
 
@@ -381,8 +381,8 @@ plot(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR,
 lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(res_ss_ew$AUC, digits = 3), "Calibrated"), 
-    paste(round(res_prolif_ew$AUC, digits = 3), "Random")), cex = 1.3)
+  legend = c(paste(round(res_ss_ew$AUC, digits = 2), "Calibrated"), 
+    paste(round(res_prolif_ew$AUC, digits = 2), "Random")), cex = 1.3)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -392,8 +392,8 @@ plot(x = res_ss_mw$roc_stats$FPR, y = res_ss_mw$roc_stats$TPR,
 lines(x = res_prolif_mw$roc_stats$FPR, y = res_prolif_mw$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(res_ss_mw$AUC, digits = 3), "Calibrated"),
-    paste(round(res_prolif_mw$AUC, digits = 3), "Random")), cex = 1.3)
+  legend = c(paste(round(res_ss_mw$AUC, digits = 2), "Calibrated"),
+    paste(round(res_prolif_mw$AUC, digits = 2), "Random")), cex = 1.3)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 ```
@@ -446,16 +446,16 @@ plot(pr_ss_ew_bliss, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_prolif_ew_bliss, add = TRUE, color = my_palette[2])
 legend(x = 0, y = 0.9, title = 'AUC', col = my_palette[1:2], pch = 19, cex = 1.3,
-  legend = c(paste(round(pr_ss_ew_bliss$auc.davis.goadrich, digits = 3), "Calibrated"), 
-    paste(round(pr_prolif_ew_bliss$auc.davis.goadrich, digits = 3), "Random")))
+  legend = c(paste(round(pr_ss_ew_bliss$auc.davis.goadrich, digits = 2), "Calibrated"), 
+    paste(round(pr_prolif_ew_bliss$auc.davis.goadrich, digits = 2), "Random")))
 grid(lwd = 0.5)
 
 plot(pr_ss_mw_bliss, main = 'PR curve, Model-wise synergies (Bliss)', 
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_prolif_mw_bliss, add = TRUE, color = my_palette[2])
 legend(x = 0, y = 0.9, title = 'AUC', col = my_palette[1:3], pch = 19, cex = 1.3,
-  legend = c(paste(round(pr_ss_mw_bliss$auc.davis.goadrich, digits = 3), "Calibrated"),
-    paste(round(pr_prolif_mw_bliss$auc.davis.goadrich, digits = 3), "Random")))
+  legend = c(paste(round(pr_ss_mw_bliss$auc.davis.goadrich, digits = 2), "Calibrated"),
+    paste(round(pr_prolif_mw_bliss$auc.davis.goadrich, digits = 2), "Random")))
 grid(lwd = 0.5)
 ```
 
@@ -555,6 +555,8 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 - A value very close to $\beta=-1$ seems to be the one maximizes both the ROC-AUC and the PR-AUC.
 :::
 
+## Best ROC and PRC {-}
+
 :::{#combined-pred-bliss-dt}
 The **ROC ensemble-wise statistics data** for the combined predictor $calibrated + \beta \times random, \beta=-1$ are:
 :::
@@ -580,10 +582,8 @@ DT::datatable(data = res_comb_pred$roc_stats, options =
 # pred_ew_bliss %>% arrange(combined_score)
 ```
 
-## Best ROC and PRC {-}
-
 :::{.note}
-Only for the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+Only for the next 2 Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
 
@@ -594,8 +594,8 @@ plot(x = res_comb_pred$roc_stats$FPR, y = res_comb_pred$roc_stats$TPR,
 lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR, 
   lwd = 3, col = my_palette[2])
 legend('bottomright', title = 'AUC', col = my_palette[1:2], pch = 19,
-  legend = c(paste(round(res_comb_pred$AUC, digits = 3), "Calibrated"), 
-    paste(round(res_prolif_ew$AUC, digits = 3), "Random")), cex = 1.3)
+  legend = c(paste(round(res_comb_pred$AUC, digits = 2), "Calibrated"), 
+    paste(round(res_prolif_ew$AUC, digits = 2), "Random")), cex = 1.3)
 grid(lwd = 0.5)
 abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 
@@ -605,14 +605,49 @@ plot(res_comb_pred_pr, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
 plot(pr_prolif_ew_bliss, add = TRUE, color = my_palette[2])
 legend(x = 0, y = 0.9, title = 'AUC', col = my_palette[1:2], pch = 19, cex = 1.3,
-  legend = c(paste(round(res_comb_pred_pr$auc.davis.goadrich, digits = 3), "Calibrated"),
-    paste(round(pr_prolif_ew_bliss$auc.davis.goadrich, digits = 3), "Random")))
+  legend = c(paste(round(res_comb_pred_pr$auc.davis.goadrich, digits = 2), "Calibrated"),
+    paste(round(pr_prolif_ew_bliss$auc.davis.goadrich, digits = 2), "Random")))
 grid(lwd = 0.5)
 ```
 
 <div class="figure" style="text-align: center">
 <img src="index_files/figure-html/best-roc-pr-cascade1-1.png" alt="ROC and PR curves for Random and Best Combined Predictor (CASCADE 1.0, Bliss synergy method)" width="50%" /><img src="index_files/figure-html/best-roc-pr-cascade1-2.png" alt="ROC and PR curves for Random and Best Combined Predictor (CASCADE 1.0, Bliss synergy method)" width="50%" />
 <p class="caption">(\#fig:best-roc-pr-cascade1)ROC and PR curves for Random and Best Combined Predictor (CASCADE 1.0, Bliss synergy method)</p>
+</div>
+
+If we add the predictions of the non-normalized calibrated data to the above Figures, we have:
+
+```r
+plot(x = res_comb_pred$roc_stats$FPR, y = res_comb_pred$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR, 
+  lwd = 3, col = my_palette[2])
+lines(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR, 
+  lwd = 3, col = my_palette[3])
+legend('bottomright', title = 'AUC', col = my_palette[c(3,1,2)], pch = 19,
+  legend = c(paste(round(res_ss_ew$AUC, digits = 2), "Calibrated (non-normalized)"), 
+    paste(round(res_comb_pred$AUC, digits = 2), "Calibrated"), 
+    paste(round(res_prolif_ew$AUC, digits = 2), "Random")), cex = 1)
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+res_comb_pred_pr = pr.curve(scores.class0 = pred_ew_bliss %>% pull(combined_score) %>% (function(x) {-x}), 
+  weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+plot(res_comb_pred_pr, main = 'PR curve, Ensemble-wise synergies (Bliss)', 
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE)
+plot(pr_prolif_ew_bliss, add = TRUE, color = my_palette[2])
+plot(pr_ss_ew_bliss, add = TRUE, color = my_palette[3])
+legend(x = 0, y = 0.9, title = 'AUC', col = my_palette[c(3,1,2)], pch = 19, cex = 0.9,
+  legend = c(paste(round(pr_ss_ew_bliss$auc.davis.goadrich, digits = 2), "Calibrated (non-normalized)"),
+    paste(round(res_comb_pred_pr$auc.davis.goadrich, digits = 2), "Calibrated"),
+    paste(round(pr_prolif_ew_bliss$auc.davis.goadrich, digits = 2), "Random")))
+grid(lwd = 0.5)
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/best-roc-pr-cascade1-2-1.png" alt="ROC and PR curves for Random, Calibrated and Best Combined Predictor (CASCADE 1.0, Bliss synergy method)" width="50%" /><img src="index_files/figure-html/best-roc-pr-cascade1-2-2.png" alt="ROC and PR curves for Random, Calibrated and Best Combined Predictor (CASCADE 1.0, Bliss synergy method)" width="50%" />
+<p class="caption">(\#fig:best-roc-pr-cascade1-2)ROC and PR curves for Random, Calibrated and Best Combined Predictor (CASCADE 1.0, Bliss synergy method)</p>
 </div>
 
 ## Correlation {-}
@@ -1997,7 +2032,7 @@ For the **Bliss ensemble-wise results** we demonstrated above that a value of $\
 Here, we present the ROC and PR curves for the **calibrated (normalized to random model)** predictions compared to the **random proliferative** model results.
 
 :::{.note}
-Only for the next plot, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+Only for the next twp Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
 
@@ -2023,7 +2058,7 @@ lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats
   lwd = 3, col = my_palette[2])
 #lines(x = roc_best_res1$roc_stats$FPR, y = roc_best_res1$roc_stats$TPR,
 #  lwd = 2, col = my_palette[3])
-legend('topleft', title = 'AUC', col = my_palette[1:4], pch = 19, cex = 1.5,
+legend('topleft', title = 'AUC', col = my_palette[1:4], pch = 19, cex = 1.3,
   legend = c(paste(round(roc_best_res2$AUC, digits = 2), 'Calibrated'),
              paste(round(res_prolif_ew_150sim$AUC, digits = 2), 'Random')))
 grid(lwd = 0.5)
@@ -2036,7 +2071,7 @@ plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[2], lwd = 3)
 #plot(pr_best_res1, add = TRUE, color = my_palette[3], lwd = 2)
 legend('topright', title = 'AUC', col = my_palette[1:2], pch = 19, cex = 1.5,
   legend = c(paste(round(pr_best_res2$auc.davis.goadrich, digits = 2), 'Calibrated'),
-    paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Random')))
+    paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Random')))
 grid(lwd = 0.5)
 ```
 
@@ -2074,6 +2109,45 @@ DT::datatable(data = roc_best_res2$roc_stats, options =
 #   filter(threshold < mean(thres)) %>% 
 #   slice(n()) %>% kable()
 ```
+
+If we add the predictions of the non-normalized calibrated data to the above Figures (again using the results from the $150$ simulations), we have:
+
+```r
+# best_beta2 = -1
+
+# Plot best ROCs
+plot(x = roc_best_res2$roc_stats$FPR, y = roc_best_res2$roc_stats$TPR,
+  type = 'l', lwd = 3, col = my_palette[1], 
+  main = ('ROC curve, Ensemble-wise synergies (Bliss)'),
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_prolif_ew_150sim$roc_stats$FPR, y = res_prolif_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[2])
+lines(x = res_ss_ew_150sim$roc_stats$FPR, y = res_ss_ew_150sim$roc_stats$TPR,
+  lwd = 3, col = my_palette[3])
+legend('topleft', title = 'AUC', col = my_palette[c(3,1,2)], pch = 19, cex = 1,
+  legend = c(paste(round(res_ss_ew_150sim$AUC, digits = 2), 'Calibrated (non-normalized)'),
+             paste(round(roc_best_res2$AUC, digits = 2), 'Calibrated'),
+             paste(round(res_prolif_ew_150sim$AUC, digits = 2), 'Random')))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+# Plot best PRCs
+plot(pr_best_res2, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = my_palette[1], rand.plot = TRUE, lwd = 3)
+plot(pr_prolif_ew_bliss_150sim, add = TRUE, color = my_palette[2], lwd = 3)
+plot(pr_ss_ew_bliss_150sim, add = TRUE, color = my_palette[3], lwd = 2)
+legend('topright', title = 'AUC', col = my_palette[c(3,1,2)], pch = 19, cex = 1,
+  legend = c(paste(round(pr_ss_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Calibrated (non-normalized)'),
+             paste(round(pr_best_res2$auc.davis.goadrich, digits = 2), 'Calibrated'),
+             paste(round(pr_prolif_ew_bliss_150sim$auc.davis.goadrich, digits = 2), 'Random')))
+grid(lwd = 0.5)
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/best-beta-cascade2-link-2-1.png" alt="ROC and PR curves for Random, Calibrated and Combined Predictor (CASCADE 2.0, Link Operator Mutations)" width="50%" /><img src="index_files/figure-html/best-beta-cascade2-link-2-2.png" alt="ROC and PR curves for Random, Calibrated and Combined Predictor (CASCADE 2.0, Link Operator Mutations)" width="50%" />
+<p class="caption">(\#fig:best-beta-cascade2-link-2)ROC and PR curves for Random, Calibrated and Combined Predictor (CASCADE 2.0, Link Operator Mutations)</p>
+</div>
+
 
 ## Correlation {-}
 
@@ -2961,7 +3035,7 @@ abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
 plot(pr_best_res, main = TeX('PR curve (Ensemble-wise), $calibrated + \\beta \\times random$'),
   auc.main = FALSE, color = my_palette[2], rand.plot = TRUE)
 legend('topright', title = TeX('AUC ($\\beta$ = -1)'), col = my_palette[2], pch = 19,
-  legend = paste(round(pr_best_res$auc.davis.goadrich, digits = 3), 'Bliss (150 sim)'), cex = 1.5)
+  legend = paste(round(pr_best_res$auc.davis.goadrich, digits = 2), 'Bliss (150 sim)'), cex = 1.5)
 grid(lwd = 0.5)
 ```
 
@@ -3576,7 +3650,7 @@ What matters for the calculation of the ROC and PR points is the *ranking* of th
 Thus if we bring the predictor's synergy scores to the exponential space, a value of $-1$ for $\beta$ translates to a simple *fold-change normalization* technique:
 
 $calibrated + \beta \times random \overset{\beta = -1}{=} calibrated - random \xrightarrow[\text{same ranking}]{e(x) \text{ monotonous}}$
-$exp(calibrated - random)=exp(calibrated)/exp(random)$. 
+$e^{(calibrated - random)}=e^{calibrated}/e^{random}$.
 :::
 
 
@@ -4184,7 +4258,7 @@ xfun::session_info()
 ```
 R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 20.04.1 LTS
+Running under: Ubuntu 20.04.2 LTS
 
 Locale:
   LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              

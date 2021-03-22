@@ -9,6 +9,7 @@ fig:auc-sen-ew-bliss-cascade1
 fig:auc-sen-mw-bliss-cascade1
 fig:combined-pred-bliss-dt
 fig:best-roc-pr-cascade1
+fig:best-roc-pr-cascade1-2
 fig:cor-plot-cascade1
 fig:fit-evolution
 fig:fit-evolution-2
@@ -35,6 +36,7 @@ fig:auc-sen-ew-bliss-cascade2
 fig:auc-sen-mw-bliss-cascade2
 fig:best-beta-cascade2-link
 fig:comb-pred-best-link-dt
+fig:best-beta-cascade2-link-2
 fig:cor-plot-cascade2
 fig:fit-evolution-3
 fig:fit-vs-perf-roc
