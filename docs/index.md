@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 22 March, 2021"
+date: "Last updated: 25 March, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -2340,7 +2340,7 @@ boot_res = readRDS(file = "data/res_param_boot_aucs.rds")
 # the un-scrambled topology results have a similarity score equal to 1, 
 # and 'none' scrambling whatsoever as `scramble_type`
 lo_boot_res = boot_res %>%
-  add_column(sim = 1, scramble_type = 'none', .before = 1) %>% 
+  tibble::add_column(sim = 1, scramble_type = 'none', .before = 1) %>%
   filter(param == 'link-only') %>% # keep only the link-operator results
   select(-one_of("param")) # remove unwanted column
 
@@ -2507,7 +2507,7 @@ scrambled_topo_res %>%
     title = "Sign Inversion vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 6.9, y = 0.01, label = "Random (AUC = 0.04)")) + 
+  geom_text(aes(x = 6.5, y = 0.01, label = "Random (AUC = 0.04)")) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
@@ -2532,7 +2532,7 @@ scrambled_topo_res %>%
     title = "All types of Scrambling vs Performance (ROC)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = 0.5, linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5.8, y = 0.45, label = "Random (AUC = 0.5)")) + 
+  geom_text(aes(x = 6.5, y = 0.45, label = "Random (AUC = 0.5)")) +
   theme(plot.title = element_text(hjust = 0.5))
 
 # PR results
@@ -2547,7 +2547,7 @@ scrambled_topo_res %>%
     title = "All types of Scrambling vs Performance (Precision-Recall)") +
   theme_classic(base_size = 14) +
   geom_hline(yintercept = sum(observed)/length(observed), linetype = 'dashed', color = "red") +
-  geom_text(aes(x = 5.8, y = 0.01, label = "Random (AUC = 0.04)")) + 
+  geom_text(aes(x = 6.5, y = 0.01, label = "Random (AUC = 0.04)")) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 

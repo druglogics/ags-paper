@@ -65,6 +65,8 @@ for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
     pr_auc = res_pr$auc.davis.goadrich,
     avg_fit = mean(models_fit))
 
+  print(paste('File', ew_synergies_file, 'fit-avg', mean(models_fit)))
+
   data_list[[index]] = df
   index = index + 1
 }
