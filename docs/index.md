@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 25 March, 2021"
+date: "Last updated: 02 April, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -4096,6 +4096,65 @@ ggboxplot(res, x = "erk_state", y = "pr_auc", fill = "erk_state",
 Significantly better performance of the bootstrapped ensembles with `ERK_f` active, suggesting that ERK should be considered active in AGS cells from a functional point of view.
 :::
 
+# Mouse Xenograft Results {-}
+
+Figures for the paper from the mouse experiments.
+Mice were injected with AGS tumors and split to $4$ groups:
+
+- `Control` group (no drugs were administered) 
+- Mice group which was administered a *TAK1* inhibitor (`5Z` drug)
+- Mice group which was administered a *PI3K* inhibitor (`PI` drug)
+- Mice group which was administered both `5Z` and `PI` drugs
+
+
+```r
+# read file with tumor volume data
+tumor_data = readr::read_csv(file = 'data/tumor_vol_data.csv')
+
+# reshape data
+tumor_data = tumor_data %>% 
+  tidyr::pivot_longer(cols = -c(drugs), names_to = 'day', values_to = 'vol') %>%
+  mutate(day = as.integer(day)) %>%
+  mutate(drugs = factor(x = drugs, levels = c("PI", "Control", "5Z", "5Z-PI")))
+```
+
+
+```r
+pd = position_dodge(0.2)
+days = tumor_data %>% distinct(day) %>% pull()
+
+tumor_data %>%
+  ggpubr::desc_statby(measure.var = 'vol', grps = c('day', 'drugs')) %>%
+  ggplot(aes(x = day, y = mean, colour = drugs, group = drugs)) + 
+    geom_errorbar(aes(ymin = mean - se, ymax = mean + se), color = 'black', 
+      width = 1, position = pd) +
+    geom_line(position = pd) +
+    geom_point(position = pd) + 
+    scale_x_continuous(labels = as.character(days), breaks = days) +
+    scale_color_brewer(palette = 'Set1') + 
+    labs(title = 'Average tumor volume with SEM', x = 'Days', 
+      y = latex2exp::TeX('Tumor volume $\\left(mm^3\\right)$')) +
+    ylim(c(0, NA)) + 
+    theme_classic(base_size = 14) +
+    theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank())
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/mouse-xenograft-figures-1.png" alt="Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)" width="2100" />
+<p class="caption">(\#fig:mouse-xenograft-figures)Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)</p>
+</div>
+
+
+```r
+tumor_wilcox_res = tumor_data %>% 
+  rstatix::wilcox_test(formula = vol ~ drugs)%>% select(-`.y.`)
+
+DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6, searching = FALSE))
+```
+
+<!--html_preserve--><div id="htmlwidget-d2a34d502a66744b8e1f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 # Reproduce Data & Simulation Results {-}
 
 :::{.note #zenodo-doi-link}
@@ -4247,6 +4306,7 @@ In addition, there is a [`data`](https://github.com/druglogics/ags-paper/tree/ma
 - `scrambled_topo_res_cascade1.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade1.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade1) in CASCADE 1.0.
 - `scrambled_topo_res_cascade2.rds`: a compressed file with a `tibble` object having the result data from executing the script [get_syn_res_scrambled_topo_cascade2.R](https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R), related to the [scrambled topologies investigation](#scrambled-topo-inv-cascade2) in CASCADE 2.0.
 - `res_erl.rds`: a compressed file with a `tibble` object having the result data from executing the script [erk_perf_tidy_data.R](https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R), related to the [ERK analysis](#erk-perf-inv) with the link operator mutated models in CASCADE 2.0.
+- `tumor_vol_data.csv`: the data from the xenograft experiments relating to the `PI` and `5Z` inhibitors.
 
 # R session info {-}
 
