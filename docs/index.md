@@ -4143,17 +4143,17 @@ tumor_data %>%
 <img src="index_files/figure-html/mouse-xenograft-figures-1.png" alt="Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)" width="2100" />
 <p class="caption">(\#fig:mouse-xenograft-figures)Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)</p>
 </div>
-
+We use the Wilcoxon rank sum test to compare the tumor values between the different mice groups:
 
 ```r
 tumor_wilcox_res = tumor_data %>% 
   rstatix::wilcox_test(formula = vol ~ drugs)%>% select(-`.y.`)
 
-DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6, searching = FALSE))
+DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6))
 ```
 
 <!--html_preserve--><div id="htmlwidget-d2a34d502a66744b8e1f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 # Reproduce Data & Simulation Results {-}
 

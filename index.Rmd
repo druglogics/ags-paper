@@ -3570,12 +3570,12 @@ tumor_data %>%
     theme_classic(base_size = 14) +
     theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank())
 ```
-
+We use the Wilcoxon rank sum test to compare the tumor values between the different mice groups:
 ```{r p-values-tumor-data}
 tumor_wilcox_res = tumor_data %>% 
   rstatix::wilcox_test(formula = vol ~ drugs)%>% select(-`.y.`)
 
-DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6, searching = FALSE))
+DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6))
 ```
 
 # Reproduce Data & Simulation Results {-}
