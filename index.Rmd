@@ -3603,7 +3603,7 @@ tumor_diff %>%
   geom_jitter(position = position_jitter(0.2)) +
   ggpubr::stat_pvalue_manual(wilcox_res, label = "p = {p.adj} ({p.adj.signif})") +
   scale_fill_brewer(palette = 'Set1') + 
-  labs(title = 'Relative tumor size (Day 1 vs Day 19)', 
+  labs(title = 'Relative tumor size (Day 1 vs Day 19)', x = "",
     y = latex2exp::TeX('Difference in tumor volume $\\left(mm^3\\right)$')) +
   theme_classic(base_size = 14) +
     theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank())
