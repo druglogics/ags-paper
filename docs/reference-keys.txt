@@ -75,4 +75,5 @@ fig:topo-ss-heat-1
 fig:edge-heat-1
 fig:edge-heat-2
 fig:erk-pool-cpm
-fig:mouse-xenograft-figures
+fig:mouse-xenograft-figure-1
+fig:mouse-xenograft-figure-2

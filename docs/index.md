@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 02 April, 2021"
+date: "Last updated: 03 April, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -4110,6 +4110,7 @@ Mice were injected with AGS tumors and split to $4$ groups:
 ```r
 # read file with tumor volume data
 tumor_data = readr::read_csv(file = 'data/tumor_vol_data.csv')
+tumor_data_wide = tumor_data # keep the wide format for later
 
 # reshape data
 tumor_data = tumor_data %>% 
@@ -4140,20 +4141,66 @@ tumor_data %>%
 ```
 
 <div class="figure" style="text-align: center">
-<img src="index_files/figure-html/mouse-xenograft-figures-1.png" alt="Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)" width="2100" />
-<p class="caption">(\#fig:mouse-xenograft-figures)Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)</p>
+<img src="index_files/figure-html/mouse-xenograft-figure-1-1.png" alt="Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)" width="2100" />
+<p class="caption">(\#fig:mouse-xenograft-figure-1)Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)</p>
 </div>
-We use the Wilcoxon rank sum test to compare the tumor values between the different mice groups:
+We use the Wilcoxon rank sum test to compare the tumor values between the different mice groups (adjusted p-values are calculated using Holm's method [@Holm1979; @Aickin1996]:
 
 ```r
 tumor_wilcox_res = tumor_data %>% 
   rstatix::wilcox_test(formula = vol ~ drugs)%>% select(-`.y.`)
 
-DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6))
+DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6)) %>%
+  DT::formatStyle('p.adj', backgroundColor = 'lightgreen')
 ```
 
 <!--html_preserve--><div id="htmlwidget-d2a34d502a66744b8e1f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
+
+
+```r
+tumor_diff = tumor_data_wide %>% 
+  mutate(diff = `19` - `1`, rel_change = (`19`-`1`)/`1`) %>% 
+  mutate(drugs = factor(x = drugs, levels = c("PI", "Control", "5Z", "5Z-PI"))) %>% 
+  select(drugs, diff, rel_change)
+
+# Compare single drug vs combo drug group
+wilcox_res = tumor_diff %>% 
+  rstatix::wilcox_test(formula = diff ~ drugs,
+    comparisons = list(c('5Z-PI', 'Control'), c('5Z-PI', '5Z'), c('PI','5Z-PI'))) %>% 
+  select(-`.y.`) %>%
+  rstatix::add_xy_position()
+# swap heights
+y_pos = wilcox_res %>% pull(y.position)
+wilcox_res$y.position = y_pos[c(2,1,3)]
+  
+set.seed(42)
+tumor_diff %>%
+  ggplot(aes(x = drugs, y = diff)) +
+  geom_boxplot(aes(fill = drugs)) +
+  geom_jitter(position = position_jitter(0.2)) +
+  ggpubr::stat_pvalue_manual(wilcox_res, label = "p = {p.adj} ({p.adj.signif})") +
+  scale_fill_brewer(palette = 'Set1') + 
+  labs(title = 'Relative tumor size (Day 1 vs Day 19)', 
+    y = latex2exp::TeX('Difference in tumor volume $\\left(mm^3\\right)$')) +
+  theme_classic(base_size = 14) +
+    theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank())
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/mouse-xenograft-figure-2-1.png" alt="Comparing tumor volumes from all mice between Days 1 and 19." width="2100" />
+<p class="caption">(\#fig:mouse-xenograft-figure-2)Comparing tumor volumes from all mice between Days 1 and 19.</p>
+</div>
+
+We also include the table of the Wilcoxon test results between the compared groups:
+
+```r
+DT::datatable(data = wilcox_res %>% select(1:8), options = list(searching = FALSE)) %>%
+  DT::formatStyle('p.adj', backgroundColor = 'lightgreen')
+```
+
+<!--html_preserve--><div id="htmlwidget-e96c0688a849169abb34" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e96c0688a849169abb34">{"x":{"filter":"none","data":[["1","2","3"],["Control","5Z","PI"],["5Z-PI","5Z-PI","5Z-PI"],[7,8,7],[8,8,8],[53,57,48],[0.002,0.007,0.02],[0.007,0.014,0.02],["**","*","*"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
 
 # Reproduce Data & Simulation Results {-}
 
