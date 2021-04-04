@@ -215,7 +215,8 @@ ha_lo = HeatmapAnnotation(COSMIC = node_cosmic_map[colnames(lo_mat)],
   annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
   na_col = "white")
 
-indexes = sample(1:nrow(lo_mat), 500)
+# for testing
+#indexes = sample(1:nrow(lo_mat), 500)
 
 set.seed(42)
 heatmap_param = ComplexHeatmap::Heatmap(matrix = lo_mat,
@@ -297,6 +298,7 @@ dev.off()
 set.seed(42)
 heat_ss = Heatmap(matrix = lo_ss_mat[,colnames(lo_mat)],
   #matrix = lo_ss_mat[indexes, colnames(lo_mat)],
+  name = 'heat_ss',
   column_km = 3, column_km_repeats = 5, col = state_colors,
   row_title_side = "right", row_title = "Stable states",
   show_row_dend = FALSE, #row_title_rot = 90,
@@ -315,14 +317,14 @@ heat_param = Heatmap(matrix = lo_mat,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Link Operator', labels = c('AND-NOT', 'OR-NOT')))
 
-ha = HeatmapAnnotation(Training = node_training_state_map[colnames(lo_mat)],
+ha = HeatmapAnnotation(Calibration = node_training_state_map[colnames(lo_mat)],
   COSMIC = node_cosmic_map[colnames(lo_mat)],
   Pathway = node_path_map[colnames(lo_mat)],
   `Drug Targets` = node_drug_target_map[colnames(lo_mat)],
   `Target Connectivity` = anno_barplot(x = node_conn_map[colnames(lo_mat)]),
   `Source Connectivity` = anno_barplot(x = node_src_conn_map[colnames(lo_mat)]),
   Agreement = anno_barplot(x = lo_ss_aggreement, gp = gpar(fill = 'black')),
-  col = list(Training = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors, `Drug Targets` = drug_target_colors),
+  col = list(Calibration = training_colors, Pathway = pathway_colors, COSMIC = cosmic_colors, `Drug Targets` = drug_target_colors),
   na_col = "white",
   annotation_name_side = 'right', annotation_name_rot = list(Connectivity = 0),
   annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
@@ -333,11 +335,23 @@ column_name_annot = HeatmapAnnotation(node_names = anno_text(colnames(lo_mat), g
 # we combine the heatmaps vertically along with the annotations
 heat_list = heat_ss %v% heat_param %v% ha %v% column_name_annot
 
+# mark 3 nodes with boxes
+co = column_order(heat_list)$`2` # the marked nodes are in the second column slice
+nc = length(co)
+marked_nodes = c("JNK_f", "ERK_f", "MAPK14")
+
 png(filename = "img/lo_combined_heat.png", width = 7, height = 7, units = "in", res = 600)
 draw(heat_list, heatmap_legend_side = "left")
 decorate_annotation("Agreement", {
   grid.lines(x = unit(c(0.5, 53.5), units = "native"), # 52 link-operator nodes
     y = unit(c(0.5, 0.5), units = "npc"),
     gp = gpar(lty = 2, col = 'red'))
+})
+# all the marked nodes belong to the second slice
+decorate_heatmap_body(heatmap = "heat_ss", column_slice = 2, code = {
+  for(node in marked_nodes) {
+    i = which(colnames(lo_mat)[co] == node)
+    grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 1))
+  }
 })
 dev.off()
