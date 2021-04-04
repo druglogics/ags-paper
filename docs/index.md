@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 03 April, 2021"
+date: "Last updated: 04 April, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -3860,7 +3860,7 @@ knitr::include_graphics(path = 'img/edge_path_dist.png')
 
 ### Training Data {-}
 
-We annotate in the stable state heatmaps the states (*activation* or *inhibition*) of the nodes as they were in the AGS training data.
+We annotate in the stable state heatmaps the states (*activation* or *inhibition*) of the nodes as they were in the AGS training data (annotation name is *Training* or *Calibration*).
 
 ### Connectivity {-}
 
@@ -3959,8 +3959,8 @@ knitr::include_graphics(path = 'img/lo_combined_heat.png')
 ```
 
 <div class="figure">
-<img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown." width="2100" />
-<p class="caption">(\#fig:lo-heat-3)Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown.</p>
+<img src="img/lo_combined_heat.png" alt="Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data (Calibration), COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown. The stable states across the models for the JNK_f, ERK_f and MAPK14 nodes have been marked with rectangular black boxes." width="2100" />
+<p class="caption">(\#fig:lo-heat-3)Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data (Calibration), COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown. The stable states across the models for the JNK_f, ERK_f and MAPK14 nodes have been marked with rectangular black boxes.</p>
 </div>
 
 :::{.green-box}

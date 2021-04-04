@@ -3348,7 +3348,7 @@ knitr::include_graphics(path = 'img/edge_path_dist.png')
 
 ### Training Data {-}
 
-We annotate in the stable state heatmaps the states (*activation* or *inhibition*) of the nodes as they were in the AGS training data.
+We annotate in the stable state heatmaps the states (*activation* or *inhibition*) of the nodes as they were in the AGS training data (annotation name is *Training* or *Calibration*).
 
 ### Connectivity {-}
 
@@ -3417,7 +3417,7 @@ The `RTPK_g` node is an outlier in our data: it is annotated as an oncogene and 
 knitr::include_graphics(path = 'img/lo_heat.png')
 ```
 
-```{r lo-heat-3, fig.cap='Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data, COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown.'}
+```{r lo-heat-3, fig.cap='Combined stable states and parameterization heatmaps. Only the CASCADE 2.0 nodes that have a link-operator in their respective boolean equation are shown. The 52 link-operator nodes have been grouped to 3 clusters with K-means using the stable states matrix data. The link-operator data heatmap has the same row order as the stable states heatmap. Training data (Calibration), COSMIC, Pathway, Drug Target, in-degree, out-degree Connectivity and Percent Agreement annotations are shown. The stable states across the models for the JNK_f, ERK_f and MAPK14 nodes have been marked with rectangular black boxes.'}
 knitr::include_graphics(path = 'img/lo_combined_heat.png')
 ```
 
