@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 04 April, 2021"
+date: "Last updated: 06 April, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -4161,7 +4161,7 @@ DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6)) %>%
 ```r
 tumor_diff = tumor_data_wide %>% 
   mutate(diff = `19` - `1`, rel_change = (`19`-`1`)/`1`) %>% 
-  mutate(drugs = factor(x = drugs, levels = c("PI", "Control", "5Z", "5Z-PI"))) %>% 
+  mutate(drugs = factor(x = drugs, levels = c("Control", "PI", "5Z", "5Z-PI"))) %>% 
   select(drugs, diff, rel_change)
 
 # Compare single drug vs combo drug group
@@ -4172,15 +4172,17 @@ wilcox_res = tumor_diff %>%
   rstatix::add_xy_position()
 # swap heights
 y_pos = wilcox_res %>% pull(y.position)
-wilcox_res$y.position = y_pos[c(2,1,3)]
-  
+wilcox_res$y.position = y_pos[c(3,1,2)]
+# to change color ordering
+set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
+
 set.seed(42)
 tumor_diff %>%
   ggplot(aes(x = drugs, y = diff)) +
   geom_boxplot(aes(fill = drugs)) +
   geom_jitter(position = position_jitter(0.2)) +
   ggpubr::stat_pvalue_manual(wilcox_res, label = "p = {p.adj} ({p.adj.signif})") +
-  scale_fill_brewer(palette = 'Set1') + 
+  scale_fill_manual(values = set1_col[c(2,1,3,4)]) +
   labs(title = 'Relative tumor size (Day 1 vs Day 19)', x = "",
     y = latex2exp::TeX('Difference in tumor volume $\\left(mm^3\\right)$')) +
   theme_classic(base_size = 14) +
