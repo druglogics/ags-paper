@@ -23,3 +23,5 @@ tidyr
 circlize
 ComplexHeatmap
 rstatix
+survival
+survminer

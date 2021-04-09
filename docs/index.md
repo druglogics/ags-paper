@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 06 April, 2021"
+date: "Last updated: 09 April, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -86,6 +86,8 @@ library(MAMSE)
 library(circlize)
 library(ComplexHeatmap)
 library(rstatix)
+library(survival)
+library(survminer)
 ```
 
 # CASCADE 1.0 Analysis {-}
@@ -4157,6 +4159,45 @@ DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6)) %>%
 <!--html_preserve--><div id="htmlwidget-d2a34d502a66744b8e1f" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
 
+We also demonstrate the mouse survival plots and compute a p-value using the *log-rank* non-parametric test, which shows that the survival curves are not identical.
+We chose the median tumor value of the `PZ-PI` mice group on day $19$ as the threshold to define the status indicator ($0=\text{alive}, 1=\text{death}$) for each mouse measurement and compute the survival probabilities using the Kaplan-Meier method.
+
+```r
+# specify a tumor volume value, less than which, signifies that the tumor
+# is "dead" or equivalently, that the mouse "survives"
+tumor_thres = tumor_data %>%
+  filter(day == 19, drugs == "5Z-PI") %>% 
+  summarise(med = median(vol)) %>% 
+  pull()
+
+# for coloring
+set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
+
+# 0 = alive, 1 = dead mouse!
+td = tumor_data %>% mutate(status = ifelse(vol < tumor_thres, 0, 1))
+fit = survival::survfit(survival::Surv(day, status) ~ drugs, data = td)
+survminer::ggsurvplot(fit, palette = set1_col[c(2,1,3,4)], 
+  fun = "pct", xlab = "Days", ylab = "Mouse Survival Probability (%)",
+  pval = TRUE, pval.method = TRUE, surv.median.line = "hv", 
+  pval.size = 8, pval.coord = c(2,25),  pval.method.coord = c(2,15),
+  #risk.table = TRUE,
+  # confidence intervals don't look good because of small number of days
+  #conf.int = TRUE, conf.int.style = "ribbon", conf.int.alpha = 0.5,
+  break.x.by = 2,
+  legend.labs = c("Control", "PI", "5Z", "5Z-PI"))
+```
+
+<div class="figure" style="text-align: center">
+<img src="index_files/figure-html/survival-plot-1.png" alt="Mouse survival plot (Kaplan-Meier)" width="2100" />
+<p class="caption">(\#fig:survival-plot)Mouse survival plot (Kaplan-Meier)</p>
+</div>
+
+:::{.green-box}
+Mice treated with the `PZ-PI` drug combo have a higher survival probability compared to the individual treatment or no treatment groups.
+:::
+
+We also compare the tumor differences between first and last day for every mouse in each respective group: 
+
 
 ```r
 tumor_diff = tumor_data_wide %>% 
@@ -4173,8 +4214,6 @@ wilcox_res = tumor_diff %>%
 # swap heights
 y_pos = wilcox_res %>% pull(y.position)
 wilcox_res$y.position = y_pos[c(3,1,2)]
-# to change color ordering
-set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
 
 set.seed(42)
 tumor_diff %>%
@@ -4379,36 +4418,39 @@ Locale:
 
 Package version:
   abind_1.4-5              assertthat_0.2.1         backports_1.2.1         
-  base64enc_0.1.3          BH_1.72.0.3              bookdown_0.21           
-  boot_1.3.25              brio_1.1.0               broom_0.7.3             
-  callr_3.5.1              car_3.0-10               carData_3.0-4           
-  cellranger_1.1.0         circlize_0.4.11          Ckmeans.1d.dp_4.3.3     
-  cli_2.2.0                clipr_0.7.1              clue_0.3-58             
-  cluster_2.1.0            codetools_0.2-18         colorspace_2.0-0        
-  compiler_3.6.3           ComplexHeatmap_2.2.0     conquer_1.0.2           
-  corrplot_0.84            cowplot_1.1.0            cpp11_0.2.4             
-  crayon_1.3.4             crosstalk_1.1.0.1        curl_4.3                
-  data.table_1.13.4        desc_1.2.0               diffobj_0.3.2           
-  digest_0.6.27            dplyr_1.0.2              DT_0.16                 
-  ellipsis_0.3.1           emba_0.1.8               equatiomatic_0.1.0      
-  evaluate_0.14            fansi_0.4.1              farver_2.0.3            
-  forcats_0.5.0            foreach_1.5.1            foreign_0.8-75          
-  gbRd_0.4-11              generics_0.1.0           GetoptLong_1.0.5        
-  ggplot2_3.3.2            ggpubr_0.4.0             ggrepel_0.9.0           
-  ggsci_2.9                ggsignif_0.6.0           glmnet_4.0-2            
+  base64enc_0.1.3          BH_1.72.0.3              bitops_1.0.6            
+  bookdown_0.21            boot_1.3.25              brio_1.1.0              
+  broom_0.7.3              callr_3.5.1              car_3.0-10              
+  carData_3.0-4            cellranger_1.1.0         circlize_0.4.11         
+  Ckmeans.1d.dp_4.3.3      cli_2.2.0                clipr_0.7.1             
+  clue_0.3-58              cluster_2.1.0            codetools_0.2-18        
+  colorspace_2.0-0         compiler_3.6.3           ComplexHeatmap_2.2.0    
+  conquer_1.0.2            corrplot_0.84            cowplot_1.1.0           
+  cpp11_0.2.4              crayon_1.3.4             crosstalk_1.1.0.1       
+  curl_4.3                 data.table_1.13.4        desc_1.2.0              
+  diffobj_0.3.2            digest_0.6.27            dplyr_1.0.2             
+  DT_0.16                  ellipsis_0.3.1           emba_0.1.8              
+  equatiomatic_0.1.0       evaluate_0.14            exactRankTests_0.8.31   
+  fansi_0.4.1              farver_2.0.3             forcats_0.5.0           
+  foreach_1.5.1            foreign_0.8-75           gbRd_0.4-11             
+  generics_0.1.0           GetoptLong_1.0.5         ggplot2_3.3.2           
+  ggpubr_0.4.0             ggrepel_0.9.0            ggsci_2.9               
+  ggsignif_0.6.0           ggtext_0.1.1             glmnet_4.0-2            
   GlobalOptions_0.1.2      glue_1.4.2               graphics_3.6.3          
   grDevices_3.6.3          grid_3.6.3               gridExtra_2.3           
-  gtable_0.3.0             haven_2.3.1              highr_0.8               
-  hms_0.5.3                htmltools_0.5.0          htmlwidgets_1.5.3       
-  igraph_1.2.6             isoband_0.2.3            iterators_1.0.13        
-  jsonlite_1.7.2           knitr_1.30               labeling_0.4.2          
-  later_1.1.0.1            latex2exp_0.4.0          lattice_0.20-41         
-  lazyeval_0.2.2           lifecycle_0.2.0          lme4_1.1.26             
-  magrittr_2.0.1           MAMSE_0.2-1              maptools_1.0.2          
-  markdown_1.1             MASS_7.3.53              Matrix_1.2-18           
-  MatrixModels_0.4.1       matrixStats_0.57.0       methods_3.6.3           
-  mgcv_1.8.33              mime_0.9                 minqa_1.2.4             
-  munsell_0.5.0            nlme_3.1.151             nloptr_1.2.2.2          
+  gridtext_0.1.4           gtable_0.3.0             haven_2.3.1             
+  highr_0.8                hms_0.5.3                htmltools_0.5.0         
+  htmlwidgets_1.5.3        igraph_1.2.6             isoband_0.2.3           
+  iterators_1.0.13         jpeg_0.1.8.1             jsonlite_1.7.2          
+  km.ci_0.5-2              KMsurv_0.1-5             knitr_1.30              
+  labeling_0.4.2           later_1.1.0.1            latex2exp_0.4.0         
+  lattice_0.20-41          lazyeval_0.2.2           lifecycle_0.2.0         
+  lme4_1.1.26              magrittr_2.0.1           MAMSE_0.2-1             
+  maptools_1.0.2           markdown_1.1             MASS_7.3.53             
+  Matrix_1.2-18            MatrixModels_0.4.1       matrixStats_0.57.0      
+  maxstat_0.7.25           methods_3.6.3            mgcv_1.8.33             
+  mime_0.9                 minqa_1.2.4              munsell_0.5.0           
+  mvtnorm_1.1.1            nlme_3.1.151             nloptr_1.2.2.2          
   nnet_7.3.14              openxlsx_4.2.3           parallel_3.6.3          
   pbkrtest_0.4.8.6         pillar_1.4.7             pkgbuild_1.2.0          
   pkgconfig_2.0.3          pkgload_1.1.0            png_0.1-7               
@@ -4417,20 +4459,22 @@ Package version:
   PRROC_1.3.1              ps_1.5.0                 purrr_0.3.4             
   quantreg_5.75            R6_2.5.0                 rbibutils_2.0           
   RColorBrewer_1.1-2       Rcpp_1.0.5               RcppArmadillo_0.10.1.2.0
-  RcppEigen_0.3.3.7.0      Rdpack_2.1               readr_1.4.0             
-  readxl_1.3.1             rematch_1.0.1            rematch2_2.1.2          
-  rio_0.5.16               rje_1.10.16              rjson_0.2.20            
-  rlang_0.4.9              rmarkdown_2.6            rprojroot_2.0.2         
-  rstatix_0.6.0            rstudioapi_0.13          scales_1.1.1            
-  shape_1.4.5              sp_1.4.4                 SparseM_1.78            
-  splines_3.6.3            statmod_1.4.35           stats_3.6.3             
-  stringi_1.5.3            stringr_1.4.0            survival_3.2-7          
+  RcppEigen_0.3.3.7.0      RCurl_1.98.1.3           Rdpack_2.1              
+  readr_1.4.0              readxl_1.3.1             rematch_1.0.1           
+  rematch2_2.1.2           rio_0.5.16               rje_1.10.16             
+  rjson_0.2.20             rlang_0.4.9              rmarkdown_2.6           
+  rprojroot_2.0.2          rstatix_0.6.0            rstudioapi_0.13         
+  scales_1.1.1             shape_1.4.5              sp_1.4.4                
+  SparseM_1.78             splines_3.6.3            statmod_1.4.35          
+  stats_3.6.3              stringi_1.5.3            stringr_1.4.0           
+  survival_3.2-7           survminer_0.4.9          survMisc_0.5.5          
   testthat_3.0.0           tibble_3.0.4             tidyr_1.1.2             
   tidyselect_1.1.0         tinytex_0.28             tools_3.6.3             
   usefun_0.4.8             utf8_1.1.4               utils_3.6.3             
   vctrs_0.3.5              viridisLite_0.3.0        visNetwork_2.0.9        
   waldo_0.2.3              withr_2.3.0              xfun_0.19               
-  yaml_2.2.1               zip_2.1.1               
+  xml2_1.3.2               xtable_1.8-4             yaml_2.2.1              
+  zip_2.1.1                zoo_1.8-9               
 ```
 
 # References {-}

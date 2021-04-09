@@ -76,4 +76,5 @@ fig:edge-heat-1
 fig:edge-heat-2
 fig:erk-pool-cpm
 fig:mouse-xenograft-figure-1
+fig:survival-plot
 fig:mouse-xenograft-figure-2
