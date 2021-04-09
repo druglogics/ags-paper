@@ -88,6 +88,8 @@ library(MAMSE)
 library(circlize)
 library(ComplexHeatmap)
 library(rstatix)
+library(survival)
+library(survminer)
 ```
 
 # CASCADE 1.0 Analysis {-}
@@ -3580,6 +3582,38 @@ DT::datatable(data = tumor_wilcox_res, options = list(pageLength = 6)) %>%
   DT::formatStyle('p.adj', backgroundColor = 'lightgreen')
 ```
 
+We also demonstrate the mouse survival plots and compute a p-value using the *log-rank* non-parametric test, which shows that the survival curves are not identical.
+We chose the median tumor value of the `PZ-PI` mice group on day $19$ as the threshold to define the status indicator ($0=\text{alive}, 1=\text{death}$) for each mouse measurement and compute the survival probabilities using the Kaplan-Meier method.
+```{r survival-plot, dpi=300, cache=TRUE, fig.align='center', fig.cap='Mouse survival plot (Kaplan-Meier)'}
+# specify a tumor volume value, less than which, signifies that the tumor
+# is "dead" or equivalently, that the mouse "survives"
+tumor_thres = tumor_data %>%
+  filter(day == 19, drugs == "5Z-PI") %>%
+  summarise(med = median(vol)) %>%
+  pull()
+
+# for coloring
+set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
+
+# 0 = alive, 1 = dead mouse!
+td = tumor_data %>% mutate(status = ifelse(vol < tumor_thres, 0, 1))
+fit = survival::survfit(survival::Surv(day, status) ~ drugs, data = td)
+survminer::ggsurvplot(fit, palette = set1_col[c(2,1,3,4)],
+  fun = "pct", xlab = "Days", ylab = "Mouse Survival Probability (%)",
+  pval = TRUE, pval.method = TRUE, surv.median.line = "hv",
+  pval.size = 8, pval.coord = c(2,25),  pval.method.coord = c(2,15),
+  #risk.table = TRUE,
+  # confidence intervals don't look good because of small number of days
+  #conf.int = TRUE, conf.int.style = "ribbon", conf.int.alpha = 0.5,
+  break.x.by = 2,
+  legend.labs = c("Control", "PI", "5Z", "5Z-PI"))
+```
+
+:::{.green-box}
+Mice treated with the `PZ-PI` drug combo have a higher survival probability compared to the individual treatment or no treatment groups.
+:::
+
+We also compare the tumor differences between first and last day for every mouse in each respective group:
 ```{r mouse-xenograft-figure-2, dpi=300, cache=TRUE, fig.align='center', fig.cap='Comparing tumor volumes from all mice between Days 1 and 19.'}
 tumor_diff = tumor_data_wide %>% 
   mutate(diff = `19` - `1`, rel_change = (`19`-`1`)/`1`) %>% 
@@ -3595,8 +3629,6 @@ wilcox_res = tumor_diff %>%
 # swap heights
 y_pos = wilcox_res %>% pull(y.position)
 wilcox_res$y.position = y_pos[c(3,1,2)]
-# to change color ordering
-set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
 
 set.seed(42)
 tumor_diff %>%
