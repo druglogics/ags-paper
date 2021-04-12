@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 09 April, 2021"
+date: "Last updated: 12 April, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -4166,8 +4166,8 @@ We chose the median tumor value of the `PZ-PI` mice group on day $19$ as the thr
 # specify a tumor volume value, less than which, signifies that the tumor
 # is "dead" or equivalently, that the mouse "survives"
 tumor_thres = tumor_data %>%
-  filter(day == 19, drugs == "5Z-PI") %>% 
-  summarise(med = median(vol)) %>% 
+  filter(day == 19, drugs == "5Z-PI") %>%
+  summarise(med = median(vol)) %>%
   pull()
 
 # for coloring
@@ -4176,9 +4176,9 @@ set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
 # 0 = alive, 1 = dead mouse!
 td = tumor_data %>% mutate(status = ifelse(vol < tumor_thres, 0, 1))
 fit = survival::survfit(survival::Surv(day, status) ~ drugs, data = td)
-survminer::ggsurvplot(fit, palette = set1_col[c(2,1,3,4)], 
-  fun = "pct", xlab = "Days", ylab = "Mouse Survival Probability (%)",
-  pval = TRUE, pval.method = TRUE, surv.median.line = "hv", 
+survminer::ggsurvplot(fit, palette = set1_col[c(2,1,3,4)],
+  fun = "pct", xlab = "Days", ylab = "Event Probability (%)",
+  pval = TRUE, pval.method = TRUE, surv.median.line = "hv",
   pval.size = 8, pval.coord = c(2,25),  pval.method.coord = c(2,15),
   #risk.table = TRUE,
   # confidence intervals don't look good because of small number of days
@@ -4196,8 +4196,7 @@ survminer::ggsurvplot(fit, palette = set1_col[c(2,1,3,4)],
 Mice treated with the `PZ-PI` drug combo have a higher survival probability compared to the individual treatment or no treatment groups.
 :::
 
-We also compare the tumor differences between first and last day for every mouse in each respective group: 
-
+We also compare the tumor differences between first and last day for every mouse in each respective group:
 
 ```r
 tumor_diff = tumor_data_wide %>% 

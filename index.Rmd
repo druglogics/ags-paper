@@ -3599,7 +3599,7 @@ set1_col = RColorBrewer::brewer.pal(n = 4, name = 'Set1')
 td = tumor_data %>% mutate(status = ifelse(vol < tumor_thres, 0, 1))
 fit = survival::survfit(survival::Surv(day, status) ~ drugs, data = td)
 survminer::ggsurvplot(fit, palette = set1_col[c(2,1,3,4)],
-  fun = "pct", xlab = "Days", ylab = "Mouse Survival Probability (%)",
+  fun = "pct", xlab = "Days", ylab = "Event Probability (%)",
   pval = TRUE, pval.method = TRUE, surv.median.line = "hv",
   pval.size = 8, pval.coord = c(2,25),  pval.method.coord = c(2,15),
   #risk.table = TRUE,
