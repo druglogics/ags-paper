@@ -355,3 +355,43 @@ decorate_heatmap_body(heatmap = "heat_ss", column_slice = 2, code = {
   }
 })
 dev.off()
+
+##########################################################
+# Reduced Combined Stable States + Link Operator Heatmap #
+##########################################################
+
+# Less column annotations will be included (Training and Cosmic)
+ha_reduced = HeatmapAnnotation(Calibration = node_training_state_map[colnames(lo_mat)],
+  COSMIC = node_cosmic_map[colnames(lo_mat)],
+  col = list(Calibration = training_colors, COSMIC = cosmic_colors),
+  na_col = "white",
+  annotation_name_side = 'right',
+  annotation_legend_param = list(COSMIC = list(at = c('oncogene', 'TSG', 'Both'))),
+  show_legend = c(FALSE, TRUE), gap = unit(c(1,1), "points"))
+
+# color the 3 marked nodes differently
+col_name_colors = rep("black", ncol(lo_mat))
+names(col_name_colors) = colnames(lo_mat)
+col_name_colors[names(col_name_colors) %in% marked_nodes] = 'blue'
+
+column_name_annot_reduced = HeatmapAnnotation(node_names = anno_text(
+  colnames(lo_mat), gp = gpar(fontsize = 8, col = col_name_colors)))
+
+heat_list_reduced = heat_ss %v% heat_param %v% ha_reduced %v% column_name_annot_reduced
+
+png(filename = "img/lo_combined_heat_reduced.png", width = 7, height = 7, units = "in", res = 600)
+draw(heat_list_reduced, heatmap_legend_side = "left")
+# all the marked nodes belong to the second slice
+decorate_heatmap_body(heatmap = "heat_ss", column_slice = 2, code = {
+  for(node in marked_nodes) {
+    i = which(colnames(lo_mat)[co] == node)
+    grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 2))
+  }
+})
+decorate_heatmap_body(heatmap = "heat_param", column_slice = 2, code = {
+  for(node in marked_nodes) {
+    i = which(colnames(lo_mat)[co] == node)
+    grid.rect(x = (i-0.5)/nc, width = 1/nc, gp=gpar(col="black", fill = NA, lwd = 2))
+  }
+})
+dev.off()
