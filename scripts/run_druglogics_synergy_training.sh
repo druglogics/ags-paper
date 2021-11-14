@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run this script from the `druglogics-synergy` repository root (v1.2.0)
+# Run this script from the `druglogics-synergy` repository root (v1.2.1)
 # The `training-data-files` are produced via the `gen_training_data.R` script
 # See Zenodo dataset http://tiny.cc/ags-paper-zenodo, file `training-data-files.tar.gz`
 training_files=`ls training-data-files`
@@ -24,7 +24,7 @@ for file in ${training_files}; do
   #cat training-data-files/$file > ags_cascade_2.0/training
 
   start=`date +%s`
-  java -cp target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.synergy.Launcher --inputDir=ags_cascade_1.0 --project=$file > /dev/null 2>&1 # for CASCADE 2.0: `--inputDir=ags_cascade_2.0`
+  java -cp target/synergy-1.2.1-jar-with-dependencies.jar eu.druglogics.synergy.Launcher --inputDir=ags_cascade_1.0 --project=$file > /dev/null 2>&1 # for CASCADE 2.0: `--inputDir=ags_cascade_2.0`
   runtime=$(($(date +%s)-$start))
   echo Execution Time: "$(($runtime / 60)) minutes"
 done

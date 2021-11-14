@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Execute this script inside the `ags_cascade_1.0` directory of the
-# `druglogics-synergy` repository (v1.2.0)
+# `druglogics-synergy` repository (v1.2.1)
 
 # Use this script to bootstrap `batch_size` amount of gitsbe models from
 # a specific `models_dir` directory and provide them as input to `drabme`.
@@ -17,7 +17,7 @@ batch_size=50
 models_dir="models"
 
 # change drabme config option (use bliss synergy assessement)
-# all other options to default values in v1.2.0
+# all other options to default values in v1.2.1
 sed -i 's/synergy_method:.*/synergy_method:\tbliss/' config
 
 for batch in $( seq 1 $batches )
@@ -35,7 +35,7 @@ do
 
   # run Drabme
   start=`date +%s`
-  java -cp ../target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_1.0_ss_bliss_batch_${batch} --modelsDir=${sample_models_dir} --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs > /dev/null 2>&1
+  java -cp ../target/synergy-1.2.1-jar-with-dependencies.jar eu.druglogics.drabme.Launcher --project=cascade_1.0_ss_bliss_batch_${batch} --modelsDir=${sample_models_dir} --drugs=drugpanel --perturbations=perturbations --config=config --modeloutputs=modeloutputs > /dev/null 2>&1
   runtime=$(($(date +%s)-$start))
   echo -e Execution Time: "$(($runtime / 60)) minutes\n"
 done

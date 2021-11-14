@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run this script from the `druglogics-synergy` repository root (v1.2.0)
+# Run this script from the `druglogics-synergy` repository root (v1.2.1)
 # The `scrambled_topologies_cascade1` directory is produced via the
 # `gen_scrambled_topologies_cascade1.R` script and should also be placed in
 # the repository root
@@ -13,7 +13,7 @@ files_num=`ls scrambled_topologies_cascade1 | wc -l`
 count=0
 
 # change drabme config option (use bliss synergy assessement)
-# keep all other config options to default values in v1.2.0
+# keep all other config options to default values in v1.2.1
 sed -i 's/synergy_method:.*/synergy_method:\tbliss/' ags_cascade_1.0/config
 
 for file in ${training_files}; do
@@ -28,11 +28,11 @@ for file in ${training_files}; do
 
   # run calibrated models simulations
   cat ags_cascade_1.0/steadystate > ags_cascade_1.0/training
-  java -cp target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.synergy.Launcher --inputDir=ags_cascade_1.0 --project=${file_name}_ss > /dev/null 2>&1
+  java -cp target/synergy-1.2.1-jar-with-dependencies.jar eu.druglogics.synergy.Launcher --inputDir=ags_cascade_1.0 --project=${file_name}_ss > /dev/null 2>&1
 
   # run random proliferative models simulations
   cat ags_cascade_1.0/random_train > ags_cascade_1.0/training
-  java -cp target/synergy-1.2.0-jar-with-dependencies.jar eu.druglogics.synergy.Launcher --inputDir=ags_cascade_1.0 --project=${file_name}_random > /dev/null 2>&1
+  java -cp target/synergy-1.2.1-jar-with-dependencies.jar eu.druglogics.synergy.Launcher --inputDir=ags_cascade_1.0 --project=${file_name}_random > /dev/null 2>&1
 
   runtime=$(($(date +%s)-$start))
   echo Execution Time: "$(($runtime / 60)) minutes"
