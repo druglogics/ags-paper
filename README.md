@@ -3,7 +3,9 @@
 Supplementary material and extra analyses for the  paper:
 
 ```
-Flobak, Å., Zobolas, J., Vazquez, M., Steigedal, T. S., Thommesen, L., Grislingås, A., … Kuiper, M. (2021). Logical modeling: Combining manual curation and automated parameterization to predict drug synergies. BioRxiv. https://doi.org/10.1101/2021.06.28.450165
+Flobak, Å., Zobolas, J., Vazquez, M., Steigedal, T. S., Thommesen, L., Grislingås, 
+A., … Kuiper, M. (2021). Logical modeling: Combining manual curation and automated 
+parameterization to predict drug synergies. BioRxiv. https://doi.org/10.1101/2021.06.28.450165
 ```
 
 See [full report here](https://druglogics.github.io/ags-paper/index.html).
@@ -13,7 +15,7 @@ Instructions for reproducing results are available at the [last section](https:/
 ## Paper Figures
 
 Since the report includes a lot of analyses that didn't make it to the paper, here we shortlist the figures that are present in the publication.
-Note that to be fully able to reproduce these figures you have to carefully read not only the instructions at the last section of the report, but also the code blocks from the start of each respective section that the figure belongs to:
+Note that to be fully able to reproduce these figures you may have to run previous code blocks from the start of each respective section that the figure belongs to:
 
 ### Main Figures
 
