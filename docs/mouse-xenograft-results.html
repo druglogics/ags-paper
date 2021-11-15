@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Mouse Xenograft Results | AGS paper - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper - SI" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Mouse Xenograft Results | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
@@ -32,8 +32,9 @@
   
 <link rel="prev" href="annotated-heatmaps.html"/>
 <link rel="next" href="reproduce-data-simulation-results.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,16 +50,16 @@
 
 
 
-
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.16/datatables.js"></script>
+<script src="libs/datatables-binding-0.19/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 <script>
 /* ========================================================================
@@ -801,6 +802,7 @@ $(document).ready(function () {
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -861,6 +863,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -883,95 +908,95 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-libraries.html"><a href="r-libraries.html"><i class="fa fa-check"></i>R Libraries</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#auc-sensitivity"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#auc-sensitivity"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#bliss-results"><i class="fa fa-check"></i>Bliss results</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#bliss-results"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#auc-sensitivity-1"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#auc-sensitivity-1"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#fit-vs-ens-perf-cascade1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#hsa-results-1"><i class="fa fa-check"></i>HSA results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#hsa-results-2"><i class="fa fa-check"></i>HSA Results</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#hsa-results-1"><i class="fa fa-check"></i>HSA results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-4"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-4"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#bliss-results-2"><i class="fa fa-check"></i>Bliss Results</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#roc-curves-5"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#hsa-results-2"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#pr-curves-4"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#auc-sensitivity-4"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#bliss-results-2"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#roc-curves-5"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#fit-vs-ens-perf-topo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
@@ -1034,7 +1059,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="mouse-xenograft-results" class="section level1 unnumbered" number="">
+<div id="mouse-xenograft-results" class="section level1 unnumbered">
 <h1>Mouse Xenograft Results</h1>
 <p>Figures for the paper from the mouse experiments.
 Mice were injected with AGS tumors and split to <span class="math inline">\(4\)</span> groups:</p>
@@ -1044,71 +1069,71 @@ Mice were injected with AGS tumors and split to <span class="math inline">\(4\)<
 <li>Mice group which was administered a <em>PI3K</em> inhibitor (<code>PI</code> drug)</li>
 <li>Mice group which was administered both <code>5Z</code> and <code>PI</code> drugs</li>
 </ul>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="mouse-xenograft-results.html#cb117-1"></a><span class="co"># read file with tumor volume data</span></span>
-<span id="cb117-2"><a href="mouse-xenograft-results.html#cb117-2"></a>tumor_data =<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;data/tumor_vol_data.csv&#39;</span>)</span>
-<span id="cb117-3"><a href="mouse-xenograft-results.html#cb117-3"></a>tumor_data_wide =<span class="st"> </span>tumor_data <span class="co"># keep the wide format for later</span></span>
-<span id="cb117-4"><a href="mouse-xenograft-results.html#cb117-4"></a></span>
-<span id="cb117-5"><a href="mouse-xenograft-results.html#cb117-5"></a><span class="co"># reshape data</span></span>
-<span id="cb117-6"><a href="mouse-xenograft-results.html#cb117-6"></a>tumor_data =<span class="st"> </span>tumor_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb117-7"><a href="mouse-xenograft-results.html#cb117-7"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span><span class="kw">c</span>(drugs), <span class="dt">names_to =</span> <span class="st">&#39;day&#39;</span>, <span class="dt">values_to =</span> <span class="st">&#39;vol&#39;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb117-8"><a href="mouse-xenograft-results.html#cb117-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">day =</span> <span class="kw">as.integer</span>(day)) <span class="op">%&gt;%</span></span>
-<span id="cb117-9"><a href="mouse-xenograft-results.html#cb117-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">drugs =</span> <span class="kw">factor</span>(<span class="dt">x =</span> drugs, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;PI&quot;</span>, <span class="st">&quot;Control&quot;</span>, <span class="st">&quot;5Z&quot;</span>, <span class="st">&quot;5Z-PI&quot;</span>)))</span></code></pre></div>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="mouse-xenograft-results.html#cb118-1"></a>pd =<span class="st"> </span><span class="kw">position_dodge</span>(<span class="fl">0.2</span>)</span>
-<span id="cb118-2"><a href="mouse-xenograft-results.html#cb118-2"></a>days =<span class="st"> </span>tumor_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">distinct</span>(day) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>()</span>
-<span id="cb118-3"><a href="mouse-xenograft-results.html#cb118-3"></a></span>
-<span id="cb118-4"><a href="mouse-xenograft-results.html#cb118-4"></a>tumor_data <span class="op">%&gt;%</span></span>
-<span id="cb118-5"><a href="mouse-xenograft-results.html#cb118-5"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">desc_statby</span>(<span class="dt">measure.var =</span> <span class="st">&#39;vol&#39;</span>, <span class="dt">grps =</span> <span class="kw">c</span>(<span class="st">&#39;day&#39;</span>, <span class="st">&#39;drugs&#39;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb118-6"><a href="mouse-xenograft-results.html#cb118-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> day, <span class="dt">y =</span> mean, <span class="dt">colour =</span> drugs, <span class="dt">group =</span> drugs)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb118-7"><a href="mouse-xenograft-results.html#cb118-7"></a><span class="st">    </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> mean <span class="op">-</span><span class="st"> </span>se, <span class="dt">ymax =</span> mean <span class="op">+</span><span class="st"> </span>se), <span class="dt">color =</span> <span class="st">&#39;black&#39;</span>, </span>
-<span id="cb118-8"><a href="mouse-xenograft-results.html#cb118-8"></a>      <span class="dt">width =</span> <span class="dv">1</span>, <span class="dt">position =</span> pd) <span class="op">+</span></span>
-<span id="cb118-9"><a href="mouse-xenograft-results.html#cb118-9"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">position =</span> pd) <span class="op">+</span></span>
-<span id="cb118-10"><a href="mouse-xenograft-results.html#cb118-10"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">position =</span> pd) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb118-11"><a href="mouse-xenograft-results.html#cb118-11"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">labels =</span> <span class="kw">as.character</span>(days), <span class="dt">breaks =</span> days) <span class="op">+</span></span>
-<span id="cb118-12"><a href="mouse-xenograft-results.html#cb118-12"></a><span class="st">    </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">&#39;Set1&#39;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb118-13"><a href="mouse-xenograft-results.html#cb118-13"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Average tumor volume with SEM&#39;</span>, <span class="dt">x =</span> <span class="st">&#39;Days&#39;</span>, </span>
-<span id="cb118-14"><a href="mouse-xenograft-results.html#cb118-14"></a>      <span class="dt">y =</span> latex2exp<span class="op">::</span><span class="kw">TeX</span>(<span class="st">&#39;Tumor volume $</span><span class="ch">\\</span><span class="st">left(mm^3</span><span class="ch">\\</span><span class="st">right)$&#39;</span>)) <span class="op">+</span></span>
-<span id="cb118-15"><a href="mouse-xenograft-results.html#cb118-15"></a><span class="st">    </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb118-16"><a href="mouse-xenograft-results.html#cb118-16"></a><span class="st">    </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
-<span id="cb118-17"><a href="mouse-xenograft-results.html#cb118-17"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">legend.title =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:mouse-xenograft-figure-1"></span>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="mouse-xenograft-results.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read file with tumor volume data</span></span>
+<span id="cb117-2"><a href="mouse-xenograft-results.html#cb117-2" aria-hidden="true" tabindex="-1"></a>tumor_data <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&#39;data/tumor_vol_data.csv&#39;</span>)</span>
+<span id="cb117-3"><a href="mouse-xenograft-results.html#cb117-3" aria-hidden="true" tabindex="-1"></a>tumor_data_wide <span class="ot">=</span> tumor_data <span class="co"># keep the wide format for later</span></span>
+<span id="cb117-4"><a href="mouse-xenograft-results.html#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="mouse-xenograft-results.html#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape data</span></span>
+<span id="cb117-6"><a href="mouse-xenograft-results.html#cb117-6" aria-hidden="true" tabindex="-1"></a>tumor_data <span class="ot">=</span> tumor_data <span class="sc">%&gt;%</span> </span>
+<span id="cb117-7"><a href="mouse-xenograft-results.html#cb117-7" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(drugs), <span class="at">names_to =</span> <span class="st">&#39;day&#39;</span>, <span class="at">values_to =</span> <span class="st">&#39;vol&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb117-8"><a href="mouse-xenograft-results.html#cb117-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">day =</span> <span class="fu">as.integer</span>(day)) <span class="sc">%&gt;%</span></span>
+<span id="cb117-9"><a href="mouse-xenograft-results.html#cb117-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drugs =</span> <span class="fu">factor</span>(<span class="at">x =</span> drugs, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;PI&quot;</span>, <span class="st">&quot;Control&quot;</span>, <span class="st">&quot;5Z&quot;</span>, <span class="st">&quot;5Z-PI&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="mouse-xenograft-results.html#cb118-1" aria-hidden="true" tabindex="-1"></a>pd <span class="ot">=</span> <span class="fu">position_dodge</span>(<span class="fl">0.2</span>)</span>
+<span id="cb118-2"><a href="mouse-xenograft-results.html#cb118-2" aria-hidden="true" tabindex="-1"></a>days <span class="ot">=</span> tumor_data <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(day) <span class="sc">%&gt;%</span> <span class="fu">pull</span>()</span>
+<span id="cb118-3"><a href="mouse-xenograft-results.html#cb118-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-4"><a href="mouse-xenograft-results.html#cb118-4" aria-hidden="true" tabindex="-1"></a>tumor_data <span class="sc">%&gt;%</span></span>
+<span id="cb118-5"><a href="mouse-xenograft-results.html#cb118-5" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">desc_statby</span>(<span class="at">measure.var =</span> <span class="st">&#39;vol&#39;</span>, <span class="at">grps =</span> <span class="fu">c</span>(<span class="st">&#39;day&#39;</span>, <span class="st">&#39;drugs&#39;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb118-6"><a href="mouse-xenograft-results.html#cb118-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> day, <span class="at">y =</span> mean, <span class="at">colour =</span> drugs, <span class="at">group =</span> drugs)) <span class="sc">+</span> </span>
+<span id="cb118-7"><a href="mouse-xenograft-results.html#cb118-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> se, <span class="at">ymax =</span> mean <span class="sc">+</span> se), <span class="at">color =</span> <span class="st">&#39;black&#39;</span>, </span>
+<span id="cb118-8"><a href="mouse-xenograft-results.html#cb118-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="dv">1</span>, <span class="at">position =</span> pd) <span class="sc">+</span></span>
+<span id="cb118-9"><a href="mouse-xenograft-results.html#cb118-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">position =</span> pd) <span class="sc">+</span></span>
+<span id="cb118-10"><a href="mouse-xenograft-results.html#cb118-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">position =</span> pd) <span class="sc">+</span> </span>
+<span id="cb118-11"><a href="mouse-xenograft-results.html#cb118-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">as.character</span>(days), <span class="at">breaks =</span> days) <span class="sc">+</span></span>
+<span id="cb118-12"><a href="mouse-xenograft-results.html#cb118-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&#39;Set1&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb118-13"><a href="mouse-xenograft-results.html#cb118-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&#39;Average tumor volume with SEM&#39;</span>, <span class="at">x =</span> <span class="st">&#39;Days&#39;</span>, </span>
+<span id="cb118-14"><a href="mouse-xenograft-results.html#cb118-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&#39;Tumor volume $</span><span class="sc">\\</span><span class="st">left(mm^3</span><span class="sc">\\</span><span class="st">right)$&#39;</span>)) <span class="sc">+</span></span>
+<span id="cb118-15"><a href="mouse-xenograft-results.html#cb118-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">NA</span>)) <span class="sc">+</span> </span>
+<span id="cb118-16"><a href="mouse-xenograft-results.html#cb118-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb118-17"><a href="mouse-xenograft-results.html#cb118-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mouse-xenograft-figure-1"></span>
 <img src="index_files/figure-html/mouse-xenograft-figure-1-1.png" alt="Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)" width="2100" />
 <p class="caption">
 Figure 78: Average tumor volume and standard error of the mean (SEM) for the four groups of mice, per measurement day after tumor injection (1st day)
 </p>
 </div>
-<p>We use the Wilcoxon rank sum test to compare the tumor values between the different mice groups (adjusted p-values are calculated using Holm’s method <span class="citation">(Holm <a href="references.html#ref-Holm1979" role="doc-biblioref">1979</a>; Aickin and Gensler <a href="references.html#ref-Aickin1996" role="doc-biblioref">1996</a>)</span>:</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="mouse-xenograft-results.html#cb119-1"></a>tumor_wilcox_res =<span class="st"> </span>tumor_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb119-2"><a href="mouse-xenograft-results.html#cb119-2"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> vol <span class="op">~</span><span class="st"> </span>drugs)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="st">`</span><span class="dt">.y.</span><span class="st">`</span>)</span>
-<span id="cb119-3"><a href="mouse-xenograft-results.html#cb119-3"></a></span>
-<span id="cb119-4"><a href="mouse-xenograft-results.html#cb119-4"></a>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">data =</span> tumor_wilcox_res, <span class="dt">options =</span> <span class="kw">list</span>(<span class="dt">pageLength =</span> <span class="dv">6</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb119-5"><a href="mouse-xenograft-results.html#cb119-5"></a><span class="st">  </span>DT<span class="op">::</span><span class="kw">formatStyle</span>(<span class="st">&#39;p.adj&#39;</span>, <span class="dt">backgroundColor =</span> <span class="st">&#39;lightgreen&#39;</span>)</span></code></pre></div>
-<div id="htmlwidget-d2a34d502a66744b8e1f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d2a34d502a66744b8e1f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<p>We use the Wilcoxon rank sum test to compare the tumor values between the different mice groups (adjusted p-values are calculated using Holm’s method <span class="citation">(<a href="references.html#ref-Holm1979" role="doc-biblioref">Holm 1979</a>; <a href="references.html#ref-Aickin1996" role="doc-biblioref">Aickin and Gensler 1996</a>)</span>:</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="mouse-xenograft-results.html#cb119-1" aria-hidden="true" tabindex="-1"></a>tumor_wilcox_res <span class="ot">=</span> tumor_data <span class="sc">%&gt;%</span> </span>
+<span id="cb119-2"><a href="mouse-xenograft-results.html#cb119-2" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_test</span>(<span class="at">formula =</span> vol <span class="sc">~</span> drugs)<span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">.y.</span><span class="st">`</span>)</span>
+<span id="cb119-3"><a href="mouse-xenograft-results.html#cb119-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-4"><a href="mouse-xenograft-results.html#cb119-4" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="at">data =</span> tumor_wilcox_res, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">6</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb119-5"><a href="mouse-xenograft-results.html#cb119-5" aria-hidden="true" tabindex="-1"></a>  DT<span class="sc">::</span><span class="fu">formatStyle</span>(<span class="st">&#39;p.adj&#39;</span>, <span class="at">backgroundColor =</span> <span class="st">&#39;lightgreen&#39;</span>)</span></code></pre></div>
+<div id="htmlwidget-88fdd2a34d502a66744b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-88fdd2a34d502a66744b">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6"],["PI","PI","PI","Control","Control","5Z"],["Control","5Z","5Z-PI","5Z","5Z-PI","5Z-PI"],[49,49,49,49,49,56],[49,56,56,56,56,56],[1269,1581,2004.5,1513,2042,2119.5],[0.629,0.18,4.92e-05,0.367,1.71e-05,0.001],[0.734,0.54,0.000246,0.734,0.000103,0.005],["ns","ns","***","ns","***","**"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 <p>We also demonstrate the mouse survival plots and compute a p-value using the <em>log-rank</em> non-parametric test, which shows that the survival curves are not identical.
 We chose the median tumor value of the <code>PZ-PI</code> mice group on day <span class="math inline">\(19\)</span> as the threshold to define the status indicator (<span class="math inline">\(0=\text{alive}, 1=\text{death}\)</span>) for each mouse measurement and compute the survival probabilities using the Kaplan-Meier method.</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="mouse-xenograft-results.html#cb120-1"></a><span class="co"># specify a tumor volume value, less than which, signifies that the tumor</span></span>
-<span id="cb120-2"><a href="mouse-xenograft-results.html#cb120-2"></a><span class="co"># is &quot;dead&quot; or equivalently, that the mouse &quot;survives&quot;</span></span>
-<span id="cb120-3"><a href="mouse-xenograft-results.html#cb120-3"></a>tumor_thres =<span class="st"> </span>tumor_data <span class="op">%&gt;%</span></span>
-<span id="cb120-4"><a href="mouse-xenograft-results.html#cb120-4"></a><span class="st">  </span><span class="kw">filter</span>(day <span class="op">==</span><span class="st"> </span><span class="dv">19</span>, drugs <span class="op">==</span><span class="st"> &quot;5Z-PI&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb120-5"><a href="mouse-xenograft-results.html#cb120-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">med =</span> <span class="kw">median</span>(vol)) <span class="op">%&gt;%</span></span>
-<span id="cb120-6"><a href="mouse-xenograft-results.html#cb120-6"></a><span class="st">  </span><span class="kw">pull</span>()</span>
-<span id="cb120-7"><a href="mouse-xenograft-results.html#cb120-7"></a></span>
-<span id="cb120-8"><a href="mouse-xenograft-results.html#cb120-8"></a><span class="co"># for coloring</span></span>
-<span id="cb120-9"><a href="mouse-xenograft-results.html#cb120-9"></a>set1_col =<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">4</span>, <span class="dt">name =</span> <span class="st">&#39;Set1&#39;</span>)</span>
-<span id="cb120-10"><a href="mouse-xenograft-results.html#cb120-10"></a></span>
-<span id="cb120-11"><a href="mouse-xenograft-results.html#cb120-11"></a><span class="co"># 0 = alive, 1 = dead mouse!</span></span>
-<span id="cb120-12"><a href="mouse-xenograft-results.html#cb120-12"></a>td =<span class="st"> </span>tumor_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">status =</span> <span class="kw">ifelse</span>(vol <span class="op">&lt;</span><span class="st"> </span>tumor_thres, <span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb120-13"><a href="mouse-xenograft-results.html#cb120-13"></a>fit =<span class="st"> </span>survival<span class="op">::</span><span class="kw">survfit</span>(survival<span class="op">::</span><span class="kw">Surv</span>(day, status) <span class="op">~</span><span class="st"> </span>drugs, <span class="dt">data =</span> td)</span>
-<span id="cb120-14"><a href="mouse-xenograft-results.html#cb120-14"></a>survminer<span class="op">::</span><span class="kw">ggsurvplot</span>(fit, <span class="dt">palette =</span> set1_col[<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>)],</span>
-<span id="cb120-15"><a href="mouse-xenograft-results.html#cb120-15"></a>  <span class="dt">fun =</span> <span class="st">&quot;pct&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Days&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Event Probability (%)&quot;</span>,</span>
-<span id="cb120-16"><a href="mouse-xenograft-results.html#cb120-16"></a>  <span class="dt">pval =</span> <span class="ot">TRUE</span>, <span class="dt">pval.method =</span> <span class="ot">TRUE</span>, <span class="dt">surv.median.line =</span> <span class="st">&quot;hv&quot;</span>,</span>
-<span id="cb120-17"><a href="mouse-xenograft-results.html#cb120-17"></a>  <span class="dt">pval.size =</span> <span class="dv">8</span>, <span class="dt">pval.coord =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">25</span>),  <span class="dt">pval.method.coord =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">15</span>),</span>
-<span id="cb120-18"><a href="mouse-xenograft-results.html#cb120-18"></a>  <span class="co">#risk.table = TRUE,</span></span>
-<span id="cb120-19"><a href="mouse-xenograft-results.html#cb120-19"></a>  <span class="co"># confidence intervals don&#39;t look good because of small number of days</span></span>
-<span id="cb120-20"><a href="mouse-xenograft-results.html#cb120-20"></a>  <span class="co">#conf.int = TRUE, conf.int.style = &quot;ribbon&quot;, conf.int.alpha = 0.5,</span></span>
-<span id="cb120-21"><a href="mouse-xenograft-results.html#cb120-21"></a>  <span class="dt">break.x.by =</span> <span class="dv">2</span>,</span>
-<span id="cb120-22"><a href="mouse-xenograft-results.html#cb120-22"></a>  <span class="dt">legend.labs =</span> <span class="kw">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;PI&quot;</span>, <span class="st">&quot;5Z&quot;</span>, <span class="st">&quot;5Z-PI&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:survival-plot"></span>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="mouse-xenograft-results.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify a tumor volume value, less than which, signifies that the tumor</span></span>
+<span id="cb120-2"><a href="mouse-xenograft-results.html#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="co"># is &quot;dead&quot; or equivalently, that the mouse &quot;survives&quot;</span></span>
+<span id="cb120-3"><a href="mouse-xenograft-results.html#cb120-3" aria-hidden="true" tabindex="-1"></a>tumor_thres <span class="ot">=</span> tumor_data <span class="sc">%&gt;%</span></span>
+<span id="cb120-4"><a href="mouse-xenograft-results.html#cb120-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(day <span class="sc">==</span> <span class="dv">19</span>, drugs <span class="sc">==</span> <span class="st">&quot;5Z-PI&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb120-5"><a href="mouse-xenograft-results.html#cb120-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">med =</span> <span class="fu">median</span>(vol)) <span class="sc">%&gt;%</span></span>
+<span id="cb120-6"><a href="mouse-xenograft-results.html#cb120-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>()</span>
+<span id="cb120-7"><a href="mouse-xenograft-results.html#cb120-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-8"><a href="mouse-xenograft-results.html#cb120-8" aria-hidden="true" tabindex="-1"></a><span class="co"># for coloring</span></span>
+<span id="cb120-9"><a href="mouse-xenograft-results.html#cb120-9" aria-hidden="true" tabindex="-1"></a>set1_col <span class="ot">=</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">4</span>, <span class="at">name =</span> <span class="st">&#39;Set1&#39;</span>)</span>
+<span id="cb120-10"><a href="mouse-xenograft-results.html#cb120-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-11"><a href="mouse-xenograft-results.html#cb120-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 0 = alive, 1 = dead mouse!</span></span>
+<span id="cb120-12"><a href="mouse-xenograft-results.html#cb120-12" aria-hidden="true" tabindex="-1"></a>td <span class="ot">=</span> tumor_data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">status =</span> <span class="fu">ifelse</span>(vol <span class="sc">&lt;</span> tumor_thres, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb120-13"><a href="mouse-xenograft-results.html#cb120-13" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> survival<span class="sc">::</span><span class="fu">survfit</span>(survival<span class="sc">::</span><span class="fu">Surv</span>(day, status) <span class="sc">~</span> drugs, <span class="at">data =</span> td)</span>
+<span id="cb120-14"><a href="mouse-xenograft-results.html#cb120-14" aria-hidden="true" tabindex="-1"></a>survminer<span class="sc">::</span><span class="fu">ggsurvplot</span>(fit, <span class="at">palette =</span> set1_col[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>)],</span>
+<span id="cb120-15"><a href="mouse-xenograft-results.html#cb120-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> <span class="st">&quot;pct&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Days&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Event Probability (%)&quot;</span>,</span>
+<span id="cb120-16"><a href="mouse-xenograft-results.html#cb120-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval =</span> <span class="cn">TRUE</span>, <span class="at">pval.method =</span> <span class="cn">TRUE</span>, <span class="at">surv.median.line =</span> <span class="st">&quot;hv&quot;</span>,</span>
+<span id="cb120-17"><a href="mouse-xenograft-results.html#cb120-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">pval.size =</span> <span class="dv">8</span>, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">25</span>),  <span class="at">pval.method.coord =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">15</span>),</span>
+<span id="cb120-18"><a href="mouse-xenograft-results.html#cb120-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#risk.table = TRUE,</span></span>
+<span id="cb120-19"><a href="mouse-xenograft-results.html#cb120-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># confidence intervals don&#39;t look good because of small number of days</span></span>
+<span id="cb120-20"><a href="mouse-xenograft-results.html#cb120-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#conf.int = TRUE, conf.int.style = &quot;ribbon&quot;, conf.int.alpha = 0.5,</span></span>
+<span id="cb120-21"><a href="mouse-xenograft-results.html#cb120-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">break.x.by =</span> <span class="dv">2</span>,</span>
+<span id="cb120-22"><a href="mouse-xenograft-results.html#cb120-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.labs =</span> <span class="fu">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;PI&quot;</span>, <span class="st">&quot;5Z&quot;</span>, <span class="st">&quot;5Z-PI&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:survival-plot"></span>
 <img src="index_files/figure-html/survival-plot-1.png" alt="Mouse survival plot (Kaplan-Meier)" width="2100" />
 <p class="caption">
 Figure 79: Mouse survival plot (Kaplan-Meier)
@@ -1118,43 +1143,43 @@ Figure 79: Mouse survival plot (Kaplan-Meier)
 <p>Mice treated with the <code>PZ-PI</code> drug combo have a higher survival probability compared to the individual treatment or no treatment groups.</p>
 </div>
 <p>We also compare the tumor differences between first and last day for every mouse in each respective group:</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="mouse-xenograft-results.html#cb121-1"></a>tumor_diff =<span class="st"> </span>tumor_data_wide <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb121-2"><a href="mouse-xenograft-results.html#cb121-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diff =</span> <span class="st">`</span><span class="dt">19</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">1</span><span class="st">`</span>, <span class="dt">rel_change =</span> (<span class="st">`</span><span class="dt">19</span><span class="st">`</span><span class="op">-</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span>)<span class="op">/</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb121-3"><a href="mouse-xenograft-results.html#cb121-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">drugs =</span> <span class="kw">factor</span>(<span class="dt">x =</span> drugs, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;PI&quot;</span>, <span class="st">&quot;5Z&quot;</span>, <span class="st">&quot;5Z-PI&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb121-4"><a href="mouse-xenograft-results.html#cb121-4"></a><span class="st">  </span><span class="kw">select</span>(drugs, diff, rel_change)</span>
-<span id="cb121-5"><a href="mouse-xenograft-results.html#cb121-5"></a></span>
-<span id="cb121-6"><a href="mouse-xenograft-results.html#cb121-6"></a><span class="co"># Compare single drug vs combo drug group</span></span>
-<span id="cb121-7"><a href="mouse-xenograft-results.html#cb121-7"></a>wilcox_res =<span class="st"> </span>tumor_diff <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb121-8"><a href="mouse-xenograft-results.html#cb121-8"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">wilcox_test</span>(<span class="dt">formula =</span> diff <span class="op">~</span><span class="st"> </span>drugs,</span>
-<span id="cb121-9"><a href="mouse-xenograft-results.html#cb121-9"></a>    <span class="dt">comparisons =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&#39;5Z-PI&#39;</span>, <span class="st">&#39;Control&#39;</span>), <span class="kw">c</span>(<span class="st">&#39;5Z-PI&#39;</span>, <span class="st">&#39;5Z&#39;</span>), <span class="kw">c</span>(<span class="st">&#39;PI&#39;</span>,<span class="st">&#39;5Z-PI&#39;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb121-10"><a href="mouse-xenograft-results.html#cb121-10"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="st">`</span><span class="dt">.y.</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
-<span id="cb121-11"><a href="mouse-xenograft-results.html#cb121-11"></a><span class="st">  </span>rstatix<span class="op">::</span><span class="kw">add_xy_position</span>()</span>
-<span id="cb121-12"><a href="mouse-xenograft-results.html#cb121-12"></a><span class="co"># swap heights</span></span>
-<span id="cb121-13"><a href="mouse-xenograft-results.html#cb121-13"></a>y_pos =<span class="st"> </span>wilcox_res <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(y.position)</span>
-<span id="cb121-14"><a href="mouse-xenograft-results.html#cb121-14"></a>wilcox_res<span class="op">$</span>y.position =<span class="st"> </span>y_pos[<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>)]</span>
-<span id="cb121-15"><a href="mouse-xenograft-results.html#cb121-15"></a></span>
-<span id="cb121-16"><a href="mouse-xenograft-results.html#cb121-16"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb121-17"><a href="mouse-xenograft-results.html#cb121-17"></a>tumor_diff <span class="op">%&gt;%</span></span>
-<span id="cb121-18"><a href="mouse-xenograft-results.html#cb121-18"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> drugs, <span class="dt">y =</span> diff)) <span class="op">+</span></span>
-<span id="cb121-19"><a href="mouse-xenograft-results.html#cb121-19"></a><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> drugs)) <span class="op">+</span></span>
-<span id="cb121-20"><a href="mouse-xenograft-results.html#cb121-20"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="fl">0.2</span>)) <span class="op">+</span></span>
-<span id="cb121-21"><a href="mouse-xenograft-results.html#cb121-21"></a><span class="st">  </span>ggpubr<span class="op">::</span><span class="kw">stat_pvalue_manual</span>(wilcox_res, <span class="dt">label =</span> <span class="st">&quot;p = {p.adj} ({p.adj.signif})&quot;</span>) <span class="op">+</span></span>
-<span id="cb121-22"><a href="mouse-xenograft-results.html#cb121-22"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> set1_col[<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>)]) <span class="op">+</span></span>
-<span id="cb121-23"><a href="mouse-xenograft-results.html#cb121-23"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Relative tumor size (Day 1 vs Day 19)&#39;</span>, <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</span>
-<span id="cb121-24"><a href="mouse-xenograft-results.html#cb121-24"></a>    <span class="dt">y =</span> latex2exp<span class="op">::</span><span class="kw">TeX</span>(<span class="st">&#39;Difference in tumor volume $</span><span class="ch">\\</span><span class="st">left(mm^3</span><span class="ch">\\</span><span class="st">right)$&#39;</span>)) <span class="op">+</span></span>
-<span id="cb121-25"><a href="mouse-xenograft-results.html#cb121-25"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
-<span id="cb121-26"><a href="mouse-xenograft-results.html#cb121-26"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">legend.title =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:mouse-xenograft-figure-2"></span>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="mouse-xenograft-results.html#cb121-1" aria-hidden="true" tabindex="-1"></a>tumor_diff <span class="ot">=</span> tumor_data_wide <span class="sc">%&gt;%</span> </span>
+<span id="cb121-2"><a href="mouse-xenograft-results.html#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> <span class="st">`</span><span class="at">19</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">1</span><span class="st">`</span>, <span class="at">rel_change =</span> (<span class="st">`</span><span class="at">19</span><span class="st">`</span><span class="sc">-</span><span class="st">`</span><span class="at">1</span><span class="st">`</span>)<span class="sc">/</span><span class="st">`</span><span class="at">1</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-3"><a href="mouse-xenograft-results.html#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">drugs =</span> <span class="fu">factor</span>(<span class="at">x =</span> drugs, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;PI&quot;</span>, <span class="st">&quot;5Z&quot;</span>, <span class="st">&quot;5Z-PI&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-4"><a href="mouse-xenograft-results.html#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(drugs, diff, rel_change)</span>
+<span id="cb121-5"><a href="mouse-xenograft-results.html#cb121-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-6"><a href="mouse-xenograft-results.html#cb121-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare single drug vs combo drug group</span></span>
+<span id="cb121-7"><a href="mouse-xenograft-results.html#cb121-7" aria-hidden="true" tabindex="-1"></a>wilcox_res <span class="ot">=</span> tumor_diff <span class="sc">%&gt;%</span> </span>
+<span id="cb121-8"><a href="mouse-xenograft-results.html#cb121-8" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">wilcox_test</span>(<span class="at">formula =</span> diff <span class="sc">~</span> drugs,</span>
+<span id="cb121-9"><a href="mouse-xenograft-results.html#cb121-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparisons =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&#39;5Z-PI&#39;</span>, <span class="st">&#39;Control&#39;</span>), <span class="fu">c</span>(<span class="st">&#39;5Z-PI&#39;</span>, <span class="st">&#39;5Z&#39;</span>), <span class="fu">c</span>(<span class="st">&#39;PI&#39;</span>,<span class="st">&#39;5Z-PI&#39;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-10"><a href="mouse-xenograft-results.html#cb121-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">`</span><span class="at">.y.</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb121-11"><a href="mouse-xenograft-results.html#cb121-11" aria-hidden="true" tabindex="-1"></a>  rstatix<span class="sc">::</span><span class="fu">add_xy_position</span>()</span>
+<span id="cb121-12"><a href="mouse-xenograft-results.html#cb121-12" aria-hidden="true" tabindex="-1"></a><span class="co"># swap heights</span></span>
+<span id="cb121-13"><a href="mouse-xenograft-results.html#cb121-13" aria-hidden="true" tabindex="-1"></a>y_pos <span class="ot">=</span> wilcox_res <span class="sc">%&gt;%</span> <span class="fu">pull</span>(y.position)</span>
+<span id="cb121-14"><a href="mouse-xenograft-results.html#cb121-14" aria-hidden="true" tabindex="-1"></a>wilcox_res<span class="sc">$</span>y.position <span class="ot">=</span> y_pos[<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>)]</span>
+<span id="cb121-15"><a href="mouse-xenograft-results.html#cb121-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-16"><a href="mouse-xenograft-results.html#cb121-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb121-17"><a href="mouse-xenograft-results.html#cb121-17" aria-hidden="true" tabindex="-1"></a>tumor_diff <span class="sc">%&gt;%</span></span>
+<span id="cb121-18"><a href="mouse-xenograft-results.html#cb121-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> drugs, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
+<span id="cb121-19"><a href="mouse-xenograft-results.html#cb121-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> drugs)) <span class="sc">+</span></span>
+<span id="cb121-20"><a href="mouse-xenograft-results.html#cb121-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb121-21"><a href="mouse-xenograft-results.html#cb121-21" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_pvalue_manual</span>(wilcox_res, <span class="at">label =</span> <span class="st">&quot;p = {p.adj} ({p.adj.signif})&quot;</span>) <span class="sc">+</span></span>
+<span id="cb121-22"><a href="mouse-xenograft-results.html#cb121-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> set1_col[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>)]) <span class="sc">+</span></span>
+<span id="cb121-23"><a href="mouse-xenograft-results.html#cb121-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&#39;Relative tumor size (Day 1 vs Day 19)&#39;</span>, <span class="at">x =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb121-24"><a href="mouse-xenograft-results.html#cb121-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&#39;Difference in tumor volume $</span><span class="sc">\\</span><span class="st">left(mm^3</span><span class="sc">\\</span><span class="st">right)$&#39;</span>)) <span class="sc">+</span></span>
+<span id="cb121-25"><a href="mouse-xenograft-results.html#cb121-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb121-26"><a href="mouse-xenograft-results.html#cb121-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mouse-xenograft-figure-2"></span>
 <img src="index_files/figure-html/mouse-xenograft-figure-2-1.png" alt="Comparing tumor volumes from all mice between Days 1 and 19." width="2100" />
 <p class="caption">
 Figure 80: Comparing tumor volumes from all mice between Days 1 and 19.
 </p>
 </div>
 <p>We also include the table of the Wilcoxon test results between the compared groups:</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="mouse-xenograft-results.html#cb122-1"></a>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">data =</span> wilcox_res <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>), <span class="dt">options =</span> <span class="kw">list</span>(<span class="dt">searching =</span> <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb122-2"><a href="mouse-xenograft-results.html#cb122-2"></a><span class="st">  </span>DT<span class="op">::</span><span class="kw">formatStyle</span>(<span class="st">&#39;p.adj&#39;</span>, <span class="dt">backgroundColor =</span> <span class="st">&#39;lightgreen&#39;</span>)</span></code></pre></div>
-<div id="htmlwidget-e96c0688a849169abb34" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e96c0688a849169abb34">{"x":{"filter":"none","data":[["1","2","3"],["Control","5Z","PI"],["5Z-PI","5Z-PI","5Z-PI"],[7,8,7],[8,8,8],[53,57,48],[0.002,0.007,0.02],[0.007,0.014,0.02],["**","*","*"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="mouse-xenograft-results.html#cb122-1" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="at">data =</span> wilcox_res <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>), <span class="at">options =</span> <span class="fu">list</span>(<span class="at">searching =</span> <span class="cn">FALSE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb122-2"><a href="mouse-xenograft-results.html#cb122-2" aria-hidden="true" tabindex="-1"></a>  DT<span class="sc">::</span><span class="fu">formatStyle</span>(<span class="st">&#39;p.adj&#39;</span>, <span class="at">backgroundColor =</span> <span class="st">&#39;lightgreen&#39;</span>)</span></code></pre></div>
+<div id="htmlwidget-8e1fe96c0688a849169a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8e1fe96c0688a849169a">{"x":{"filter":"none","vertical":false,"data":[["1","2","3"],["Control","5Z","PI"],["5Z-PI","5Z-PI","5Z-PI"],[7,8,7],[8,8,8],[53,57,48],[0.002,0.007,0.02],[0.007,0.014,0.02],["**","*","*"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>group1<\/th>\n      <th>group2<\/th>\n      <th>n1<\/th>\n      <th>n2<\/th>\n      <th>statistic<\/th>\n      <th>p<\/th>\n      <th>p.adj<\/th>\n      <th>p.adj.signif<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':'lightgreen'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 </div>
             </section>
 
@@ -1166,7 +1191,6 @@ Figure 80: Comparing tumor volumes from all mice between Days 1 and 19.
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -1185,6 +1209,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": false
 },
 "fontsettings": {
@@ -1205,6 +1230,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

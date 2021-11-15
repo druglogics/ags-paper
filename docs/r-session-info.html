@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>R session info | AGS paper - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper - SI" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="R session info | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
@@ -32,8 +32,9 @@
   
 <link rel="prev" href="reproduce-data-simulation-results.html"/>
 <link rel="next" href="references.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,16 +50,16 @@
 
 
 
-
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.16/datatables.js"></script>
+<script src="libs/datatables-binding-0.19/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 <script>
 /* ========================================================================
@@ -801,6 +802,7 @@ $(document).ready(function () {
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -861,6 +863,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -883,95 +908,95 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-libraries.html"><a href="r-libraries.html"><i class="fa fa-check"></i>R Libraries</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#auc-sensitivity"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#auc-sensitivity"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#bliss-results"><i class="fa fa-check"></i>Bliss results</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#bliss-results"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#auc-sensitivity-1"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#auc-sensitivity-1"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#fit-vs-ens-perf-cascade1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#hsa-results-1"><i class="fa fa-check"></i>HSA results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#hsa-results-2"><i class="fa fa-check"></i>HSA Results</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#hsa-results-1"><i class="fa fa-check"></i>HSA results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-4"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-4"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#bliss-results-2"><i class="fa fa-check"></i>Bliss Results</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#roc-curves-5"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#hsa-results-2"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#pr-curves-4"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#auc-sensitivity-4"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#bliss-results-2"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#roc-curves-5"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#fit-vs-ens-perf-topo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
@@ -1034,12 +1059,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="r-session-info" class="section level1 unnumbered" number="">
+<div id="r-session-info" class="section level1 unnumbered">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="r-session-info.html#cb123-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="r-session-info.html#cb123-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 20.04.2 LTS
+Running under: Ubuntu 20.04.3 LTS
 
 Locale:
   LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -1051,63 +1076,62 @@ Locale:
 
 Package version:
   abind_1.4-5              assertthat_0.2.1         backports_1.2.1         
-  base64enc_0.1.3          BH_1.72.0.3              bitops_1.0.6            
-  bookdown_0.21            boot_1.3.25              brio_1.1.0              
-  broom_0.7.3              callr_3.5.1              car_3.0-10              
-  carData_3.0-4            cellranger_1.1.0         circlize_0.4.11         
-  Ckmeans.1d.dp_4.3.3      cli_2.2.0                clipr_0.7.1             
-  clue_0.3-58              cluster_2.1.0            codetools_0.2-18        
-  colorspace_2.0-0         compiler_3.6.3           ComplexHeatmap_2.2.0    
-  conquer_1.0.2            corrplot_0.84            cowplot_1.1.0           
-  cpp11_0.2.4              crayon_1.3.4             crosstalk_1.1.0.1       
-  curl_4.3                 data.table_1.13.4        desc_1.2.0              
-  diffobj_0.3.2            digest_0.6.27            dplyr_1.0.2             
-  DT_0.16                  ellipsis_0.3.1           emba_0.1.8              
-  equatiomatic_0.1.0       evaluate_0.14            exactRankTests_0.8.31   
-  fansi_0.4.1              farver_2.0.3             forcats_0.5.0           
-  foreach_1.5.1            foreign_0.8-75           gbRd_0.4-11             
-  generics_0.1.0           GetoptLong_1.0.5         ggplot2_3.3.2           
-  ggpubr_0.4.0             ggrepel_0.9.0            ggsci_2.9               
-  ggsignif_0.6.0           ggtext_0.1.1             glmnet_4.0-2            
-  GlobalOptions_0.1.2      glue_1.4.2               graphics_3.6.3          
-  grDevices_3.6.3          grid_3.6.3               gridExtra_2.3           
-  gridtext_0.1.4           gtable_0.3.0             haven_2.3.1             
-  highr_0.8                hms_0.5.3                htmltools_0.5.0         
-  htmlwidgets_1.5.3        igraph_1.2.6             isoband_0.2.3           
-  iterators_1.0.13         jpeg_0.1.8.1             jsonlite_1.7.2          
-  km.ci_0.5-2              KMsurv_0.1-5             knitr_1.30              
-  labeling_0.4.2           later_1.1.0.1            latex2exp_0.4.0         
-  lattice_0.20-41          lazyeval_0.2.2           lifecycle_0.2.0         
-  lme4_1.1.26              magrittr_2.0.1           MAMSE_0.2-1             
-  maptools_1.0.2           markdown_1.1             MASS_7.3.53             
-  Matrix_1.2-18            MatrixModels_0.4.1       matrixStats_0.57.0      
-  maxstat_0.7.25           methods_3.6.3            mgcv_1.8.33             
-  mime_0.9                 minqa_1.2.4              munsell_0.5.0           
-  mvtnorm_1.1.1            nlme_3.1.151             nloptr_1.2.2.2          
-  nnet_7.3.14              openxlsx_4.2.3           parallel_3.6.3          
-  pbkrtest_0.4.8.6         pillar_1.4.7             pkgbuild_1.2.0          
-  pkgconfig_2.0.3          pkgload_1.1.0            png_0.1-7               
-  polynom_1.4.0            praise_1.0.0             prettyunits_1.1.1       
-  processx_3.4.5           progress_1.2.2           promises_1.1.1          
-  PRROC_1.3.1              ps_1.5.0                 purrr_0.3.4             
-  quantreg_5.75            R6_2.5.0                 rbibutils_2.0           
-  RColorBrewer_1.1-2       Rcpp_1.0.5               RcppArmadillo_0.10.1.2.0
-  RcppEigen_0.3.3.7.0      RCurl_1.98.1.3           Rdpack_2.1              
-  readr_1.4.0              readxl_1.3.1             rematch_1.0.1           
-  rematch2_2.1.2           rio_0.5.16               rje_1.10.16             
-  rjson_0.2.20             rlang_0.4.9              rmarkdown_2.6           
-  rprojroot_2.0.2          rstatix_0.6.0            rstudioapi_0.13         
-  scales_1.1.1             shape_1.4.5              sp_1.4.4                
-  SparseM_1.78             splines_3.6.3            statmod_1.4.35          
-  stats_3.6.3              stringi_1.5.3            stringr_1.4.0           
-  survival_3.2-7           survminer_0.4.9          survMisc_0.5.5          
-  testthat_3.0.0           tibble_3.0.4             tidyr_1.1.2             
-  tidyselect_1.1.0         tinytex_0.28             tools_3.6.3             
-  usefun_0.4.8             utf8_1.1.4               utils_3.6.3             
-  vctrs_0.3.5              viridisLite_0.3.0        visNetwork_2.0.9        
-  waldo_0.2.3              withr_2.3.0              xfun_0.19               
-  xml2_1.3.2               xtable_1.8-4             yaml_2.2.1              
-  zip_2.1.1                zoo_1.8-9               </code></pre>
+  base64enc_0.1.3          bit_4.0.4                bit64_4.0.5             
+  bitops_1.0.7             bookdown_0.24            boot_1.3.28             
+  broom_0.7.9              broom.mixed_0.2.7        bslib_0.3.1             
+  car_3.0-10               carData_3.0-4            cellranger_1.1.0        
+  circlize_0.4.13          Ckmeans.1d.dp_4.3.3      cli_3.0.1               
+  clipr_0.7.1              clue_0.3-59              cluster_2.1.2           
+  coda_0.19.4              codetools_0.2-18         colorspace_2.0-2        
+  compiler_3.6.3           ComplexHeatmap_2.2.0     conquer_1.0.2           
+  corrplot_0.90            cowplot_1.1.1            cpp11_0.4.0             
+  crayon_1.4.1             crosstalk_1.1.1          curl_4.3.2              
+  data.table_1.14.2        DBI_1.1.1                digest_0.6.28           
+  dplyr_1.0.7              DT_0.19                  ellipsis_0.3.2          
+  emba_0.1.8               equatiomatic_0.2.0       evaluate_0.14           
+  exactRankTests_0.8.32    fansi_0.5.0              farver_2.1.0            
+  fastmap_1.1.0            forcats_0.5.1            foreach_1.5.1           
+  foreign_0.8-75           fs_1.5.0                 generics_0.1.0          
+  GetoptLong_1.0.5         ggplot2_3.3.5            ggpubr_0.4.0            
+  ggrepel_0.9.1            ggsci_2.9                ggsignif_0.6.3          
+  ggtext_0.1.1             glmnet_4.1-2             GlobalOptions_0.1.2     
+  glue_1.4.2               graphics_3.6.3           grDevices_3.6.3         
+  grid_3.6.3               gridExtra_2.3            gridtext_0.1.4          
+  gtable_0.3.0             haven_2.4.1              highr_0.9               
+  hms_1.1.1                htmltools_0.5.2          htmlwidgets_1.5.4       
+  igraph_1.2.6             isoband_0.2.5            iterators_1.0.13        
+  jpeg_0.1.9               jquerylib_0.1.4          jsonlite_1.7.2          
+  km.ci_0.5-2              KMsurv_0.1-5             knitr_1.36              
+  labeling_0.4.2           later_1.3.0              latex2exp_0.5.0         
+  lattice_0.20-45          lazyeval_0.2.2           lifecycle_1.0.1         
+  lme4_1.1.27              magrittr_2.0.1           MAMSE_0.2-1             
+  maptools_1.1.2           markdown_1.1             MASS_7.3.54             
+  Matrix_1.3-4             MatrixModels_0.5.0       matrixStats_0.61.0      
+  maxstat_0.7.25           methods_3.6.3            mgcv_1.8.36             
+  mime_0.12                minqa_1.2.4              munsell_0.5.0           
+  mvtnorm_1.1.2            nlme_3.1.153             nloptr_1.2.2.2          
+  nnet_7.3.16              numDeriv_2016.8.1.1      openxlsx_4.2.4          
+  parallel_3.6.3           pbkrtest_0.5.1           pillar_1.6.3            
+  pkgconfig_2.0.3          png_0.1-7                polynom_1.4.0           
+  prettyunits_1.1.1        progress_1.2.2           promises_1.2.0.1        
+  PRROC_1.3.1              purrr_0.3.4              quantreg_5.86           
+  R6_2.5.1                 rappdirs_0.3.3           rbibutils_2.2.3         
+  RColorBrewer_1.1-2       Rcpp_1.0.7               RcppArmadillo_0.10.7.0.0
+  RcppEigen_0.3.3.9.1      RCurl_1.98.1.5           Rdpack_2.1.2            
+  readr_2.0.2              readxl_1.3.1             rematch_1.0.1           
+  rio_0.5.26               rje_1.10.16              rjson_0.2.20            
+  rlang_0.4.11             rmarkdown_2.11           rstatix_0.7.0           
+  rstudioapi_0.13          sass_0.4.0               scales_1.1.1            
+  shape_1.4.6              sp_1.4.5                 SparseM_1.81            
+  splines_3.6.3            stats_3.6.3              stringi_1.7.5           
+  stringr_1.4.0            survival_3.2-13          survminer_0.4.9         
+  survMisc_0.5.5           tibble_3.1.5             tidyr_1.1.4             
+  tidyselect_1.1.1         tinytex_0.34             tools_3.6.3             
+  tzdb_0.1.2               usefun_0.4.8             utf8_1.2.2              
+  utils_3.6.3              vctrs_0.3.8              viridisLite_0.4.0       
+  visNetwork_2.1.0         vroom_1.5.5              withr_2.4.2             
+  xfun_0.26                xml2_1.3.2               xtable_1.8-4            
+  yaml_2.2.1               zip_2.2.0                zoo_1.8-9               </code></pre>
 </div>
             </section>
 
@@ -1119,7 +1143,6 @@ Package version:
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -1138,6 +1161,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": false
 },
 "fontsettings": {
@@ -1158,6 +1182,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

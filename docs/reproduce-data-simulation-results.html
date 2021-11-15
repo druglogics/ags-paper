@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Reproduce Data &amp; Simulation Results | AGS paper - Supplementary Information (SI)</title>
   <meta name="description" content="AGS paper - SI" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Reproduce Data &amp; Simulation Results | AGS paper - Supplementary Information (SI)" />
   <meta property="og:type" content="book" />
@@ -32,8 +32,9 @@
   
 <link rel="prev" href="mouse-xenograft-results.html"/>
 <link rel="next" href="r-session-info.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,16 +50,16 @@
 
 
 
-
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.16/datatables.js"></script>
+<script src="libs/datatables-binding-0.19/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 <script>
 /* ========================================================================
@@ -801,6 +802,7 @@ $(document).ready(function () {
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -861,6 +863,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -883,95 +908,95 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="r-libraries.html"><a href="r-libraries.html"><i class="fa fa-check"></i>R Libraries</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html"><i class="fa fa-check"></i>CASCADE 1.0 Analysis</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#hsa-results"><i class="fa fa-check"></i>HSA results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#auc-sensitivity"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#roc-curves"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#pr-curves"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#auc-sensitivity"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#bliss-results"><i class="fa fa-check"></i>Bliss results</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#bliss-results"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#auc-sensitivity-1"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#roc-curves-1"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#pr-curves-1"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#auc-sensitivity-1"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#best-roc-and-prc"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#correlation"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#fitness-evolution"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#fit-vs-ens-perf-cascade1"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#scrambled-topo-inv-cascade1"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-1-0-analysis.html"><a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#hsa-results-1"><i class="fa fa-check"></i>HSA results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-link-operator-mutations.html"><a href="cascade-2-0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#source-scrambling"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#target-scrambling"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#sign-inversion"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#source-target-scrambling-and-sign-inversion"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-1.0-analysis.html"><a href="cascade-1.0-analysis.html#boot-ss-cascade1-curated"><i class="fa fa-check"></i>Bootstrap Calibrated Models + Boxplots</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Link Operator Mutations)</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#hsa-results-2"><i class="fa fa-check"></i>HSA Results</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#hsa-results-1"><i class="fa fa-check"></i>HSA results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-4"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-4"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#roc-curves-2"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#pr-curves-2"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#auc-sensitivity-2"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#logistic-regression-analysis"><i class="fa fa-check"></i>Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#regularized-logistic-regression-analysis"><i class="fa fa-check"></i>Regularized Logistic Regression Analysis</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#mamse-roc-analysis"><i class="fa fa-check"></i>MAMSE ROC Analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#bliss-results-2"><i class="fa fa-check"></i>Bliss Results</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#bliss-results-1"><i class="fa fa-check"></i>Bliss results</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#roc-curves-5"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#roc-curves-3"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#pr-curves-3"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#bootstrap-random-model-auc"><i class="fa fa-check"></i>Bootstrap Random Model AUC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#auc-sensitivity-3"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-mutations.html"><a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#best-roc-and-prc-1"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#correlation-1"><i class="fa fa-check"></i>Correlation</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#fitness-evolution-1"><i class="fa fa-check"></i>Fitness Evolution</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2"><i class="fa fa-check"></i>Scrambled Topologies Investigation</a>
 <ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#source-scrambling-1"><i class="fa fa-check"></i>Source Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#target-scrambling-1"><i class="fa fa-check"></i>Target Scrambling</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#sign-inversion-1"><i class="fa fa-check"></i>Sign Inversion</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-link-operator-mutations.html"><a href="cascade-2.0-analysis-link-operator-mutations.html#source-target-scrambling-and-sign-inversion-1"><i class="fa fa-check"></i>Source, Target Scrambling and Sign Inversion</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
-<ul>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="cascade-2-0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology Mutations)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#hsa-results-2"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#roc-curves-4"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#pr-curves-4"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#auc-sensitivity-4"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#bliss-results-2"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#roc-curves-5"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#pr-curves-5"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#auc-sensitivity-5"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#best-roc-and-prc-2"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-mutations.html"><a href="cascade-2.0-analysis-topology-mutations.html#fit-vs-ens-perf-topo"><i class="fa fa-check"></i>Fitness vs Ensemble Performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><i class="fa fa-check"></i>CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#hsa-results-3"><i class="fa fa-check"></i>HSA Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#roc-curves-6"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#pr-curves-6"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-6"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#bliss-results-3"><i class="fa fa-check"></i>Bliss Results</a>
+<ul>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#roc-curves-7"><i class="fa fa-check"></i>ROC curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#pr-curves-7"><i class="fa fa-check"></i>PR curves</a></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#auc-sensitivity-7"><i class="fa fa-check"></i>AUC sensitivity</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="cascade-2.0-analysis-topology-and-link-operator-mutations.html"><a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#best-roc-and-prc-3"><i class="fa fa-check"></i>Best ROC and PRC</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="parameterization-vs-performance.html"><a href="parameterization-vs-performance.html"><i class="fa fa-check"></i>Parameterization vs Performance</a>
 <ul>
@@ -1034,21 +1059,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="reproduce-data-simulation-results" class="section level1 unnumbered" number="">
+<div id="reproduce-data-simulation-results" class="section level1 unnumbered">
 <h1>Reproduce Data &amp; Simulation Results</h1>
 <div id="zenodo-doi-link" class="note">
 <p>We have stored all the simulations results in an open-access repository provided by Zenodo: <a href="https://doi.org/10.5281/zenodo.4430998"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4430998.svg" alt="DOI" /></a></p>
 </div>
-<div id="repro123" class="section level2 unnumbered" number="">
+<div id="repro123" class="section level2 unnumbered">
 <h2>ROC and PR curves, Fitness Evolution<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h2>
 <ul>
-<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.1</code>: <code>git checkout v1.2.1</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.1 package</a>)</li>
 <li>Run the script <code>run_druglogics_synergy.sh</code> in the above repo.</li>
 </ul>
 <p>You can of course change several other parameters in the input files or the script itself (e.g. number of simulations to run - see <a href="https://druglogics.github.io/druglogics-doc/gitsbe-config.html">here</a> for a complete list of configuration options).
 To get the results for the <strong>topology mutations</strong> for CASCADE 2.0 you need to change the <code>ags_cascade_2.0/config</code> file option <code>topology_mutations: 10</code> and <code>balance_mutations: 0</code> (the default options are <span class="math inline">\(0\)</span> topology mutations and <span class="math inline">\(3\)</span> link-operator/balance mutations).
 If you wish to get the results using <strong>both kinds of mutation</strong>, set both <code>topology_mutations</code> and <code>balance_mutations</code> options to a non-zero value (<span class="math inline">\(10\)</span> and <span class="math inline">\(3\)</span> were used in the simulations).</p>
-<p>So, for example to get the simulation output directories for the <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> I just run the <code>run_druglogics_synergy.sh</code> script with the following options defined in the loops inside (no need to change any further configuration):</p>
+<p>So, for example to get the simulation output directories for the <a href="cascade-1.0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> I just run the <code>run_druglogics_synergy.sh</code> script with the following options defined in the loops inside (no need to change any further configuration):</p>
 <ul>
 <li><code>cascade_version</code>: <code>1.0</code> (which topology to use)</li>
 <li><code>train</code>: <code>ss rand</code> (train to the AGS steady state or to a (random) proliferation phenotype))</li>
@@ -1063,9 +1088,9 @@ When uncompressed, the <code>sim_res.tar.gz</code> file outputs 2 separate direc
 The directory with the <em>CASCADE 2.0</em> related results has 3 subsequent directories, corresponding to the different parameterization that was used in the simulations (link mutations, topology mutations or both).
 Each further directory, <strong>specifies on its name</strong> the <em>training type</em>, <em>simulation number</em>, <em>attractor tool</em> and <em>synergy assessment method</em>.</p>
 </div>
-<div id="fitness-vs-performance-methods" class="section level2 unnumbered" number="">
+<div id="fitness-vs-performance-methods" class="section level2 unnumbered">
 <h2>Fitness vs Performance Methods</h2>
-<div id="generate-the-training-data-samples" class="section level3 unnumbered" number="">
+<div id="generate-the-training-data-samples" class="section level3 unnumbered">
 <h3>Generate the training data samples</h3>
 <p>Use the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/gen_training_data.R">gen_training_data.R</a> script to <strong>produce the training data samples</strong>.
 In this script we first choose <span class="math inline">\(11\)</span> numbers that represent the number of nodes that are going to be <em>flipped</em> in the AGS steady state.
@@ -1074,9 +1099,9 @@ Then, for each such number, we generate <span class="math inline">\(20\)</span> 
 Thus, in total, <span class="math inline">\(205\)</span> training data sample files are produced (<span class="math inline">\(205 = 9 \times 20 + 1 \times 24 + 1 \times 1\)</span>, where from the <span class="math inline">\(11\)</span> number of flips, the one flip happens for every node (<span class="math inline">\(24\)</span> different steady states) and flipping all the nodes generates the unique completely reversed steady state).</p>
 <p>The training data files are stored in the Zenodo file <strong><code>training-data-files.tar.gz</code></strong>.</p>
 </div>
-<div id="run-model-ensembles-simulations" class="section level3 unnumbered" number="">
+<div id="run-model-ensembles-simulations" class="section level3 unnumbered">
 <h3>Run model ensembles simulations</h3>
-<p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> repository root (version <code>1.2.0</code>: <code>git checkout v1.2.0</code>).
+<p>To generate the calibrated model ensembles and perform the drug response analysis on them we use the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_druglogics_synergy_training.sh">run_druglogics_synergy_training.sh</a> from the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> repository root (version <code>1.2.1</code>: <code>git checkout v1.2.1</code>).
 Note that the <code>training-data-files</code> directory must be placed inside the <code>druglogics-synergy</code> root directory before executing the aforementioned script.
 The end result we get is the simulation results for each of the training data files (a different directory per training data file).</p>
 <p>The following changes need to be applied to the CASCADE 1.0 or 2.0 configuration file (depends on the topology you are using, the files are either <code>druglogics-synergy/ags_cascade_1.0/config</code> or <code>druglogics-synergy/ags_cascade_2.0/config</code>) before executing the script (some are done automatically in the script):</p>
@@ -1092,10 +1117,10 @@ The results of the CASCADE 2.0 link-operator mutated model simulations are store
 The result of this simulation is also part of the results described above (see section <a href="reproduce-data-simulation-results.html#repro123">above</a>, also considering the necessary changes applied for the topology mutation-based simulations for CASCADE 2.0) and it’s available inside the file <strong><code>sim_res.tar.gz</code></strong> of the Zenodo dataset (also available in the results directory - see <a href="reproduce-data-simulation-results.html#repo-results-structure">Repo results structure</a>).</p>
 </div>
 </div>
-<div id="random-model-bootstrap" class="section level2 unnumbered" number="">
+<div id="random-model-bootstrap" class="section level2 unnumbered">
 <h2>Random Model Bootstrap</h2>
 <ul>
-<li>Install the <a href="https://github.com/druglogics/druglogics-synergy/packages">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy/packages">druglogics-synergy</a> module and use the version <code>1.2.1</code>: <code>git checkout v1.2.1</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.1 package</a>)</li>
 <li>Run the the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_random.sh">run_gitsbe_random.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository.
 This creates a results directory which includes a <code>models</code> directory, with a total of <span class="math inline">\(3000\)</span> <code>gitsbe</code> models which we are going to use for the bootstrapping.</li>
 <li>Place the <code>models</code> directory inside the <code>ags_cascade_2.0</code> directory.</li>
@@ -1106,10 +1131,10 @@ The bootstrap configuration consists of <span class="math inline">\(20\)</span> 
 </ul>
 <p>The results of the simulations are stored in the <strong><code>random_model_bootstrap.tar.gz</code></strong> file of the Zenodo dataset.</p>
 </div>
-<div id="parameterization-bootstrap" class="section level2 unnumbered" number="">
+<div id="parameterization-bootstrap" class="section level2 unnumbered">
 <h2>Parameterization Bootstrap</h2>
 <ul>
-<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.1</code>: <code>git checkout v1.2.1</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.1 package</a>)</li>
 <li>To generate the <span class="math inline">\(3\)</span> pools of calibrated models (fitting to the AGS steady state) subject to different normalization schemes, run the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh">run_gitsbe_param.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository root.
 This will generate the directories:
 <ul>
@@ -1136,56 +1161,56 @@ Use the script <a href="https://github.com/druglogics/ags-paper/blob/main/script
 <p>When uncompressed, the <code>parameterization-comp.tar.gz</code> file outputs 3 separate directories, one per parameterization scheme.
 Each separate directory is structured so as to contain the <code>gitsbe</code> simulation results with the model pool inside (result of the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/run_gitsbe_param.sh">run_gitsbe_param.sh</a>), a <code>boot_res</code> directory (includes the results of the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme.sh">bootstrap_models_drabme.sh</a> script) and lastly the results of the <strong>random proliferative model simulations</strong> which can be reproduced following the guidelines <a href="reproduce-data-simulation-results.html#repro123">above</a>.</p>
 </div>
-<div id="erk-repro" class="section level2 unnumbered" number="">
+<div id="erk-repro" class="section level2 unnumbered">
 <h2>ERK investigation</h2>
 <p>We split the link operator model pool (<span class="math inline">\(4500\)</span> models, see <a href="reproduce-data-simulation-results.html#parameterization-bootstrap">above</a>) to <span class="math inline">\(2\)</span> pools, one with a total of <span class="math inline">\(2764\)</span> models that have <code>ERK_f</code> active and one with a total of <span class="math inline">\(1736\)</span> models that have it inhibited in the corresponding stable states.
 The two model pools are the two directories named <code>erk_active_pool</code> and <code>erk_inhibited_pool</code> respectively inside the Zenodo file <code>erk_perf_investigation.tar.gz</code>.</p>
 <p>Then:</p>
 <ul>
-<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.1</code>: <code>git checkout v1.2.1</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.1 package</a>)</li>
 <li>Run the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_erk_pools.sh">bootstrap_models_drabme_erk_pools.sh</a> inside the <code>ags_cascade_2.0</code> directory of the <code>druglogics-synergy</code> repository.
 This will produce the drug combination prediction results for the bootstrapped ensembles of boolean models from each pool.
 From each pool, we bootstrapped <span class="math inline">\(35\)</span> ensembles with <span class="math inline">\(300\)</span> models each and used the <code>bliss</code> drabme synergy method to calculate the prediction results.</li>
 <li>Run the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R">erk_perf_tidy_data.R</a> to calculate the ROC and PR AUC of every bootstrapped ensemble, subject to normalization against the random proliferative model predictions.</li>
 </ul>
 </div>
-<div id="boot-ss-cascade1-curated-reproduce" class="section level2 unnumbered" number="">
+<div id="boot-ss-cascade1-curated-reproduce" class="section level2 unnumbered">
 <h2>CASCADE 1.0 Calibrated Models bootstrap</h2>
 <ul>
-<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.0</code>: <code>git checkout v1.2.0</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.0 package</a>)</li>
+<li>Install the <a href="https://github.com/druglogics/druglogics-synergy">druglogics-synergy</a> module and use the version <code>1.2.1</code>: <code>git checkout v1.2.1</code> (or use directly the <a href="https://github.com/druglogics/druglogics-synergy/packages">released v1.2.1 package</a>)</li>
 <li>Generate one large pool of calibrated models (fitting to the AGS steady state) by using the instructions <a href="reproduce-data-simulation-results.html#repro123">above</a> =&gt; use the <code>run_druglogics_synergy.sh</code> script at the root of the <code>druglogics-synergy</code> repo with script config: <code>{1.0, ss, 1000, fixpoints, bliss}</code></li>
 <li>Use the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/bootstrap_models_drabme_cascade1.sh">bootstrap_models_drabme_cascade1.sh</a> script to run the bootstrapped model simulations.</li>
 <li>Use the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a> script to tidy up the bootstrap simulation data.</li>
 </ul>
 <p>The results from the bootstrap simulations are stored in the <strong><code>ss_cascade1_model_bootstrap.tar.gz</code></strong> file of the Zenodo dataset.</p>
 </div>
-<div id="repo-results-structure" class="section level2 unnumbered" number="">
+<div id="repo-results-structure" class="section level2 unnumbered">
 <h2>Repo results structure</h2>
 <p>We have gathered all the necessary output files from the above simulations (mostly relating to ROC, PR curves and AUC sensitivity figures) to the directory <a href="https://github.com/druglogics/ags-paper/tree/main/results"><code>results</code></a> for ease of use in our report.
 The <code>results</code> directory has 3 main sub-directories:</p>
 <ol style="list-style-type: decimal">
-<li><a href="https://github.com/druglogics/ags-paper/tree/main/results/link-only"><code>link-only</code></a>: results from the link-operator mutated models only (used in the sections <a href="cascade-1-0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> and <a href="cascade-2-0-analysis-link-operator-mutations.html#cascade-2.0-analysis-link-operator-mutations">CASCADE 2.0 Analysis (Link Operator Mutations)</a>)</li>
-<li><a href="https://github.com/druglogics/ags-paper/tree/main/results/topology-only"><code>topology-only</code></a>: results from the topology-mutated models only (used in the section <a href="cascade-2-0-analysis-topology-mutations.html#cascade-2.0-analysis-topology-mutations">CASCADE 2.0 Analysis (Topology Mutations)</a>)</li>
-<li><a href="https://github.com/druglogics/ags-paper/tree/main/results/topo-and-link"><code>topo-and-link</code></a>: results where both mutations applied to the generated boolean models (used in section <a href="cascade-2-0-analysis-topology-and-link-operator-mutations.html#cascade-2.0-analysis-topology-and-link-operator-mutations">CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>)</li>
+<li><a href="https://github.com/druglogics/ags-paper/tree/main/results/link-only"><code>link-only</code></a>: results from the link-operator mutated models only (used in the sections <a href="cascade-1.0-analysis.html#cascade-1.0-analysis">Cascade 1.0 Analysis</a> and <a href="cascade-2.0-analysis-link-operator-mutations.html#cascade-2.0-analysis-link-operator-mutations">CASCADE 2.0 Analysis (Link Operator Mutations)</a>)</li>
+<li><a href="https://github.com/druglogics/ags-paper/tree/main/results/topology-only"><code>topology-only</code></a>: results from the topology-mutated models only (used in the section <a href="cascade-2.0-analysis-topology-mutations.html#cascade-2.0-analysis-topology-mutations">CASCADE 2.0 Analysis (Topology Mutations)</a>)</li>
+<li><a href="https://github.com/druglogics/ags-paper/tree/main/results/topo-and-link"><code>topo-and-link</code></a>: results where both mutations applied to the generated boolean models (used in section <a href="cascade-2.0-analysis-topology-and-link-operator-mutations.html#cascade-2.0-analysis-topology-and-link-operator-mutations">CASCADE 2.0 Analysis (Topology and Link Operator Mutations)</a>)</li>
 </ol>
 <p>In addition, there is a <a href="https://github.com/druglogics/ags-paper/tree/main/data"><code>data</code></a> directory that includes the following:</p>
 <ul>
-<li><code>observed_synergies_cascade_1.0</code>: the gold-standard synergies for the CASCADE 1.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2015" role="doc-biblioref">2015</a>)</span></li>
-<li><code>observed_synergies_cascade_2.0</code>: the gold-standard synergies for the CASCADE 2.0 topology <span class="citation">(Flobak et al. <a href="references.html#ref-Flobak2019" role="doc-biblioref">2019</a>)</span></li>
+<li><code>observed_synergies_cascade_1.0</code>: the gold-standard synergies for the CASCADE 1.0 topology <span class="citation">(<a href="references.html#ref-Flobak2015" role="doc-biblioref">Flobak et al. 2015</a>)</span></li>
+<li><code>observed_synergies_cascade_2.0</code>: the gold-standard synergies for the CASCADE 2.0 topology <span class="citation">(<a href="references.html#ref-Flobak2019" role="doc-biblioref">Flobak et al. 2019</a>)</span></li>
 <li><code>steadystate</code>, <code>steadystate.rds</code>: the AGS training data for the calibrated models (file + compressed data) - see <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> script.</li>
 <li><code>edge_mat.rds</code>, <code>topo_ss_df.rds</code>: heatmap data for the topology-mutation models - see <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R">lo_mutated_models_heatmaps.R</a> script.</li>
 <li><code>lo_df.rds</code>, <code>lo_ss_df.rds</code>: heatmap data for the link-operator models - see <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R">topo_mutated_models_heatmaps.R</a> script.</li>
 <li><code>node_pathway_annotations_cascade2.csv</code>, <code>node_path_tbl.rds</code>: node pathway annotation data for CASCADE 2.0 and compressed data table produced via the <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/node_path_annot_cascade2.R">node_path_annot_cascade2.R</a> script.</li>
 <li><code>cosmic_cancer_gene_census_all_29102020.tsv</code>: Cancer Gene Census COSMIC data downloaded from <a href="https://cancer.sanger.ac.uk/census" class="uri">https://cancer.sanger.ac.uk/census</a> (for academic purposes)</li>
 <li><code>cosmic_tbl.rds</code>: a compressed file with a <code>tibble</code> object having the CASCADE 2.0 nodes and their respective COSMIC cancer role annotation (see <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_cosmic_data_annot.R">get_cosmic_data_annot.R</a> script).</li>
-<li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
-<li><code>res_fit_aucs_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-1-0-analysis.html#fit-vs-ens-perf-cascade1">Fitness vs Ensemble Performance</a> section (CASCADE 1.0, link operator mutations).</li>
-<li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, link operator mutations).</li>
-<li><code>res_fit_aucs_topo.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2-0-analysis-topology-mutations.html#fit-vs-ens-perf-topo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, topology mutations).</li>
+<li><code>bootstrap_rand_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2.0-analysis-link-operator-mutations.html#bootstrap-random-model-auc">Bootstrap Random Model AUC</a> section.</li>
+<li><code>res_fit_aucs_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-1.0-analysis.html#fit-vs-ens-perf-cascade1">Fitness vs Ensemble Performance</a> section (CASCADE 1.0, link operator mutations).</li>
+<li><code>res_fit_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2.0-analysis-link-operator-mutations.html#fit-vs-ens-perf-lo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, link operator mutations).</li>
+<li><code>res_fit_aucs_topo.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="cascade-2.0-analysis-topology-mutations.html#fit-vs-ens-perf-topo">Fitness vs Ensemble Performance</a> section (CASCADE 2.0, topology mutations).</li>
 <li><code>res_param_boot_aucs.rds</code>: a compressed file with a <code>tibble</code> object having the result data in a tidy format for the analysis related to the <a href="parameterization-vs-performance.html#boot-comp-param">Bootstrap Simulations</a> section.</li>
-<li><code>boot_cascade1_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#boot-ss-cascade1-curated">scrambled topologies investigation</a> in CASCADE 1.0.</li>
-<li><code>scrambled_topo_res_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>, related to the <a href="cascade-1-0-analysis.html#scrambled-topo-inv-cascade1">scrambled topologies investigation</a> in CASCADE 1.0.</li>
-<li><code>scrambled_topo_res_cascade2.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R">get_syn_res_scrambled_topo_cascade2.R</a>, related to the <a href="cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2">scrambled topologies investigation</a> in CASCADE 2.0.</li>
+<li><code>boot_cascade1_res.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_boot_ss_cascade1.R">get_syn_res_boot_ss_cascade1.R</a>, related to the <a href="cascade-1.0-analysis.html#boot-ss-cascade1-curated">scrambled topologies investigation</a> in CASCADE 1.0.</li>
+<li><code>scrambled_topo_res_cascade1.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade1.R">get_syn_res_scrambled_topo_cascade1.R</a>, related to the <a href="cascade-1.0-analysis.html#scrambled-topo-inv-cascade1">scrambled topologies investigation</a> in CASCADE 1.0.</li>
+<li><code>scrambled_topo_res_cascade2.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/get_syn_res_scrambled_topo_cascade2.R">get_syn_res_scrambled_topo_cascade2.R</a>, related to the <a href="cascade-2.0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2">scrambled topologies investigation</a> in CASCADE 2.0.</li>
 <li><code>res_erl.rds</code>: a compressed file with a <code>tibble</code> object having the result data from executing the script <a href="https://github.com/druglogics/ags-paper/blob/main/scripts/erk_perf_tidy_data.R">erk_perf_tidy_data.R</a>, related to the <a href="annotated-heatmaps.html#erk-perf-inv">ERK analysis</a> with the link operator mutated models in CASCADE 2.0.</li>
 <li><code>tumor_vol_data.csv</code>: the data from the xenograft experiments relating to the <code>PI</code> and <code>5Z</code> inhibitors.</li>
 </ul>
@@ -1207,7 +1232,6 @@ The <code>results</code> directory has 3 main sub-directories:</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -1226,6 +1250,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": false
 },
 "fontsettings": {
@@ -1246,6 +1271,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
