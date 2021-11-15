@@ -17,7 +17,7 @@ knitr::write_bib(c(.packages(), 'rtemps', 'glmnet', 'MAMSE'), 'packages.bib')
 
 # Intro {-}
 
-This report is the **supplementary material** for the AGS paper and has all the simulation results and investigations related to that paper, as well as instructions for reproducing the results.
+This report is the **supplementary material** for the AGS paper and has all the simulation results and investigations related to that paper, as well as [instructions](#repro123) for reproducing the results.
 
 ## Methodology/Input Overview {-}
 
