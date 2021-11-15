@@ -16,7 +16,11 @@ Instructions for reproducing results are available at the [last section](https:/
 ## Paper Figures
 
 Since the report includes a lot of analyses that didn't make it to the paper, here we shortlist the figures that are present in the publication.
+<<<<<<< HEAD
 Note that to be fully able to reproduce these figures you may have to run previous code blocks, usually from the start of each respective section where the input files (simulation results) are parsed:
+=======
+Note that to be fully able to reproduce these figures you may have to run previous code blocks from the start of each respective section that the figure belongs to:
+>>>>>>> e7563a4789b9116e691d59ba9f8e1ed038a437c0
 
 ### Main Figures
 
