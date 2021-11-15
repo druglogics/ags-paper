@@ -503,7 +503,7 @@ ggline(data = df_mw, x = "weights", y = "AUC", numeric.x.axis = TRUE, color = "t
 ## Best ROC and PRC {-}
 
 :::{#combined-pred-bliss-dt}
-The **ROC ensemble-wise statistics data** for the combined predictor $calibrated + \beta \times random, \beta=-1$ are:
+The **ROC ensemble-wise statistics data** for the combined predictor $calibrated + \beta \times random, \beta=-1$ (using the results from the $50$ simulation runs) are:
 :::
 ```{r combined-pred-bliss-dt, fig.align='center', fig.cap="ROC data for Combined Predictor (CASCADE 1.0, Bliss synergy method)"}
 beta = -1
@@ -1754,8 +1754,10 @@ For $\beta=-1$ we still see **significant performance improvement**.
 
 ## Best ROC and PRC {-}
 
+:::{.blue-box}
 For the **Bliss ensemble-wise results** we demonstrated above that a value of $\beta_{best}=-1.6$ can result in significant performance gain of the combined predictor ($calibrated + \beta \times random$) using the results from the $150$ simulation runs (the results for $\beta=-1$ were still better than the single predictors).
 Here, we present the ROC and PR curves for the **calibrated (normalized to random model)** predictions compared to the **random proliferative** model results.
+:::
 
 :::{.note}
 Only for the next twp Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
