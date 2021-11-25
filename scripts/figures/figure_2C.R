@@ -23,10 +23,10 @@ observed = sapply(ss_bliss_ew_synergies$perturbation %in% observed_synergies, as
 # make predictions table and save to file
 beta = -1
 pred_ew_bliss = dplyr::bind_cols(
-  ss_bliss_ew_synergies %>% rename(ss_score = score),
-  prolif_bliss_ew_synergies %>% select(score) %>% rename(prolif_score = score),
+  ss_bliss_ew_synergies %>% rename(ss_score = score), # calibrated models synergy scores
+  prolif_bliss_ew_synergies %>% select(score) %>% rename(prolif_score = score),  # random proliferative models synergy scores
   tibble::as_tibble_col(observed, column_name = 'observed')) %>%
-  mutate(combined_score = ss_score + beta * prolif_score, .before = observed)
+  mutate(combined_score = ss_score + beta * prolif_score, .before = observed) # calibrated normalized synergy scores
 readr::write_csv(x = pred_ew_bliss, file = 'scripts/figures/cascade1.0_prediction_results.csv')
 
 # ROC statistics
