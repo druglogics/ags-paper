@@ -381,7 +381,7 @@ The **ROC statistics data** for the calibrated models are as follows:
 ```{r calibrated-bliss-dt, fig.align='center', fig.cap="ROC data for Calibrated Models (CASCADE 1.0, Bliss synergy method)"}
 DT::datatable(data = res_ss_ew$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>% 
-  formatRound(c(1,6,7,8,9), digits = 3)
+  formatRound(c(1,6,7,8,9), digits = 5)
 
 # investigate the average threshold as a synergy classification index
 # thres = res_ss_ew$roc_stats %>% pull(threshold)
@@ -512,7 +512,7 @@ res_comb_pred = usefun::get_roc_stats(df = pred_ew_bliss, pred_col = "combined_s
 
 DT::datatable(data = res_comb_pred$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>% 
-  DT::formatRound(c(1,6,7,8,9), digits = 3)
+  DT::formatRound(c(1,6,7,8,9), digits = 5)
 
 # All observed synergies are in top 6
 # pred_ew_bliss %>% arrange(combined_score)
@@ -1808,7 +1808,7 @@ The **ROC ensemble-wise statistics data** for the combined predictor ($\beta=-1$
 ```{r comb-pred-best-link-dt, fig.align='center', fig.cap="ROC data for Best Combined Predictor (CASCADE 2.0, Link Operator Mutations, Bliss synergy method)"}
 DT::datatable(data = roc_best_res2$roc_stats, options = 
   list(pageLength = 5, lengthMenu = c(5, 20, 40), searching = FALSE)) %>% 
-  formatRound(c(1,6,7,8,9), digits = 3)
+  formatRound(c(1,6,7,8,9), digits = 5)
 
 # TP synergies at a specified threshold (0 below)
 # pred_ew_bliss %>% 
