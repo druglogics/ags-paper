@@ -1760,7 +1760,7 @@ Here, we present the ROC and PR curves for the **calibrated (normalized to rando
 :::
 
 :::{.note}
-Only for the next twp Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+Only for the next two Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
 ```{r best-beta-cascade2-link, fig.width=5, fig.height=5, fig.align='center', dpi=300, cache=TRUE, fig.show='hold', out.width='50%', fig.cap='ROC and PR curves for Random and Combined Predictor (CASCADE 2.0, Link Operator Mutations)'}
