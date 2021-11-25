@@ -23,7 +23,7 @@ In addition, we also provide separate standalone scripts that can be used to gen
 ### Main Figures
 
 - [Figure 2B](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb20), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_2B.R)
-- [Figure 2C](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb16), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_2C.R))
+- [Figure 2C](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb16), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_2C.R)
 - [Figure 3](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb57)
 - [Figure 4](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb71)
 - [Figure 5](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2)
