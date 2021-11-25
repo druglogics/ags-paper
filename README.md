@@ -16,11 +16,13 @@ Instructions for reproducing results are available at the [last section](https:/
 ## Paper Figures
 
 Since the report includes a lot of analyses that didn't make it to the paper, here we shortlist the figures that are present in the publication.
-Note that to be fully able to reproduce these figures you may have to run previous code blocks, usually from the start of each respective section where the input files (simulation results) are parsed:
+Note that to be fully able to reproduce these figures you may have to run previous code blocks, usually from the start of each respective section where the input files (simulation results) are parsed.
+This also means that the report has all the **necessary context** in relation to each of these figures.
+In addition, we also provide separate standalone scripts that can be used to generate each of the figures in the publication from the simulation data results.
 
 ### Main Figures
 
-- [Figure 2B](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb20)
+- [Figure 2B](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb20), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_2B.R))
 - [Figure 2C](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb16)
 - [Figure 3](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb57)
 - [Figure 4](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb71)
