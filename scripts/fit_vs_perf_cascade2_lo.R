@@ -33,6 +33,9 @@ for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
   ew_synergies_file = list.files(path = res_dir, pattern = "ensemblewise_synergies", full.names = TRUE)
   ew_ss_scores = emba::get_synergy_scores(ew_synergies_file)
 
+  # get number of nodes that were flipped in the steady state from directory name
+  n_flips = stringr::str_match(res_dir, 'training_(.*)_flips')[1,2] %>% as.integer()
+
   # get the models stable states
   models_dir = paste0(res_dir, "/models")
 
@@ -63,7 +66,8 @@ for (res_dir in list.dirs(data_dir, recursive = FALSE)) {
   df = dplyr::bind_cols(
     roc_auc = res_roc$auc,
     pr_auc = res_pr$auc.davis.goadrich,
-    avg_fit = mean(models_fit))
+    avg_fit = mean(models_fit),
+    per_flipped_data = n_flips/length(steady_state))
 
   print(paste('File', ew_synergies_file, 'fit-avg', mean(models_fit)))
 
