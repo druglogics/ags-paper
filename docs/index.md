@@ -1,7 +1,7 @@
 ---
 title: "AGS paper - Supplementary Information (SI)"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 25 November, 2021"
+date: "Last updated: 26 November, 2021"
 description: "AGS paper - SI"
 url: 'https\://druglogics.github.io/ags-paper/'
 github-repo: "druglogics/ags-paper"
@@ -867,13 +867,15 @@ We observe from the low *p-values* that the **data is not normally distributed**
 Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** test (and it's respective coefficient, $\tau$), to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
 
 ```r
-ggscatter(data = res, x = "avg_fit", y = "roc_auc",
+p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
   ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
   add.params = list(color = "blue", fill = "lightgray"),
   cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "top", size = 6, cor.coef.name = "tau")) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
+ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ```
 
 <div class="figure" style="text-align: center">
@@ -883,13 +885,15 @@ ggscatter(data = res, x = "avg_fit", y = "roc_auc",
 
 
 ```r
-ggscatter(data = res, x = "avg_fit", y = "pr_auc",
+p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "pr_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
   add.params = list(color = "blue", fill = "lightgray"),
   ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
   cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
+ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ```
 
 <div class="figure" style="text-align: center">
@@ -2044,7 +2048,7 @@ Here, we present the ROC and PR curves for the **calibrated (normalized to rando
 :::
 
 :::{.note}
-Only for the next twp Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
+Only for the next two Figures, **Calibrated** stands for the combined predictor results, i.e. $calibrated + \beta \times random, \beta=-1$.
 :::
 
 
@@ -2290,13 +2294,15 @@ We observe from the low *p-values* that the **data is not normally distributed**
 Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** test (and it's respective coefficient, $\tau$), to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
 
 ```r
-ggscatter(data = res, x = "avg_fit", y = "roc_auc",
+p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
   ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
   add.params = list(color = "blue", fill = "lightgray"),
   cor.coef = TRUE, cor.coeff.args = list(method = "kendall", label.y.npc = "bottom", size = 6, cor.coef.name = "tau")) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
+ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ```
 
 <div class="figure" style="text-align: center">
@@ -2306,13 +2312,15 @@ ggscatter(data = res, x = "avg_fit", y = "roc_auc",
 
 
 ```r
-ggscatter(data = res, x = "avg_fit", y = "pr_auc",
+p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "pr_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
   add.params = list(color = "blue", fill = "lightgray"),
   ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
   cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
+ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ```
 
 <div class="figure" style="text-align: center">
@@ -3122,13 +3130,15 @@ We observe from the low *p-values* that the **data is not normally distributed**
 Thus, we are going to use a non-parametric correlation metric, namely the **Kendall rank-based** test (and it's respective coefficient, $\tau$), to check for correlation between the ensemble model performance (ROC-AUC, PR-AUC) and the fitness to the AGS steady state:
 
 ```r
-ggscatter(data = res, x = "avg_fit", y = "roc_auc",
+p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
   ylab = "ROC AUC", add = "reg.line", conf.int = TRUE,
   add.params = list(color = "blue", fill = "lightgray"),
   cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
+ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ```
 
 <div class="figure" style="text-align: center">
@@ -3138,13 +3148,15 @@ ggscatter(data = res, x = "avg_fit", y = "roc_auc",
 
 
 ```r
-ggscatter(data = res, x = "avg_fit", y = "pr_auc",
+p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "pr_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
   add.params = list(color = "blue", fill = "lightgray"),
   ylab = "PR AUC", add = "reg.line", conf.int = TRUE,
   cor.coef = TRUE, cor.coeff.args = list(method = "kendall", size = 6, cor.coef.name = "tau")) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
+ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ```
 
 <div class="figure" style="text-align: center">
@@ -4466,9 +4478,9 @@ Package version:
   lme4_1.1.27              magrittr_2.0.1           MAMSE_0.2-1             
   maptools_1.1.2           markdown_1.1             MASS_7.3.54             
   Matrix_1.3-4             MatrixModels_0.5.0       matrixStats_0.61.0      
-  maxstat_0.7.25           methods_3.6.3            mgcv_1.8.36             
+  maxstat_0.7.25           methods_3.6.3            mgcv_1.8-36             
   mime_0.12                minqa_1.2.4              munsell_0.5.0           
-  mvtnorm_1.1.2            nlme_3.1.153             nloptr_1.2.2.2          
+  mvtnorm_1.1.2            nlme_3.1-153             nloptr_1.2.2.2          
   nnet_7.3.16              numDeriv_2016.8.1.1      openxlsx_4.2.4          
   parallel_3.6.3           pbkrtest_0.5.1           pillar_1.6.3            
   pkgconfig_2.0.3          png_0.1-7                polynom_1.4.0           
