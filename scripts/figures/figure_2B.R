@@ -55,9 +55,9 @@ avg_fit_long = avg_fit %>%
 
 set1_cols = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 
-ggline(data = avg_fit_long, x = "name", y = "value", color = set1_cols[2],
+ggpubr::ggline(data = avg_fit_long, x = "name", y = "value", color = set1_cols[2],
   add = "mean_sd", add.params = list(color = "black"), ylim = c(0, 1),
   main = "Fitness Evolution across Generations",
   xlab = "Generations", ylab = "Fitness") +
   theme(plot.title = element_text(hjust = 0.5)) + grids()
-ggsave(filename = 'scripts/figures/figure_2B.png', dpi = 400, width = 7, height = 5)
+ggplot2::ggsave(filename = 'scripts/figures/figure_2B.pdf', width = 7, height = 5, device = cairo_pdf)

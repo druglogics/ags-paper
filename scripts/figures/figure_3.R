@@ -44,7 +44,7 @@ set1_cols = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 # Figure 3 - ROC (1)
 # 'Calibrated' here is Calibrated + normalized to random proliferative model predictions
 # i.e. the combined predictor
-png(filename = 'scripts/figures/figure_3_ROC.png', width = 5, height = 5, units = 'in', res = 300)
+cairo_pdf(filename = 'scripts/figures/figure_3_ROC.pdf', width = 5, height = 5)
 plot(x = res_comb_pred$roc_stats$FPR, y = res_comb_pred$roc_stats$TPR,
   type = 'l', lwd = 3, col = set1_cols[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
   xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
@@ -71,7 +71,7 @@ res_comb_pred_pr = PRROC::pr.curve(scores.class0 = pred_ew_bliss %>%
 # Figure 3 - PR (2)
 # 'Calibrated' here is Calibrated + normalized to random proliferative model predictions
 # i.e. the combined predictor
-png(filename = 'scripts/figures/figure_3_PR.png', width = 5, height = 5, units = 'in', res = 300)
+cairo_pdf(filename = 'scripts/figures/figure_3_PR.pdf', width = 5, height = 5)
 plot(res_comb_pred_pr, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = set1_cols[1], rand.plot = TRUE)
 plot(res_prolif_ew_pr, add = TRUE, color = set1_cols[2])
