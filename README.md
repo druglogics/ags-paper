@@ -25,7 +25,7 @@ In addition, we also provide separate standalone scripts that can be used to gen
 - [Figure 2B](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb20), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_2B.R)
 - [Figure 2C](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb16), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_2C.R)
 - [Figure 3](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb57), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_3.R)
-- [Figure 4](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb71)
+- [Figure 4](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb71), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_4.R)
 - [Figure 5](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2)
 - [Figure 6](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#cb112)
 - [Figure 7](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#cb110)
