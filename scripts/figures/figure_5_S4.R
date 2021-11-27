@@ -1,4 +1,5 @@
 library(dplyr)
+library(emba)
 library(tibble)
 library(ggplot2)
 library(ggpubr)
@@ -111,6 +112,14 @@ ggplot2::ggsave(filename = 'scripts/figures/figure_5_ROC.pdf', width = 14, heigh
 #################################
 # Figure S4 - PR results in one #
 #################################
+
+# Observed synergies (CASCADE 2.0)
+ss_bliss_ew_file = 'results/link-only/cascade_2.0_ss_150sim_fixpoints_bliss_ensemblewise_synergies.tab'
+ss_bliss_ew_synergies = emba::get_synergy_scores(ss_bliss_ew_file)
+observed_synergies_file = 'data/observed_synergies_cascade_2.0'
+observed_synergies = emba::get_observed_synergies(observed_synergies_file)
+# 1 (positive/observed synergy) or 0 (negative/not observed) for all tested drug combinations
+observed = sapply(ss_bliss_ew_synergies$perturbation %in% observed_synergies, as.integer)
 
 # for reproducibility for `geom_jitter()`
 set.seed(42)
