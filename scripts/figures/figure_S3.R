@@ -10,7 +10,7 @@ shapiro.test(x = res$roc_auc)
 shapiro.test(x = res$pr_auc)
 shapiro.test(x = res$avg_fit)
 
-# Figure 3S - ROC
+# Figure S3 - ROC
 p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
@@ -21,9 +21,9 @@ p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_fli
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
 ggpubr::ggpar(p, legend = "right", font.legend = 14)
-ggplot2::ggsave(filename = 'scripts/figures/figure_3S_ROC.pdf', width = 7, height = 5, device = cairo_pdf)
+ggplot2::ggsave(filename = 'scripts/figures/figure_S3_ROC.pdf', width = 7, height = 5, device = cairo_pdf)
 
-# Figure 3S - PR
+# Figure S3 - PR
 p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "pr_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
@@ -34,4 +34,4 @@ p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "pr_auc", color = "per_flip
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_color_distiller(n.breaks = 5, labels = scales::label_percent(accuracy = 1L), palette = 'RdYlBu', guide = guide_colourbar(title = '%Data Flipped'))
 ggpubr::ggpar(p, legend = "right", font.legend = 14)
-ggplot2::ggsave(filename = 'scripts/figures/figure_3S_PR.pdf', width = 7, height = 5, device = cairo_pdf)
+ggplot2::ggsave(filename = 'scripts/figures/figure_S3_PR.pdf', width = 7, height = 5, device = cairo_pdf)
