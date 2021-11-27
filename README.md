@@ -15,10 +15,10 @@ Instructions for reproducing results are available at the [last section](https:/
 
 ## Paper Figures
 
-Since the report includes a lot of analyses that didn't make it to the paper, here we shortlist the figures that are present in the publication and **their specific position in the online report**.
+Since the report includes a lot of analyses that didn't make it to the paper, here we shortlist the figures that are present in the publication and **their specific position in the online report** (or the section which reproduces them if they are more than one, grouped together in the paper).
 Note that to be fully able to reproduce these figures you may have to run previous code blocks, usually from the start of each respective section where the input files (simulation results) are parsed.
 This also means that the report has all the **necessary context** in relation to each of these figures.
-In addition, we also provide separate standalone scripts that can be used to generate each of the figures in the publication from the simulation data results.
+In addition, we also provide **separate standalone scripts** that can be used to generate each of the figures in the publication from the simulation data results.
 
 ### Main Figures
 
