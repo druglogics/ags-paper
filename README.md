@@ -41,4 +41,4 @@ In addition, we also provide **separate standalone scripts** that can be used to
 - [Figure S2](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#cb60), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_3_S2.R)
 - [Figure S3](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#cb30), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_S3.R)
 - [Figure S4](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_5_S4.R)
-- [Figure S5 & S6](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#scrambled-topo-inv-cascade1)
+- [Figure S5 & S6](https://druglogics.github.io/ags-paper/cascade-1-0-analysis.html#boot-ss-cascade1-curated), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_S5_S6.R)
