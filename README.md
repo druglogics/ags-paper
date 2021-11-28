@@ -11,7 +11,7 @@ https://doi.org/10.1101/2021.06.28.450165
 
 See the full report [here](https://druglogics.github.io/ags-paper/index.html).
 
-Instructions for reproducing results are available at the [last section](https://druglogics.github.io/ags-paper/reproduce-data-simulation-results.html) of the report.
+Instructions for **reproducing the simulation results** are available at the [last section](https://druglogics.github.io/ags-paper/reproduce-data-simulation-results.html) of the report.
 
 ## Paper Figures
 
