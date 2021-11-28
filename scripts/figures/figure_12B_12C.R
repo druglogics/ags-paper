@@ -4,6 +4,7 @@ library(tidyr)
 library(ggpubr)
 library(ggplot2)
 library(rstatix)
+library(latex2exp)
 
 # read file with tumor volume data
 tumor_data = readr::read_csv(file = 'data/tumor_vol_data.csv')
