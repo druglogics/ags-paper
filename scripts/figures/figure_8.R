@@ -2,6 +2,7 @@ library(rstatix)
 library(ggpubr)
 library(ggplot2)
 
+# load the data
 # see script 'scripts/erk_perf_tidy_data.R'
 res = readRDS(file = "data/res_erk.rds")
 
