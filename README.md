@@ -30,10 +30,10 @@ In addition, we also provide **separate standalone scripts** that can be used to
 - [Figure 5](https://druglogics.github.io/ags-paper/cascade-2-0-analysis-link-operator-mutations.html#scrambled-topo-inv-cascade2), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_5_S4.R)
 - [Figure 6](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#cb112), see [script](https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R#L288)
 - [Figure 7](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#cb110), see [script](https://github.com/druglogics/ags-paper/blob/main/scripts/lo_mutated_models_heatmaps.R#L175)
-- [Figure 8](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#erk-perf-inv)
-- [Figure 9](https://druglogics.github.io/ags-paper/parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization)
-- [Figure 10](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#cb114)
-- [Figure 12B & 12C](https://druglogics.github.io/ags-paper/mouse-xenograft-results.html)
+- [Figure 8](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#erk-perf-inv), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_8.R)
+- [Figure 9](https://druglogics.github.io/ags-paper/parameterization-vs-performance.html#compare-topology-vs-link-operator-parameterization), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_9.R)
+- [Figure 10](https://druglogics.github.io/ags-paper/annotated-heatmaps.html#cb114), see [script](https://github.com/druglogics/ags-paper/blob/main/scripts/topo_mutated_models_heatmaps.R#L266)
+- [Figure 12B & 12C](https://druglogics.github.io/ags-paper/mouse-xenograft-results.html), see [script](https://github.com/druglogics/ags-paper/tree/main/scripts/figures/figure_12B_12C.R)
 
 ### Supplementary Figures
 
