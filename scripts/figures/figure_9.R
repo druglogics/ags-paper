@@ -35,7 +35,7 @@ stat_test_pr = res %>%
   rstatix::add_significance("p") %>%
   rstatix::add_y_position()
 
-# PR AUCs
+# PR AUCs (Figure 9)
 pr_fig = ggboxplot(res, x = "param", y = "pr_auc", fill = "param", palette = "Set1",
   add = "jitter", xlab = "", ylab = "Precision-Recall AUC") +
   scale_x_discrete(breaks = c("link-only","topology-only"),
