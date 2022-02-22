@@ -81,6 +81,29 @@ legend(x = 0, y = 0.9, title = 'AUC', col = set1_cols[1:2], pch = 19, cex = 1.3,
 grid(lwd = 0.5)
 dev.off()
 
+# Figure 3 - ROC and PR combined
+cairo_pdf(filename = 'scripts/figures/figure_3.pdf', width = 10, height = 5)
+par(mfrow = c(1,2))
+plot(x = res_comb_pred$roc_stats$FPR, y = res_comb_pred$roc_stats$TPR,
+  type = 'l', lwd = 3, col = set1_cols[1], main = 'ROC curve, Ensemble-wise synergies (Bliss)',
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR,
+  lwd = 3, col = set1_cols[2])
+legend('topleft', title = 'AUC', col = set1_cols[1:2], pch = 19,
+  legend = c(paste(round(res_comb_pred$AUC, digits = 2), "Calibrated"),
+    paste(round(res_prolif_ew$AUC, digits = 2), "Random")), cex = 1.3)
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
+plot(res_comb_pred_pr, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = set1_cols[1], rand.plot = TRUE)
+plot(res_prolif_ew_pr, add = TRUE, color = set1_cols[2])
+legend(x = 0, y = 0.9, title = 'AUC', col = set1_cols[1:2], pch = 19, cex = 1.3,
+  legend = c(paste(round(res_comb_pred_pr$auc.davis.goadrich, digits = 2), "Calibrated"),
+    paste(round(res_prolif_ew_pr$auc.davis.goadrich, digits = 2), "Random")))
+grid(lwd = 0.5)
+dev.off()
+
 # Figure S2 - ROC
 # Calibrated non-normalized vs calibrated normalized vs random proliferative
 cairo_pdf(filename = 'scripts/figures/figure_S2_ROC.pdf', width = 5, height = 5)
@@ -103,6 +126,35 @@ dev.off()
 # Figure S2 - PR
 # Calibrated non-normalized vs calibrated normalized vs random proliferative
 cairo_pdf(filename = 'scripts/figures/figure_S2_PR.pdf', width = 5, height = 5)
+plot(res_comb_pred_pr, main = 'PR curve, Ensemble-wise synergies (Bliss)',
+  auc.main = FALSE, color = set1_cols[1], rand.plot = TRUE, lwd = 3)
+plot(res_prolif_ew_pr, add = TRUE, color = set1_cols[2], lwd = 3)
+plot(res_ss_ew_pr, add = TRUE, color = set1_cols[3], lwd = 2)
+legend('topright', title = 'AUC', col = set1_cols[c(3,1,2)], pch = 19, cex = 1,
+  legend = c(paste(round(res_ss_ew_pr$auc.davis.goadrich, digits = 2), 'Calibrated (non-normalized)'),
+    paste(round(res_comb_pred_pr$auc.davis.goadrich, digits = 2), 'Calibrated'),
+    paste(round(res_prolif_ew_pr$auc.davis.goadrich, digits = 2), 'Random')))
+grid(lwd = 0.5)
+dev.off()
+
+# Figure S2 - ROC and PR combined
+cairo_pdf(filename = 'scripts/figures/figure_S2.pdf', width = 10, height = 5)
+par(mfrow = c(1,2))
+plot(x = res_comb_pred$roc_stats$FPR, y = res_comb_pred$roc_stats$TPR,
+  type = 'l', lwd = 3, col = set1_cols[1],
+  main = ('ROC curve, Ensemble-wise synergies (Bliss)'),
+  xlab = 'False Positive Rate (FPR)', ylab = 'True Positive Rate (TPR)')
+lines(x = res_prolif_ew$roc_stats$FPR, y = res_prolif_ew$roc_stats$TPR,
+  lwd = 3, col = set1_cols[2])
+lines(x = res_ss_ew$roc_stats$FPR, y = res_ss_ew$roc_stats$TPR,
+  lwd = 3, col = set1_cols[3])
+legend('topleft', title = 'AUC', col = set1_cols[c(3,1,2)], pch = 19, cex = 1,
+  legend = c(paste(round(res_ss_ew$AUC, digits = 2), 'Calibrated (non-normalized)'),
+    paste(round(res_comb_pred$AUC, digits = 2), 'Calibrated'),
+    paste(round(res_prolif_ew$AUC, digits = 2), 'Random')))
+grid(lwd = 0.5)
+abline(a = 0, b = 1, col = 'lightgrey', lty = 'dotdash', lwd = 1.2)
+
 plot(res_comb_pred_pr, main = 'PR curve, Ensemble-wise synergies (Bliss)',
   auc.main = FALSE, color = set1_cols[1], rand.plot = TRUE, lwd = 3)
 plot(res_prolif_ew_pr, add = TRUE, color = set1_cols[2], lwd = 3)
