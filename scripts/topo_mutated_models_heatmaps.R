@@ -296,13 +296,15 @@ edge_heat = ComplexHeatmap::Heatmap(matrix = edge_mat,
   name = "edge_heatmap", bottom_annotation = ha_edges,
   column_title = "Model topology parameterization", column_title_gp = gpar(fontsize = 20),
   column_names_gp = gpar(fontsize = 1),
+  # show_column_names = FALSE, # for pdf output
   column_split = factor(cl, levels = c(5,3,2,1,4)), cluster_column_slices = FALSE,
   col = edge_colors, show_row_names = FALSE, show_row_dend = FALSE,
   show_heatmap_legend = TRUE,
   heatmap_legend_param = list(title = 'Edge Mutations', labels = c('Absense', 'Presence')),
-  use_raster = TRUE, raster_quality = 4)
+  use_raster = TRUE, raster_quality = 4) # use raster_quality = 1 for pdf heatmap output if there are white lines
 
 png(filename = "img/edge_heat.png", width = 7, height = 5, units = "in", res = 600)
+#cairo_pdf(filename = "img/edge_heat.pdf", width = 7, height = 5) # pdf output
 draw(edge_heat, annotation_legend_side = "right", merge_legends = FALSE)
 dev.off()
 
