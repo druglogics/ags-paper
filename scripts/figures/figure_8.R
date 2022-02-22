@@ -48,6 +48,6 @@ erk_pr = ggpubr::ggboxplot(res, x = "erk_state", y = "pr_auc", fill = "erk_state
   theme(legend.position = "none")
 ggplot2::ggsave(filename = 'scripts/figures/figure_8_PR.pdf', width = 7, height = 5, device = cairo_pdf)
 
-# Both plots in one
+# Both plots in one (Figure 8 in publication)
 ggpubr::ggarrange(erk_roc, erk_pr, labels = LETTERS[1:2], nrow = 1, ncol = 2)
 ggplot2::ggsave(filename = 'scripts/figures/figure_8.pdf', width = 14, height = 5, device = cairo_pdf)
