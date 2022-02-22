@@ -198,6 +198,7 @@ ggpubr::ggboxplot(data = cosmic_state %>% rename(COSMIC = cosmic),
   ylim(c(0,1.15)) +
   ggpubr::stat_pvalue_manual(stat_test, label = "p = {p} ({p.signif})", y.position = 1.1)
 ggsave(filename = 'img/cosmic_state_cmp.png', dpi = "print", width = 7, height = 5)
+ggsave(filename = 'img/cosmic_state_cmp.pdf', width = 7, height = 5)
 
 #########################
 # Link-operator Heatmap #
@@ -304,7 +305,7 @@ heat_ss = Heatmap(matrix = lo_ss_mat[,colnames(lo_mat)],
   show_row_dend = FALSE, #row_title_rot = 90,
   show_heatmap_legend = TRUE, column_title = "Combined Heatmaps",
   heatmap_legend_param = list(title = 'Activity State', labels = c('Inhibited', 'Active')),
-  use_raster = TRUE, raster_quality = 4)
+  use_raster = TRUE, raster_quality = 4) # change raster_quality = 1 to avoid having white lines in pdf heatmap
 
 ro_ss = row_order(heat_ss)
 
@@ -341,6 +342,7 @@ nc = length(co)
 marked_nodes = c("JNK_f", "ERK_f", "MAPK14")
 
 png(filename = "img/lo_combined_heat.png", width = 7, height = 7, units = "in", res = 600)
+#cairo_pdf(filename = 'img/lo_combined_heat.pdf', width = 7, height = 7) # for pdf output
 draw(heat_list, heatmap_legend_side = "left")
 decorate_annotation("Agreement", {
   grid.lines(x = unit(c(0.5, 53.5), units = "native"), # 52 link-operator nodes
