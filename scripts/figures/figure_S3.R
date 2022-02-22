@@ -10,7 +10,7 @@ shapiro.test(x = res$roc_auc)
 shapiro.test(x = res$pr_auc)
 shapiro.test(x = res$avg_fit)
 
-# Figure S3 - ROC
+# Figure S3 - ROC (not included in the publication)
 p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (ROC)",
@@ -23,7 +23,7 @@ p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "roc_auc", color = "per_fli
 ggpubr::ggpar(p, legend = "right", font.legend = 14)
 ggplot2::ggsave(filename = 'scripts/figures/figure_S3_ROC.pdf', width = 7, height = 5, device = cairo_pdf)
 
-# Figure S3 - PR
+# Figure S3 - PR (included in the publication as Figure S3)
 p = ggpubr::ggscatter(data = res, x = "avg_fit", y = "pr_auc", color = "per_flipped_data",
   xlab = "Average Fitness per Model Ensemble",
   title = "Fitness to AGS Steady State vs Performance (Precision-Recall)",
