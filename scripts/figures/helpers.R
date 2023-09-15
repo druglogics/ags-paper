@@ -11,16 +11,34 @@ library(PRROC) # for PR-AUC calculation
 #' "less" or "greater". Default: "two.sided".
 #' @examples
 #'
+#' set.seed(42)
 #' labels = sample(c(0,1), 20, replace = TRUE, prob = c(0.7,0.3))
 #' pred1 = rnorm(20)
 #' pred2 = rnorm(20)
-#' pr.test(labels, pred1, pred2, n.boot = 100)
-pr.test = function(labels, pred1, pred2, boot.n = 10000, alternative = "two.sided") {
+#' pr.test(labels, pred1, pred2, boot.n = 100)
+pr.test = function(labels, pred1, pred2, boot.n = 10000, alternative = "two.sided",
+  boot.stratified = TRUE) {
   match.arg(alternative, c("two.sided", "less", "greater"))
+  stopifnot(length(unique(labels)) == 2) # 2 classes only
 
   diffs = sapply(1:boot.n, function(i) {
-    # non-stratified bootstrap sampling
-    indx = sample(1:length(labels), replace = TRUE)
+    if (boot.stratified) {
+      # get the two classes values
+      cl1 = unique(labels)[1]
+      cl2 = unique(labels)[2]
+      # find indexes of those
+      cl1_indxs = which(labels == cl1)
+      cl2_indxs = which(labels == cl2)
+      # resample with replacement each class on its own
+      indx1 = sample(cl1_indxs, replace = TRUE)
+      indx2 = sample(cl2_indxs, replace = TRUE)
+      # combine to indx
+      indx = c(indx1, indx2)
+    } else {
+      indx = sample(1:length(labels), replace = TRUE)
+    }
+
+    # resampled labels and prediction values
     rsmp_labels = labels[indx]
     rsmp_pred1  = pred1[indx]
     rsmp_pred2  = pred2[indx]
