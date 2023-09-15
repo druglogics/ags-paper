@@ -3,6 +3,8 @@ library(usefun)
 library(dplyr)
 library(tibble)
 library(PRROC)
+library(pROC)
+source('scripts/figures/helpers.R')
 
 # Load synegy predictions (CASCADE 1.0, 50 simulations, Bliss)
 # 'ss' => calibrated models, 'prolif' => random models
@@ -39,6 +41,16 @@ DT::datatable(data = res_comb_pred$roc_stats, options =
     list(pageLength = 5, lengthMenu = c(5, 10, 16), searching = FALSE)) %>%
   DT::formatRound(c(1,6,7,8,9), digits = 3)
 
+# Compare ROC AUCs
+roc_prolif = pROC::roc(response = pred_ew_bliss$observed,
+  predictor = pred_ew_bliss$prolif_score, direction = ">")
+# controls > cases (lower more synergistic)
+roc_combined = pROC::roc(response = pred_ew_bliss$observed,
+  predictor = pred_ew_bliss$combined_score, direction = ">")
+set.seed(42)
+pROC::roc.test(roc_prolif, roc_combined, method = "bootstrap", boot.n = 10000,
+  direction = ">")
+
 set1_cols = RColorBrewer::brewer.pal(n = 9, name = "Set1")
 
 # Figure 2C - ROC
@@ -67,6 +79,11 @@ res_prolif_ew_pr = PRROC::pr.curve(scores.class0 = pred_ew_bliss %>%
 res_comb_pred_pr = PRROC::pr.curve(scores.class0 = pred_ew_bliss %>%
     pull(combined_score) %>% (function(x) {-x}),
   weights.class0 = pred_ew_bliss %>% pull(observed), curve = TRUE, rand.compute = TRUE)
+
+# Compare PR AUCs
+set.seed(42)
+pr.test(labels = pred_ew_bliss$observed, pred1 = -pred_ew_bliss$prolif_score,
+  pred2 = -pred_ew_bliss$combined_score, boot.n = 10000)
 
 # Figure 2C - PR
 # 'Calibrated' here is Calibrated + normalized to random proliferative model predictions
